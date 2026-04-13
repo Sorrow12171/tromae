@@ -8,7 +8,8 @@ const galeriaData_22 = {
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1773521110142.png" },
             { id: 2, url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1773522716920.png" },
-            { id: 3, url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774447707992_1.png" }
+            { id: 3, url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774447707992_1.png" },
+            { id: 4, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1776104694408_1.png" }
         ]
     },
 
