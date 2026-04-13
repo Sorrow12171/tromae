@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuintiCulonas</title>
+    <link rel="stylesheet" href="1_style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>">
+</head>
+
+<body>
+    <button id="boton-casa" class="btn-casa" onclick="volverAlInicio()" title="Volver al inicio">
+        🏠
+    </button>
+
+    <header class="header">
+        <h1>🔥 Quinti Culonas</h1>
+        <p>Mejora tus habilidades con estas herramientas de práctica</p>
+    </header>
+
+    <section class="especial-section">
+        <h2>📄 ENTRENAMIENTO ESPECIAL</h2>
+
+        <div class="card-container">
+            <!-- CARD 1 - MANGAS -->
+            <div class="card card-blue" id="manga-card">
+                <div class="card-img" style="background-image: url('https://pbs.twimg.com/media/G9QVihtbMAABMJl?format=jpg&name=small')"></div>
+                <h3>🎌 Hentais doujinshi</h3>
+                <p>Explora y aprende con cómics japoneses</p>
+                <button class="card-button" onclick="cargarPaginaMangas()">Ver colección</button>
+            </div>
+
+            <!-- CARD 2 - VIDEOS -->
+            <div class="card card-green">
+                <div class="card-img" style="background-image: url('https://pbs.twimg.com/media/G7wkBDjWEAAPM8B?format=png&name=900x900')"></div>
+                <h3>🎬 Porno</h3>
+                <p>Google Drive con timestamps interactivos</p>
+                <button class="card-button" onclick="cargarPaginaVideos()">Ver videos</button>
+            </div>
+
+            <!-- CARD 8 - GALERÍA -->
+            <div class="card card-blue" style="background: linear-gradient(135deg, rgba(255, 20, 147, 0.2), rgba(255, 105, 180, 0.2)); border-color: rgba(255, 20, 147, 0.5);">
+                <div class="card-img" style="background-image: url('https://pbs.twimg.com/media/G7fxbA5WsAAMcky?format=png&name=900x900')"></div>
+                <h3>🖼️ GALERÍA</h3>
+                <p>Colección de imágenes organizadas en galerías</p>
+                <button class="card-button" style="background: linear-gradient(135deg, #FF1493, #FF69B4);" onclick="cargarPaginaGaleria()">
+                    Ver Galerías
+                </button>
+            </div>
+
+            <!-- CARD 6 - RPG QUINTILLIZAS -->
+            <div class="card card-purple" style="background: linear-gradient(135deg, rgba(255, 20, 147, 0.2), rgba(255, 105, 180, 0.2)); border-color: rgba(255, 20, 147, 0.5);">
+                <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=400&fit=crop')"></div>
+                <h3>🎮 RPG QUINTILLIZAS</h3>
+                <p>Conquista a las 5 hermanas Nakano</p>
+                <button class="card-button" style="background: linear-gradient(135deg, #FF1493, #FF69B4);" onclick="cargarPaginaRPG()">
+                    Jugar RPG
+                </button>
+            </div>
+
+            <!-- CARD 3 - ANIMES -->
+            <div class="card card-purple">
+                <div class="card-img" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlyn5Y6nBQZXZj-90MIbqhFlNdbzNBrKR_pg&s')"></div>
+                <h3>🎌 Hentai</h3>
+                <p>Anime con vocabulario + videos español/japonés</p>
+                <button class="card-button" onclick="cargarPaginaAnimes()">Ver animes</button>
+            </div>
+
+            <!-- CARD 11 - SISTEMA SRS -->
+            <div class="card card-purple" style="background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(33, 150, 243, 0.2)); border-color: rgba(76, 175, 80, 0.5);">
+                <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=400&fit=crop')"></div>
+                <h3>🔄 SISTEMA SRS</h3>
+                <p>Repetición espaciada para palabras difíciles</p>
+                <button class="card-button" style="background: linear-gradient(135deg, #4CAF50, #2196F3);" onclick="cargarPaginaSRS()">
+                    Ir al SRS
+                </button>
+            </div>
+
+            <!-- CARD 5 - ASMR ORIGINAL -->
+            <div class="card card-purple" style="background: linear-gradient(135deg, rgba(156, 39, 176, 0.2), rgba(103, 58, 183, 0.2)); border-color: rgba(156, 39, 176, 0.5);">
+                <div class="card-img" style="background-image: url('https://pbs.twimg.com/media/G_CpDeXXAAAoqV5?format=png&name=small')"></div>
+                <h3>🎧 ASMR JAPONÉS</h3>
+                <p>Audios relajantes para estudio y meditación</p>
+                <button class="card-button" style="background: linear-gradient(135deg, #9C27B0, #673AB7);" onclick="cargarPaginaASMR()">
+                    Escuchar ASMR
+                </button>
+            </div>
+
+            <!-- ★ CARD NUEVA - ASMR2 (Hermanas/Novias) ★ -->
+            <div class="card card-purple" style="background: linear-gradient(135deg, rgba(255, 105, 180, 0.25), rgba(255, 20, 147, 0.2)); border-color: rgba(255, 105, 180, 0.6);">
+                <div class="card-img" style="background-image: url('https://pbs.twimg.com/media/G_CpDeXXAAAoqV5?format=png&name=small')"></div>
+                <h3>🎧 ASMR2 - HERMANAS & NOVIAS</h3>
+                <p>ASMR con hermanas, novias y yanderes + vocabulario</p>
+                <button class="card-button" style="background: linear-gradient(135deg, #FF69B4, #FF1493);" onclick="cargarPaginaASMR2()">
+                    Escuchar ASMR2
+                </button>
+            </div>
+
+            <!-- CARD 4 - AUDIOS -->
+            <div class="card card-green" style="background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(255, 209, 102, 0.2)); border-color: rgba(255, 107, 107, 0.5);">
+                <div class="card-img" style="background-image: url('https://culturageek.com.ar/wp-content/uploads/2024/07/Openings-de-anime-culturageek.com_.ar_-scaled.webp')"></div>
+                <h3>🎵 AUDIOS OPENINGS</h3>
+                <p>Openings MP3 + vocabulario de letras</p>
+                <button class="card-button" style="background: linear-gradient(135deg, #FF6B6B, #FFD166);" onclick="cargarPaginaAudios()">
+                    Escuchar audios
+                </button>
+            </div>
+
+            <!-- CARD 7 - RPG FANTASÍA -->
+            <div class="card card-purple" style="background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(255, 20, 147, 0.2)); border-color: rgba(255, 107, 107, 0.5);">
+                <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=400&fit=crop')"></div>
+                <h3>⚔️ RPG FANTASÍA</h3>
+                <p>Combate por turnos + stats manuales + bonus para chicas</p>
+                <button class="card-button" style="background: linear-gradient(135deg, #FF6B6B, #FF1493);" onclick="cargarPaginaFantasiaRPG()">
+                    Jugar RPG Fantasía
+                </button>
+            </div>
+
+            <!-- CARD 9 - MISIONES -->
+            <div class="card card-green" style="background: linear-gradient(135deg, rgba(255, 209, 102, 0.2), rgba(255, 20, 147, 0.2)); border-color: rgba(255, 209, 102, 0.5);">
+                <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1536922246289-88c42f957773?w=400&h=400&fit=crop')"></div>
+                <h3>🎯 SISTEMA DE MISIONES</h3>
+                <p>Misiones diarias/semanales + mazos difíciles + dinero</p>
+                <button class="card-button" style="background: linear-gradient(135deg, #FFD166, #FF1493);" onclick="cargarPaginaMisiones()">
+                    Ver Misiones
+                </button>
+            </div>
+
+            <!-- CARD 10 - RUSO -->
+            <div class="card card-blue" style="background: linear-gradient(135deg, rgba(255, 0, 0, 0.2), rgba(0, 0, 255, 0.2)); border-color: rgba(255, 0, 0, 0.5);">
+                <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=400&h=400&fit=crop&auto=format'); background-position: center;"></div>
+                <h3>🇷🇺 RUSO</h3>
+                <p>Aprende el alfabeto cirílico con mazos de práctica</p>
+                <button class="card-button" style="background: linear-gradient(135deg, #FF0000, #0000FF);" onclick="cargarPaginaRuso()">
+                    Aprender Ruso
+                </button>
+            </div>
+
+            <!-- CARD 12 - COREANO -->
+            <div class="card card-blue" style="background: linear-gradient(135deg, rgba(0, 51, 153, 0.2), rgba(204, 0, 0, 0.2)); border-color: rgba(0, 51, 153, 0.5);">
+                <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1570197571499-166b99f54642?w=400&h=400&fit=crop&auto=format'); background-position: center;"></div>
+                <h3>🇰🇷 COREANO (한글)</h3>
+                <p>Aprende el alfabeto Hangul con mazos de práctica</p>
+                <button class="card-button" style="background: linear-gradient(135deg, #003399, #CC0000);" onclick="cargarPaginaCoreano()">
+                    Aprender Coreano
+                </button>
+            </div>
+
+            <!-- CARD 13 - COREANO QUINTILLIZAS -->
+            <div class="card" style="background: linear-gradient(135deg, rgba(255, 105, 180, 0.25), rgba(255, 20, 147, 0.2)); border-color: rgba(255, 105, 180, 0.6);">
+                <div class="card-img" style="background-image: url('https://pbs.twimg.com/media/G_CpDeXXAAAoqV5?format=png&name=small')"></div>
+                <h3 style="color: #FF69B4;">🌸 MAZOS QUINTILLIZAS</h3>
+                <p style="color: #FFB6C1;">Palabras de frases de anime - Las hermanas Nakano</p>
+                <button class="card-button" style="background: linear-gradient(135deg, #FF69B4, #FF1493);" onclick="cargarPaginaQuintillizasCoreano()">
+                    Ver Mazos Quintillizas
+                </button>
+            </div>
+
+            <!-- CARD 14 - PORTUGUÉS -->
+            <div class="card card-blue" style="background: linear-gradient(135deg, rgba(46, 204, 113, 0.2), rgba(39, 174, 96, 0.2)); border-color: rgba(46, 204, 113, 0.5);">
+                <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=400&h=400&fit=crop&auto=format'); background-position: center;"></div>
+                <h3>🇵🇹🇧🇷 PORTUGUÉS</h3>
+                <p>Alfabeto, fonética y vocabulario básico</p>
+                <button class="card-button" style="background: linear-gradient(135deg, #2ECC71, #27AE60);" onclick="cargarPaginaPortugues()">
+                    Aprender Portugués
+                </button>
+            </div>
+
+            <!-- ★ CARD YOTSUBA CHAT ★ -->
+            <div class="card" style="background: linear-gradient(135deg, rgba(58,140,47,0.25), rgba(125,219,110,0.12)); border-color: rgba(125,219,110,0.55); box-shadow: 0 0 18px rgba(125,219,110,0.12);">
+                <div class="card-img" style="background-image: url('https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD18/main/imagenes/img_1773524604135.jpg'); background-size: cover; background-position: top;"></div>
+                <h3 style="color: #7ddb6e;">🍀 CHAT QUINTILLIZAS</h3>
+                <p style="color: #8ab88a;">Habla con las 5 hermanas Nakano ♡</p>
+                <button class="card-button" style="background: linear-gradient(135deg, #3a8c2f, #7ddb6e); color: #0d1f0d; font-weight: bold;" onclick="cargarPaginaQuintillizas()">
+                    Hablar con las Nakano ♡
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECCIÓN DINÁMICA -->
+    <section id="manga-section" style="display: none;"></section>
+
+    <!-- SECCIÓN DEL QUIZ -->
+    <section id="quiz-section" style="display: none;"></section>
+
+    <!-- SECCIÓN ADICIONAL -->
+    <section class="additional-section">
+        <h2>✨ Más Características</h2>
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">📊</div>
+                <h3>Seguimiento de Progreso</h3>
+                <p>Monitorea tu mejora con estadísticas detalladas</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🎯</div>
+                <h3>Objetivos Diarios</h3>
+                <p>Establece metas alcanzables cada día</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🏆</div>
+                <h3>Sistema de Logros</h3>
+                <p>Desbloquea recompensas por tu dedicación</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>© 2023 Entrenamiento Especial - Diseñado para mejorar habilidades</p>
+        <p class="github-link">Publicado en <a href="https://pages.github.com/" target="_blank">GitHub Pages</a></p>
+    </footer>
+
+    <!-- ARCHIVOS DEL SISTEMA ORIGINALES -->
+    <script src="1_imagenes.js"></script>
+    <script src="1_vocabulario.js"></script>
+    <script src="1_videos.js"></script>
+    <script src="1_animes.js"></script>
+    <script src="1_animes_vocabulario.js"></script>
+    <script src="1_sistemas.js"></script>
+    <script src="lectormanga.js"></script>
+    <script src="1_audios.js"></script>
+    <script src="1_audios_vocabulario.js"></script>
+    <script src="1_asmr.js"></script>
+    <script src="rpg.js"></script>
+    <script src="fantasia.js"></script>
+    <script src="ruso.js"></script>
+    <script src="coreano.js"></script>
+    <script src="coreano_quintillizas.js"></script>
+    <script src="portugues.js"></script>
+    <script src="galeria/galeria_data_23.js"></script>
+    <script src="galeria/galeria_engine.js"></script>
+    <script src="galeria/galeria_contenedores.js"></script>
+    <script src="galeria/galeria_data_1.js"></script>
+    <script src="galeria/galeria_data_2.js"></script>
+    <script src="galeria/galeria_data_3.js"></script>
+    <script src="galeria/galeria_data_4.js"></script>
+    <script src="galeria/galeria_data_5.js"></script>
+    <script src="galeria/galeria_data_6.js"></script>
+    <script src="galeria/galeria_data_7.js"></script>
+    <script src="galeria/galeria_data_8.js"></script>
+    <script src="galeria/galeria_data_9.js"></script>
+    <script src="galeria/galeria_data_10.js"></script>
+    <script src="galeria/galeria_data_11.js"></script>
+    <script src="galeria/galeria_data_12.js"></script>
+    <script src="galeria/galeria_data_13.js"></script>
+    <script src="galeria/galeria_data_14.js"></script>
+    <script src="galeria/galeria_data_15.js"></script>
+    <script src="galeria/galeria_data_16.js"></script>
+    <script src="galeria/galeria_data_17.js"></script>
+    <script src="galeria/galeria_data_18.js"></script>
+    <script src="galeria/galeria_data_19.js"></script>
+    <script src="galeria/galeria_data_20.js"></script>
+    <script src="galeria/galeria_data_21.js"></script>
+    <script src="galeria/galeria_data_22.js"></script>
+    <script src="1_eventos_diarios.js"></script>
+    <script src="1_main.js"></script>
+
+    <!-- ★ ARCHIVOS NUEVOS ASMR2 (DESPUÉS DE 1_main.js) ★ -->
+    <script src="asmr2_datos.js"></script>
+    <script src="asmr2_vocabulario.js"></script>
+    <script src="asmr2_main.js"></script>
+
+    <!-- ★ QUINTILLIZAS CHAT — va DESPUÉS de 1_main.js ★ -->
+    <script src="QuintiImagenes.js"></script>
+    <script src="locaciones.js"></script>
+    <script src="eventos_aleatorios.js"></script>
+    <script src="quint_prompts.js"></script>
+    <script src="quintillizas.js"></script>
+
+    <!-- ★ SISTEMA DE MENSAJES CELULAR ★ -->
+    <script src="SistemaMensajesCelular.js"></script>
+
+    <!-- ★ SISTEMA DE HORA DEL DÍA (fondos dinámicos) ★ -->
+    <script src="SistemaHoraDelDia.js"></script>
+
+    <!-- ★ NUEVAS FUNCIONES: selector de chica + sistema de memorias ★ -->
+    <script src="quint_nuevas_funciones.js"></script>
+
+</body>
+</html>
