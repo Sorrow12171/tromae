@@ -12,7 +12,7 @@ const _K = [
 ];
 const GROQ_KEYS = _K.map(p => p.join(""));
 
-const MODELO_PRINCIPAL   = "moonshotai/kimi-k2-instruct-0905";
+const MODELO_PRINCIPAL   = "meta-llama/llama-4-scout-17b-16e-instruct";
 
 // ============================================================
 //  CHICAS
