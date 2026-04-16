@@ -82,7 +82,7 @@ Anal: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDX
         Chupando_Bola_Derecha: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773179153272.jpg",
       Doggystyle: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD8/main/imagenes/img_1773408899336.jpg",  
      Misionero: "https://raw.githubusercontent.com/SORFAR123123/XDXDXDXDXD/main/imagenes/img_1773021449129.jpg",  
-    Hablando: "https://raw.githubusercontent.com/SORFAR123123/XDXDXDXDXD/main/imagenes/img_1773068369650.jpg",
+    Hablando: "https://pbs.twimg.com/media/HF-3zGSW4AENtrX?format=jpg&name=medium",
        Desnuda: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD19/main/imagenes/img_1773671000069.jpg", 
      StandFuck_Follando_De_Pie: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773691922528.jpg", 
        Follando_En_La_Ventana: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773691924726.jpg", 
@@ -95,7 +95,7 @@ Anal: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDX
     Miku_Licking_Anus: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774103182288.png", 
  Follando_En_El_Aire: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD23/main/imagenes/img_1774198364002.jpg", 
      Me_Corro_En_Su_Boca_De_Miku: "https://raw.githubusercontent.com/SORFAR123123/XDXDXDXDXD/main/imagenes/img_1773021980596.jpg", 
-Ropa_idol: "https://pbs.twimg.com/media/HFoblZNWIAA9Pgy?format=jpg&name=small",         
+Ropa_idol: "https://pbs.twimg.com/media/HFobfuKWMAAiAke?format=jpg&name=large",         
     },
     Yotsuba: {
         Hablando: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD11/main/imagenes/img_1773503723445.png",

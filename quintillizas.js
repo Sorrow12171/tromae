@@ -12,7 +12,7 @@ const _K = [
 ];
 const GROQ_KEYS = _K.map(p => p.join(""));
 
-const MODELO_PRINCIPAL   = "openai/gpt-oss-120b";
+const MODELO_PRINCIPAL   = "llama-3.3-70b-versatile";
 
 // ============================================================
 //  CHICAS
@@ -127,6 +127,13 @@ USA PALABRAS EXPLÍCITAS SIN EUFEMISMOS: pene, verga, coño, vagina, follar, chu
 REGLA DE IMAGEN:
 - "imagen_tag" debe ser UNO de los nombres de ACCIONES DISPONIBLES de esa chica
 - Elige el que mejor describa lo que el personaje esta haciendo en el dialogo
+
+REGLAS DE COORDINACIÓN:
+
+- Las chicas pueden hablar entre ellas, no solo al usuario
+- Si una chica hace una pregunta, otra puede responderla
+- Mantén la personalidad de cada una en todo momento
+- El orden de los diálogos debe tener sentido narrativo
 
 
 REGLA CRITICA: Responde SOLO con JSON valido. Sin texto fuera del JSON. Empieza con { termina con }.
