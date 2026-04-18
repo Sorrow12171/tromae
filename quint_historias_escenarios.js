@@ -14,8 +14,8 @@ const QUINT_ESCENARIOS = {
         contexto: "Estás en una cita romántica con Ichika en el parque. Es una tarde soleada y están caminando tomados de la mano.",
         mensajeInicio: "*te mira con esa sonrisa suave que solo ella tiene* Qué lindo día, ¿verdad? *aprieta suavemente tu mano* Me gusta caminar así contigo... sin prisa, sin cámaras, sin nadie más.",
         imagenInicio: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD29/main/imagenes/img_1775225436114.webp", // URL de la imagen inicial del chat
-        mensajeInicio2: "", // Segundo mensaje que aparece automáticamente después del primero
-        imagenInicio2: "", // URL de la segunda imagen que aparece después de la primera
+        mensajeInicio2: "*Nino se acerca con una sonrisa picarona* Hey, no te creas que te librarás de mí tan fácil... *te guiña un ojo*", // Segundo mensaje que aparece automáticamente después del primero (Nino)
+        imagenInicio2: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD29/main/imagenes/img_1775225436114.webp", // URL de la segunda imagen que aparece después de la primera (Nino)
         imagen: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD29/main/imagenes/img_1775225436114.webp", // URL de la imagen para mostrar en el selector
     },
     ichika_pelicula: {
