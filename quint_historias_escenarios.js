@@ -5,10 +5,10 @@
 
 const QUINT_ESCENARIOS = {
     // ==================== ICHIKA ====================
-    ichika_cita: {
-        id: "ichika_cita",
-        nombre: "Cita con Ichika",
-        chica: "Ichika",
+    Orgia: {
+        id: "Orgia",
+        nombre: "Orgia Itsuki Nino Aldo y Fabrizio",
+        chica: "Itsuki",
         descripcion: "Una cita tranquila en el parque con Ichika",
         locacion: "parque",
         contexto: "Estás en una cita romántica con Ichika en el parque. Es una tarde soleada y están caminando tomados de la mano.",
