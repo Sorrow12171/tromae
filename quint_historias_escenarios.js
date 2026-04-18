@@ -24,8 +24,8 @@ const QUINT_ESCENARIOS = {
         locacion: "estudio_tv",
         contexto: "Estás visitando a Ichika en el set de grabación de su nueva película. Ella está en un descanso.",
         mensajeInicio: "*se quita el micrófono y corre hacia ti* ¡Llegaste! *te abraza rápido* Los demás están grabando otra escena... tenemos unos minutos solos. *sonríe cómplice*",
-        imagenInicio: "https://via.placeholder.com/400x400/FF1493/FFFFFF?text=Ichika+Hablando", // URL de la imagen inicial del chat
-        imagen: "https://via.placeholder.com/300x200/FF1493/FFFFFF?text=Ichika+Pelicula", // URL de la imagen para mostrar en el selector
+        imagenInicio: "", // URL de la imagen inicial del chat
+        imagen: "", // URL de la imagen para mostrar en el selector
     },
     
     // ==================== NINO ====================
@@ -37,7 +37,7 @@ const QUINT_ESCENARIOS = {
         locacion: "cocina",
         contexto: "Nino decidió enseñarte a cocinar. Están en la cocina juntos, con delantales puestos.",
         mensajeInicio: "*te pone el delantal con gestos bruscos pero cuidado* No es que quiera... es que si vas a comer mi comida, mejor aprendes a hacerla bien. *se sonroja* ¡No malinterpretes!",
-        imagenTag: "Hablando",
+        imagenInicio: "", // URL de la imagen inicial del chat
         imagen: "", // URL de la imagen para mostrar en el selector
     },
     nino_celos: {
@@ -48,7 +48,7 @@ const QUINT_ESCENARIOS = {
         locacion: "casa_nakano",
         contexto: "Nino te vio hablando con otra chica y está visiblemente molesta, cruzada de brazos.",
         mensajeInicio: "*cruza los brazos y voltea la cara* Ah, ¿así que ahora hablas con ella también? *murmura* No es que me importe... para nada. *evita mirarte*",
-        imagenTag: "Enojada",
+        imagenInicio: "", // URL de la imagen inicial del chat
         imagen: "", // URL de la imagen para mostrar en el selector
     },
     
@@ -61,7 +61,7 @@ const QUINT_ESCENARIOS = {
         locacion: "biblioteca",
         contexto: "Miku te invitó a la biblioteca para mostrarte libros sobre el período Sengoku.",
         mensajeInicio: "*abre un libro antiguo con cuidado* Este general... era como yo. *levanta la vista tímidamente* Callado, pero con convicciones fuertes. ¿Quieres que te cuente?",
-        imagenTag: "Hablando",
+        imagenInicio: "", // URL de la imagen inicial del chat
         imagen: "", // URL de la imagen para mostrar en el selector
     },
     miku_aquarium: {
@@ -72,7 +72,7 @@ const QUINT_ESCENARIOS = {
         locacion: "acuario",
         contexto: "Estás con Miku en el acuario, observando los peces juntos.",
         mensajeInicio: "*presiona sus manos contra el cristal* Son tan tranquilos... *te mira de reojo* Como cuando estoy contigo. *vuelve a mirar los peces, sonrojada*",
-        imagenTag: "Hablando",
+        imagenInicio: "", // URL de la imagen inicial del chat
         imagen: "", // URL de la imagen para mostrar en el selector
     },
     
@@ -85,7 +85,7 @@ const QUINT_ESCENARIOS = {
         locacion: "gimnasio",
         contexto: "Yotsuba te arrastró al gimnasio para hacer ejercicio juntos.",
         mensajeInicio: "¡Vamos, vamos! *te jala del brazo* ¡Hoy toca cardio! *salta emocionada* No te canses tan rápido, ¡apenas empezamos!",
-        imagenTag: "Hablando",
+        imagenInicio: "", // URL de la imagen inicial del chat
         imagen: "", // URL de la imagen para mostrar en el selector
     },
     yotsuba_voluntariado: {
@@ -96,7 +96,7 @@ const QUINT_ESCENARIOS = {
         locacion: "centro_comunitario",
         contexto: "Estás ayudando con Yotsuba en un evento de voluntariado comunitario.",
         mensajeInicio: "*organiza cajas con energía* ¡Gracias por venir! *te da una botella de agua* Sin ti no habría podido con todo esto. *sonríe radiante*",
-        imagenTag: "Hablando",
+        imagenInicio: "", // URL de la imagen inicial del chat
         imagen: "", // URL de la imagen para mostrar en el selector
     },
     
@@ -109,7 +109,7 @@ const QUINT_ESCENARIOS = {
         locacion: "sala_estudio",
         contexto: "Itsuki aceptó ayudarte a estudiar para un examen importante.",
         mensajeInicio: "*golpea suavemente el libro* Concéntrate. *suspira* Si vas a aprobar, necesitas tomar esto en serio. *te pasa un apunte* Aquí está lo más importante.",
-        imagenTag: "Hablando",
+        imagenInicio: "", // URL de la imagen inicial del chat
         imagen: "", // URL de la imagen para mostrar en el selector
     },
     itsuki_comida: {
@@ -120,7 +120,7 @@ const QUINT_ESCENARIOS = {
         locacion: "restaurante",
         contexto: "Itsuki te invitó a comer a su restaurante favorito.",
         mensajeInicio: "*ya está comiendo* Llegué antes y pedí. *mastilla* ¿Vas a probar algo? Todo es delicioso aquí. *te empuja un plato*",
-        imagenTag: "Comiendo",
+        imagenInicio: "", // URL de la imagen inicial del chat
         imagen: "", // URL de la imagen para mostrar en el selector
     },
     
@@ -133,7 +133,7 @@ const QUINT_ESCENARIOS = {
         locacion: "cafe",
         contexto: "Te encontraste con Reze en un café. Ella parece estar esperando algo.",
         mensajeInicio: "*revuelve su café lentamente* Sabía que vendrías. *levanta la vista con esa sonrisa enigmática* Siéntate. Tenemos de qué hablar.",
-        imagenTag: "Hablando",
+        imagenInicio: "", // URL de la imagen inicial del chat
         imagen: "", // URL de la imagen para mostrar en el selector
     },
 };
