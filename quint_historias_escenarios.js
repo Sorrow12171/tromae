@@ -13,7 +13,7 @@ const QUINT_ESCENARIOS = {
         locacion: "parque",
         contexto: "Estás en una cita romántica con Ichika en el parque. Es una tarde soleada y están caminando tomados de la mano.",
         mensajeInicio: "*te mira con esa sonrisa suave que solo ella tiene* Qué lindo día, ¿verdad? *aprieta suavemente tu mano* Me gusta caminar así contigo... sin prisa, sin cámaras, sin nadie más.",
-        imagenTag: "Hablando",
+        imagenInicio: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD29/main/imagenes/img_1775225436114.webp", // URL de la imagen inicial del chat
         imagen: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD29/main/imagenes/img_1775225436114.webp", // URL de la imagen para mostrar en el selector
     },
     ichika_pelicula: {
@@ -24,7 +24,7 @@ const QUINT_ESCENARIOS = {
         locacion: "estudio_tv",
         contexto: "Estás visitando a Ichika en el set de grabación de su nueva película. Ella está en un descanso.",
         mensajeInicio: "*se quita el micrófono y corre hacia ti* ¡Llegaste! *te abraza rápido* Los demás están grabando otra escena... tenemos unos minutos solos. *sonríe cómplice*",
-        imagenTag: "Hablando",
+        imagenInicio: "https://via.placeholder.com/400x400/FF1493/FFFFFF?text=Ichika+Hablando", // URL de la imagen inicial del chat
         imagen: "https://via.placeholder.com/300x200/FF1493/FFFFFF?text=Ichika+Pelicula", // URL de la imagen para mostrar en el selector
     },
     
