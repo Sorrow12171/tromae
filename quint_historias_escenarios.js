@@ -31,7 +31,7 @@ const QUINT_ESCENARIOS = {
         mensajeInicio2: "", // Segundo mensaje que aparece automáticamente después del primero
         imagenInicio2: "", // URL de la segunda imagen que aparece después de la primera
         chicaMensaje2: "", // Nombre de la chica que dice el segundo mensaje (opcional)
-        imagen: "", // URL de la imagen para mostrar en el selector
+        imagen: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD12/main/imagenes/img_1773505494391.png", // URL de la imagen para mostrar en el selector
     },
     
     // ==================== NINO ====================
