@@ -14,7 +14,7 @@ const QUINT_ESCENARIOS = {
         contexto: "Estás en una cita romántica con Ichika en el parque. Es una tarde soleada y están caminando tomados de la mano.",
         mensajeInicio: "*te mira con esa sonrisa suave que solo ella tiene* Qué lindo día, ¿verdad? *aprieta suavemente tu mano* Me gusta caminar así contigo... sin prisa, sin cámaras, sin nadie más.",
         imagenTag: "Hablando",
-        imagen: "https://via.placeholder.com/300x200/FF69B4/FFFFFF?text=Ichika+Cita", // URL de la imagen para mostrar en el selector
+        imagen: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD29/main/imagenes/img_1775225436114.webp", // URL de la imagen para mostrar en el selector
     },
     ichika_pelicula: {
         id: "ichika_pelicula",
