@@ -455,11 +455,21 @@ function memoryInjectStyles() {
         .quint-chica-card-kanji  { font-size:26px; font-family:"Noto Serif JP",serif; }
         .quint-chica-card-nombre { font-size:13px; font-family:Georgia,serif; font-weight:bold; }
         .quint-chica-card-desc   { font-size:10px; color:#3a5a90; font-family:Arial,sans-serif; text-align:center; line-height:1.4; }
+        /* Botón de Historias */
+        #quint-chica-btn-historias {
+            background:linear-gradient(135deg,#5a3a70,#7a5aaf);
+            color:#e0c0ff; border:none; padding:11px 32px; border-radius:10px; cursor:pointer;
+            font-family:Georgia,serif; font-size:15px; font-weight:bold;
+            transition:all 0.2s; width:100%; max-width:260px;
+        }
+        #quint-chica-btn-historias:hover { transform:scale(1.04); box-shadow:0 0 12px rgba(120,80,255,0.3); }
+        
+        /* Botón Continuar */
         #quint-chica-btn-continuar {
-            margin-top:20px; background:linear-gradient(135deg,#1f3a70,#3a6adf);
+            background:linear-gradient(135deg,#1f3a70,#3a6adf);
             color:#c0d8ff; border:none; padding:11px 32px; border-radius:10px; cursor:pointer;
             font-family:Georgia,serif; font-size:15px; font-weight:bold;
-            transition:all 0.2s; max-width:260px; width:100%;
+            transition:all 0.2s; width:100%; max-width:260px;
         }
         #quint-chica-btn-continuar:hover { transform:scale(1.04); box-shadow:0 0 12px rgba(80,120,255,0.3); }
         #quint-chica-btn-continuar:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
@@ -481,6 +491,7 @@ const CHICA_DESCRIPCIONES = {
 };
 
 let quintChicaSeleccionadaInicial = null;
+let quintEscenarioSeleccionado = null;
 
 function quintMostrarSelectorChica() {
     const app     = document.getElementById("quint-app");
@@ -505,9 +516,14 @@ function quintMostrarSelectorChica() {
                 `;
             }).join("")}
         </div>
-        <button id="quint-chica-btn-continuar" disabled onclick="quintConfirmarChicaInicial()">
-            Comenzar ♡
-        </button>
+        <div style="display:flex; flex-direction:column; gap:10px; margin-top:16px; align-items:center;">
+            <button id="quint-chica-btn-historias" onclick="quintMostrarSelectorHistorias()">
+                📖 Historias / Escenarios
+            </button>
+            <button id="quint-chica-btn-continuar" disabled onclick="quintConfirmarChicaInicial()">
+                Comenzar ♡
+            </button>
+        </div>
     `;
     app.style.position = "relative";
     app.appendChild(overlay);
@@ -540,8 +556,196 @@ function quintConfirmarChicaInicial() {
     // Iniciar timer de eventos aleatorios
     if (typeof quintIniciarTimerEventos === "function") quintIniciarTimerEventos();
 
-    // Mostrar selector de locación ANTES del chat
-    quintMostrarSelectorLocacion();
+    // Si hay escenario seleccionado, usar su contexto especial
+    if (quintEscenarioSeleccionado) {
+        quintIniciarConEscenario(quintEscenarioSeleccionado);
+    } else {
+        // Mostrar selector de locación ANTES del chat
+        quintMostrarSelectorLocacion();
+    }
+}
+
+// ============================================================
+//  SELECTOR DE HISTORIAS / ESCENARIOS
+// ============================================================
+
+function quintMostrarSelectorHistorias() {
+    const app = document.getElementById("quint-app");
+    const overlayExistente = document.getElementById("quint-historias-overlay");
+    if (overlayExistente) overlayExistente.remove();
+    
+    const overlay = document.createElement("div");
+    overlay.id = "quint-historias-overlay";
+    
+    // Obtener todas las chicas seleccionadas o la actual
+    const chicaFiltro = quintChicaSeleccionadaInicial;
+    const escenarios = chicaFiltro 
+        ? obtenerEscenariosPorChica(chicaFiltro)
+        : obtenerListaEscenarios();
+    
+    const htmlEscenarios = escenarios.map(esc => `
+        <div class="quint-escenario-card" onclick="quintSeleccionarEscenario('${esc.id}')">
+            <div class="quint-escenario-nombre">${esc.nombre}</div>
+            <div class="quint-escenario-chica">👤 ${esc.chica}</div>
+            <div class="quint-escenario-desc">${esc.descripcion}</div>
+            <div class="quint-escenario-locacion">📍 ${esc.locacion}</div>
+        </div>
+    `).join("");
+    
+    overlay.innerHTML = `
+        <div id="quint-historias-box">
+            <div id="quint-historias-titulo">📖 Historias / Escenarios</div>
+            <div id="quint-historias-sub">
+                ${chicaFiltro ? `Escenarios con ${chicaFiltro}` : 'Elige una historia para comenzar'}
+            </div>
+            <div id="quint-historias-grid">
+                ${htmlEscenarios || '<div class="quint-sin-escenarios">No hay escenarios disponibles para esta chica aún.</div>'}
+            </div>
+            <button id="quint-historias-btn-volver" onclick="quintCerrarSelectorHistorias()">
+                ← Volver
+            </button>
+        </div>
+        <style>
+            #quint-historias-overlay {
+                position:absolute; inset:0; z-index:150;
+                background:#0a0f18ee;
+                display:flex; align-items:center; justify-content:center;
+                border-radius:16px;
+            }
+            #quint-historias-box {
+                display:flex; flex-direction:column; align-items:center;
+                gap:16px; padding:32px 24px; max-width:600px; width:90%;
+                max-height:80vh; overflow-y:auto;
+                background:#101d35; border:1px solid #1f2d45;
+                border-radius:16px;
+            }
+            #quint-historias-titulo {
+                color:#8ab0ff; font-size:20px; font-weight:bold;
+                font-family:'Georgia',serif; text-align:center;
+            }
+            #quint-historias-sub {
+                color:#3a5a90; font-size:14px;
+                font-family:'Georgia',serif; text-align:center; margin-top:-8px;
+            }
+            #quint-historias-grid {
+                display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                gap:12px; width:100%; margin-top:8px;
+            }
+            .quint-escenario-card {
+                display:flex; flex-direction:column; gap:6px;
+                padding:16px 12px; background:#1a2d50;
+                border:1px solid #2a3f60; border-radius:12px;
+                cursor:pointer; transition:all 0.2s;
+            }
+            .quint-escenario-card:hover {
+                background:#254070; border-color:#3a5a90;
+                transform:scale(1.03); box-shadow:0 0 16px rgba(80,120,255,0.25);
+            }
+            .quint-escenario-nombre {
+                color:#c0d8ff; font-size:14px; font-weight:bold;
+                font-family:'Georgia',serif;
+            }
+            .quint-escenario-chica {
+                color:#8ab0ff; font-size:12px;
+            }
+            .quint-escenario-desc {
+                color:#6a8fc7; font-size:11px; line-height:1.3;
+            }
+            .quint-escenario-locacion {
+                color:#5a7fb7; font-size:11px; font-style:italic;
+            }
+            .quint-sin-escenarios {
+                grid-column: 1/-1; text-align:center;
+                color:#4a6fa5; font-size:14px; padding:20px;
+            }
+            #quint-historias-btn-volver {
+                margin-top:8px; padding:10px 24px;
+                background:#1a2d50; color:#8ab0ff;
+                border:1px solid #3a5a90; border-radius:8px;
+                cursor:pointer; font-size:14px;
+                font-family:'Georgia',serif;
+                transition:all 0.2s;
+            }
+            #quint-historias-btn-volver:hover {
+                background:#254070; transform:scale(1.05);
+            }
+        </style>
+    `;
+    
+    app.appendChild(overlay);
+}
+
+function quintSeleccionarEscenario(id) {
+    const escenario = obtenerEscenarioPorId(id);
+    if (!escenario) return;
+    
+    quintEscenarioSeleccionado = escenario;
+    quintChicaSeleccionadaInicial = escenario.chica;
+    
+    // Cerrar selector de historias
+    quintCerrarSelectorHistorias();
+    
+    // Confirmar selección e iniciar
+    quintConfirmarChicaInicial();
+}
+
+function quintCerrarSelectorHistorias() {
+    const overlay = document.getElementById("quint-historias-overlay");
+    if (overlay) overlay.remove();
+}
+
+function quintIniciarConEscenario(escenario) {
+    const nombre = quintNombreUsuario;
+    const loc = establecerLocacion(escenario.locacion);
+    const locNombre = loc ? loc.nombre : escenario.locacion;
+    
+    // Remover overlay de locación si existe
+    const overlayLoc = document.getElementById("quint-locacion-overlay");
+    if (overlayLoc) overlayLoc.remove();
+    
+    quintAgregarSistema(`[ 📖 Historia: ${escenario.nombre} ]`);
+    quintAgregarSistema(`[ 👤 Personaje: ${escenario.chica} ]`);
+    quintAgregarSistema(`[ 📍 Locación: ${locNombre} ]`);
+    
+    // Mostrar imagen panorámica de la locación si existe
+    if (loc && loc.imagen) {
+        quintInsertarImagenLocacion(loc.imagen);
+    }
+    
+    // Buscar el tag de imagen correcto
+    const chica = CHICAS[escenario.chica];
+    let imgTag = escenario.imagenTag || "Hablando";
+    if (chica && !Object.keys(chica.imagenes).includes(imgTag)) {
+        imgTag = Object.keys(chica.imagenes)[0] || "Hablando";
+    }
+    
+    quintAgregarChica(escenario.chica, imgTag, escenario.mensajeInicio);
+    
+    // Agregar contexto al historial
+    quintHistorial.push({ 
+        role: "user", 
+        content: `(El nombre del usuario es ${nombre}. ${escenario.contexto} La chica presente es ${escenario.chica}.)` 
+    });
+    quintHistorial.push({ 
+        role: "assistant", 
+        content: JSON.stringify({ 
+            chicasQueHablan: [{ 
+                nombre: escenario.chica, 
+                imagen_tag: imgTag, 
+                dialogo: escenario.mensajeInicio 
+            }], 
+            nuevasChicasQueAparecen: [] 
+        }) 
+    });
+    quintLogExport.push(`[ Historia: ${escenario.nombre} — inicio con ${escenario.chica} ]`);
+    
+    // Reproducir música de la locación
+    reproducirMusicaLocacion();
+    
+    setTimeout(() => { 
+        const i = document.getElementById("quint-input"); 
+        if (i) i.focus(); 
+    }, 100);
 }
 
 // ============================================================
@@ -773,6 +977,7 @@ function cargarPaginaQuintillizas() {
     quintResumenPendiente = false;
     quintChicasActivas   = new Set();
     quintChicaSeleccionadaInicial = null;
+    quintEscenarioSeleccionado = null;
     _memoryPatched = false;   // permitir re-parchear en nueva sesión
 
     memoryInjectStyles();
