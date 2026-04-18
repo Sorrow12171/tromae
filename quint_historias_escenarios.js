@@ -14,8 +14,9 @@ const QUINT_ESCENARIOS = {
         contexto: "Estás en una cita romántica con Ichika en el parque. Es una tarde soleada y están caminando tomados de la mano.",
         mensajeInicio: "*te mira con esa sonrisa suave que solo ella tiene* Qué lindo día, ¿verdad? *aprieta suavemente tu mano* Me gusta caminar así contigo... sin prisa, sin cámaras, sin nadie más.",
         imagenInicio: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD29/main/imagenes/img_1775225436114.webp", // URL de la imagen inicial del chat
-        mensajeInicio2: "*Nino se acerca con una sonrisa picarona* Hey, no te creas que te librarás de mí tan fácil... *te guiña un ojo*", // Segundo mensaje que aparece automáticamente después del primero (Nino)
-        imagenInicio2: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD29/main/imagenes/img_1775225436114.webp", // URL de la segunda imagen que aparece después de la primera (Nino)
+        mensajeInicio2: "*se acerca con una sonrisa picarona* Hey, no te creas que te librarás de mí tan fácil... *te guiña un ojo*", // Segundo mensaje que aparece automáticamente después del primero
+        imagenInicio2: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD29/main/imagenes/img_1775225436114.webp", // URL de la segunda imagen que aparece después de la primera
+        chicaMensaje2: "Nino", // Nombre de la chica que dice el segundo mensaje (puede ser cualquier quintilliza)
         imagen: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD29/main/imagenes/img_1775225436114.webp", // URL de la imagen para mostrar en el selector
     },
     ichika_pelicula: {
@@ -29,6 +30,7 @@ const QUINT_ESCENARIOS = {
         imagenInicio: "", // URL de la imagen inicial del chat
         mensajeInicio2: "", // Segundo mensaje que aparece automáticamente después del primero
         imagenInicio2: "", // URL de la segunda imagen que aparece después de la primera
+        chicaMensaje2: "", // Nombre de la chica que dice el segundo mensaje (opcional)
         imagen: "", // URL de la imagen para mostrar en el selector
     },
     
@@ -44,6 +46,7 @@ const QUINT_ESCENARIOS = {
         imagenInicio: "", // URL de la imagen inicial del chat
         mensajeInicio2: "", // Segundo mensaje que aparece automáticamente después del primero
         imagenInicio2: "", // URL de la segunda imagen que aparece después de la primera
+        chicaMensaje2: "", // Nombre de la chica que dice el segundo mensaje (opcional)
         imagen: "", // URL de la imagen para mostrar en el selector
     },
     nino_celos: {
@@ -57,6 +60,7 @@ const QUINT_ESCENARIOS = {
         imagenInicio: "", // URL de la imagen inicial del chat
         mensajeInicio2: "", // Segundo mensaje que aparece automáticamente después del primero
         imagenInicio2: "", // URL de la segunda imagen que aparece después de la primera
+        chicaMensaje2: "", // Nombre de la chica que dice el segundo mensaje (opcional)
         imagen: "", // URL de la imagen para mostrar en el selector
     },
     
@@ -72,6 +76,7 @@ const QUINT_ESCENARIOS = {
         imagenInicio: "", // URL de la imagen inicial del chat
         mensajeInicio2: "", // Segundo mensaje que aparece automáticamente después del primero
         imagenInicio2: "", // URL de la segunda imagen que aparece después de la primera
+        chicaMensaje2: "", // Nombre de la chica que dice el segundo mensaje (opcional)
         imagen: "", // URL de la imagen para mostrar en el selector
     },
     miku_aquarium: {
@@ -85,6 +90,7 @@ const QUINT_ESCENARIOS = {
         imagenInicio: "", // URL de la imagen inicial del chat
         mensajeInicio2: "", // Segundo mensaje que aparece automáticamente después del primero
         imagenInicio2: "", // URL de la segunda imagen que aparece después de la primera
+        chicaMensaje2: "", // Nombre de la chica que dice el segundo mensaje (opcional)
         imagen: "", // URL de la imagen para mostrar en el selector
     },
     
@@ -100,6 +106,7 @@ const QUINT_ESCENARIOS = {
         imagenInicio: "", // URL de la imagen inicial del chat
         mensajeInicio2: "", // Segundo mensaje que aparece automáticamente después del primero
         imagenInicio2: "", // URL de la segunda imagen que aparece después de la primera
+        chicaMensaje2: "", // Nombre de la chica que dice el segundo mensaje (opcional)
         imagen: "", // URL de la imagen para mostrar en el selector
     },
     yotsuba_voluntariado: {
@@ -113,6 +120,7 @@ const QUINT_ESCENARIOS = {
         imagenInicio: "", // URL de la imagen inicial del chat
         mensajeInicio2: "", // Segundo mensaje que aparece automáticamente después del primero
         imagenInicio2: "", // URL de la segunda imagen que aparece después de la primera
+        chicaMensaje2: "", // Nombre de la chica que dice el segundo mensaje (opcional)
         imagen: "", // URL de la imagen para mostrar en el selector
     },
     
@@ -128,6 +136,7 @@ const QUINT_ESCENARIOS = {
         imagenInicio: "", // URL de la imagen inicial del chat
         mensajeInicio2: "", // Segundo mensaje que aparece automáticamente después del primero
         imagenInicio2: "", // URL de la segunda imagen que aparece después de la primera
+        chicaMensaje2: "", // Nombre de la chica que dice el segundo mensaje (opcional)
         imagen: "", // URL de la imagen para mostrar en el selector
     },
     itsuki_comida: {
@@ -141,6 +150,7 @@ const QUINT_ESCENARIOS = {
         imagenInicio: "", // URL de la imagen inicial del chat
         mensajeInicio2: "", // Segundo mensaje que aparece automáticamente después del primero
         imagenInicio2: "", // URL de la segunda imagen que aparece después de la primera
+        chicaMensaje2: "", // Nombre de la chica que dice el segundo mensaje (opcional)
         imagen: "", // URL de la imagen para mostrar en el selector
     },
     
@@ -156,6 +166,7 @@ const QUINT_ESCENARIOS = {
         imagenInicio: "", // URL de la imagen inicial del chat
         mensajeInicio2: "", // Segundo mensaje que aparece automáticamente después del primero
         imagenInicio2: "", // URL de la segunda imagen que aparece después de la primera
+        chicaMensaje2: "", // Nombre de la chica que dice el segundo mensaje (opcional)
         imagen: "", // URL de la imagen para mostrar en el selector
     },
 };
