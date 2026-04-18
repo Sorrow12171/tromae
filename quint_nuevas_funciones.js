@@ -585,6 +585,7 @@ function quintMostrarSelectorHistorias() {
     
     const htmlEscenarios = escenarios.map(esc => `
         <div class="quint-escenario-card" onclick="quintSeleccionarEscenario('${esc.id}')">
+            ${esc.imagen ? `<img src="${esc.imagen}" alt="${esc.nombre}" class="quint-escenario-imagen">` : ''}
             <div class="quint-escenario-nombre">${esc.nombre}</div>
             <div class="quint-escenario-chica">👤 ${esc.chica}</div>
             <div class="quint-escenario-desc">${esc.descripcion}</div>
@@ -640,6 +641,11 @@ function quintMostrarSelectorHistorias() {
             .quint-escenario-card:hover {
                 background:#254070; border-color:#3a5a90;
                 transform:scale(1.03); box-shadow:0 0 16px rgba(80,120,255,0.25);
+            }
+            .quint-escenario-imagen {
+                width:100%; height:140px; object-fit:cover;
+                border-radius:8px; margin-bottom:4px;
+                border:1px solid #2a3f60;
             }
             .quint-escenario-nombre {
                 color:#c0d8ff; font-size:14px; font-weight:bold;
