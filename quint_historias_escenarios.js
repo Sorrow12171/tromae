@@ -9,7 +9,7 @@ const QUINT_ESCENARIOS = {
         id: "Orgia",
         nombre: "Orgia Itsuki Nino Aldo y Fabrizio",
         chica: "Itsuki",
-        descripcion: "Una cita tranquila en el parque con Ichika",
+        descripcion: "Orgia en el hotel",
         locacion: "parque",
         contexto: "Estás en una cita romántica con Ichika en el parque. Es una tarde soleada y están caminando tomados de la mano.",
         mensajeInicio: "*te mira con esa sonrisa suave que solo ella tiene* Qué lindo día, ¿verdad? *aprieta suavemente tu mano* Me gusta caminar así contigo... sin prisa, sin cámaras, sin nadie más.",
