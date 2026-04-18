@@ -721,12 +721,34 @@ function quintAgregarChica(nombre, imagen_tag, dialogo, imagenUrlDirecta) {
     // Solo mostrar imagen si el personaje está en CHICAS
     if (info) {
         // Si se pasa una URL directa (ej: imagen personalizada de locación), usarla
-        const imgUrl = imagenUrlDirecta || info.imagenes[imagen_tag] || Object.values(info.imagenes)[0];
+        let imgData = info.imagenes[imagen_tag] || Object.values(info.imagenes)[0];
+        
+        // Soporte para formato antiguo (string directo) y nuevo (objeto {url, audio})
+        let imgUrl, imgAudio;
+        if (typeof imgData === 'string') {
+            imgUrl = imgData;
+            imgAudio = null;
+        } else if (imgData && typeof imgData === 'object') {
+            imgUrl = imgData.url;
+            imgAudio = imgData.audio;
+        }
+        
+        imgUrl = imagenUrlDirecta || imgUrl;
+        
         if (imgUrl) {
             const w   = document.createElement("div"); w.className = "quint-img-wrapper";
             const img = document.createElement("img");
             img.className = "quint-img"; img.src = imgUrl; img.alt = nombre; img.loading = "lazy";
             img.onerror = () => w.remove();
+            
+            // Reproducir audio si existe
+            if (imgAudio) {
+                img.onload = () => {
+                    const audio = new Audio(imgAudio);
+                    audio.play().catch(e => console.log('Error reproduciendo audio:', e));
+                };
+            }
+            
             w.appendChild(img); b.appendChild(w);
         }
     }
