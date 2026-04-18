@@ -718,14 +718,24 @@ function quintIniciarConEscenario(escenario) {
         quintInsertarImagenLocacion(loc.imagen);
     }
     
-    // Buscar el tag de imagen correcto
+    // Buscar la imagen correcta (URL directa o tag)
     const chica = CHICAS[escenario.chica];
-    let imgTag = escenario.imagenTag || "Hablando";
-    if (chica && !Object.keys(chica.imagenes).includes(imgTag)) {
-        imgTag = Object.keys(chica.imagenes)[0] || "Hablando";
+    let imgTag;
+    let imgUrl = null;
+    
+    // Si el escenario tiene una URL directa para la imagen inicial, usarla
+    if (escenario.imagenInicio) {
+        imgUrl = escenario.imagenInicio;
+        imgTag = null; // No usamos tag si tenemos URL directa
+    } else {
+        // Usar el sistema de tags tradicional
+        imgTag = escenario.imagenTag || "Hablando";
+        if (chica && !Object.keys(chica.imagenes).includes(imgTag)) {
+            imgTag = Object.keys(chica.imagenes)[0] || "Hablando";
+        }
     }
     
-    quintAgregarChica(escenario.chica, imgTag, escenario.mensajeInicio);
+    quintAgregarChica(escenario.chica, imgTag, escenario.mensajeInicio, imgUrl);
     
     // Agregar contexto al historial - AHORA PERMITIENDO OTRAS CHICAS
     quintHistorial.push({ 
