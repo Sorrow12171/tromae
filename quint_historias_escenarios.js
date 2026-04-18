@@ -12,9 +12,9 @@ const QUINT_ESCENARIOS = {
         descripcion: "Orgia en el hotel",
         locacion: "parque",
         contexto: "Estás en una cita romántica con Ichika en el parque. Es una tarde soleada y están caminando tomados de la mano.",
-        mensajeInicio: "*te mira con esa sonrisa suave que solo ella tiene* Qué lindo día, ¿verdad? *aprieta suavemente tu mano* Me gusta caminar así contigo... sin prisa, sin cámaras, sin nadie más.",
+        mensajeInicio: "*Itsuki está a cuatro patas justo al lado de Nino, siendo penetrada desde atrás por Aldo. Su cara está completamente roja y sus ojos llorosos de placer.* Mmm… ahhn… ¡Aldo! Es demasiado grande… me está llegando tan profundo… *gime temblorosa y aprieta las sábanas* Por favor… no te detengas… ¡más rápido! Se siente… demasiado bien… ahh!",
         imagenInicio: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD29/main/imagenes/img_1775225436114.webp", // URL de la imagen inicial del chat
-        mensajeInicio2: "*se acerca con una sonrisa picarona* Hey, no te creas que te librarás de mí tan fácil... *te guiña un ojo*", // Segundo mensaje que aparece automáticamente después del primero
+        mensajeInicio2: "*Nino está a cuatro patas en la cama, siendo follada fuerte por detrás por Fabrizio. Su uniforme de maid está desordenado y su cara está roja de placer.* Ahh… ¡Fabrizio! ¡Más fuerte! Métemela más profundo… no pares… *gime alto y empuja sus caderas hacia atrás* Fufu… se siente tan rico… ¡sigue follándome duro como una puta, Fabrizio!", // Segundo mensaje que aparece automáticamente después del primero
         imagenInicio2: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD29/main/imagenes/img_1775225436114.webp", // URL de la segunda imagen que aparece después de la primera
         chicaMensaje2: "Nino", // Nombre de la chica que dice el segundo mensaje (puede ser cualquier quintilliza)
         imagen: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD29/main/imagenes/img_1775225436114.webp", // URL de la imagen para mostrar en el selector
