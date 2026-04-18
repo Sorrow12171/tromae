@@ -29,7 +29,8 @@ Cowgirl: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXD
     Ichika_Licking_Anus: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774103171064.png",
     Follando_En_El_Aire: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD23/main/imagenes/img_1774198366172.jpg", 
     Me_Corro_En_Su_Boca_De_Ichika: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854981094.jpg",  
- Ropa_idol: "https://pbs.twimg.com/media/HFoblZNWIAA9Pgy?format=jpg&name=small",         
+ Ropa_idol: "https://pbs.twimg.com/media/HFoblZNWIAA9Pgy?format=jpg&name=small",        
+       Mostrando_culo_tanga_negra: "https://pbs.twimg.com/media/HGJ4KmyW8AAZfgm?format=jpg&name=small",      
     },
     Nino: {
         besando:   "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD12/main/imagenes/img_1773506144298.png",
