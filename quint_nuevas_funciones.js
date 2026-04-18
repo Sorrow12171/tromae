@@ -577,11 +577,9 @@ function quintMostrarSelectorHistorias() {
     const overlay = document.createElement("div");
     overlay.id = "quint-historias-overlay";
     
-    // Obtener todas las chicas seleccionadas o la actual
-    const chicaFiltro = quintChicaSeleccionadaInicial;
-    const escenarios = chicaFiltro 
-        ? obtenerEscenariosPorChica(chicaFiltro)
-        : obtenerListaEscenarios();
+    // Mostrar TODOS los escenarios sin filtrar por chica
+    // Así funciona como el chatbot normal: todas las chicas pueden aparecer
+    const escenarios = obtenerListaEscenarios();
     
     const htmlEscenarios = escenarios.map(esc => `
         <div class="quint-escenario-card" onclick="quintSeleccionarEscenario('${esc.id}')">
@@ -597,10 +595,10 @@ function quintMostrarSelectorHistorias() {
         <div id="quint-historias-box">
             <div id="quint-historias-titulo">📖 Historias / Escenarios</div>
             <div id="quint-historias-sub">
-                ${chicaFiltro ? `Escenarios con ${chicaFiltro}` : 'Elige una historia para comenzar'}
+                Elige una historia para comenzar — Todas las chicas están disponibles
             </div>
             <div id="quint-historias-grid">
-                ${htmlEscenarios || '<div class="quint-sin-escenarios">No hay escenarios disponibles para esta chica aún.</div>'}
+                ${htmlEscenarios || '<div class="quint-sin-escenarios">No hay escenarios disponibles aún.</div>'}
             </div>
             <button id="quint-historias-btn-volver" onclick="quintCerrarSelectorHistorias()">
                 ← Volver
@@ -686,6 +684,7 @@ function quintSeleccionarEscenario(id) {
     if (!escenario) return;
     
     quintEscenarioSeleccionado = escenario;
+    // Establecer la chica del escenario como inicial para que aparezca primero
     quintChicaSeleccionadaInicial = escenario.chica;
     
     // Cerrar selector de historias
@@ -710,8 +709,9 @@ function quintIniciarConEscenario(escenario) {
     if (overlayLoc) overlayLoc.remove();
     
     quintAgregarSistema(`[ 📖 Historia: ${escenario.nombre} ]`);
-    quintAgregarSistema(`[ 👤 Personaje: ${escenario.chica} ]`);
+    quintAgregarSistema(`[ 👤 Personaje principal: ${escenario.chica} ]`);
     quintAgregarSistema(`[ 📍 Locación: ${locNombre} ]`);
+    quintAgregarSistema(`[ 💡 Puedes mencionar a otras chicas y ellas aparecerán, igual que en el chat normal ]`);
     
     // Mostrar imagen panorámica de la locación si existe
     if (loc && loc.imagen) {
@@ -727,10 +727,10 @@ function quintIniciarConEscenario(escenario) {
     
     quintAgregarChica(escenario.chica, imgTag, escenario.mensajeInicio);
     
-    // Agregar contexto al historial
+    // Agregar contexto al historial - AHORA PERMITIENDO OTRAS CHICAS
     quintHistorial.push({ 
         role: "user", 
-        content: `(El nombre del usuario es ${nombre}. ${escenario.contexto} La chica presente es ${escenario.chica}.)` 
+        content: `(El nombre del usuario es ${nombre}. ${escenario.contexto} La chica inicial es ${escenario.chica}, pero el usuario puede mencionar a otras hermanas Nakano y ellas aparecerán. Todas las quintillizas existen en este mundo.)` 
     });
     quintHistorial.push({ 
         role: "assistant", 
@@ -743,7 +743,7 @@ function quintIniciarConEscenario(escenario) {
             nuevasChicasQueAparecen: [] 
         }) 
     });
-    quintLogExport.push(`[ Historia: ${escenario.nombre} — inicio con ${escenario.chica} ]`);
+    quintLogExport.push(`[ Historia: ${escenario.nombre} — inicio con ${escenario.chica} — todas las chicas pueden aparecer ]`);
     
     // Reproducir música de la locación
     reproducirMusicaLocacion();
