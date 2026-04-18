@@ -737,6 +737,38 @@ function quintIniciarConEscenario(escenario) {
     
     quintAgregarChica(escenario.chica, imgTag, escenario.mensajeInicio, imgUrl);
     
+    // Si hay un segundo mensaje definido (mensajeInicio2), mostrarlo después del primero
+    if (escenario.mensajeInicio2 && escenario.imagenInicio2) {
+        // Determinar qué chica dice el segundo mensaje: usa chicaMensaje2 si está definido, sino usa la chica principal
+        const chicaMensaje2 = escenario.chicaMensaje2 || escenario.chica;
+        const chica2 = CHICAS[chicaMensaje2];
+        let imgTag2 = null;
+        let imgUrl2 = escenario.imagenInicio2;
+        
+        // Si la chica del mensaje 2 existe en CHICAS, obtener su tag de imagen por defecto
+        if (chica2) {
+            imgTag2 = Object.keys(chica2.imagenes)[0] || "Hablando";
+        }
+        
+        // Agregar el segundo mensaje con un pequeño delay para que se vea natural
+        setTimeout(() => {
+            quintAgregarChica(chicaMensaje2, imgTag2, escenario.mensajeInicio2, imgUrl2);
+            
+            // También agregar al historial estructurado
+            quintHistorial.push({ 
+                role: "assistant", 
+                content: JSON.stringify({ 
+                    chicasQueHablan: [{ 
+                        nombre: chicaMensaje2, 
+                        imagen_tag: imgTag2, 
+                        dialogo: escenario.mensajeInicio2 
+                    }], 
+                    nuevasChicasQueAparecen: [] 
+                }) 
+            });
+        }, 800);
+    }
+    
     // Agregar contexto al historial - AHORA PERMITIENDO OTRAS CHICAS
     quintHistorial.push({ 
         role: "user", 
