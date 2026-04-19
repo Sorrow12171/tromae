@@ -31,7 +31,8 @@ Cowgirl: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDD
     Follando_En_El_Aire: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD23/main/imagenes/img_1774198366172.jpg", audio: null }, 
     Me_Corro_En_Su_Boca_De_Ichika: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854981094.jpg", audio: null },  
  Ropa_idol: { url: "https://pbs.twimg.com/media/HFoblZNWIAA9Pgy?format=jpg&name=small", audio: null },        
-       Mostrando_culo_tanga_negra: { url: "https://pbs.twimg.com/media/HGJ4KmyW8AAZfgm?format=jpg&name=small", audio: null },      
+       Mostrando_culo_tanga_negra: { url: "https://pbs.twimg.com/media/HGJ4KmyW8AAZfgm?format=jpg&name=small", audio: null },     
+            manos_alrededor_del_cuello: { url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1776630296732_1.png", audio: null },    
     },
     Nino: {
         besando:   { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD12/main/imagenes/img_1773506144298.png", audio: "https://files.catbox.moe/tu_audio_beso.mp3" },
@@ -73,6 +74,10 @@ Anal: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDX
     Nino_Licking_Anus: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774103028570.png", 
     Follando_En_El_Aire: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD23/main/imagenes/img_1774198349436.jpg", 
  Me_Corro_En_Su_Boca_De_Nino: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854164065.jpg",
+manos_alrededor_del_cuello: { url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1776630311500_1.png", audio: null },
+
+
+        
     },
     Miku: {
         besando:     "https://raw.githubusercontent.com/SORFAR123123/XDXDXDXDXD/main/imagenes/img_1773021246328.jpg",
@@ -97,7 +102,9 @@ Anal: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDX
     Miku_Licking_Anus: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774103182288.png", 
  Follando_En_El_Aire: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD23/main/imagenes/img_1774198364002.jpg", 
      Me_Corro_En_Su_Boca_De_Miku: "https://raw.githubusercontent.com/SORFAR123123/XDXDXDXDXD/main/imagenes/img_1773021980596.jpg", 
-Ropa_idol: "https://pbs.twimg.com/media/HFobfuKWMAAiAke?format=jpg&name=large",         
+Ropa_idol: "https://pbs.twimg.com/media/HFobfuKWMAAiAke?format=jpg&name=large",  
+manos_alrededor_del_cuello: { url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1776630334116_1.png", audio: null },
+        
     },
     Yotsuba: {
         Hablando: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD11/main/imagenes/img_1773503723445.png",
@@ -125,7 +132,9 @@ Anal: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDX
     Yotsuba_Se_Sube_La_Falda_Y_Muestra_Su_Tanga_Morada: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD29/main/imagenes/img_1774996833813.png",
       //      
        Me_Corro_En_Su_Boca_De_Yotsuba: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772896690931.jpg",      
-    },
+  
+manos_alrededor_del_cuello: { url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1776630296732_1.png", audio: null },
+    
     Itsuki: {
         besando:    "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD12/main/imagenes/img_1773506379780.png",
     Chupando_Solo_La_Cabeza_Del_Pene:"https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773183720872.jpg",
@@ -149,5 +158,9 @@ Anal: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDX
     Itsuki_Licking_Anus: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774103200874.png",   
  Follando_En_El_Aire: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD23/main/imagenes/img_1774198368440.jpg", 
  Me_Corro_En_Su_Boca_De_Itsuki: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772997286390.jpg",
+manos_alrededor_del_cuello: { url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1776630346039_1.png", audio: null },
+
+
+        
     },
 };
