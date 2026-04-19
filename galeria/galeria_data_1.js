@@ -257,7 +257,8 @@ const galeriaData_1 = {
             { id: 151, url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774109704579_4.png" },
             { id: 152, url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774109706095_5.png" },
             { id: 153, url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774199293859_1.png" },
-            { id: 154, url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774920436849_1.png" }
+            { id: 154, url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774920436849_1.png" },
+            { id: 155, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1776630311500_1.png" }
         ]
     },
     '1_2': {
