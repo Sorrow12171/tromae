@@ -2690,7 +2690,7 @@ function cargarReproductorASMR(contenedor, subcontenedor) {
 
 function crearReproductorASMRUI(asmrInfo) {
     return `
-        <div class="reproductor-audio-container" style="max-width: 800px; margin: 40px auto; background: rgba(30, 30, 40, 0.95); border-radius: 25px; padding: 40px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); border: 3px solid #9C27B0;">
+        <div class="reproductor-audio-container" style="max-width: 1000px; margin: 40px auto; background: rgba(30, 30, 40, 0.95); border-radius: 25px; padding: 40px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); border: 3px solid #9C27B0;">
             <h2 style="text-align: center; color: #FFD166; margin-bottom: 10px;">${asmrInfo.titulo}</h2>
             <p style="text-align: center; opacity: 0.8; margin-bottom: 30px;">
                 ${asmrInfo.descripcion}
@@ -2702,7 +2702,7 @@ function crearReproductorASMRUI(asmrInfo) {
                     <iframe 
                         src="https://drive.google.com/file/d/${asmrInfo.driveId}/preview"
                         width="100%"
-                        height="100"
+                        height="500"
                         frameborder="0"
                         style="border-radius: 10px; background: rgba(0, 0, 0, 0.5);"
                         allow="autoplay"
