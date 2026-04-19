@@ -59,7 +59,7 @@ Cowgirl: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDD
     Chupando_Bolas: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD3/main/imagenes/img_1773178631853.jpg",
   Chupando_Bola_Izquierda: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD3/main/imagenes/img_1773178590378.jpg",
 Chupando_Bola_Derecha: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD3/main/imagenes/img_1773178598793.jpg",
-    Doggystyle: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD8/main/imagenes/img_1773407766732.jpg",    
+      Doggystyle: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD8/main/imagenes/img_1773413911459.jpg", audio: "https://files.catbox.moe/grj3xy.mp3" },
     Misionero: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854182648.jpg",   
     Hablando: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD1/main/imagenes/img_1773115420355.jpg",
      Desnuda: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD19/main/imagenes/img_1773670997782.jpg", 
