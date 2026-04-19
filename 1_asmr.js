@@ -23,6 +23,7 @@ const asmrDatabase = {
         duracion: "15:30",
         categoria: "Meditación",
         tipoVoz: "Femenina suave",
+        tipo: "audio",
         tags: ["relajación", "meditación", "japonés lento"]
     },
     
@@ -41,6 +42,7 @@ const asmrDatabase = {
         duracion: "12:45",
         categoria: "Storytelling",
         tipoVoz: "Masculina calmada",
+        tipo: "audio",
         tags: ["cuento", "tradicional", "susurros"]
     },
     
@@ -58,6 +60,7 @@ const asmrDatabase = {
         duracion: "18:20",
         categoria: "Naturaleza",
         tipoVoz: "Varios",
+        tipo: "audio",
         tags: ["naturaleza", "ambiental", "relajante"]
     },
     '1_4': {
@@ -95,6 +98,7 @@ const asmrDatabase = {
         duracion: "15:00",
         categoria: "Aprendizaje",
         tipoVoz: "Femenina clara",
+        tipo: "audio",
         tags: ["vocabulario", "repetición", "N5"]
     },
     
@@ -113,6 +117,7 @@ const asmrDatabase = {
         duracion: "10:30",
         categoria: "Motivación",
         tipoVoz: "Femenina susurrante",
+        tipo: "audio",
         tags: ["afirmaciones", "motivación", "autoestima"]
     },
     
@@ -130,6 +135,7 @@ const asmrDatabase = {
         duracion: "14:15",
         categoria: "Pronunciación",
         tipoVoz: "Masculina precisa",
+        tipo: "audio",
         tags: ["hiragana", "pronunciación", "básico"]
     },
     
@@ -152,6 +158,7 @@ const asmrDatabase = {
         duracion: "13:45",
         categoria: "Cultural",
         tipoVoz: "Femenina ceremonial",
+        tipo: "audio",
         tags: ["ceremonia del té", "tradicional", "ritual"]
     },
     
@@ -169,6 +176,7 @@ const asmrDatabase = {
         duracion: "16:30",
         categoria: "Instrumental",
         tipoVoz: "Varios",
+        tipo: "audio",
         tags: ["instrumental", "meditación", "templo"]
     },
     
@@ -187,6 +195,7 @@ const asmrDatabase = {
         duracion: "11:20",
         categoria: "Poesía",
         tipoVoz: "Masculina poética",
+        tipo: "audio",
         tags: ["haiku", "poesía", "clásico"]
     },
       '3_4': {
@@ -203,6 +212,7 @@ const asmrDatabase = {
         duracion: "11:20",
         categoria: "Poesía",
         tipoVoz: "Masculina poética",
+        tipo: "audio",
         tags: ["haiku", "poesía", "clásico"]
     },
       '3_5': {
@@ -219,6 +229,7 @@ const asmrDatabase = {
         duracion: "11:20",
         categoria: "Poesía",
         tipoVoz: "Masculina poética",
+        tipo: "audio",
         tags: ["haiku", "poesía", "clásico"]
     },
       '3_6': {
@@ -235,6 +246,7 @@ const asmrDatabase = {
         duracion: "11:20",
         categoria: "Poesía",
         tipoVoz: "Masculina poética",
+        tipo: "audio",
         tags: ["haiku", "poesía", "clásico"]
     },
     
@@ -256,6 +268,7 @@ const asmrDatabase = {
         duracion: "25:00",
         categoria: "Sueño",
         tipoVoz: "Femenina soporífera",
+        tipo: "audio",
         tags: ["dormir", "cuento", "relajación profunda"]
     },
     
@@ -273,6 +286,7 @@ const asmrDatabase = {
         duracion: "30:00",
         categoria: "Música",
         tipoVoz: "Instrumental",
+        tipo: "audio",
         tags: ["koto", "música tradicional", "instrumental"]
     },
     '5_1': {
@@ -288,6 +302,7 @@ const asmrDatabase = {
         duracion: "30:00",
         categoria: "Música",
         tipoVoz: "Instrumental",
+        tipo: "audio",
         tags: ["koto", "música tradicional", "instrumental"]
     },
     '5_2': {
@@ -303,6 +318,7 @@ const asmrDatabase = {
         duracion: "30:00",
         categoria: "Música",
         tipoVoz: "Instrumental",
+        tipo: "audio",
         tags: ["koto", "música tradicional", "instrumental"]
     }
     
