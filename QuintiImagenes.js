@@ -134,7 +134,7 @@ Anal: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDX
        Me_Corro_En_Su_Boca_De_Yotsuba: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772896690931.jpg",      
   
 manos_alrededor_del_cuello: { url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1776630296732_1.png", audio: null },
-    
+    },
     Itsuki: {
         besando:    "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD12/main/imagenes/img_1773506379780.png",
     Chupando_Solo_La_Cabeza_Del_Pene:"https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773183720872.jpg",
