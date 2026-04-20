@@ -14,6 +14,9 @@ const GROQ_KEYS = _K.map(p => p.join(""));
 
 const MODELO_PRINCIPAL   = "meta-llama/llama-4-scout-17b-16e-instruct";
 
+// Variable global para manejar el audio actual (se detiene al llegar nuevo mensaje)
+let audioActual = null;
+
 // ============================================================
 //  CHICAS
 //  — El nombre de cada key en "imagenes" ES la accion
@@ -741,12 +744,31 @@ function quintAgregarChica(nombre, imagen_tag, dialogo, imagenUrlDirecta) {
             img.className = "quint-img"; img.src = imgUrl; img.alt = nombre; img.loading = "lazy";
             img.onerror = () => w.remove();
             
-            // Reproducir audio si existe
+            // Reproducir audio si existe: detener anterior, poner en loop y reproducir nuevo
             if (imgAudio) {
                 img.onload = () => {
-                    const audio = new Audio(imgAudio);
-                    audio.play().catch(e => console.log('Error reproduciendo audio:', e));
+                    // 1. Detener cualquier audio que esté sonando actualmente
+                    if (audioActual) {
+                        audioActual.pause();
+                        audioActual.currentTime = 0;
+                        audioActual = null;
+                    }
+                    
+                    // 2. Crear y configurar nuevo audio en loop
+                    audioActual = new Audio(imgAudio);
+                    audioActual.loop = true; // Se repite infinitamente mientras sea el mensaje activo
+                    
+                    // 3. Reproducir nuevo audio
+                    audioActual.play().catch(e => console.log('Error reproduciendo audio:', e));
                 };
+            } else {
+                // 4. IMPORTANTE: Si el mensaje actual NO tiene audio, cortamos cualquier sonido previo
+                // Esto evita que el audio de la frase anterior siga sonando de fondo
+                if (audioActual) {
+                    audioActual.pause();
+                    audioActual.currentTime = 0;
+                    audioActual = null;
+                }
             }
             
             w.appendChild(img); b.appendChild(w);
