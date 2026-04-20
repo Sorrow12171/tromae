@@ -56,7 +56,7 @@ Cowgirl: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDD
     Chupando_Solo_La_Punta_Del_Pene: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD3/main/imagenes/img_1773178619655.jpg", audio: "" },
       Chupando_Solo_La_Mitad_del_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD3/main/imagenes/img_1773178625831.jpg", audio: "" },
     Chupando_TODO_El_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD3/main/imagenes/img_1773178636024.jpg", audio: "" },
-    Chupando_Bolas: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD3/main/imagenes/img_1773178631853.jpg", audio: "" },
+    Chupando_Bolas: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD3/main/imagenes/img_1773178631853.jpg", audio: "https://litter.catbox.moe/j3j8ldzk3jus6etx.mp3" },
   Chupando_Bola_Izquierda: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD3/main/imagenes/img_1773178590378.jpg", audio: "" },
 Chupando_Bola_Derecha: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD3/main/imagenes/img_1773178598793.jpg",
       Doggystyle: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD8/main/imagenes/img_1773407766732.jpg", audio: "https://litter.catbox.moe/23lpu1ddlbtzhxv1.mp3" },
