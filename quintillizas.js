@@ -754,30 +754,21 @@ function quintAgregarChica(nombre, imagen_tag, dialogo, imagenUrlDirecta) {
             img.className = "quint-img"; img.src = imgUrl; img.alt = nombre; img.loading = "lazy";
             img.onerror = () => w.remove();
             
-            // Reproducir audio si existe: detener audios anteriores de ESTA chica, agregar a lista y reproducir nuevo
+            // Reproducir audio si existe: agregar a lista de audios activos y reproducir (sin detener otros)
             if (imgAudio) {
                 img.onload = () => {
-                    // 1. Detener solo los audios que están sonando actualmente (para reemplazarlos con el nuevo)
-                    if (audiosActivos.length > 0) {
-                        audiosActivos.forEach(audio => {
-                            audio.pause();
-                            audio.currentTime = 0;
-                        });
-                        audiosActivos = [];
-                    }
-                    
-                    // 2. Crear y configurar nuevo audio en loop
+                    // 1. Crear y configurar nuevo audio en loop
                     const nuevoAudio = new Audio(imgAudio);
                     nuevoAudio.loop = true; // Se repite infinitamente mientras sea el mensaje activo
                     
-                    // 3. Agregar a la lista de audios activos
+                    // 2. Agregar a la lista de audios activos (acumulando con los que ya están sonando)
                     audiosActivos.push(nuevoAudio);
                     
-                    // 4. Reproducir nuevo audio
+                    // 3. Reproducir nuevo audio
                     nuevoAudio.play().catch(e => console.log('Error reproduciendo audio:', e));
                 };
             } else {
-                // 5. IMPORTANTE: Si el mensaje actual NO tiene audio, cortamos cualquier sonido previo
+                // 4. IMPORTANTE: Si el mensaje actual NO tiene audio, cortamos cualquier sonido previo
                 // Esto evita que el audio de la frase anterior siga sonando de fondo
                 if (audiosActivos.length > 0) {
                     audiosActivos.forEach(audio => {
