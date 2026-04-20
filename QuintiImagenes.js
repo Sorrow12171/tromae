@@ -65,7 +65,7 @@ Chupando_Bola_Derecha: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDD
      Desnuda: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD19/main/imagenes/img_1773670997782.jpg", 
        StandFuck_Follando_De_Pie: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773691914196.jpg", 
      Follando_En_La_Ventana: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773691916421.jpg", 
- Handjob_Paja: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773692609296.jpg",     
+ Handjob_Paja: {  url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773692609296.jpg",  audio: "https://litter.catbox.moe/gybisrc3ys50tlum.mp3" },    
 Cowgirl: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773692621326.jpg",           
     Cowgirl_Le_Estiro_El_ano: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773692621326.jpg", 
  Sidefuck: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773692681132.jpg",  
