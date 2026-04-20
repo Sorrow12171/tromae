@@ -388,7 +388,9 @@ function quintRecortarHistorialSiEsNecesario() {
             }
         } else if (m.role === "user") {
             // Capturar lo que dijo el usuario (primeras 80 chars)
-            const texto = (m.content || "").replace(/\[EVENTO EN CURSO.*?\]/gs, "").trim();
+            const contenido = m.content;
+            const textoString = typeof contenido === 'string' ? contenido : String(contenido || "");
+            const texto = textoString.replace(/\[EVENTO EN CURSO.*?\]/gs, "").trim();
             if (texto.length > 20) {
                 hechosLocales.push(`Usuario: ${texto.slice(0, 80)}`);
             }
