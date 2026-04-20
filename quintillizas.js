@@ -17,6 +17,9 @@ const MODELO_PRINCIPAL   = "meta-llama/llama-4-scout-17b-16e-instruct";
 // Variable global para manejar los audios actuales (se detienen al llegar nuevo mensaje del usuario)
 let audiosActivos = []; // Array para mantener referencia a todos los audios que están sonando
 
+// Variable global para imagen adjunta (base64)
+let quintImagenAdjunta = null;
+
 // ============================================================
 //  CHICAS
 //  — El nombre de cada key en "imagenes" ES la accion
@@ -691,7 +694,7 @@ function quintAgregarSistema(texto) {
     chat.appendChild(d); quintScrollFondo();
 }
 
-function quintAgregarUsuario(texto) {
+function quintAgregarUsuario(texto, imagenAdjunta = null) {
     const chat = document.getElementById("quint-chat-mensajes"); if (!chat) return;
     
     // Detener TODOS los audios de las chicas cuando el usuario envía un mensaje
@@ -708,6 +711,21 @@ function quintAgregarUsuario(texto) {
     const n = document.createElement("span"); n.className = "quint-nombre-usuario"; n.textContent = (quintNombreUsuario || "Tú") + ":";
     b.appendChild(n); b.appendChild(document.createElement("br"));
     const s = document.createElement("span"); s.textContent = texto; b.appendChild(s);
+    
+    // Si hay imagen adjunta, mostrarla
+    if (imagenAdjunta) {
+        const imgContainer = document.createElement("div");
+        imgContainer.style.marginTop = "10px";
+        const img = document.createElement("img");
+        img.src = imagenAdjunta;
+        img.style.maxWidth = "200px";
+        img.style.maxHeight = "200px";
+        img.style.borderRadius = "8px";
+        img.style.display = "block";
+        imgContainer.appendChild(img);
+        b.appendChild(imgContainer);
+    }
+    
     chat.appendChild(b); quintScrollFondo();
 }
 
@@ -840,6 +858,66 @@ function quintAgregarChicaEscena(nombre) {
 }
 
 // ============================================================
+//  ACTUALIZAR VISTA PREVIA DE IMAGEN
+// ============================================================
+function quintActualizarVistaPreviaImagen() {
+    const preview = document.getElementById("quint-imagen-vista-previa");
+    if (!preview) return;
+    
+    if (quintImagenAdjunta) {
+        preview.style.display = "flex";
+        const img = preview.querySelector("img");
+        if (img) img.src = quintImagenAdjunta;
+    } else {
+        preview.style.display = "none";
+    }
+}
+
+// ============================================================
+//  MANEJAR SELECCIÓN DE IMAGEN
+// ============================================================
+function quintManejarImagen(input) {
+    const file = input.files[0];
+    if (!file) return;
+    
+    // Validar que sea imagen
+    if (!file.type.startsWith('image/')) {
+        alert('Por favor selecciona un archivo de imagen válido');
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        quintImagenAdjunta = e.target.result;
+        quintActualizarVistaPreviaImagen();
+    };
+    reader.readAsDataURL(file);
+}
+
+// ============================================================
+//  MANEJAR PEGAR IMAGEN (Ctrl+V)
+// ============================================================
+function quintManejarPaste(event) {
+    const items = (event.clipboardData || event.originalEvent.clipboardData).items;
+    
+    for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf('image') !== -1) {
+            const file = items[i].getAsFile();
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                quintImagenAdjunta = e.target.result;
+                quintActualizarVistaPreviaImagen();
+            };
+            
+            reader.readAsDataURL(file);
+            event.preventDefault();
+            break;
+        }
+    }
+}
+
+// ============================================================
 //  ENVIAR
 // ============================================================
 async function quintEnviar() {
@@ -855,7 +933,30 @@ async function quintEnviar() {
     if (typeof quintContarTurnoEvento === "function") quintContarTurnoEvento();
 
     let textoEnviar = texto;
-    if (texto) {
+    
+    // Manejar imagen adjunta si existe
+    if (quintImagenAdjunta) {
+        const mensajeConImagen = texto 
+            ? `${texto}\n\n[IMAGEN ADJUNTA: El usuario ha compartido una imagen. Describe lo que ves en la imagen y úsalo como referencia para tu respuesta.]`
+            : `[IMAGEN ADJUNTA: El usuario ha compartido una imagen. Describe lo que ves en la imagen y responde acorde al contexto.]`;
+        
+        // Agregar imagen al historial con formato especial para Groq Vision
+        quintHistorial.push({
+            role: "user",
+            content: [
+                { type: "text", text: mensajeConImagen },
+                { type: "image_url", image_url: { url: quintImagenAdjunta } }
+            ]
+        });
+        
+        // Mostrar imagen en el chat
+        quintAgregarUsuario(texto || "(imagen adjunta)", quintImagenAdjunta);
+        quintLogExport.push(`Tu: ${texto || "(imagen adjunta)"}`);
+        
+        // Limpiar imagen adjunta después de enviar
+        quintImagenAdjunta = null;
+        quintActualizarVistaPreviaImagen();
+    } else if (texto) {
         quintAgregarUsuario(texto);
         quintLogExport.push(`Tu: ${texto}`);
 
@@ -1206,13 +1307,22 @@ function cargarPaginaQuintillizas() {
 
             <!-- INPUT -->
             <div id="quint-input-area">
+                <!-- Vista previa de imagen -->
+                <div id="quint-imagen-vista-previa" style="display:none; align-items:center; gap:8px; padding:8px; background:rgba(58,90,144,0.1); border-radius:8px; margin-bottom:8px;">
+                    <img src="" style="max-height:60px; border-radius:4px;" alt="Vista previa">
+                    <button onclick="quintImagenAdjunta=null; quintActualizarVistaPreviaImagen(); document.getElementById('quint-file-input').value='';" style="background:#ff4444; color:white; border:none; border-radius:4px; padding:4px 8px; cursor:pointer; font-size:12px;">✕</button>
+                </div>
+                
                 <textarea
                     id="quint-input"
-                    placeholder="Escríbeles a las Nakano... ♡"
+                    placeholder="Escríbeles a las Nakano... ♡ (también puedes pegar una imagen con Ctrl+V)"
                     rows="1"
                     onkeydown="quintKeyHandler(event)"
                     oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"
+                    onpaste="quintManejarPaste(event)"
                 ></textarea>
+                <input type="file" id="quint-file-input" accept="image/*" style="display:none;" onchange="quintManejarImagen(this)">
+                <button id="quint-btn-adjuntar" onclick="document.getElementById('quint-file-input').click()" title="Adjuntar imagen">📷</button>
                 <button id="quint-btn-enviar" onclick="quintEnviar()">Enviar ♡</button>
             </div>
         </div>
@@ -1357,7 +1467,7 @@ function cargarPaginaQuintillizas() {
             #quint-input-area {
                 display:flex; gap:10px; padding:12px 16px;
                 background:#0d1526; border-top:1px solid #1f2d45;
-                flex-shrink:0; align-items:flex-end;
+                flex-shrink:0; align-items:flex-end; flex-wrap:wrap;
             }
             #quint-input {
                 flex:1; background:#101d35; color:#e8e8f0;
@@ -1368,14 +1478,15 @@ function cargarPaginaQuintillizas() {
             }
             #quint-input:focus        { border-color:#3a5a90; }
             #quint-input::placeholder { color:#3a5a90; }
-            #quint-btn-enviar {
+            #quint-btn-enviar, #quint-btn-adjuntar {
                 background:linear-gradient(135deg,#1f3a70,#3a6adf);
                 color:#c0d8ff; border:none; padding:9px 18px;
                 border-radius:10px; cursor:pointer;
                 font-family:'Georgia',serif; font-size:14px; font-weight:bold;
                 transition:all 0.2s; white-space:nowrap; align-self:flex-end;
             }
-            #quint-btn-enviar:hover    { transform:scale(1.04); box-shadow:0 0 10px rgba(80,120,255,0.3); }
+            #quint-btn-adjuntar { padding:9px 12px; font-size:18px; }
+            #quint-btn-enviar:hover, #quint-btn-adjuntar:hover { transform:scale(1.04); box-shadow:0 0 10px rgba(80,120,255,0.3); }
             #quint-btn-enviar:disabled { opacity:0.5; cursor:not-allowed; transform:none; box-shadow:none; }
             @media(max-width:600px) {
                 #quint-app          { height:calc(100vh - 60px); border-radius:0; }
