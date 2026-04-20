@@ -916,11 +916,22 @@ function cargarPaginaQuintillizas() {
                 💡 Las hermanas aparecen cuando las mencionas. ♡ Memorias guarda slots con imágenes correctas.
             </div>
 
+            <!-- VISTA PREVIA DE IMAGEN -->
+            <div id="quint-vista-previa-container" style="display:none; padding:8px 16px; background:#0d1526; border-top:1px solid #1f2d45;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <img id="quint-vista-previa-img" src="" alt="Vista previa" style="height:60px; border-radius:6px; border:2px solid #1f2d45;">
+                    <button onclick="quintImagenAdjunta=null; quintActualizarVistaPreviaImagen(); document.getElementById('quint-file-input').value='';" style="background:#ff4444; color:white; border:none; border-radius:4px; padding:4px 8px; cursor:pointer; font-size:12px;">✕ Quitar imagen</button>
+                </div>
+            </div>
+
             <div id="quint-input-area">
-                <textarea id="quint-input" placeholder="Escríbeles a las Nakano... ♡" rows="1"
+                <textarea id="quint-input" placeholder="Escríbeles a las Nakano... ♡ (Ctrl+V para pegar imagen)" rows="1"
                     onkeydown="quintKeyHandler(event)"
                     oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px'"
+                    onpaste="quintManejarPaste(event)"
                 ></textarea>
+                <input type="file" id="quint-file-input" accept="image/*" style="display:none;" onchange="quintManejarImagen(this)">
+                <button id="quint-btn-adjuntar" onclick="document.getElementById('quint-file-input').click()" title="Adjuntar imagen" style="background:#1f2d45; color:#8ab0ff; border:1px solid #1f2d45; padding:8px 12px; border-radius:8px; cursor:pointer; font-size:14px;">📷</button>
                 <button id="quint-btn-enviar" onclick="quintEnviar()">Enviar ♡</button>
             </div>
         </div>
@@ -971,12 +982,13 @@ function cargarPaginaQuintillizas() {
             .quint-dot:nth-child(2){animation-delay:0.0s} .quint-dot:nth-child(3){animation-delay:0.2s} .quint-dot:nth-child(4){animation-delay:0.4s}
             @keyframes quintDot { 0%,80%,100%{transform:scale(0.7);opacity:0.3} 40%{transform:scale(1.1);opacity:1} }
             #quint-ayuda { background:#080e1c; color:#3a5a90; font-size:11px; font-family:Arial,sans-serif; padding:6px 16px; border-top:1px solid #151f35; flex-shrink:0; }
-            #quint-input-area { display:flex; gap:10px; padding:12px 16px; background:#0d1526; border-top:1px solid #1f2d45; flex-shrink:0; align-items:flex-end; }
+            #quint-input-area { display:flex; gap:8px; padding:12px 16px; background:#0d1526; border-top:1px solid #1f2d45; flex-shrink:0; align-items:center; }
             #quint-input { flex:1; background:#101d35; color:#e8e8f0; border:1px solid #1f2d45; border-radius:10px; padding:9px 13px; font-family:'Georgia',serif; font-size:14px; resize:none; outline:none; min-height:40px; max-height:120px; line-height:1.5; transition:border-color 0.2s; }
             #quint-input:focus { border-color:#3a5a90; }
             #quint-input::placeholder { color:#3a5a90; }
-            #quint-btn-enviar { background:linear-gradient(135deg,#1f3a70,#3a6adf); color:#c0d8ff; border:none; padding:9px 18px; border-radius:10px; cursor:pointer; font-family:'Georgia',serif; font-size:14px; font-weight:bold; transition:all 0.2s; white-space:nowrap; align-self:flex-end; }
-            #quint-btn-enviar:hover { transform:scale(1.04); }
+            #quint-btn-enviar, #quint-btn-adjuntar { background:linear-gradient(135deg,#1f3a70,#3a6adf); color:#c0d8ff; border:none; padding:9px 18px; border-radius:10px; cursor:pointer; font-family:'Georgia',serif; font-size:14px; font-weight:bold; transition:all 0.2s; white-space:nowrap; align-self:center; height:40px; }
+            #quint-btn-adjuntar { padding:9px 12px; font-size:18px; }
+            #quint-btn-enviar:hover, #quint-btn-adjuntar:hover { transform:scale(1.04); box-shadow:0 0 10px rgba(80,120,255,0.3); }
             #quint-btn-enviar:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
             @media(max-width:600px) { #quint-app{height:calc(100vh - 60px);border-radius:0;} .quint-burbuja{max-width:92%;} #quint-header-btns{display:flex;flex-wrap:wrap;gap:4px;} #quint-header-btns .quint-btn-top{font-size:10px;padding:4px 8px;} .quint-img-wrapper{max-width:100%;} }
 
