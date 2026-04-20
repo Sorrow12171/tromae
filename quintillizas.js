@@ -861,12 +861,12 @@ function quintAgregarChicaEscena(nombre) {
 //  ACTUALIZAR VISTA PREVIA DE IMAGEN
 // ============================================================
 function quintActualizarVistaPreviaImagen() {
-    const preview = document.getElementById("quint-imagen-vista-previa");
+    const preview = document.getElementById("quint-vista-previa-container");
     if (!preview) return;
     
     if (quintImagenAdjunta) {
-        preview.style.display = "flex";
-        const img = preview.querySelector("img");
+        preview.style.display = "block";
+        const img = document.getElementById("quint-vista-previa-img");
         if (img) img.src = quintImagenAdjunta;
     } else {
         preview.style.display = "none";
@@ -1308,9 +1308,11 @@ function cargarPaginaQuintillizas() {
             <!-- INPUT -->
             <div id="quint-input-area">
                 <!-- Vista previa de imagen -->
-                <div id="quint-imagen-vista-previa" style="display:none; align-items:center; gap:8px; padding:8px; background:rgba(58,90,144,0.1); border-radius:8px; margin-bottom:8px;">
-                    <img src="" style="max-height:60px; border-radius:4px;" alt="Vista previa">
-                    <button onclick="quintImagenAdjunta=null; quintActualizarVistaPreviaImagen(); document.getElementById('quint-file-input').value='';" style="background:#ff4444; color:white; border:none; border-radius:4px; padding:4px 8px; cursor:pointer; font-size:12px;">✕</button>
+                <div id="quint-vista-previa-container" style="display:none; padding:8px 16px; background:#0d1526; border-top:1px solid #1f2d45;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <img id="quint-vista-previa-img" src="" alt="Vista previa" style="height:60px; border-radius:6px; border:2px solid #1f2d45;">
+                        <button onclick="quintImagenAdjunta=null; quintActualizarVistaPreviaImagen(); document.getElementById('quint-file-input').value='';" style="background:#ff4444; color:white; border:none; border-radius:4px; padding:4px 8px; cursor:pointer; font-size:12px;">✕ Quitar imagen</button>
+                    </div>
                 </div>
                 
                 <textarea
@@ -1483,7 +1485,7 @@ function cargarPaginaQuintillizas() {
                 color:#c0d8ff; border:none; padding:9px 18px;
                 border-radius:10px; cursor:pointer;
                 font-family:'Georgia',serif; font-size:14px; font-weight:bold;
-                transition:all 0.2s; white-space:nowrap; align-self:flex-end;
+                transition:all 0.2s; white-space:nowrap; align-self:center; height:40px;
             }
             #quint-btn-adjuntar { padding:9px 12px; font-size:18px; }
             #quint-btn-enviar:hover, #quint-btn-adjuntar:hover { transform:scale(1.04); box-shadow:0 0 10px rgba(80,120,255,0.3); }
