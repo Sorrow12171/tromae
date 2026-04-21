@@ -27,7 +27,7 @@ let quintImagenAdjunta = null;
 //  — Las imagenes estan en QuintiImagenes.js (archivo separado)
 // ============================================================
 
-const CHICAS = {
+const CHICAS = window.CHICAS = {
     Ichika: {
         color:  "#e06b8f",
         kanji:  "一",
