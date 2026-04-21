@@ -27,7 +27,7 @@ let quintImagenAdjunta = null;
 //  — Las imagenes estan en QuintiImagenes.js (archivo separado)
 // ============================================================
 
-const CHICAS = window.CHICAS = {
+const CHICAS = {
     Ichika: {
         color:  "#e06b8f",
         kanji:  "一",
@@ -197,18 +197,9 @@ function quintScrollFondo() {
 // ============================================================
 
 async function quintGenerarResumen(mensajesViejos, resumenPrevio) {
-    // Helper para obtener texto del mensaje (soporta formato array vision)
-    const getTexto = (m) => {
-        if (Array.isArray(m.content)) {
-            const textItem = m.content.find(item => item.type === "text");
-            return textItem ? textItem.text : "";
-        }
-        return m.content || "";
-    };
-    
     const promptResumen = QUINT_PROMPT_RESUMEN
         .replace("{resumenPrevio}", resumenPrevio ? `RESUMEN ANTERIOR (ya cubre lo más viejo):\n${resumenPrevio}\n\n` : "")
-        .replace("{mensajes}", mensajesViejos.map(m => `${m.role === "user" ? "Usuario" : "Narrador"}: ${getTexto(m)}`).join("\n"));
+        .replace("{mensajes}", mensajesViejos.map(m => `${m.role === "user" ? "Usuario" : "Narrador"}: ${m.content}`).join("\n"));
 
     try {
         const resp = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -254,18 +245,9 @@ async function quintGenerarResumen(mensajesViejos, resumenPrevio) {
 }
 
 async function quintExtraerHechosClave(mensajesViejos, hechosPrevios) {
-    // Helper para obtener texto del mensaje (soporta formato array vision)
-    const getTexto = (m) => {
-        if (Array.isArray(m.content)) {
-            const textItem = m.content.find(item => item.type === "text");
-            return textItem ? textItem.text : "";
-        }
-        return m.content || "";
-    };
-    
     const promptHechos = QUINT_PROMPT_HECHOS
         .replace("{hechosPrevios}", hechosPrevios.length > 0 ? `HECHOS YA CONOCIDOS (no repitas):\n${hechosPrevios.join("\n")}\n\n` : "")
-        .replace("{mensajes}", mensajesViejos.map(m => `${m.role === "user" ? "Usuario" : "Narrador"}: ${getTexto(m)}`).join("\n"));
+        .replace("{mensajes}", mensajesViejos.map(m => `${m.role === "user" ? "Usuario" : "Narrador"}: ${m.content}`).join("\n"));
 
     try {
         const resp = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -301,18 +283,9 @@ async function quintExtraerHechosClave(mensajesViejos, hechosPrevios) {
     }
 
     // Fallback: extraer nombre del usuario y poco más
-    const getTexto = (m) => {
-        if (Array.isArray(m.content)) {
-            const textItem = m.content.find(item => item.type === "text");
-            return textItem ? textItem.text : "";
-        }
-        return m.content || "";
-    };
-    
     const hechosFallback = [...hechosPrevios];
     for (const m of mensajesViejos) {
-        const texto = getTexto(m);
-        const match = texto.match(/El nombre del usuario es (\w+)/);
+        const match = m.content.match(/El nombre del usuario es (\w+)/);
         if (match && !hechosFallback.some(h => h.includes(match[1]))) {
             hechosFallback.push(`El usuario se llama ${match[1]}`);
         }
@@ -415,12 +388,7 @@ function quintRecortarHistorialSiEsNecesario() {
             }
         } else if (m.role === "user") {
             // Capturar lo que dijo el usuario (primeras 80 chars)
-            let contenido = m.content;
-            // Si content es un array (formato vision), extraer el texto
-            if (Array.isArray(contenido)) {
-                const textItem = contenido.find(item => item.type === "text");
-                contenido = textItem ? textItem.text : "";
-            }
+            const contenido = m.content;
             const textoString = typeof contenido === 'string' ? contenido : String(contenido || "");
             const texto = textoString.replace(/\[EVENTO EN CURSO.*?\]/gs, "").trim();
             if (texto.length > 20) {
@@ -980,13 +948,12 @@ async function quintEnviar() {
             content: [
                 { type: "text", text: mensajeConImagen },
                 { type: "image_url", image_url: { url: quintImagenAdjunta } }
-            ],
-            imagenAdjunta: quintImagenAdjunta // Guardar imagen para mostrar en el chat
+            ]
         });
         
         // Mostrar imagen en el chat
         quintAgregarUsuario(texto || "(imagen adjunta)", quintImagenAdjunta);
-        quintLogExport.push(`Tu: ${texto || "(imagen adjunta)"}|IMG:${quintImagenAdjunta}`);
+        quintLogExport.push(`Tu: ${texto || "(imagen adjunta)"}`);
         
         // Limpiar imagen adjunta después de enviar
         quintImagenAdjunta = null;
@@ -1088,18 +1055,7 @@ function quintImportar() {
             quintAgregarSistema(`[ Conversación cargada: ${file.name} ]`);
             for (const l of quintLogExport) {
                 const t = l.trim(); if (!t) continue;
-                if (t.startsWith("Tu:")) {
-                    // Verificar si hay imagen adjunta en el log
-                    const tieneImagen = t.includes("|IMG:");
-                    let textoMensaje = t.slice(3).trim();
-                    let imagenData = null;
-                    if (tieneImagen) {
-                        const partes = textoMensaje.split("|IMG:");
-                        textoMensaje = partes[0].trim();
-                        imagenData = partes[1] || null;
-                    }
-                    quintAgregarUsuario(textoMensaje, imagenData);
-                }
+                if (t.startsWith("Tu:"))   quintAgregarUsuario(t.slice(3).trim());
                 else if (t.startsWith("[")) quintAgregarSistema(t);
                 else {
                     const sep  = t.indexOf(":");
@@ -1161,17 +1117,7 @@ function quintRenderDebugPanel() {
     const systemLen = p.systemPrompt ? p.systemPrompt.length : 0;
     const contextLen = p.contextoExtra ? p.contextoExtra.length : 0;
     const histLen = p.historial ? p.historial.length : 0;
-    
-    // Helper para obtener longitud del content (soporta formato array vision)
-    const getContentLength = (m) => {
-        if (Array.isArray(m.content)) {
-            const textItem = m.content.find(item => item.type === "text");
-            return textItem ? textItem.text.length : 0;
-        }
-        return (m.content || "").length;
-    };
-    
-    const totalChars = systemLen + contextLen + p.historial.reduce((sum, m) => sum + getContentLength(m), 0);
+    const totalChars = systemLen + contextLen + p.historial.reduce((sum, m) => sum + (m.content || "").length, 0);
 
     let html = "";
 
@@ -1211,21 +1157,10 @@ function quintRenderDebugPanel() {
     // Mensajes del historial
     html += `<div class="quint-debug-section">`;
     html += `<span class="quint-debug-label">💬 Historial Enviado (${histLen} mensajes)</span>`;
-    
-    // Helper para obtener preview del content (soporta formato array vision)
-    const getContentPreview = (m) => {
-        if (Array.isArray(m.content)) {
-            const textItem = m.content.find(item => item.type === "text");
-            const texto = textItem ? textItem.text : "";
-            return `${texto.slice(0, 200)}${texto.length > 200 ? "..." : ""}`;
-        }
-        const contenido = m.content || "";
-        return `${contenido.slice(0, 200)}${contenido.length > 200 ? "..." : ""}`;
-    };
-    
     const msgs = p.historial.map((m, i) => {
         const role = m.role === "user" ? "👤 USER" : m.role === "assistant" ? "🤖 ASSISTANT" : "⚙️ SYSTEM";
-        return `${role}: ${getContentPreview(m)}`;
+        const preview = (m.content || "").slice(0, 200);
+        return `${role}: ${preview}${(m.content || "").length > 200 ? "..." : ""}`;
     }).join("\n\n---\n\n");
     html += `<div class="quint-debug-box">${msgs || "(vacío)"}</div>`;
     html += `</div>`;
