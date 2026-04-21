@@ -1466,6 +1466,8 @@ function cargarPaginaQuintillizas() {
                 border-radius: 8px;
                 margin-top: 10px;
                 display: block;
+                width: 100%;
+                object-fit: contain;
             }
             .quint-img-wrapper {
                 margin-top:10px; border-radius:10px; overflow:hidden;
