@@ -716,16 +716,10 @@ function quintAgregarUsuario(texto, imagenAdjunta = null) {
     
     // Si hay imagen adjunta, mostrarla
     if (imagenAdjunta) {
-        const imgContainer = document.createElement("div");
-        imgContainer.style.marginTop = "10px";
         const img = document.createElement("img");
         img.src = imagenAdjunta;
-        img.style.maxWidth = "200px";
-        img.style.maxHeight = "200px";
-        img.style.borderRadius = "8px";
-        img.style.display = "block";
-        imgContainer.appendChild(img);
-        b.appendChild(imgContainer);
+        img.alt = "Imagen adjunta";
+        b.appendChild(img);
     }
     
     chat.appendChild(b); quintScrollFondo();
@@ -1428,6 +1422,13 @@ function cargarPaginaQuintillizas() {
                 background:linear-gradient(135deg,#1a2a4a,#1c3060);
                 border:1px solid #2a4080; align-self:flex-end;
                 border-bottom-right-radius:4px; color:#c0d8ff;
+            }
+            .quint-usuario img {
+                max-width: 100%;
+                height: auto;
+                border-radius: 8px;
+                margin-top: 10px;
+                display: block;
             }
             .quint-sistema {
                 text-align:center; color:#3a5a90; font-size:11px;
