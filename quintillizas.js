@@ -716,16 +716,26 @@ function quintAgregarUsuario(texto, imagenAdjunta = null) {
     
     // Si hay imagen adjunta, mostrarla con wrapper igual que las chicas
     if (imagenAdjunta) {
-        const w = document.createElement("div"); w.className = "quint-img-wrapper";
+        const w = document.createElement("div");
+        w.className = "quint-img-wrapper";
+        w.style.maxWidth = "320px";
+        w.style.marginTop = "10px";
+        w.style.borderRadius = "10px";
+        w.style.overflow = "hidden";
+        w.style.border = "1px solid rgba(255,255,255,0.15)";
         const img = document.createElement("img");
         img.className = "quint-img";
         img.src = imagenAdjunta;
         img.alt = "Imagen adjunta";
         img.loading = "lazy";
+        img.style.width = "100%";
+        img.style.display = "block";
         w.appendChild(img);
         b.appendChild(w);
-    }
+
     
+    }
+
     chat.appendChild(b); quintScrollFondo();
 }
 
