@@ -975,8 +975,8 @@ function cargarPaginaQuintillizas() {
             .quint-nombre-usuario { color:#7aaeff; font-weight:bold; font-size:12px; }
             .quint-texto  { color:#e8e8f0; }
             .quint-accion { font-style:italic; }
-            .quint-img-wrapper { margin-top:10px; border-radius:10px; overflow:hidden; max-width:320px; border:1px solid rgba(255,255,255,0.08); }
-            .quint-img { width:100%; display:block; }
+            .quint-img-wrapper { margin-top:10px; border-radius:10px; overflow:hidden; max-width:320px; border:1px solid rgba(255,255,255,0.08); background:rgba(0,0,0,0.2); min-height:50px; }
+            .quint-img { width:100%; display:block; position:relative; z-index:1; }
             .quint-typing { background:#0d1526; border:1px solid #1f2d45; border-radius:16px; border-bottom-left-radius:4px; padding:10px 14px; align-self:flex-start; max-width:160px; animation:quintFadeIn 0.2s ease; }
             .quint-dot { display:inline-block; width:7px; height:7px; background:#3a5a90; border-radius:50%; margin:0 2px; animation:quintDot 1.2s infinite; }
             .quint-dot:nth-child(2){animation-delay:0.0s} .quint-dot:nth-child(3){animation-delay:0.2s} .quint-dot:nth-child(4){animation-delay:0.4s}

@@ -731,9 +731,17 @@ function quintAgregarUsuario(texto, imagenAdjunta = null) {
         img.src = imagenAdjunta;
         img.alt = "Imagen adjunta";
         img.loading = "lazy";
-        img.style.cssText = "width:100%!important;display:block!important;max-width:100%!important;height:auto!important;min-height:50px;object-fit:contain!important;visibility:visible!important;opacity:1!important;";
-        img.onerror = function() { console.error('Error cargando imagen:', imagenAdjunta, '- src:', this.src); };
-        img.onload = function() { console.log('Imagen cargada correctamente:', imagenAdjunta); };
+        img.style.cssText = "width:100%!important;display:block!important;max-width:100%!important;height:auto!important;min-height:50px;object-fit:contain!important;visibility:visible!important;opacity:1!important;position:relative!important;z-index:1!important;";
+        img.onerror = function() { 
+            console.error('Error cargando imagen:', imagenAdjunta, '- src:', this.src); 
+            this.style.display = 'none';
+            w.innerHTML = '<span style="color:#ff6b6b;font-size:12px;padding:10px;display:block;text-align:center;">❌ Error al cargar la imagen</span>';
+        };
+        img.onload = function() { 
+            console.log('Imagen cargada correctamente:', imagenAdjunta);
+            this.style.visibility = 'visible';
+            this.style.opacity = '1';
+        };
         w.appendChild(img);
         b.appendChild(w);
         console.log('Imagen agregada al DOM con src:', imagenAdjunta);
