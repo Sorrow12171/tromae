@@ -678,11 +678,18 @@ function quintMostrarDialogo(contenedor, texto, chicaKey) {
 
 function quintInsertarImagen(contenedor, url) {
     if (!url) return;
-    const w   = document.createElement("div"); w.className = "quint-img-wrapper";
+    const w   = document.createElement("div"); 
+    w.className = "quint-img-wrapper";
+    w.style.cssText = "max-width:320px;margin-top:10px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);";
     const img = document.createElement("img");
-    img.className = "quint-img"; img.src = url; img.alt = ""; img.loading = "lazy";
+    img.className = "quint-img"; 
+    img.src = url; 
+    img.alt = ""; 
+    img.loading = "lazy";
+    img.style.cssText = "width:100%;display:block;max-width:100%;height:auto;object-fit:contain;";
     img.onerror = () => w.remove();
-    w.appendChild(img); contenedor.appendChild(w);
+    w.appendChild(img); 
+    contenedor.appendChild(w);
 }
 
 // ============================================================
@@ -718,22 +725,15 @@ function quintAgregarUsuario(texto, imagenAdjunta = null) {
     if (imagenAdjunta) {
         const w = document.createElement("div");
         w.className = "quint-img-wrapper";
-        w.style.maxWidth = "320px";
-        w.style.marginTop = "10px";
-        w.style.borderRadius = "10px";
-        w.style.overflow = "hidden";
-        w.style.border = "1px solid rgba(255,255,255,0.15)";
+        w.style.cssText = "max-width:320px;margin-top:10px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.15);";
         const img = document.createElement("img");
         img.className = "quint-img";
         img.src = imagenAdjunta;
         img.alt = "Imagen adjunta";
         img.loading = "lazy";
-        img.style.width = "100%";
-        img.style.display = "block";
+        img.style.cssText = "width:100%;display:block;max-width:100%;height:auto;";
         w.appendChild(img);
         b.appendChild(w);
-
-    
     }
 
     chat.appendChild(b); quintScrollFondo();
@@ -777,9 +777,15 @@ function quintAgregarChica(nombre, imagen_tag, dialogo, imagenUrlDirecta) {
         imgUrl = imagenUrlDirecta || imgUrl;
         
         if (imgUrl) {
-            const w   = document.createElement("div"); w.className = "quint-img-wrapper";
+            const w   = document.createElement("div"); 
+            w.className = "quint-img-wrapper";
+            w.style.cssText = "max-width:320px;margin-top:10px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);";
             const img = document.createElement("img");
-            img.className = "quint-img"; img.src = imgUrl; img.alt = nombre; img.loading = "lazy";
+            img.className = "quint-img"; 
+            img.src = imgUrl; 
+            img.alt = nombre; 
+            img.loading = "lazy";
+            img.style.cssText = "width:100%;display:block;max-width:100%;height:auto;object-fit:contain;";
             img.onerror = () => w.remove();
             
             // Reproducir audio si existe: agregar a lista de audios activos y reproducir (sin detener otros)
@@ -918,6 +924,9 @@ function quintManejarPaste(event) {
             reader.onload = function(e) {
                 quintImagenAdjunta = e.target.result;
                 quintActualizarVistaPreviaImagen();
+                // Enfocar el input después de pegar
+                const input = document.getElementById("quint-input");
+                if (input) input.focus();
             };
             
             reader.readAsDataURL(file);
@@ -926,6 +935,15 @@ function quintManejarPaste(event) {
         }
     }
 }
+
+// Agregar listener global para paste en el input cuando se carga la página
+setTimeout(function() {
+    const input = document.getElementById("quint-input");
+    if (input && !input._hasPasteListener) {
+        input.addEventListener('paste', quintManejarPaste);
+        input._hasPasteListener = true;
+    }
+}, 500);
 
 // ============================================================
 //  ENVIAR
@@ -1240,11 +1258,13 @@ function quintInsertarImagenLocacion(url) {
     if (!chat) return;
     const w = document.createElement("div");
     w.className = "quint-img-wrapper quint-loc-img";
+    w.style.cssText = "max-width:400px;margin:10px auto;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);";
     const img = document.createElement("img");
     img.className = "quint-img quint-loc-img";
     img.src = url;
     img.alt = "Bienvenida — Locación";
     img.loading = "lazy";
+    img.style.cssText = "width:100%;display:block;max-width:100%;height:auto;object-fit:contain;";
     img.onerror = () => w.remove();
     w.appendChild(img);
     chat.appendChild(w);
@@ -1447,8 +1467,15 @@ function cargarPaginaQuintillizas() {
             .quint-img-wrapper {
                 margin-top:10px; border-radius:10px; overflow:hidden;
                 max-width:320px; border:1px solid rgba(255,255,255,0.08);
+                background:rgba(0,0,0,0.2);
             }
-            .quint-img { width:100%; display:block; }
+            .quint-img { 
+                width:100%; 
+                display:block; 
+                max-width:100%;
+                height:auto;
+                object-fit:contain;
+            }
             .quint-sistema {
                 text-align:center; color:#3a5a90; font-size:11px;
                 font-style:italic; font-family:Arial,sans-serif; padding:2px 0;
