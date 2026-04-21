@@ -725,15 +725,18 @@ function quintAgregarUsuario(texto, imagenAdjunta = null) {
     if (imagenAdjunta) {
         const w = document.createElement("div");
         w.className = "quint-img-wrapper";
-        w.style.cssText = "max-width:320px;margin-top:10px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.15);";
+        w.style.cssText = "max-width:320px;margin-top:10px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.15);background:rgba(0,0,0,0.2);min-height:50px;display:block;";
         const img = document.createElement("img");
         img.className = "quint-img";
         img.src = imagenAdjunta;
         img.alt = "Imagen adjunta";
         img.loading = "lazy";
-        img.style.cssText = "width:100%;display:block;max-width:100%;height:auto;";
+        img.style.cssText = "width:100%!important;display:block!important;max-width:100%!important;height:auto!important;min-height:50px;object-fit:contain!important;visibility:visible!important;opacity:1!important;";
+        img.onerror = function() { console.error('Error cargando imagen:', imagenAdjunta, '- src:', this.src); };
+        img.onload = function() { console.log('Imagen cargada correctamente:', imagenAdjunta); };
         w.appendChild(img);
         b.appendChild(w);
+        console.log('Imagen agregada al DOM con src:', imagenAdjunta);
     }
 
     chat.appendChild(b); quintScrollFondo();
