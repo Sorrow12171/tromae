@@ -1480,14 +1480,18 @@ function cargarPaginaQuintillizas() {
             .quint-img-wrapper {
                 margin-top:10px; border-radius:10px; overflow:hidden;
                 max-width:320px; border:1px solid rgba(255,255,255,0.08);
-                background:rgba(0,0,0,0.2);
+                background:rgba(0,0,0,0.2); display:block !important; visibility:visible !important;
             }
             .quint-img { 
-                width:100%; 
-                display:block; 
-                max-width:100%;
-                height:auto;
-                object-fit:contain;
+                width:100% !important; 
+                display:block !important; 
+                max-width:100% !important;
+                height:auto !important;
+                object-fit:contain !important;
+                visibility:visible !important;
+                opacity:1 !important;
+                position:relative !important;
+                z-index:1 !important;
             }
             .quint-sistema {
                 text-align:center; color:#3a5a90; font-size:11px;
