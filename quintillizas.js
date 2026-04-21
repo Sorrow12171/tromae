@@ -188,12 +188,6 @@ function quintScrollFondo() {
 
 // ============================================================
 //  SISTEMA DE RESUMEN + MEMORIA DE HECHOS CLAVE
-//  Cuando el historial supera QUINT_HISTORIAL_MAX mensajes:
-//    1. Se extraen los mensajes viejos (excluyendo los últimos QUINT_RECENT_KEEP)
-//    2. Se llama al AI para generar un resumen compacto
-//    3. Se extraen hechos clave (nombre del usuario, relaciones, eventos, emociones)
-//    4. Los mensajes viejos se reemplazan por el resumen acumulado
-//    5. El resumen se acumula con el anterior (si ya existía)
 // ============================================================
 
 async function quintGenerarResumen(mensajesViejos, resumenPrevio) {
@@ -230,7 +224,6 @@ async function quintGenerarResumen(mensajesViejos, resumenPrevio) {
         console.log("[QUINT RESUMEN] Error:", e.message);
     }
 
-    // Fallback: resumen básico automático
     console.log("[QUINT RESUMEN] Usando fallback");
     const acciones = mensajesViejos
         .filter(m => m.role === "assistant")
@@ -282,7 +275,6 @@ async function quintExtraerHechosClave(mensajesViejos, hechosPrevios) {
         console.log("[QUINT HECHOS] Error:", e.message);
     }
 
-    // Fallback: extraer nombre del usuario y poco más
     const hechosFallback = [...hechosPrevios];
     for (const m of mensajesViejos) {
         const match = m.content.match(/El nombre del usuario es (\w+)/);
@@ -295,45 +287,37 @@ async function quintExtraerHechosClave(mensajesViejos, hechosPrevios) {
 
 async function quintResumirSiEsNecesario() {
     if (quintHistorial.length <= QUINT_HISTORIAL_MAX) return;
-    if (quintResumenPendiente) return; // Ya hay uno en proceso
-    if (quintOcupado) return; // No resumir mientras el AI está respondiendo
+    if (quintResumenPendiente) return;
+    if (quintOcupado) return;
 
     quintResumenPendiente = true;
     console.log(`[QUINT RESUMEN] Activando — historial: ${quintHistorial.length} mensajes`);
 
-    // Calcular cuántos mensajes mover a resumen
     const mensajesAResumir = quintHistorial.slice(0, quintHistorial.length - QUINT_RECENT_KEEP);
     const mensajesRecientes  = quintHistorial.slice(-QUINT_RECENT_KEEP);
 
     if (mensajesAResumir.length < 2) {
         quintResumenPendiente = false;
-        return; // Muy pocos para resumir
+        return;
     }
 
-    // Generar resumen y hechos en paralelo
     const [nuevoResumen, nuevosHechos] = await Promise.all([
         quintGenerarResumen(mensajesAResumir, quintResumenAcumulado),
         quintExtraerHechosClave(mensajesAResumir, quintHechosClave)
     ]);
 
-    // Acumular resumen
     if (nuevoResumen) {
         quintResumenAcumulado = quintResumenAcumulado
             ? `${quintResumenAcumulado}\n${nuevoResumen}`
             : nuevoResumen;
-        // Limitar longitud del resumen acumulado (últimos 2000 caracteres)
         if (quintResumenAcumulado.length > 2000) {
-            // Si crece demasiado, resumirlo de nuevo
             const partes = quintResumenAcumulado.split("\n");
             quintResumenAcumulado = partes.slice(-8).join("\n");
         }
     }
 
-    // Actualizar hechos (fusionar, máx 12)
     const todosHechos = [...new Set([...quintHechosClave, ...nuevosHechos])];
     quintHechosClave = todosHechos.slice(-12);
-
-    // Reemplazar historial: solo mensajes recientes
     quintHistorial = mensajesRecientes;
 
     console.log("[QUINT RESUMEN] Completado — resumen acumulado:", quintResumenAcumulado.length, "caracteres");
@@ -352,7 +336,6 @@ function quintRecortarHistorialSiEsNecesario() {
     const mensajesAViejos = quintHistorial.slice(0, quintHistorial.length - QUINT_RECENT_KEEP);
     const mensajesNuevos  = quintHistorial.slice(-QUINT_RECENT_KEEP);
 
-    // Extraer frases clave CONCRETAS (acciones, eventos, besos, etc.)
     let hechosLocales = [];
 
     for (const m of mensajesAViejos) {
@@ -362,7 +345,6 @@ function quintRecortarHistorialSiEsNecesario() {
                 for (const chica of (datos.chicasQueHablan || [])) {
                     const dialogo = (chica.dialogo || "").toLowerCase();
 
-                    // Acciones físicas explícitas
                     const acciones = [
                         { patron: /bes[oó]|besando|beso/i, accion: `${chica.nombre} besó a alguien` },
                         { patron: /abraz[oó]|abrazando|abrazo/i, accion: `${chica.nombre} abrazó` },
@@ -387,7 +369,6 @@ function quintRecortarHistorialSiEsNecesario() {
                 }
             }
         } else if (m.role === "user") {
-            // Capturar lo que dijo el usuario (primeras 80 chars)
             const contenido = m.content;
             const textoString = typeof contenido === 'string' ? contenido : String(contenido || "");
             const texto = textoString.replace(/\[EVENTO EN CURSO.*?\]/gs, "").trim();
@@ -397,7 +378,6 @@ function quintRecortarHistorialSiEsNecesario() {
         }
     }
 
-    // Guardar como resumen acumulado
     if (hechosLocales.length > 0) {
         const nuevoResumen = hechosLocales.join(". ");
         quintResumenAcumulado = quintResumenAcumulado
@@ -421,7 +401,6 @@ async function quintLlamarAPI(messages, modelo, system) {
     const sysPrompt = system || quintBuildSystem(quintChicasActivas);
     let msgs = messages.length > 0 ? messages : [{ role: "user", content: "Hola" }];
 
-    // ——— Inyectar resumen + hechos clave antes de los mensajes recientes ———
     if (quintResumenAcumulado || quintHechosClave.length > 0) {
         let contextoExtra = "";
         if (quintResumenAcumulado) {
@@ -430,17 +409,11 @@ async function quintLlamarAPI(messages, modelo, system) {
         if (quintHechosClave.length > 0) {
             contextoExtra += `\n📌 HECHOS IMPORTANTES RECUERDA:\n${quintHechosClave.map(h => `• ${h}`).join("\n")}\n`;
         }
-        // Insertar como mensaje de sistema contextual antes de los mensajes
         msgs = [{ role: "system", content: contextoExtra.trim() }, ...msgs];
     }
 
-    // Intentar resumir historial viejo en background (no bloquea)
-    // Se hace después de que la respuesta se procese para evitar conflicto con quintOcupado
-
-    // ——— RECORTAR historial ANTES de enviar (evita 413) ———
     quintRecortarHistorialSiEsNecesario();
 
-    // Capturar payload para debug visual
     quintUltimoPayloadAPI = {
         systemPrompt: sysPrompt,
         contextoExtra: (quintResumenAcumulado || quintHechosClave.length > 0) ? msgs[0]?.content : null,
@@ -451,7 +424,6 @@ async function quintLlamarAPI(messages, modelo, system) {
         historialReal: quintHistorial.length
     };
 
-    // Auto-refresh debug panel if visible
     const panel = document.getElementById("quint-debug-panel");
     if (panel && panel.style.display !== "none") quintRenderDebugPanel();
 
@@ -506,24 +478,21 @@ function quintParsearJSON(raw) {
 }
 
 // ============================================================
-//  VALIDAR RESPUESTA — detecta rechazos, respuestas vacías o inválidas
+//  VALIDAR RESPUESTA
 // ============================================================
 
 function quintEsRespuestaValida(datos) {
     if (!datos) return false;
 
-    // Debe tener chicasQueHablan con al menos una entrada válida
     const chicas = datos.chicasQueHablan;
     if (!Array.isArray(chicas) || chicas.length === 0) return false;
 
-    // Verificar que al menos una chica tenga diálogo válido
     let tieneDialogoValido = false;
     for (const chica of chicas) {
         if (!chica.nombre || !chica.dialogo) continue;
         const dialogo = chica.dialogo.trim();
-        if (dialogo.length < 10) continue; // Diálogo muy corto = no válido
+        if (dialogo.length < 10) continue;
 
-        // Verificar que no sea un rechazo del modelo
         for (const patron of PATRONES_RECHAZO) {
             if (patron.test(dialogo)) {
                 console.log("[QUINT VALIDACION] Rechazo detectado:", dialogo.slice(0, 100));
@@ -531,7 +500,6 @@ function quintEsRespuestaValida(datos) {
             }
         }
 
-        // Verificar que no sea placeholder genérico del sistema
         if (/^(ok|yes|no|sure|fine|hello|hi|hey)\s*\.?$/i.test(dialogo)) {
             console.log("[QUINT VALIDACION] Placeholder genérico:", dialogo);
             return false;
@@ -544,19 +512,12 @@ function quintEsRespuestaValida(datos) {
 }
 
 // ============================================================
-//  OBTENER RESPUESTA — solo GPT-oss-120b, múltiples estrategias de reintento
-//  1. Intento normal con historial completo
-//  2. Reintentos con prompts de corrección JSON
-//  3. Historial reducido (últimos 4 mensajes) con resumen inyectado
-//  4. Contexto mínimo (solo último msg user + system mínimo)
-//  5. Prompt agresivo directo
-//  6. Fallback local (solo si todo falla)
+//  OBTENER RESPUESTA
 // ============================================================
 
 async function quintObtenerRespuesta() {
     let datos = null;
 
-    // ——— FASE PRINCIPAL: GPT-oss-120b con historial completo ———
     console.log("[QUINT FASE0] Modelo:", MODELO_PRINCIPAL);
     const raw = await quintLlamarAPI(quintHistorial, MODELO_PRINCIPAL);
     if (raw) {
@@ -569,7 +530,6 @@ async function quintObtenerRespuesta() {
         console.log("[QUINT FASE0]", !datos ? "JSON no parseable" : "Contenido rechazado/inválido");
     }
 
-    // ——— FASE1: Reintentos con prompts de corrección ———
     console.log("[QUINT FASE1] Reintentos con corrección JSON");
     for (let i = 0; i < QUINT_FASE1.length; i++) {
         quintHistorial.push({ role:"user", content: QUINT_FASE1[i] });
@@ -585,7 +545,6 @@ async function quintObtenerRespuesta() {
         quintHistorial.pop();
     }
 
-    // ——— FASE2: Historial reducido + resumen inyectado ———
     console.log("[QUINT FASE2] Historial reducido (últimos 4) + resumen");
     const historialOriginal = [...quintHistorial];
     const ultimos4 = quintHistorial.slice(-4);
@@ -603,9 +562,8 @@ async function quintObtenerRespuesta() {
         }
         quintHistorial.pop();
     }
-    quintHistorial = historialOriginal; // restaurar
+    quintHistorial = historialOriginal;
 
-    // ——— FASE3: Contexto mínimo — solo último user + system mínimo ———
     console.log("[QUINT FASE3] Contexto mínimo");
     const ultimoMsg = quintHistorial.filter(m => m.role === "user").slice(-1);
     for (let i = 0; i < QUINT_FASE3.length; i++) {
@@ -621,7 +579,6 @@ async function quintObtenerRespuesta() {
         }
     }
 
-    // ——— FASE4: Prompt agresivo directo ———
     console.log("[QUINT FASE4] Prompt agresivo directo");
     for (let i = 0; i < QUINT_FASE4.length; i++) {
         const reducido = [...ultimoMsg, { role:"user", content: QUINT_FASE4[i] }];
@@ -636,7 +593,6 @@ async function quintObtenerRespuesta() {
         }
     }
 
-    // ——— FALLBACK LOCAL ———
     console.log("[QUINT FALLBACK] Todo falló — respuesta local");
     const primera   = [...quintChicasActivas][0];
     const fallbacks = [
@@ -703,6 +659,9 @@ function quintAgregarSistema(texto) {
     chat.appendChild(d); quintScrollFondo();
 }
 
+// ============================================================
+//  FIX PRINCIPAL: quintAgregarUsuario — muestra imagen base64 correctamente
+// ============================================================
 function quintAgregarUsuario(texto, imagenAdjunta = null) {
     const chat = document.getElementById("quint-chat-mensajes"); if (!chat) return;
     
@@ -712,40 +671,59 @@ function quintAgregarUsuario(texto, imagenAdjunta = null) {
             audio.pause();
             audio.currentTime = 0;
         });
-        audiosActivos = []; // Limpiar array de audios activos
+        audiosActivos = [];
     }
     
     const b = document.createElement("div");
     b.className = "quint-burbuja quint-usuario";
-    const n = document.createElement("span"); n.className = "quint-nombre-usuario"; n.textContent = (quintNombreUsuario || "Tú") + ":";
-    b.appendChild(n); b.appendChild(document.createElement("br"));
-    const s = document.createElement("span"); s.textContent = texto; b.appendChild(s);
+
+    const n = document.createElement("span");
+    n.className = "quint-nombre-usuario";
+    n.textContent = (quintNombreUsuario || "Tú") + ":";
+    b.appendChild(n);
+    b.appendChild(document.createElement("br"));
+
+    const s = document.createElement("span");
+    s.textContent = texto;
+    b.appendChild(s);
     
-    // Si hay imagen adjunta, mostrarla con wrapper igual que las chicas
+    // ✅ FIX: Mostrar imagen adjunta (base64 o URL) directamente con <img>
+    // No usar .quint-img-wrapper para evitar overflow:hidden colapsando la imagen
     if (imagenAdjunta) {
-        const w = document.createElement("div");
-        w.className = "quint-img-wrapper";
-        w.style.cssText = "max-width:320px;margin-top:10px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.15);background:rgba(0,0,0,0.2);min-height:50px;display:block;";
-        const img = document.createElement("img");
-        img.className = "quint-img";
-        img.src = imagenAdjunta;
-        img.alt = "Imagen adjunta";
-        img.loading = "lazy";
-        img.style.cssText = "width:100%!important;display:block!important;max-width:100%!important;height:auto!important;min-height:50px;object-fit:contain!important;visibility:visible!important;opacity:1!important;";
-        img.onerror = function() { console.error('Error cargando imagen:', imagenAdjunta, '- src:', this.src); };
-        img.onload = function() { console.log('Imagen cargada correctamente:', imagenAdjunta); };
-        w.appendChild(img);
-        b.appendChild(w);
-        console.log('Imagen agregada al DOM con src:', imagenAdjunta);
+        const imgEl = document.createElement("img");
+        imgEl.src = imagenAdjunta;
+        imgEl.alt = "Imagen adjunta";
+        // Estilos inline directos — sin wrapper que pueda colapsar
+        imgEl.style.cssText = [
+            "display: block",
+            "margin-top: 10px",
+            "max-width: 280px",
+            "width: auto",
+            "height: auto",
+            "max-height: 320px",
+            "border-radius: 10px",
+            "border: 1px solid rgba(255,255,255,0.15)",
+            "object-fit: contain",
+            "background: rgba(0,0,0,0.2)"
+        ].join(";");
+        imgEl.onerror = function() {
+            console.error("[QUINT IMG] Error cargando imagen del usuario");
+            this.style.display = "none";
+        };
+        imgEl.onload = function() {
+            console.log("[QUINT IMG] Imagen del usuario cargada OK, dimensiones:", this.naturalWidth, "x", this.naturalHeight);
+            quintScrollFondo();
+        };
+        b.appendChild(imgEl);
     }
 
-    chat.appendChild(b); quintScrollFondo();
+    chat.appendChild(b);
+    quintScrollFondo();
 }
 
 function quintAgregarChica(nombre, imagen_tag, dialogo, imagenUrlDirecta) {
     const chat = document.getElementById("quint-chat-mensajes"); if (!chat) return;
 
-    // Si el personaje no está en CHICAS → personaje genérico sin imagen
     const info  = CHICAS[nombre];
     const color = info ? info.color : "#a0a8c0";
 
@@ -762,12 +740,9 @@ function quintAgregarChica(nombre, imagen_tag, dialogo, imagenUrlDirecta) {
 
     quintMostrarDialogo(b, dialogo, nombre);
 
-    // Solo mostrar imagen si el personaje está en CHICAS
     if (info) {
-        // Si se pasa una URL directa (ej: imagen personalizada de locación), usarla
         let imgData = info.imagenes[imagen_tag] || Object.values(info.imagenes)[0];
         
-        // Soporte para formato antiguo (string directo) y nuevo (objeto {url, audio})
         let imgUrl, imgAudio;
         if (typeof imgData === 'string') {
             imgUrl = imgData;
@@ -791,22 +766,14 @@ function quintAgregarChica(nombre, imagen_tag, dialogo, imagenUrlDirecta) {
             img.style.cssText = "width:100%;display:block;max-width:100%;height:auto;object-fit:contain;";
             img.onerror = () => w.remove();
             
-            // Reproducir audio si existe: agregar a lista de audios activos y reproducir (sin detener otros)
             if (imgAudio) {
                 img.onload = () => {
-                    // 1. Crear y configurar nuevo audio en loop
                     const nuevoAudio = new Audio(imgAudio);
-                    nuevoAudio.loop = true; // Se repite infinitamente mientras sea el mensaje activo
-                    
-                    // 2. Agregar a la lista de audios activos (acumulando con los que ya están sonando)
+                    nuevoAudio.loop = true;
                     audiosActivos.push(nuevoAudio);
-                    
-                    // 3. Reproducir nuevo audio
                     nuevoAudio.play().catch(e => console.log('Error reproduciendo audio:', e));
                 };
             } else {
-                // 4. IMPORTANTE: Si el mensaje actual NO tiene audio, cortamos cualquier sonido previo
-                // Esto evita que el audio de la frase anterior siga sonando de fondo
                 if (audiosActivos.length > 0) {
                     audiosActivos.forEach(audio => {
                         audio.pause();
@@ -870,7 +837,6 @@ function quintActualizarBadges() {
 function quintAgregarChicaEscena(nombre) {
     if (quintChicasActivas.has(nombre)) return;
     quintChicasActivas.add(nombre);
-    // Solo actualizar badge si es una chica definida
     if (CHICAS[nombre]) quintActualizarBadges();
     quintAgregarSistema(`[ ${nombre} ha entrado en la escena ]`);
     quintLogExport.push(`[ ${nombre} ha entrado en la escena ]`);
@@ -899,7 +865,6 @@ function quintManejarImagen(input) {
     const file = input.files[0];
     if (!file) return;
     
-    // Validar que sea imagen
     if (!file.type.startsWith('image/')) {
         alert('Por favor selecciona un archivo de imagen válido');
         return;
@@ -927,7 +892,6 @@ function quintManejarPaste(event) {
             reader.onload = function(e) {
                 quintImagenAdjunta = e.target.result;
                 quintActualizarVistaPreviaImagen();
-                // Enfocar el input después de pegar
                 const input = document.getElementById("quint-input");
                 if (input) input.focus();
             };
@@ -960,38 +924,40 @@ async function quintEnviar() {
     const btn = document.getElementById("quint-btn-enviar");
     btn.disabled = true; btn.textContent = "...";
 
-    // Contar turno para eventos aleatorios (se dispara ANTES de enviar)
     if (typeof quintContarTurnoEvento === "function") quintContarTurnoEvento();
 
     let textoEnviar = texto;
     
-    // Manejar imagen adjunta si existe
+    // ✅ FIX ORDEN: primero mostrar, luego limpiar
     if (quintImagenAdjunta) {
+        const imagenParaMostrar = quintImagenAdjunta; // guardar referencia ANTES de limpiar
+
         const mensajeConImagen = texto 
             ? `${texto}\n\n[IMAGEN ADJUNTA: El usuario ha compartido una imagen. Describe lo que ves en la imagen y úsalo como referencia para tu respuesta.]`
             : `[IMAGEN ADJUNTA: El usuario ha compartido una imagen. Describe lo que ves en la imagen y responde acorde al contexto.]`;
         
-        // Agregar imagen al historial con formato especial para Groq Vision
         quintHistorial.push({
             role: "user",
             content: [
                 { type: "text", text: mensajeConImagen },
-                { type: "image_url", image_url: { url: quintImagenAdjunta } }
+                { type: "image_url", image_url: { url: imagenParaMostrar } }
             ]
         });
         
-        // Mostrar imagen en el chat
-        quintAgregarUsuario(texto || "(imagen adjunta)", quintImagenAdjunta);
+        // ✅ Mostrar PRIMERO con la imagen guardada en variable local
+        quintAgregarUsuario(texto || "(imagen adjunta)", imagenParaMostrar);
         quintLogExport.push(`Tu: ${texto || "(imagen adjunta)"}`);
         
-        // Limpiar imagen adjunta después de enviar
+        // ✅ Limpiar DESPUÉS de mostrar
         quintImagenAdjunta = null;
         quintActualizarVistaPreviaImagen();
+        const fileInput = document.getElementById('quint-file-input');
+        if (fileInput) fileInput.value = '';
+
     } else if (texto) {
         quintAgregarUsuario(texto);
         quintLogExport.push(`Tu: ${texto}`);
 
-        // Si hay evento activo, modificar el texto para forzar al AI a reaccionar
         if (quintEventoActivo) {
             textoEnviar = `${texto}\n\n[EVENTO EN CURSO — IMPORTANTE: ${quintEventoActivo.nombre}. Las chicas están reaccionando a esto AHORA MISMO. La respuesta DEBE incorporar este evento.]`;
         }
@@ -1003,7 +969,6 @@ async function quintEnviar() {
             }
         });
     } else {
-        // Input vacío = continuar historia según contexto
         let contenidoContinuo = "(Continúa la historia de forma natural según el contexto anterior, sin repetir lo ya dicho)";
         if (quintEventoActivo) {
             contenidoContinuo = `[EVENTO EN CURSO — IMPORTANTE: ${quintEventoActivo.nombre}. ${quintEventoActivo.contexto} Las chicas deben reaccionar a esto en su respuesta.]`;
@@ -1018,7 +983,6 @@ async function quintEnviar() {
     console.log("[QUINT DATOS] modelo usado:", modelo);
     console.log("[QUINT DATOS]", JSON.stringify(datos, null, 2));
 
-    // Limpiar evento activo después de que el AI respondió (ya lo incorporó)
     if (typeof limpiarEventoActivo === "function") limpiarEventoActivo();
 
     (datos.nuevasChicasQueAparecen || []).forEach(n => {
@@ -1038,9 +1002,9 @@ async function quintEnviar() {
 
     quintOcupado = false; btn.disabled = false; btn.textContent = "Enviar ♡";
 
-    // Intentar resumir historial viejo ahora que quintOcupado = false
     quintResumirSiEsNecesario();
 }
+
 function quintBorrarUltimo() {
     const chat = document.getElementById("quint-chat-mensajes");
     const elementos = chat.querySelectorAll(".quint-burbuja, .quint-sistema");
@@ -1119,7 +1083,7 @@ function quintLimpiar() {
 }
 
 // ============================================================
-//  DEBUG PANEL — ver qué se envía a la API
+//  DEBUG PANEL
 // ============================================================
 
 function quintToggleDebugAPI() {
@@ -1150,7 +1114,6 @@ function quintRenderDebugPanel() {
 
     let html = "";
 
-    // Stats
     html += `<div class="quint-debug-section">`;
     html += `<span class="quint-debug-stat">📊 Mensajes en payload: <span>${histLen}</span></span><br>`;
     html += `<span class="quint-debug-stat">📝 Historial real en memoria: <span>${p.historialReal}</span></span><br>`;
@@ -1159,7 +1122,6 @@ function quintRenderDebugPanel() {
     html += `<span class="quint-debug-stat">🔢 Total chars enviados: <span>${totalChars.toLocaleString()}</span></span>`;
     html += `</div>`;
 
-    // Hechos clave
     if (p.hechosClave.length > 0) {
         html += `<div class="quint-debug-section">`;
         html += `<span class="quint-debug-label">📌 Hechos Clave (${p.hechosClave.length})</span>`;
@@ -1167,7 +1129,6 @@ function quintRenderDebugPanel() {
         html += `</div>`;
     }
 
-    // Resumen acumulado
     if (p.resumenAcumulado) {
         html += `<div class="quint-debug-section">`;
         html += `<span class="quint-debug-label">📝 Resumen Acumulado (${p.resumenAcumulado.length} chars)</span>`;
@@ -1175,7 +1136,6 @@ function quintRenderDebugPanel() {
         html += `</div>`;
     }
 
-    // Contexto extra (inyectado como system message)
     if (p.contextoExtra) {
         html += `<div class="quint-debug-section">`;
         html += `<span class="quint-debug-label">🔗 Contexto Extra Inyectado (${p.contextoExtra.length} chars)</span>`;
@@ -1183,7 +1143,6 @@ function quintRenderDebugPanel() {
         html += `</div>`;
     }
 
-    // Mensajes del historial
     html += `<div class="quint-debug-section">`;
     html += `<span class="quint-debug-label">💬 Historial Enviado (${histLen} mensajes)</span>`;
     const msgs = p.historial.map((m, i) => {
@@ -1211,7 +1170,6 @@ function quintBienvenida() {
     quintAgregarSistema(`[ Actualmente: Yotsuba está presente. Locación: ${locNombre} ]`);
     quintAgregarSistema(`[ Menciona a otras hermanas para que lleguen. ]`);
 
-    // Intentar mensaje personalizado de Yotsuba para esta locación
     let bienvenidaTexto;
     let imagenTag = "Hablando";
     let imagenUrl = "";
@@ -1219,9 +1177,7 @@ function quintBienvenida() {
     if (msgYotsuba) {
         bienvenidaTexto = msgYotsuba.mensaje;
         imagenUrl = msgYotsuba.imagen || "";
-        // Si hay imagen específica, buscar el tag también (para el log)
         if (imagenUrl) {
-            const imgKeys = Object.keys(CHICAS.Yotsuba.imagenes);
             for (const [key, url] of Object.entries(CHICAS.Yotsuba.imagenes)) {
                 if (url === imagenUrl) { imagenTag = key; break; }
             }
@@ -1230,14 +1186,12 @@ function quintBienvenida() {
         bienvenidaTexto = `¡¡Oye, oye, ${nombre}!! *salta emocionada y te agarra del brazo* ¡Ya llegué! *gira sobre sí misma sonriendo* ¿Qué hacemos hoy? ¡Dime, dime! `;
     }
 
-    // Mostrar imagen de la locación si existe
     if (loc && loc.imagen) {
         quintInsertarImagenLocacion(loc.imagen);
     }
 
     quintAgregarChica("Yotsuba", imagenTag, bienvenidaTexto, imagenUrl || undefined);
 
-    // Inyectar el nombre del usuario y la locación en el historial
     quintHistorial.push({
         role: "user",
         content: `(El nombre del usuario es ${nombre}. ${locPrefix}Las chicas deben llamarlo por su nombre y considerar que están en ${locNombre}.)`
@@ -1252,7 +1206,6 @@ function quintBienvenida() {
 
     quintLogExport.push("[ Quintillizas Nakano — inicio ]");
 
-    // Reproducir música de la locación
     reproducirMusicaLocacion();
 }
 
@@ -1460,12 +1413,18 @@ function cargarPaginaQuintillizas() {
                 border:1px solid #2a4080; align-self:flex-end;
                 border-bottom-right-radius:4px; color:#c0d8ff;
             }
-            .quint-usuario img {
-                max-width: 100%;
-                height: auto;
-                border-radius: 8px;
-                margin-top: 10px;
+            /* ✅ FIX CSS: img directa dentro de burbuja usuario */
+            .quint-usuario > img {
                 display: block;
+                margin-top: 10px;
+                max-width: 280px;
+                width: auto;
+                height: auto;
+                max-height: 320px;
+                border-radius: 10px;
+                border: 1px solid rgba(255,255,255,0.15);
+                object-fit: contain;
+                background: rgba(0,0,0,0.2);
             }
             .quint-img-wrapper {
                 margin-top:10px; border-radius:10px; overflow:hidden;
@@ -1543,6 +1502,7 @@ function cargarPaginaQuintillizas() {
                 #quint-header-btns  { display:flex; flex-wrap:wrap; gap:4px; }
                 #quint-header-btns .quint-btn-top { font-size:10px; padding:4px 8px; }
                 .quint-img-wrapper  { max-width:100%; }
+                .quint-usuario > img { max-width: 100%; }
             }
         </style>
     `;
@@ -1554,7 +1514,6 @@ function cargarPaginaQuintillizas() {
     quintResumenPendiente = false;
     quintChicasActivas   = new Set(["Yotsuba"]);
 
-    // Mostrar pantalla de nombre antes de iniciar
     quintPedirNombre();
 }
 
@@ -1563,9 +1522,6 @@ function cargarPaginaQuintillizas() {
 // ============================================================
 
 function quintPedirNombre() {
-    const seccion = document.getElementById("manga-section");
-
-    // Insertar overlay encima del chat
     const overlay = document.createElement("div");
     overlay.id = "quint-nombre-overlay";
     overlay.innerHTML = `
@@ -1629,12 +1585,10 @@ function quintPedirNombre() {
         </style>
     `;
 
-    // Posicionar sobre el chat
     const app = document.getElementById("quint-app");
     app.style.position = "relative";
     app.appendChild(overlay);
 
-    // Enter confirma
     const inp = document.getElementById("quint-nombre-input");
     inp.addEventListener("keydown", e => { if (e.key === "Enter") quintConfirmarNombre(); });
     setTimeout(() => inp.focus(), 100);
@@ -1659,11 +1613,8 @@ function quintMostrarCambiarLocacion() {
     establecerLocacion(match.id);
     quintAgregarSistema(`[ 📍 Locación cambiada a: ${match.nombre} ]`);
 
-    // Mensaje de bienvenida: usar el de la primera chica activa que tenga mensaje para esta locación
-    const fullLoc = Locaciones[match.id];
     let mensajeUsado = false;
 
-    // Primero intentar con las chicas actualmente activas
     for (const chicaNombre of quintChicasActivas) {
         const msgLoc = obtenerMensajeChicaEnLocacion(chicaNombre, quintNombreUsuario);
         if (msgLoc) {
@@ -1673,7 +1624,6 @@ function quintMostrarCambiarLocacion() {
         }
     }
 
-    // Si ninguna chica activa tiene mensaje, fallback al mensaje de Yotsuba (si existe)
     if (!mensajeUsado) {
         const msgYotsuba = obtenerMensajeChicaEnLocacion("Yotsuba", quintNombreUsuario);
         if (msgYotsuba) {
@@ -1681,7 +1631,6 @@ function quintMostrarCambiarLocacion() {
         }
     }
 
-    // Actualizar música
     if (quintMusicaActivada) {
         reproducirMusicaLocacion();
     }
@@ -1696,11 +1645,9 @@ function quintConfirmarNombre() {
     const nombre = inp ? inp.value.trim() : "";
     quintNombreUsuario = nombre || "Tú";
 
-    // Quitar overlay de nombre
     const overlay = document.getElementById("quint-nombre-overlay");
     if (overlay) overlay.remove();
 
-    // Mostrar selector de locación
     quintMostrarSelectorLocacion();
 }
 
@@ -1781,11 +1728,9 @@ function quintMostrarSelectorLocacion() {
 function quintSeleccionarLocacion(locId) {
     establecerLocacion(locId);
 
-    // Quitar overlay de locación
     const overlay = document.getElementById("quint-locacion-overlay");
     if (overlay) overlay.remove();
 
-    // Iniciar chat con la chica seleccionada
     quintBienvenidaConChica(quintChicaSeleccionadaInicial);
     quintActualizarBadges();
     setTimeout(() => { const i = document.getElementById("quint-input"); if (i) i.focus(); }, 100);
