@@ -1215,6 +1215,19 @@ function mostrarLectorManga() {
                 </select>
             </div>
             
+            ${mangaActual.saltosCapitulos && mangaActual.saltosCapitulos.length > 0 ? `
+            <div class="saltos-capitulos">
+                <h3>📑 Saltar a Capítulo:</h3>
+                <div class="botones-saltos">
+                    ${mangaActual.saltosCapitulos.map((salto, index) => `
+                        <button class="btn-salto-capitulo" onclick="irAPagina(${salto.indicePagina + 1})">
+                            ${salto.nombre}
+                        </button>
+                    `).join('')}
+                </div>
+            </div>
+            ` : ''}
+            
             <div class="manga-descripcion">
                 <p>${mangaActual.descripcion}</p>
                 <p class="manga-aviso">💡 Click en imagen para zoom | Arrastra para moverte | R para resetear</p>
