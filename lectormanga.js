@@ -32,6 +32,12 @@ const mangaDatabase = {
         paginas: 43,
         año: 2015,
         autor: "Akira Toriyama",
+        saltosCapitulos: [
+            { nombre: "Capítulo 1", indicePagina: 0 },
+            { nombre: "Capítulo 2", indicePagina: 4 },
+            { nombre: "Capítulo 3", indicePagina: 15 },
+            { nombre: "Capítulo 4", indicePagina: 30 }
+        ],
         paginasUrls: [
             "https://pbs.twimg.com/media/G8F_PvmXAAM_4S_?format=png&name=large",
             "https://pbs.twimg.com/media/G8F_RCLWQAARnWG?format=png&name=large",
