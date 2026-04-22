@@ -1126,6 +1126,45 @@ body {
     margin-top: 15px !important;
 }
 
+/* SALTOS DE CAPÍTULOS */
+.saltos-capitulos {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 25px;
+    margin: 30px 0;
+    border-left: 5px solid #8A5AF7;
+}
+
+.saltos-capitulos h3 {
+    color: white;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+}
+
+.botones-saltos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.btn-salto-capitulo {
+    background: rgba(138, 90, 247, 0.3);
+    color: white;
+    border: 1px solid #8A5AF7;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.btn-salto-capitulo:hover {
+    background: rgba(138, 90, 247, 0.5);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(138, 90, 247, 0.4);
+}
+
 /* RESPONSIVE PARA LECTOR */
 @media (max-width: 768px) {
     .lector-header {
