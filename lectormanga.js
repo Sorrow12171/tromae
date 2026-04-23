@@ -1186,30 +1186,27 @@ function mostrarLectorManga() {
                 </div>
             </div>
             
-            <div class="controles-flotantes">
+            <div class="menu-inferior">
                 <button class="control-btn btn-anterior" onclick="paginaAnterior()" ${paginaActual === 1 ? 'disabled' : ''}>
                     ← Anterior
                 </button>
-                <div class="contador-pagina">
-                    ${paginaActual} / ${totalPaginas}
-                </div>
-                <button class="control-btn btn-siguiente" onclick="paginaSiguiente()" ${paginaActual === totalPaginas ? 'disabled' : ''}>
-                    Siguiente →
-                </button>
-            </div>
-            
-            <div class="menu-inferior">
                 <button class="menu-btn" onclick="irAPagina(1)" ${paginaActual === 1 ? 'disabled' : ''}>
                     ⏮️ Primera
                 </button>
                 <button class="menu-btn" onclick="irAPagina(Math.max(1, paginaActual - 5))">
                     -5 Páginas
                 </button>
+                <div class="contador-pagina">
+                    ${paginaActual} / ${totalPaginas}
+                </div>
                 <button class="menu-btn" onclick="irAPagina(Math.min(totalPaginas, paginaActual + 5))">
                     +5 Páginas
                 </button>
                 <button class="menu-btn" onclick="irAPagina(totalPaginas)" ${paginaActual === totalPaginas ? 'disabled' : ''}>
                     Última ⏭️
+                </button>
+                <button class="control-btn btn-siguiente" onclick="paginaSiguiente()" ${paginaActual === totalPaginas ? 'disabled' : ''}>
+                    Siguiente →
                 </button>
                 <select class="menu-select" onchange="irAPagina(parseInt(this.value))" id="selector-pagina">
                 </select>
