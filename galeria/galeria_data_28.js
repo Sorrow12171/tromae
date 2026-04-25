@@ -7,7 +7,15 @@ const galeriaData_28 = {
         categoria: "",
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD31/main/imagenes/img_1777153715050.webp",
         imagenes: []
-    }
+    },
+
+    '28_2': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes: []
+    },
 };
 
 if (typeof galeriaDatabase !== 'undefined') {
