@@ -854,11 +854,30 @@ const galeriaData_2 = {
     },
 
     '2_7': {
-        titulo: "",
+        titulo: "trio de peteras",
         descripcion: "",
         categoria: "",
-        imagen: "",
-        imagenes: []
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777137663660.png",
+        imagenes: [
+            { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777136901765.png" },
+            { id: 2, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777136904494.png" },
+            { id: 3, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777136907044.png" },
+            { id: 4, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777136909514.png" },
+            { id: 5, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777136911929.png" },
+            { id: 6, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777136914488.png" },
+            { id: 7, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777136917027.png" },
+            { id: 8, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777136919761.png" },
+            { id: 9, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777136922220.png" },
+            { id: 10, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777136924865.png" },
+            { id: 11, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777136927372.png" },
+            { id: 12, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777136929864.png" },
+            { id: 13, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777136932327.png" },
+            { id: 14, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777136934811.png" },
+            { id: 15, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777136937243.png" },
+            { id: 16, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777136939817.png" },
+            { id: 17, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777136942273.png" },
+            { id: 18, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777136944880.png" }
+        ]
     },
 };
 
