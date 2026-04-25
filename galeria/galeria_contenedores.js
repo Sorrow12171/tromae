@@ -150,6 +150,12 @@ const contenedoresGaleria = {
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777135803747.jpg",
         descripcion: "Putarda",
         categoria: "tarda"
+    },
+    25: {
+        nombre: "Marin",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777139325043.jpg",
+        descripcion: "rubia trola",
+        categoria: "trolasa"
     }
 };
 
