@@ -111,11 +111,37 @@ const galeriaData_24 = {
     },
 
     '24_4': {
-        titulo: "",
+        titulo: "entrenando",
         descripcion: "",
         categoria: "",
-        imagen: "",
-        imagenes: []
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141587216.jpg",
+        imagenes: [
+            { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141438455.jpg" },
+            { id: 2, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141440630.jpg" },
+            { id: 3, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141442679.jpg" },
+            { id: 4, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141444893.jpg" },
+            { id: 5, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141448289.jpg" },
+            { id: 6, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141450422.jpg" },
+            { id: 7, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141452701.jpg" },
+            { id: 8, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141455052.jpg" },
+            { id: 9, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141457373.jpg" },
+            { id: 10, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141459550.jpg" },
+            { id: 11, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141461869.jpg" },
+            { id: 12, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141464097.jpg" },
+            { id: 13, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141466189.jpg" },
+            { id: 14, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141468539.jpg" },
+            { id: 15, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141470735.jpg" },
+            { id: 16, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141473004.jpg" },
+            { id: 17, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141475113.jpg" },
+            { id: 18, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141477285.jpg" },
+            { id: 19, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141479735.jpg" },
+            { id: 20, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141482812.jpg" },
+            { id: 21, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141484902.jpg" },
+            { id: 22, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141487110.jpg" },
+            { id: 23, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141489207.jpg" },
+            { id: 24, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141491289.jpg" },
+            { id: 25, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777141493454.jpg" }
+        ]
     },
 };
 
