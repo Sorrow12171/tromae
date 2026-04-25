@@ -6,7 +6,7 @@ __pycache__/
 *.obj
 dist/
 build/
-target/
+*.out
 
 # Dependencies
 .venv/
@@ -20,12 +20,11 @@ node_modules/
 *.tmp
 *.swp
 *.swo
-*.out
 
 # Environment
 .env
 .env.local
-.env.*
+*.env.*
 
 # Editors
 .vscode/
@@ -38,44 +37,9 @@ node_modules/
 Thumbs.db
 
 # Coverage
+.coverage
 coverage/
 htmlcov/
-.coverage
-
-# Python specific
-*.pyc
-__pycache__/
-*.pyo
-*.pyd
-.Python
-*.so
-.coverage
-.pytest_cache/
-.mypy_cache/
-
-# Node specific
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Java specific
-*.class
-*.jar
-*.war
-*.ear
-*.nar
-target/
-.gradle/
-
-# C/C++ specific
-*.o
-*.a
-*.so
-*.dll
-*.exe
-*.obj
-*.out
 
 # Compressed files
 *.zip
@@ -96,8 +60,4 @@ target/
 *.Z
 *.lz
 *.lzo
-*.tar.gz
-*.tar.bz2
-*.tar.xz
-*.tar.zst
 ```
