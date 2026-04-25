@@ -241,6 +241,14 @@ const galeriaData_24 = {
             { id: 15, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD31/main/imagenes/img_1777155983739.jpg" }
         ]
     },
+
+    '24_10': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes: []
+    },
 };
 
 if (typeof galeriaDatabase !== 'undefined') {
