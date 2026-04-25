@@ -75,11 +75,19 @@ const galeriaData_26 = {
     },
 
     '26_4': {
-        titulo: "",
+        titulo: "Kachando a yukino",
         descripcion: "",
         categoria: "",
-        imagen: "",
-        imagenes: []
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD31/main/imagenes/img_1777155044473.png",
+        imagenes: [
+            { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD31/main/imagenes/img_1777155017417.png" },
+            { id: 2, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD31/main/imagenes/img_1777155019845.png" },
+            { id: 3, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD31/main/imagenes/img_1777155021998.png" },
+            { id: 4, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD31/main/imagenes/img_1777155024163.png" },
+            { id: 5, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD31/main/imagenes/img_1777155026339.png" },
+            { id: 6, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD31/main/imagenes/img_1777155028586.png" },
+            { id: 7, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD31/main/imagenes/img_1777155031063.png" }
+        ]
     },
 };
 
