@@ -156,6 +156,12 @@ const contenedoresGaleria = {
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777139325043.jpg",
         descripcion: "rubia trola",
         categoria: "trolasa"
+    },
+    26: {
+        nombre: "Yuigahama",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD31/main/imagenes/img_1777150321679.webp",
+        descripcion: "putarda",
+        categoria: "putona"
     }
 };
 
