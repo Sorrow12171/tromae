@@ -1122,7 +1122,15 @@ const galeriaData_8 = {
             { id: 590, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD5/main/imagenes/img_1773197772537.jpg" },
             { id: 591, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD5/main/imagenes/img_1773197775204.jpg" }
         ]
-    }
+    },
+
+    '8_9': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes: []
+    },
 };
 
 if (typeof galeriaDatabase !== 'undefined') {
