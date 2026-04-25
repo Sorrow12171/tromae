@@ -188,6 +188,14 @@ const galeriaData_18 = {
             { id: 46, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD7/main/imagenes/img_1773332098470.jpg" }
         ]
     },
+
+    '18_6': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes: []
+    },
 };
 
 // Registrar en galeriaDatabase global
