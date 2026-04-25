@@ -72,7 +72,7 @@ Cowgirl: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXD
 Anal: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773757218934.jpg",  
     Anal_Cumming: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773757221100.jpg", audio: "" },
     Nino_Licking_Anus: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774103028570.png", 
-     follando_en_el_aire: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD23/main/imagenes/img_1774198361930.jpg", audio: "https://files.catbox.moe/vkinyw.mp3" }, 
+     follando_en_el_aire: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD23/main/imagenes/img_1774198361930.jpg", audio: "https://files.catbox.moe/tf8kb2.mp3" }, 
  Me_Corro_En_Su_Boca_De_Nino: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854164065.jpg", audio: "" },
 manos_alrededor_del_cuello: { url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1776630311500_1.png", audio: "" },
 
