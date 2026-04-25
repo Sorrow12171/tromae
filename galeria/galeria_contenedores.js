@@ -145,5 +145,11 @@ const contenedoresGaleria = {
         descripcion: "",
         categoria: "Nobara"
     },
+    24: {
+        nombre: "Mitsuri",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777135803747.jpg",
+        descripcion: "Putarda",
+        categoria: "tarda"
+    }
 };
 
