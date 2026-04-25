@@ -168,6 +168,12 @@ const contenedoresGaleria = {
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD31/main/imagenes/img_1777150848855.jpg",
         descripcion: "putonas",
         categoria: "putitas"
+    },
+    28: {
+        nombre: "PutasDelZZZ",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD31/main/imagenes/img_1777153715050.webp",
+        descripcion: "zhu yuan que rico culo",
+        categoria: "evelyyn culaso"
     }
 };
 
