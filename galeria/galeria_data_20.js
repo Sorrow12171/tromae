@@ -425,6 +425,14 @@ const galeriaData_20 = {
             { id: 126, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD27/main/imagenes/img_1774911093005.jpg" }
         ]
     },
+
+    '20_9': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes: []
+    },
      '21_1': {
         titulo: "PRUEBA",
         descripcion: "Primer subcontenedor de prueba",
