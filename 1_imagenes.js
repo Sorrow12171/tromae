@@ -2446,7 +2446,14 @@ const sistemaDescriptivo = {
                 duracion: '' 
             },
             
-                                                                                                                                                                                                                                                  '8_1': { 
+            '7_33': { 
+                nombre: 'Kadchando con nino',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_1010_1777122580007.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
+            
+                                                                                                                                                                                                                                                              '8_1': { 
                 nombre: 'fabri putardo',
                 imagen: 'https://pbs.twimg.com/media/G_2dDpBX0AAcGz6?format=png&name=small', 
                 descripcion: '', 
