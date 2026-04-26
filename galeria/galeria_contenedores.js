@@ -180,6 +180,12 @@ const contenedoresGaleria = {
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD32/main/imagenes/img_1777210528600.webp",
         descripcion: "putona",
         categoria: "putarda"
+    },
+    31: {
+        nombre: "HonkaiStarRail",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD32/main/imagenes/img_1777213357793.png",
+        descripcion: "putonas",
+        categoria: "putardas"
     }
 };
 
