@@ -175,11 +175,11 @@ const contenedoresGaleria = {
         descripcion: "zhu yuan que rico culo",
         categoria: "evelyyn culaso"
     },
-    29: {
-        nombre: "Honkai",
-        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD32/main/imagenes/img_1777210448979.jpeg",
-        descripcion: "putardas",
-        categoria: "putonas"
+    30: {
+        nombre: "Anna",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD32/main/imagenes/img_1777210528600.webp",
+        descripcion: "putona",
+        categoria: "putarda"
     }
 };
 
