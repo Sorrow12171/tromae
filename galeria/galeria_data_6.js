@@ -1842,6 +1842,14 @@ const galeriaData_6 = {
         ]
     },
 
+    '6_27': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes: []
+    },
+
    
 
   
