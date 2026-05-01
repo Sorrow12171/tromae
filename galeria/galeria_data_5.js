@@ -1451,6 +1451,14 @@ const galeriaData_5 = {
             { id: 50, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD32/main/imagenes/img_1777643556160.webp" }
         ]
     },
+
+    '5_23': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes: []
+    },
     
     // CONTENEDOR 6 - Miku
 };
