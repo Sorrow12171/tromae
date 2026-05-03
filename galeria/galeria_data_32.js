@@ -1,0 +1,15 @@
+// GALERÍA - DATOS CHICA 32
+
+const galeriaData_32 = {
+    '32_1': {
+        titulo: "YamadaAnna",
+        descripcion: "",
+        categoria: "",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD32/main/imagenes/img_1777833496670.jpg",
+        imagenes: []
+    }
+};
+
+if (typeof galeriaDatabase !== 'undefined') {
+    Object.assign(galeriaDatabase, galeriaData_32);
+}
