@@ -192,6 +192,12 @@ const contenedoresGaleria = {
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD32/main/imagenes/img_1777833496670.jpg",
         descripcion: "PUTONA",
         categoria: "putarda"
+    },
+    33: {
+        nombre: "Yamadaputona",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD33/main/imagenes/img_1777848212356.jpg",
+        descripcion: "putarda",
+        categoria: "puta"
     }
 };
 
