@@ -205,6 +205,12 @@ const contenedoresGaleria = {
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD36/main/imagenes/img_1778335761734.jpg",
         descripcion: "Putas",
         categoria: "Yunyunmizorra"
+    },
+    37: {
+        nombre: "GenshinPutas",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD34/main/imagenes/img_1778341130470.jpg",
+        descripcion: "trolitas",
+        categoria: "trolas"
     }
 };
 
