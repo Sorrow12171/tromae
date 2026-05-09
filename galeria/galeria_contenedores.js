@@ -204,6 +204,12 @@ const contenedoresGaleria = {
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD35/main/imagenes/img_1778335282976.jpg",
         descripcion: "blueputas",
         categoria: "blueputas"
+    },
+    35: {
+        nombre: "GenshinPutas",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD36/main/imagenes/img_1778335564826.jpg",
+        descripcion: "putitas",
+        categoria: "putonas"
     }
 };
 
