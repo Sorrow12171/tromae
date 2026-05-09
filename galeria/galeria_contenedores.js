@@ -198,6 +198,12 @@ const contenedoresGaleria = {
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD33/main/imagenes/img_1777848212356.jpg",
         descripcion: "putarda",
         categoria: "puta"
+    },
+    34: {
+        nombre: "blueputas",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD35/main/imagenes/img_1778335282976.jpg",
+        descripcion: "blueputas",
+        categoria: "blueputas"
     }
 };
 
