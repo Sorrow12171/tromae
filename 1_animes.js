@@ -14,18 +14,18 @@ const animesDatabase = {
         driveIdJap: "1-wYJYTaw0ZOKQy8BBPR7Fmhlzs0IVx9K",
         descripcion: "Primer episodio doblado al español y japonés original con subtítulos.",
         timestampsEsp: [
-            { tiempo: 113, titulo: " Rico poto assjob" },
-            { tiempo: 235, titulo: " Potona tetona " },
-            { tiempo: 240, titulo: "🧱 Aparece el Titán Colosal" },
-            { tiempo: 360, titulo: "🏃‍♂️ Escape desesperado" },
-            { tiempo: 480, titulo: "😢 Escena emocional" }
+            { tiempo: 113, titulo: " Rico poto assjob", imagen: "" },
+            { tiempo: 235, titulo: " Potona tetona ", imagen: "" },
+            { tiempo: 240, titulo: "🧱 Aparece el Titán Colosal", imagen: "" },
+            { tiempo: 360, titulo: "🏃‍♂️ Escape desesperado", imagen: "" },
+            { tiempo: 480, titulo: "😢 Escena emocional", imagen: "" }
         ],
         timestampsJap: [
-            { tiempo: 0, titulo: "📖 イントロダクション" },
-            { tiempo: 120, titulo: "🗡️ エレンの紹介" },
-            { tiempo: 240, titulo: "🧱 超大型巨人登場" },
-            { tiempo: 360, titulo: "🏃‍♂️ 必死の脱出" },
-            { tiempo: 480, titulo: "😢 感動的なシーン" }
+            { tiempo: 0, titulo: "📖 イントロダクション", imagen: "" },
+            { tiempo: 120, titulo: "🗡️ エレンの紹介", imagen: "" },
+            { tiempo: 240, titulo: "🧱 超大型巨人登場", imagen: "" },
+            { tiempo: 360, titulo: "🏃‍♂️ 必死の脱出", imagen: "" },
+            { tiempo: 480, titulo: "😢 感動的なシーン", imagen: "" }
         ],
         duracion: "24:30",
         categoria: "Acción",
@@ -39,18 +39,18 @@ const animesDatabase = {
         driveIdJap: "1X6qhQxLNemXus_5WjLlMIWOAsHsJSsRS",
         descripcion: "Episodio 1: Tanjiro encuentra a su familia atacada por demonios.",
         timestampsEsp: [
-            { tiempo: 0, titulo: "🏔️ Vida en las montañas" },
-            { tiempo: 180, titulo: "😭 Tragedia familiar" },
-            { tiempo: 360, titulo: "👹 Encuentro con Nezuko" },
-            { tiempo: 540, titulo: "🗡️ Conoce a Giyu" },
-            { tiempo: 720, titulo: "🎯 Decisión de entrenar" }
+            { tiempo: 0, titulo: "🏔️ Vida en las montañas", imagen: "" },
+            { tiempo: 180, titulo: "😭 Tragedia familiar", imagen: "" },
+            { tiempo: 360, titulo: "👹 Encuentro con Nezuko", imagen: "" },
+            { tiempo: 540, titulo: "🗡️ Conoce a Giyu", imagen: "" },
+            { tiempo: 720, titulo: "🎯 Decisión de entrenar", imagen: "" }
         ],
         timestampsJap: [
-            { tiempo: 0, titulo: "🏔️ 山での生活" },
-            { tiempo: 180, titulo: "😭 家族の悲劇" },
-            { tiempo: 360, titulo: "👹 禰豆子との出会い" },
-            { tiempo: 540, titulo: "🗡️ 義勇との出会い" },
-            { tiempo: 720, titulo: "🎯 訓練の決意" }
+            { tiempo: 0, titulo: "🏔️ 山での生活", imagen: "" },
+            { tiempo: 180, titulo: "😭 家族の悲劇", imagen: "" },
+            { tiempo: 360, titulo: "👹 禰豆子との出会い", imagen: "" },
+            { tiempo: 540, titulo: "🗡️ 義勇との出会い", imagen: "" },
+            { tiempo: 720, titulo: "🎯 訓練の決意", imagen: "" }
         ],
         duracion: "23:45",
         categoria: "Fantasia",
@@ -64,18 +64,18 @@ const animesDatabase = {
         driveIdJap: "1X6qhQxLNemXus_5WjLlMIWOAsHsJSsRS",
         descripcion: "Pelea épica entre Goku y Jiren en el Torneo del Poder.",
         timestampsEsp: [
-            { tiempo: 0, titulo: "⚡ Inicio de la pelea" },
-            { tiempo: 150, titulo: "💥 Transformación Ultra Instinto" },
-            { tiempo: 300, titulo: "🔥 Poder máximo de Jiren" },
-            { tiempo: 450, titulo: "👊 Combate cuerpo a cuerpo" },
-            { tiempo: 600, titulo: "🌟 Final épico" }
+            { tiempo: 0, titulo: "⚡ Inicio de la pelea", imagen: "" },
+            { tiempo: 150, titulo: "💥 Transformación Ultra Instinto", imagen: "" },
+            { tiempo: 300, titulo: "🔥 Poder máximo de Jiren", imagen: "" },
+            { tiempo: 450, titulo: "👊 Combate cuerpo a cuerpo", imagen: "" },
+            { tiempo: 600, titulo: "🌟 Final épico", imagen: "" }
         ],
         timestampsJap: [
-            { tiempo: 0, titulo: "⚡ 戦いの開始" },
-            { tiempo: 150, titulo: "💥 身勝手の極意発動" },
-            { tiempo: 300, titulo: "🔥 ジレンの最大パワー" },
-            { tiempo: 450, titulo: "👊 接近戦" },
-            { tiempo: 600, titulo: "🌟 エピックな終了" }
+            { tiempo: 0, titulo: "⚡ 戦いの開始", imagen: "" },
+            { tiempo: 150, titulo: "💥 身勝手の極意発動", imagen: "" },
+            { tiempo: 300, titulo: "🔥 ジレンの最大パワー", imagen: "" },
+            { tiempo: 450, titulo: "👊 接近戦", imagen: "" },
+            { tiempo: 600, titulo: "🌟 エピックな終了", imagen: "" }
         ],
         duracion: "21:15",
         categoria: "Acción",
@@ -88,18 +88,18 @@ const animesDatabase = {
         driveIdJap: "1X6qhQxLNemXus_5WjLlMIWOAsHsJSsRS",
         descripcion: "Pelea épica entre Goku y Jiren en el Torneo del Poder.",
         timestampsEsp: [
-            { tiempo: 0, titulo: "⚡ Inicio de la pelea" },
-            { tiempo: 150, titulo: "💥 Transformación Ultra Instinto" },
-            { tiempo: 300, titulo: "🔥 Poder máximo de Jiren" },
-            { tiempo: 450, titulo: "👊 Combate cuerpo a cuerpo" },
-            { tiempo: 600, titulo: "🌟 Final épico" }
+            { tiempo: 0, titulo: "⚡ Inicio de la pelea", imagen: "" },
+            { tiempo: 150, titulo: "💥 Transformación Ultra Instinto", imagen: "" },
+            { tiempo: 300, titulo: "🔥 Poder máximo de Jiren", imagen: "" },
+            { tiempo: 450, titulo: "👊 Combate cuerpo a cuerpo", imagen: "" },
+            { tiempo: 600, titulo: "🌟 Final épico", imagen: "" }
         ],
         timestampsJap: [
-            { tiempo: 0, titulo: "⚡ 戦いの開始" },
-            { tiempo: 150, titulo: "💥 身勝手の極意発動" },
-            { tiempo: 300, titulo: "🔥 ジレンの最大パワー" },
-            { tiempo: 450, titulo: "👊 接近戦" },
-            { tiempo: 600, titulo: "🌟 エピックな終了" }
+            { tiempo: 0, titulo: "⚡ 戦いの開始", imagen: "" },
+            { tiempo: 150, titulo: "💥 身勝手の極意発動", imagen: "" },
+            { tiempo: 300, titulo: "🔥 ジレンの最大パワー", imagen: "" },
+            { tiempo: 450, titulo: "👊 接近戦", imagen: "" },
+            { tiempo: 600, titulo: "🌟 エピックな終了", imagen: "" }
         ],
         duracion: "21:15",
         categoria: "Acción",
@@ -117,18 +117,18 @@ const animesDatabase = {
         driveIdJap: "1X6qhQxLNemXus_5WjLlMIWOAsHsJSsRS",
         descripcion: "Primer partido oficial del equipo de Karasuno contra Date Tech.",
         timestampsEsp: [
-            { tiempo: 0, titulo: "🏐 Calentamiento previo" },
-            { tiempo: 120, titulo: "🦅 Salto de Hinata" },
-            { tiempo: 240, titulo: "🧱 Bloqueo de Date Tech" },
-            { tiempo: 360, titulo: "👑 Kageyama como setter" },
-            { tiempo: 480, titulo: "🎯 Remate decisivo" }
+            { tiempo: 0, titulo: "🏐 Calentamiento previo", imagen: "" },
+            { tiempo: 120, titulo: "🦅 Salto de Hinata", imagen: "" },
+            { tiempo: 240, titulo: "🧱 Bloqueo de Date Tech", imagen: "" },
+            { tiempo: 360, titulo: "👑 Kageyama como setter", imagen: "" },
+            { tiempo: 480, titulo: "🎯 Remate decisivo", imagen: "" }
         ],
         timestampsJap: [
-            { tiempo: 0, titulo: "🏐 試合前のウォーミングアップ" },
-            { tiempo: 120, titulo: "🦅 日の出のジャンプ" },
-            { tiempo: 240, titulo: "🧱 伊達工業のブロック" },
-            { tiempo: 360, titulo: "👑 影山のセッター" },
-            { tiempo: 480, titulo: "🎯 決定的なスパイク" }
+            { tiempo: 0, titulo: "🏐 試合前のウォーミングアップ", imagen: "" },
+            { tiempo: 120, titulo: "🦅 日の出のジャンプ", imagen: "" },
+            { tiempo: 240, titulo: "🧱 伊達工業のブロック", imagen: "" },
+            { tiempo: 360, titulo: "👑 影山のセッター", imagen: "" },
+            { tiempo: 480, titulo: "🎯 決定的なスパイク", imagen: "" }
         ],
         duracion: "22:40",
         categoria: "Deportes",
@@ -142,18 +142,18 @@ const animesDatabase = {
         driveIdJap: "1X6qhQxLNemXus_5WjLlMIWOAsHsJSsRS",
         descripcion: "Light Yagami encuentra el Death Note y conoce a Ryuk.",
         timestampsEsp: [
-            { tiempo: 0, titulo: "📔 Encuentro con el cuaderno" },
-            { tiempo: 180, titulo: "👻 Ryuk aparece" },
-            { tiempo: 360, titulo: "⚖️ Primera prueba" },
-            { tiempo: 540, titulo: "🎯 Decisión de usarlo" },
-            { tiempo: 720, titulo: "🕵️ Primer crimen" }
+            { tiempo: 0, titulo: "📔 Encuentro con el cuaderno", imagen: "" },
+            { tiempo: 180, titulo: "👻 Ryuk aparece", imagen: "" },
+            { tiempo: 360, titulo: "⚖️ Primera prueba", imagen: "" },
+            { tiempo: 540, titulo: "🎯 Decisión de usarlo", imagen: "" },
+            { tiempo: 720, titulo: "🕵️ Primer crimen", imagen: "" }
         ],
         timestampsJap: [
-            { tiempo: 0, titulo: "📔 ノートとの出会い" },
-            { tiempo: 180, titulo: "👻 リューク登場" },
-            { tiempo: 360, titulo: "⚖️ 最初のテスト" },
-            { tiempo: 540, titulo: "🎯 使用の決意" },
-            { tiempo: 720, titulo: "🕵️ 最初の犯罪" }
+            { tiempo: 0, titulo: "📔 ノートとの出会い", imagen: "" },
+            { tiempo: 180, titulo: "👻 リューク登場", imagen: "" },
+            { tiempo: 360, titulo: "⚖️ 最初のテスト", imagen: "" },
+            { tiempo: 540, titulo: "🎯 使用の決意", imagen: "" },
+            { tiempo: 720, titulo: "🕵️ 最初の犯罪", imagen: "" }
         ],
         duracion: "23:20",
         categoria: "Misterio",
@@ -167,18 +167,18 @@ const animesDatabase = {
         driveIdJap: "1rRfu1SSe3ISErFMSnEvwWzZ87py8E1ky",
         descripcion: "Light Yagami encuentra el Death Note y conoce a Ryuk.",
         timestampsEsp: [
-            { tiempo: 0, titulo: "📔 Encuentro con el cuaderno" },
-            { tiempo: 180, titulo: "👻 Ryuk aparece" },
-            { tiempo: 360, titulo: "⚖️ Primera prueba" },
-            { tiempo: 540, titulo: "🎯 Decisión de usarlo" },
-            { tiempo: 720, titulo: "🕵️ Primer crimen" }
+            { tiempo: 0, titulo: "📔 Encuentro con el cuaderno", imagen: "" },
+            { tiempo: 180, titulo: "👻 Ryuk aparece", imagen: "" },
+            { tiempo: 360, titulo: "⚖️ Primera prueba", imagen: "" },
+            { tiempo: 540, titulo: "🎯 Decisión de usarlo", imagen: "" },
+            { tiempo: 720, titulo: "🕵️ Primer crimen", imagen: "" }
         ],
         timestampsJap: [
-            { tiempo: 0, titulo: "📔 ノートとの出会い" },
-            { tiempo: 180, titulo: "👻 リューク登場" },
-            { tiempo: 360, titulo: "⚖️ 最初のテスト" },
-            { tiempo: 540, titulo: "🎯 使用の決意" },
-            { tiempo: 720, titulo: "🕵️ 最初の犯罪" }
+            { tiempo: 0, titulo: "📔 ノートとの出会い", imagen: "" },
+            { tiempo: 180, titulo: "👻 リューク登場", imagen: "" },
+            { tiempo: 360, titulo: "⚖️ 最初のテスト", imagen: "" },
+            { tiempo: 540, titulo: "🎯 使用の決意", imagen: "" },
+            { tiempo: 720, titulo: "🕵️ 最初の犯罪", imagen: "" }
         ],
         duracion: "23:20",
         categoria: "Misterio",
@@ -192,18 +192,18 @@ const animesDatabase = {
         driveIdJap: "1X6qhQxLNemXus_5WjLlMIWOAsHsJSsRS",
         descripcion: "Light Yagami encuentra el Death Note y conoce a Ryuk.",
         timestampsEsp: [
-            { tiempo: 0, titulo: "📔 Encuentro con el cuaderno" },
-            { tiempo: 180, titulo: "👻 Ryuk aparece" },
-            { tiempo: 360, titulo: "⚖️ Primera prueba" },
-            { tiempo: 540, titulo: "🎯 Decisión de usarlo" },
-            { tiempo: 720, titulo: "🕵️ Primer crimen" }
+            { tiempo: 0, titulo: "📔 Encuentro con el cuaderno", imagen: "" },
+            { tiempo: 180, titulo: "👻 Ryuk aparece", imagen: "" },
+            { tiempo: 360, titulo: "⚖️ Primera prueba", imagen: "" },
+            { tiempo: 540, titulo: "🎯 Decisión de usarlo", imagen: "" },
+            { tiempo: 720, titulo: "🕵️ Primer crimen", imagen: "" }
         ],
         timestampsJap: [
-            { tiempo: 0, titulo: "📔 ノートとの出会い" },
-            { tiempo: 180, titulo: "👻 リューク登場" },
-            { tiempo: 360, titulo: "⚖️ 最初のテスト" },
-            { tiempo: 540, titulo: "🎯 使用の決意" },
-            { tiempo: 720, titulo: "🕵️ 最初の犯罪" }
+            { tiempo: 0, titulo: "📔 ノートとの出会い", imagen: "" },
+            { tiempo: 180, titulo: "👻 リューク登場", imagen: "" },
+            { tiempo: 360, titulo: "⚖️ 最初のテスト", imagen: "" },
+            { tiempo: 540, titulo: "🎯 使用の決意", imagen: "" },
+            { tiempo: 720, titulo: "🕵️ 最初の犯罪", imagen: "" }
         ],
         duracion: "23:20",
         categoria: "Misterio",
@@ -216,18 +216,18 @@ const animesDatabase = {
         driveIdJap: "1X6qhQxLNemXus_5WjLlMIWOAsHsJSsRS",
         descripcion: "Light Yagami encuentra el Death Note y conoce a Ryuk.",
         timestampsEsp: [
-            { tiempo: 0, titulo: "📔 Encuentro con el cuaderno" },
-            { tiempo: 180, titulo: "👻 Ryuk aparece" },
-            { tiempo: 360, titulo: "⚖️ Primera prueba" },
-            { tiempo: 540, titulo: "🎯 Decisión de usarlo" },
-            { tiempo: 720, titulo: "🕵️ Primer crimen" }
+            { tiempo: 0, titulo: "📔 Encuentro con el cuaderno", imagen: "" },
+            { tiempo: 180, titulo: "👻 Ryuk aparece", imagen: "" },
+            { tiempo: 360, titulo: "⚖️ Primera prueba", imagen: "" },
+            { tiempo: 540, titulo: "🎯 Decisión de usarlo", imagen: "" },
+            { tiempo: 720, titulo: "🕵️ Primer crimen", imagen: "" }
         ],
         timestampsJap: [
-            { tiempo: 0, titulo: "📔 ノートとの出会い" },
-            { tiempo: 180, titulo: "👻 リューク登場" },
-            { tiempo: 360, titulo: "⚖️ 最初のテスト" },
-            { tiempo: 540, titulo: "🎯 使用の決意" },
-            { tiempo: 720, titulo: "🕵️ 最初の犯罪" }
+            { tiempo: 0, titulo: "📔 ノートとの出会い", imagen: "" },
+            { tiempo: 180, titulo: "👻 リューク登場", imagen: "" },
+            { tiempo: 360, titulo: "⚖️ 最初のテスト", imagen: "" },
+            { tiempo: 540, titulo: "🎯 使用の決意", imagen: "" },
+            { tiempo: 720, titulo: "🕵️ 最初の犯罪", imagen: "" }
         ],
         duracion: "23:20",
         categoria: "Misterio",
@@ -240,18 +240,18 @@ const animesDatabase = {
         driveIdJap: "1o2sItvvJO63mvhO88CTEprE22dAmPrr8",
         descripcion: "Light Yagami encuentra el Death Note y conoce a Ryuk.",
         timestampsEsp: [
-            { tiempo: 0, titulo: "📔 Encuentro con el cuaderno" },
-            { tiempo: 180, titulo: "👻 Ryuk aparece" },
-            { tiempo: 360, titulo: "⚖️ Primera prueba" },
-            { tiempo: 540, titulo: "🎯 Decisión de usarlo" },
-            { tiempo: 720, titulo: "🕵️ Primer crimen" }
+            { tiempo: 0, titulo: "📔 Encuentro con el cuaderno", imagen: "" },
+            { tiempo: 180, titulo: "👻 Ryuk aparece", imagen: "" },
+            { tiempo: 360, titulo: "⚖️ Primera prueba", imagen: "" },
+            { tiempo: 540, titulo: "🎯 Decisión de usarlo", imagen: "" },
+            { tiempo: 720, titulo: "🕵️ Primer crimen", imagen: "" }
         ],
         timestampsJap: [
-            { tiempo: 0, titulo: "📔 ノートとの出会い" },
-            { tiempo: 180, titulo: "👻 リューク登場" },
-            { tiempo: 360, titulo: "⚖️ 最初のテスト" },
-            { tiempo: 540, titulo: "🎯 使用の決意" },
-            { tiempo: 720, titulo: "🕵️ 最初の犯罪" }
+            { tiempo: 0, titulo: "📔 ノートとの出会い", imagen: "" },
+            { tiempo: 180, titulo: "👻 リューク登場", imagen: "" },
+            { tiempo: 360, titulo: "⚖️ 最初のテスト", imagen: "" },
+            { tiempo: 540, titulo: "🎯 使用の決意", imagen: "" },
+            { tiempo: 720, titulo: "🕵️ 最初の犯罪", imagen: "" }
         ],
         duracion: "23:20",
         categoria: "Misterio",
@@ -264,18 +264,18 @@ const animesDatabase = {
         driveIdJap: "1X6qhQxLNemXus_5WjLlMIWOAsHsJSsRS",
         descripcion: "Light Yagami encuentra el Death Note y conoce a Ryuk.",
         timestampsEsp: [
-            { tiempo: 0, titulo: "📔 Encuentro con el cuaderno" },
-            { tiempo: 180, titulo: "👻 Ryuk aparece" },
-            { tiempo: 360, titulo: "⚖️ Primera prueba" },
-            { tiempo: 540, titulo: "🎯 Decisión de usarlo" },
-            { tiempo: 720, titulo: "🕵️ Primer crimen" }
+            { tiempo: 0, titulo: "📔 Encuentro con el cuaderno", imagen: "" },
+            { tiempo: 180, titulo: "👻 Ryuk aparece", imagen: "" },
+            { tiempo: 360, titulo: "⚖️ Primera prueba", imagen: "" },
+            { tiempo: 540, titulo: "🎯 Decisión de usarlo", imagen: "" },
+            { tiempo: 720, titulo: "🕵️ Primer crimen", imagen: "" }
         ],
         timestampsJap: [
-            { tiempo: 0, titulo: "📔 ノートとの出会い" },
-            { tiempo: 180, titulo: "👻 リューク登場" },
-            { tiempo: 360, titulo: "⚖️ 最初のテスト" },
-            { tiempo: 540, titulo: "🎯 使用の決意" },
-            { tiempo: 720, titulo: "🕵️ 最初の犯罪" }
+            { tiempo: 0, titulo: "📔 ノートとの出会い", imagen: "" },
+            { tiempo: 180, titulo: "👻 リューク登場", imagen: "" },
+            { tiempo: 360, titulo: "⚖️ 最初のテスト", imagen: "" },
+            { tiempo: 540, titulo: "🎯 使用の決意", imagen: "" },
+            { tiempo: 720, titulo: "🕵️ 最初の犯罪", imagen: "" }
         ],
         duracion: "23:20",
         categoria: "Misterio",
@@ -288,18 +288,18 @@ const animesDatabase = {
         driveIdJap: "1X6qhQxLNemXus_5WjLlMIWOAsHsJSsRS",
         descripcion: "Light Yagami encuentra el Death Note y conoce a Ryuk.",
         timestampsEsp: [
-            { tiempo: 0, titulo: "📔 Encuentro con el cuaderno" },
-            { tiempo: 180, titulo: "👻 Ryuk aparece" },
-            { tiempo: 360, titulo: "⚖️ Primera prueba" },
-            { tiempo: 540, titulo: "🎯 Decisión de usarlo" },
-            { tiempo: 720, titulo: "🕵️ Primer crimen" }
+            { tiempo: 0, titulo: "📔 Encuentro con el cuaderno", imagen: "" },
+            { tiempo: 180, titulo: "👻 Ryuk aparece", imagen: "" },
+            { tiempo: 360, titulo: "⚖️ Primera prueba", imagen: "" },
+            { tiempo: 540, titulo: "🎯 Decisión de usarlo", imagen: "" },
+            { tiempo: 720, titulo: "🕵️ Primer crimen", imagen: "" }
         ],
         timestampsJap: [
-            { tiempo: 0, titulo: "📔 ノートとの出会い" },
-            { tiempo: 180, titulo: "👻 リューク登場" },
-            { tiempo: 360, titulo: "⚖️ 最初のテスト" },
-            { tiempo: 540, titulo: "🎯 使用の決意" },
-            { tiempo: 720, titulo: "🕵️ 最初の犯罪" }
+            { tiempo: 0, titulo: "📔 ノートとの出会い", imagen: "" },
+            { tiempo: 180, titulo: "👻 リューク登場", imagen: "" },
+            { tiempo: 360, titulo: "⚖️ 最初のテスト", imagen: "" },
+            { tiempo: 540, titulo: "🎯 使用の決意", imagen: "" },
+            { tiempo: 720, titulo: "🕵️ 最初の犯罪", imagen: "" }
         ],
         duracion: "23:20",
         categoria: "Misterio",
@@ -312,18 +312,18 @@ const animesDatabase = {
         driveIdJap: "1X6qhQxLNemXus_5WjLlMIWOAsHsJSsRS",
         descripcion: "Light Yagami encuentra el Death Note y conoce a Ryuk.",
         timestampsEsp: [
-            { tiempo: 0, titulo: "📔 Encuentro con el cuaderno" },
-            { tiempo: 180, titulo: "👻 Ryuk aparece" },
-            { tiempo: 360, titulo: "⚖️ Primera prueba" },
-            { tiempo: 540, titulo: "🎯 Decisión de usarlo" },
-            { tiempo: 720, titulo: "🕵️ Primer crimen" }
+            { tiempo: 0, titulo: "📔 Encuentro con el cuaderno", imagen: "" },
+            { tiempo: 180, titulo: "👻 Ryuk aparece", imagen: "" },
+            { tiempo: 360, titulo: "⚖️ Primera prueba", imagen: "" },
+            { tiempo: 540, titulo: "🎯 Decisión de usarlo", imagen: "" },
+            { tiempo: 720, titulo: "🕵️ Primer crimen", imagen: "" }
         ],
         timestampsJap: [
-            { tiempo: 0, titulo: "📔 ノートとの出会い" },
-            { tiempo: 180, titulo: "👻 リューク登場" },
-            { tiempo: 360, titulo: "⚖️ 最初のテスト" },
-            { tiempo: 540, titulo: "🎯 使用の決意" },
-            { tiempo: 720, titulo: "🕵️ 最初の犯罪" }
+            { tiempo: 0, titulo: "📔 ノートとの出会い", imagen: "" },
+            { tiempo: 180, titulo: "👻 リューク登場", imagen: "" },
+            { tiempo: 360, titulo: "⚖️ 最初のテスト", imagen: "" },
+            { tiempo: 540, titulo: "🎯 使用の決意", imagen: "" },
+            { tiempo: 720, titulo: "🕵️ 最初の犯罪", imagen: "" }
         ],
         duracion: "23:20",
         categoria: "Misterio",
@@ -336,18 +336,18 @@ const animesDatabase = {
         driveIdJap: "1X6qhQxLNemXus_5WjLlMIWOAsHsJSsRS",
         descripcion: "Light Yagami encuentra el Death Note y conoce a Ryuk.",
         timestampsEsp: [
-            { tiempo: 0, titulo: "📔 Encuentro con el cuaderno" },
-            { tiempo: 180, titulo: "👻 Ryuk aparece" },
-            { tiempo: 360, titulo: "⚖️ Primera prueba" },
-            { tiempo: 540, titulo: "🎯 Decisión de usarlo" },
-            { tiempo: 720, titulo: "🕵️ Primer crimen" }
+            { tiempo: 0, titulo: "📔 Encuentro con el cuaderno", imagen: "" },
+            { tiempo: 180, titulo: "👻 Ryuk aparece", imagen: "" },
+            { tiempo: 360, titulo: "⚖️ Primera prueba", imagen: "" },
+            { tiempo: 540, titulo: "🎯 Decisión de usarlo", imagen: "" },
+            { tiempo: 720, titulo: "🕵️ Primer crimen", imagen: "" }
         ],
         timestampsJap: [
-            { tiempo: 0, titulo: "📔 ノートとの出会い" },
-            { tiempo: 180, titulo: "👻 リューク登場" },
-            { tiempo: 360, titulo: "⚖️ 最初のテスト" },
-            { tiempo: 540, titulo: "🎯 使用の決意" },
-            { tiempo: 720, titulo: "🕵️ 最初の犯罪" }
+            { tiempo: 0, titulo: "📔 ノートとの出会い", imagen: "" },
+            { tiempo: 180, titulo: "👻 リューク登場", imagen: "" },
+            { tiempo: 360, titulo: "⚖️ 最初のテスト", imagen: "" },
+            { tiempo: 540, titulo: "🎯 使用の決意", imagen: "" },
+            { tiempo: 720, titulo: "🕵️ 最初の犯罪", imagen: "" }
         ],
         duracion: "23:20",
         categoria: "Misterio",
@@ -360,18 +360,18 @@ const animesDatabase = {
         driveIdJap: "1X6qhQxLNemXus_5WjLlMIWOAsHsJSsRS",
         descripcion: "Light Yagami encuentra el Death Note y conoce a Ryuk.",
         timestampsEsp: [
-            { tiempo: 0, titulo: "📔 Encuentro con el cuaderno" },
-            { tiempo: 180, titulo: "👻 Ryuk aparece" },
-            { tiempo: 360, titulo: "⚖️ Primera prueba" },
-            { tiempo: 540, titulo: "🎯 Decisión de usarlo" },
-            { tiempo: 720, titulo: "🕵️ Primer crimen" }
+            { tiempo: 0, titulo: "📔 Encuentro con el cuaderno", imagen: "" },
+            { tiempo: 180, titulo: "👻 Ryuk aparece", imagen: "" },
+            { tiempo: 360, titulo: "⚖️ Primera prueba", imagen: "" },
+            { tiempo: 540, titulo: "🎯 Decisión de usarlo", imagen: "" },
+            { tiempo: 720, titulo: "🕵️ Primer crimen", imagen: "" }
         ],
         timestampsJap: [
-            { tiempo: 0, titulo: "📔 ノートとの出会い" },
-            { tiempo: 180, titulo: "👻 リューク登場" },
-            { tiempo: 360, titulo: "⚖️ 最初のテスト" },
-            { tiempo: 540, titulo: "🎯 使用の決意" },
-            { tiempo: 720, titulo: "🕵️ 最初の犯罪" }
+            { tiempo: 0, titulo: "📔 ノートとの出会い", imagen: "" },
+            { tiempo: 180, titulo: "👻 リューク登場", imagen: "" },
+            { tiempo: 360, titulo: "⚖️ 最初のテスト", imagen: "" },
+            { tiempo: 540, titulo: "🎯 使用の決意", imagen: "" },
+            { tiempo: 720, titulo: "🕵️ 最初の犯罪", imagen: "" }
         ],
         duracion: "23:20",
         categoria: "Misterio",
@@ -384,18 +384,18 @@ const animesDatabase = {
         driveIdJap: "1X6qhQxLNemXus_5WjLlMIWOAsHsJSsRS",
         descripcion: "Light Yagami encuentra el Death Note y conoce a Ryuk.",
         timestampsEsp: [
-            { tiempo: 0, titulo: "📔 Encuentro con el cuaderno" },
-            { tiempo: 180, titulo: "👻 Ryuk aparece" },
-            { tiempo: 360, titulo: "⚖️ Primera prueba" },
-            { tiempo: 540, titulo: "🎯 Decisión de usarlo" },
-            { tiempo: 720, titulo: "🕵️ Primer crimen" }
+            { tiempo: 0, titulo: "📔 Encuentro con el cuaderno", imagen: "" },
+            { tiempo: 180, titulo: "👻 Ryuk aparece", imagen: "" },
+            { tiempo: 360, titulo: "⚖️ Primera prueba", imagen: "" },
+            { tiempo: 540, titulo: "🎯 Decisión de usarlo", imagen: "" },
+            { tiempo: 720, titulo: "🕵️ Primer crimen", imagen: "" }
         ],
         timestampsJap: [
-            { tiempo: 0, titulo: "📔 ノートとの出会い" },
-            { tiempo: 180, titulo: "👻 リューク登場" },
-            { tiempo: 360, titulo: "⚖️ 最初のテスト" },
-            { tiempo: 540, titulo: "🎯 使用の決意" },
-            { tiempo: 720, titulo: "🕵️ 最初の犯罪" }
+            { tiempo: 0, titulo: "📔 ノートとの出会い", imagen: "" },
+            { tiempo: 180, titulo: "👻 リューク登場", imagen: "" },
+            { tiempo: 360, titulo: "⚖️ 最初のテスト", imagen: "" },
+            { tiempo: 540, titulo: "🎯 使用の決意", imagen: "" },
+            { tiempo: 720, titulo: "🕵️ 最初の犯罪", imagen: "" }
         ],
         duracion: "23:20",
         categoria: "Misterio",
