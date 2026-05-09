@@ -385,22 +385,6 @@ const animesDatabase = {
         descripcion: "Light Yagami encuentra el Death Note y conoce a Ryuk.",
         timestampsEsp: [
             { tiempo: 0, titulo: "📔 Encuentro con el cuaderno", imagen: "" },
-    // Sub-contenedor 4_6
-    '4_6': {
-        titulo: "Prima putarda",
-        driveIdEsp: "1QY_k4ynK4xwRvUM46CXBwooHLa5kUs_l",
-        driveIdJap: "",
-        timestampsEsp: [
-            { tiempo: 362, titulo: "Rico culo", imagen: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/timestamp_4_6_362_1778368872189.webp" },
-            { tiempo: 498, titulo: "Tia putona", imagen: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/timestamp_4_6_498_1778368874753.webp" },
-            { tiempo: 512, titulo: "Paizuri", imagen: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/timestamp_4_6_512_1778368877343.webp" },
-        ],
-        descripcion: "",
-        timestampsJap: [],
-        duracion: "0:00",
-        categoria: "",
-        año: 2024
-    },
             { tiempo: 180, titulo: "👻 Ryuk aparece", imagen: "" },
             { tiempo: 360, titulo: "⚖️ Primera prueba", imagen: "" },
             { tiempo: 540, titulo: "🎯 Decisión de usarlo", imagen: "" },
