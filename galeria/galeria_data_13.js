@@ -1263,6 +1263,14 @@ const galeriaData_13 = {
         ]
     },
 
+    '13_19': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes: []
+    },
+
     
 
 
