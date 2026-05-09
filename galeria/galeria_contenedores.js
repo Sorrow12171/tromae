@@ -175,6 +175,12 @@ const contenedoresGaleria = {
         descripcion: "zhu yuan que rico culo",
         categoria: "evelyyn culaso"
     },
+    29: {
+        nombre: "Galería 29",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD31/main/imagenes/img_1777153715050.webp",
+        descripcion: "Galería especial",
+        categoria: "Especial"
+    },
     30: {
         nombre: "Anna",
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD32/main/imagenes/img_1777210528600.webp",
@@ -193,12 +199,23 @@ const contenedoresGaleria = {
         descripcion: "PUTONA",
         categoria: "putarda"
     },
-   
+    33: {
+        nombre: "Galería 33",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD32/main/imagenes/img_1777833496670.jpg",
+        descripcion: "Galería especial 33",
+        categoria: "Especial"
+    },
     34: {
         nombre: "blueputas",
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD35/main/imagenes/img_1778335282976.jpg",
         descripcion: "blueputas",
         categoria: "blueputas"
+    },
+    35: {
+        nombre: "Galería 35",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD35/main/imagenes/img_1778335282976.jpg",
+        descripcion: "Galería especial 35",
+        categoria: "Especial"
     },
     36: {
         nombre: "KonoPutas",
