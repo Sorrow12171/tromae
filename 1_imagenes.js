@@ -2460,7 +2460,14 @@ const sistemaDescriptivo = {
                 duracion: '' 
             },
             
-                                                                                                                                                                                                                                                                          '8_1': { 
+            '7_35': { 
+                nombre: 'Uraraka cachonda',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_3150_1778366240916.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
+            
+                                                                                                                                                                                                                                                                                      '8_1': { 
                 nombre: 'fabri putardo',
                 imagen: 'https://pbs.twimg.com/media/G_2dDpBX0AAcGz6?format=png&name=small', 
                 descripcion: '', 
