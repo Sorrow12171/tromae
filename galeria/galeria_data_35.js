@@ -1,13 +1,12 @@
 // GALERÍA - DATOS CHICA 35
+
 const galeriaData_35 = {
     '35_1': {
-        titulo: "GenshinPutas",
-        descripcion: "",
-        categoria: "",
-        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD36/main/imagenes/img_1778335564826.jpg",
-        imagenes: []
+        titulo: "Galería 35",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD35/main/imagenes/img_1778335282976.jpg"
     }
 };
-if (typeof galeriaDatabase !== 'undefined') {
-    Object.assign(galeriaDatabase, galeriaData_35);
+
+if (typeof baseDeDatosDeGalerias !== 'undefined') {
+    baseDeDatosDeGalerias[35] = galeriaData_35;
 }
