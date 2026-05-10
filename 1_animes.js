@@ -133,7 +133,24 @@ const animesDatabase = {
     // ================================================
     
     // Sub-contenedor 2.1
-    '2_1': {
+
+    // Sub-contenedor 1_6
+    '1_6': {
+        titulo: "Rubia culona",
+        driveIdEsp: "13eOs1BoDdE3nODBBNMBPT_X2y-az7ye-",
+        driveIdJap: "",
+        timestampsEsp: [
+            { tiempo: 707, titulo: "Mamada", imagen: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/timestamp_1_6_707_1778380894090.webp" },
+            { tiempo: 761, titulo: "Rico culo", imagen: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/timestamp_1_6_761_1778380896680.webp" },
+        ],
+        descripcion: "",
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 2024
+    },
+
+        '2_1': {
         titulo: "🎓 Haikyuu!! - Primer Partido",
         driveIdEsp: "1dj-N3BFk6644HQGnIwmYox_gMPhybdkW",
         driveIdJap: "1X6qhQxLNemXus_5WjLlMIWOAsHsJSsRS",
