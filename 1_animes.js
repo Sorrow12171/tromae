@@ -304,6 +304,22 @@ const animesDatabase = {
         categoria: "Misterio",
         año: 2006
     },
+    // Sub-contenedor 4_6
+    '4_6': {
+        titulo: "Prima putona",
+        driveIdEsp: "",
+        driveIdJap: "",
+        timestampsEsp: [
+            { tiempo: 362, titulo: "Anaso", imagen: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/timestamp_4_6_362_1778372558875.webp" },
+            { tiempo: 497, titulo: "Tia putona", imagen: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/timestamp_4_6_497_1778372561400.webp" },
+            { tiempo: 636, titulo: "Petera", imagen: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/timestamp_4_6_636_1778372564004.webp" },
+        ],
+        descripcion: "",
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 2024
+    },
   
     '5_1': {
         titulo: "Profesora putona",
