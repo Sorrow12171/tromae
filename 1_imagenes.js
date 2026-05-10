@@ -723,7 +723,14 @@ const sistemaDescriptivo = {
             },
             
             // Contenedor 6
-            '6_1': { 
+'5_7': { 
+                nombre: 'Trolas',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_48900_1778424325037.webp', 
+                descripcion: '', 
+                episodios: '' 
+            }
+            
+                        '6_1': { 
                 nombre: 'okaasan chupadora ',
                 imagen: 'https://pbs.twimg.com/media/G_SEobsWoAAzSUZ?format=png&name=small', 
                 descripcion: '', 
