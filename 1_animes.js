@@ -621,7 +621,20 @@ function existeAnime(contenedor, subcontenedor) {
 }
 
 function obtenerContenedoresAnimesDisponibles() {
-    const contenedores = {};
+    const contenedores = {
+    // Sub-contenedor 5_7
+    '5_7': {
+        titulo: "Trolas",
+        driveIdEsp: "1G4CdQ9mK-8pp54LgtAZJvk7wgHrrp_em",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 2025
+    },
+};
     
     Object.keys(animesDatabase).forEach(key => {
         const [contenedor, subcontenedor] = key.split('_');
