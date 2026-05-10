@@ -1894,6 +1894,12 @@ const sistemaDescriptivo = {
             },
              '5_4': { 
                 nombre: ' Putas belinda y zahiry',
+            '5_7': { 
+                nombre: 'Culonas',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_68880_1778383332767.webp', 
+                descripcion: '', 
+                episodios: '' 
+            },
                 imagen: 'https://pbs.twimg.com/media/HBD5EVZXsAADCwT?format=png&name=small', 
                 descripcion: '', 
                 duracion: '' 
