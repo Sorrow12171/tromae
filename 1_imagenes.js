@@ -1953,13 +1953,7 @@ const sistemaDescriptivo = {
                 duracion: '' 
             },
             '6_10': { 
-                nombre: 'Me kacho a mis putas f
-            '5_7': { 
-                nombre: 'trkkasdlasd',
-                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_48900_1778387451301.webp', 
-                descripcion: '', 
-                episodios: '' 
-            },avoritas',
+                nombre: 'Me kacho a mis putas favoritas',
                 imagen: 'https://pbs.twimg.com/media/G_S02NHXUAE9VIl?format=jpg&name=small', 
                 descripcion: '', 
                 duracion: '' 
