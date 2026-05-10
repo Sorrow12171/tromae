@@ -640,7 +640,14 @@ const sistemaDescriptivo = {
             },
             
             // Contenedor 4
-            '4_1': { 
+'3_6': { 
+                nombre: 'Gyarus trolitas',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_4190_1778434201492.webp', 
+                descripcion: '', 
+                episodios: '' 
+            },
+            
+                        '4_1': { 
                 nombre: 'nose el name xd 1',
                 imagen: 'https://pbs.twimg.com/media/G_DlLNbWoAA7ANu?format=png&name=small', 
                 descripcion: '', 
