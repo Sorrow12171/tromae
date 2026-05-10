@@ -490,7 +490,21 @@ const animesDatabase = {
         año: 2006
     },
     
-    '6_1': {
+
+    // Sub-contenedor 5_6
+    '5_6': {
+        titulo: "Hermanas Trolas",
+        driveIdEsp: "1LRNpKC_MCjIAfP33y6IK0Oq4-ziuJKx0",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 2024
+    },
+
+        '6_1': {
         titulo: "Okaasan mamadora ",
         driveIdEsp: "1ZbMWDRGOLYWcebQikka2Lqh-KcIvixK2",
         driveIdJap: "1X6qhQxLNemXus_5WjLlMIWOAsHsJSsRS",
