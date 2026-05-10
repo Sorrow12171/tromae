@@ -670,7 +670,14 @@ const sistemaDescriptivo = {
             },
             
             // Contenedor 5
-            '5_1': { 
+            '4_21': { 
+                nombre: 'Profesor cacha putas',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_84850_1778377601719.webp', 
+                descripcion: '', 
+                episodios: '' 
+            },
+            
+                        '5_1': { 
                 nombre: 'Profesora putona',
                 imagen: 'https://pbs.twimg.com/media/G_IGZWXXMAAo_SD?format=png&name=small', 
                 descripcion: '', 
