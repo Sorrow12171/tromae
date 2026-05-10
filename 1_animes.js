@@ -198,6 +198,45 @@ const animesDatabase = {
         categoria: "Misterio",
         año: 2006
     },
+    
+    // Sub-contenedor 2.3 (vacío)
+    '2_3': {
+        titulo: "",
+        driveIdEsp: "",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 0
+    },
+    
+    // Sub-contenedor 2.4 (vacío)
+    '2_4': {
+        titulo: "",
+        driveIdEsp: "",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 0
+    },
+    
+    // Sub-contenedor 2.5 (vacío)
+    '2_5': {
+        titulo: "",
+        driveIdEsp: "",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 0
+    },
 
     // Sub-contenedor 3
     '3_1': {
@@ -224,6 +263,58 @@ const animesDatabase = {
         año: 2006
     },
     
+    // Sub-contenedor 3.2 (vacío)
+    '3_2': {
+        titulo: "",
+        driveIdEsp: "",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 0
+    },
+    
+    // Sub-contenedor 3.3 (vacío)
+    '3_3': {
+        titulo: "",
+        driveIdEsp: "",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 0
+    },
+    
+    // Sub-contenedor 3.4 (vacío)
+    '3_4': {
+        titulo: "",
+        driveIdEsp: "",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 0
+    },
+    
+    // Sub-contenedor 3.5 (vacío)
+    '3_5': {
+        titulo: "",
+        driveIdEsp: "",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 0
+    },
+
     // Sub-contenedor 4
     '4_1': {
         titulo: "Me kacho a mi hermana pelirroja",
@@ -613,6 +704,162 @@ const animesDatabase = {
         duracion: "23:20",
         categoria: "Misterio",
         año: 2006
+    },
+    
+    // Sub-contenedor 8.2 (vacío)
+    '8_2': {
+        titulo: "",
+        driveIdEsp: "",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 0
+    },
+    
+    // Sub-contenedor 8.3 (vacío)
+    '8_3': {
+        titulo: "",
+        driveIdEsp: "",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 0
+    },
+    
+    // Sub-contenedor 8.4 (vacío)
+    '8_4': {
+        titulo: "",
+        driveIdEsp: "",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 0
+    },
+    
+    // Sub-contenedor 8.5 (vacío)
+    '8_5': {
+        titulo: "",
+        driveIdEsp: "",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 0
+    },
+    
+    // Sub-contenedor 6.3 (vacío)
+    '6_3': {
+        titulo: "",
+        driveIdEsp: "",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 0
+    },
+    
+    // Sub-contenedor 6.4 (vacío)
+    '6_4': {
+        titulo: "",
+        driveIdEsp: "",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 0
+    },
+    
+    // Sub-contenedor 6.5 (vacío)
+    '6_5': {
+        titulo: "",
+        driveIdEsp: "",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 0
+    },
+    
+    // Sub-contenedor 7.2 (vacío)
+    '7_2': {
+        titulo: "",
+        driveIdEsp: "",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 0
+    },
+    
+    // Sub-contenedor 7.3 (vacío)
+    '7_3': {
+        titulo: "",
+        driveIdEsp: "",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 0
+    },
+    
+    // Sub-contenedor 7.4 (vacío)
+    '7_4': {
+        titulo: "",
+        driveIdEsp: "",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 0
+    },
+    
+    // Sub-contenedor 7.5 (vacío)
+    '7_5': {
+        titulo: "",
+        driveIdEsp: "",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 0
+    },
+    
+    // Sub-contenedor 5.8 (vacío)
+    '5_8': {
+        titulo: "",
+        driveIdEsp: "",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 0
     }
     
 };
