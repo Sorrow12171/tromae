@@ -316,7 +316,20 @@ const animesDatabase = {
     },
 
     // Sub-contenedor 4
-    '4_1': {
+// Sub-contenedor 3_6
+    '3_6': {
+        titulo: "Gyarus trolitas",
+        driveIdEsp: "1jjj6QPTxxX9JMZ47mHtNL1QTCpZ7OpMM",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 2025
+    },
+
+        '4_1': {
         titulo: "Me kacho a mi hermana pelirroja",
         driveIdEsp: "1p4_xYNgyjjktmDPLfO9aauKkWvSSEB2C",
         driveIdJap: "1X6qhQxLNemXus_5WjLlMIWOAsHsJSsRS",
