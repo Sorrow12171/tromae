@@ -502,22 +502,7 @@ const animesDatabase = {
         duracion: "0:00",
         categoria: "",
         año: 2024
-    }
-
-    // Sub-contenedor 5_7
-    '5_7': {
-        titulo: "Trolasassasa",
-        driveIdEsp: "1A6ff4fPqfFluLX6SD_vIlqVnHLmScCYj",
-        driveIdJap: "",
-        timestampsEsp: [
-            { tiempo: 615, titulo: "asd", imagen: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/timestamp_5_7_615_1778421256467.webp" }
-        ],
-        descripcion: "",
-        timestampsJap: [],
-        duracion: "0:00",
-        categoria: "",
-        año: 2025
-    },,
+    },
 
         '6_1': {
         titulo: "Okaasan mamadora ",
