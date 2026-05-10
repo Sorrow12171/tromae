@@ -504,22 +504,7 @@ const animesDatabase = {
         año: 2024
     },
 
-// Sub-contenedor 5_7
-    '5_7': {
-        titulo: "123",
-        driveIdEsp: "1GplJoOaWCTJKdI2DvlTUNChTYhTvtdEw",
-        driveIdJap: "",
-        timestampsEsp: [
-            { tiempo: 489, titulo: "adad", imagen: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/timestamp_5_7_489_1778426823042.webp" }
-        ],
-        descripcion: "",
-        timestampsJap: [],
-        duracion: "0:00",
-        categoria: "",
-        año: 2025
-    },
-
-            '6_1': {
+        '6_1': {
         titulo: "Okaasan mamadora ",
         driveIdEsp: "1ZbMWDRGOLYWcebQikka2Lqh-KcIvixK2",
         driveIdJap: "1X6qhQxLNemXus_5WjLlMIWOAsHsJSsRS",
