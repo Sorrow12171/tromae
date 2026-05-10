@@ -322,7 +322,6 @@ const animesDatabase = {
         driveIdEsp: "1jjj6QPTxxX9JMZ47mHtNL1QTCpZ7OpMM",
         driveIdJap: "",
         descripcion: "",
-        timestampsEsp: [],
         timestampsJap: [],
         duracion: "0:00",
         categoria: "",
