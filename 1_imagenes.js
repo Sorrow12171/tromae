@@ -662,6 +662,12 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 episodios: '' 
             },
+            '4_6': { 
+                nombre: 'putarda prima',
+                imagen: 'https://pbs.twimg.com/media/HH6xIYKXgAMF8GH?format=png&name=900x900', 
+                descripcion: '', 
+                episodios: '' 
+            },
             
             // Contenedor 5
             '5_1': { 
