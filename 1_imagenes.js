@@ -723,12 +723,7 @@ const sistemaDescriptivo = {
             },
             
             // Contenedor 6
-'5_7': { 
-                nombre: 'Trolas',
-                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_48900_1778424325037.webp', 
-                descripcion: '', 
-                episodios: '' 
-            }
+
             
 '5_7': { 
                 nombre: '123',
