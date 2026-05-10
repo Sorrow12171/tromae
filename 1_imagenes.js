@@ -797,13 +797,7 @@ const sistemaDescriptivo = {
                 nombre: 'Anime 2',
                 imagen: '', 
                 descripcion: '', 
-                episodios: '
-            '5_7': { 
-                nombre: 'mamada triple',
-                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_29680_1778384410630.webp', 
-                descripcion: '', 
                 episodios: '' 
-            },' 
             },
             '8_3': { 
                 nombre: 'Anime 3',
