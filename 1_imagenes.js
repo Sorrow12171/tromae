@@ -715,6 +715,12 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 episodios: '' 
             },
+            "5_6": { 
+                nombre: "Hermanas Trolas",
+                imagen: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_148880_1778381981377.webp", 
+                descripcion: "", 
+                episodios: "" 
+            },
             
             // Contenedor 6
             '6_1': { 
@@ -3016,12 +3022,7 @@ console.log('   - obtenerNombreContenedor(modo, numero)');
 console.log('   - obtenerNombreSubcontenedor(modo, contenedor, subcontenedor)');
 console.log('   - editarContenedor(modo, numero, {nombre, imagen, descripcion, ...})');
 console.log('   - editarSubcontenedor(modo, contenedor, subcontenedor, {nombre, imagen, descripcion, ...
-                    "5_6": { 
-                nombre: "Hermanas Trolas",
-                imagen: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_148880_1778381981377.webp", 
-                descripcion: "", 
-                episodios: "" 
-            },
+                    
         })');
 console.log('   - mostrarInfoContenedor(modo, numero)');
 console.log('   - mostrarInfoSubcontenedor(modo, contenedor, subcontenedor)');
