@@ -321,6 +321,9 @@ const animesDatabase = {
         titulo: "Gyarus trolitas",
         driveIdEsp: "1jjj6QPTxxX9JMZ47mHtNL1QTCpZ7OpMM",
         driveIdJap: "",
+        timestampsEsp: [
+            { tiempo: 189, titulo: "Doble mamada", imagen: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/timestamp_3_6_189_1778435984653.webp" }
+        ],
         descripcion: "",
         timestampsJap: [],
         duracion: "0:00",
