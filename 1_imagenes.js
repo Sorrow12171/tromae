@@ -721,13 +721,6 @@ const sistemaDescriptivo = {
                 descripcion: "", 
                 episodios: "" 
             },
-'5_7': { 
-                nombre: 'asd',
-                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_48900_1778422181311.webp', 
-                descripcion: '', 
-                episodios: '' 
-            }
-
             
             // Contenedor 6
             '6_1': { 
