@@ -105,7 +105,29 @@ const animesDatabase = {
         categoria: "Acción",
         año: 2017
     },
-    
+     '1_5': {
+        titulo: "Rubia Perra ",
+        driveIdEsp: "122RGdY8DBRdRQ98pjxhQ1Dg7HOKmYYm1",
+        driveIdJap: "1X6qhQxLNemXus_5WjLlMIWOAsHsJSsRS",
+        descripcion: "Pelea épica entre Goku y Jiren en el Torneo del Poder.",
+        timestampsEsp: [
+            { tiempo: 0, titulo: "⚡ Inicio de la pelea", imagen: "" },
+            { tiempo: 150, titulo: "💥 Transformación Ultra Instinto", imagen: "" },
+            { tiempo: 300, titulo: "🔥 Poder máximo de Jiren", imagen: "" },
+            { tiempo: 450, titulo: "👊 Combate cuerpo a cuerpo", imagen: "" },
+            { tiempo: 600, titulo: "🌟 Final épico", imagen: "" }
+        ],
+        timestampsJap: [
+            { tiempo: 0, titulo: "⚡ 戦いの開始", imagen: "" },
+            { tiempo: 150, titulo: "💥 身勝手の極意発動", imagen: "" },
+            { tiempo: 300, titulo: "🔥 ジレンの最大パワー", imagen: "" },
+            { tiempo: 450, titulo: "👊 接近戦", imagen: "" },
+            { tiempo: 600, titulo: "🌟 エピックな終了", imagen: "" }
+        ],
+        duracion: "21:15",
+        categoria: "Acción",
+        año: 2017
+    },
     // ================================================
     // CONTENEDOR 2
     // ================================================
