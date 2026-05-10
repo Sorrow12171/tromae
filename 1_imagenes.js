@@ -715,7 +715,7 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 episodios: '' 
             },
-            "5_6": { 
+            '5_6': { 
                 nombre: "Hermanas Trolas",
                 imagen: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_148880_1778381981377.webp", 
                 descripcion: "", 
