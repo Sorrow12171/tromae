@@ -504,23 +504,7 @@ const animesDatabase = {
         año: 2024
     },
 
-
-    // Sub-contenedor 5_7
-    '5_7': {
-        titulo: "mamada triple",
-        driveIdEsp: "1xpmDyifFFxLrVdbaC8U_rIB3yvy_-QJo",
-        driveIdJap: "",
-        timestampsEsp: [
-            { tiempo: 296, titulo: "Triple mamada", imagen: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/timestamp_5_7_296_1778384618980.webp" },
-        ],
-        descripcion: "",
-        timestampsJap: [],
-        duracion: "0:00",
-        categoria: "",
-        año: 2024
-    },
-
-            '6_1': {
+        '6_1': {
         titulo: "Okaasan mamadora ",
         driveIdEsp: "1ZbMWDRGOLYWcebQikka2Lqh-KcIvixK2",
         driveIdJap: "1X6qhQxLNemXus_5WjLlMIWOAsHsJSsRS",
