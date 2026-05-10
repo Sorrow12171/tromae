@@ -197,6 +197,7 @@ const sistemaDescriptivo = {
                 nivel: '' 
             },
             
+            
             // Contenedor 3
             '3_1': { 
                 nombre: 'Nonomi cachonda puta',
@@ -566,6 +567,13 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 episodios: '' 
             },
+             '1_6': { 
+                nombre: 'Rubia culona',
+                imagen: ' https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/timestamp_1_6_761_1778380896680.webp', 
+                descripcion: '', 
+                episodios: '' 
+            },
+           
             
             // Contenedor 2
             '2_1': { 
