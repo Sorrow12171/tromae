@@ -1711,6 +1711,14 @@ const galeriaData_7 = {
             { id: 14, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD29/main/imagenes/img_1775226368540.webp" }
         ]
     },
+
+    '7_24': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes: []
+    },
     
     // CONTENEDOR 8 - Trolas Random
 };
