@@ -7,7 +7,7 @@
 
 const QuintiImagenes = {
     Ichika: {
-        besando:  { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772901835049.jpg", audio: "https://files.catbox.moe/tu_audio_beso.mp3" },
+        besando:  { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772901835049.jpg", audio: "" },
           
     chupando_solo_la_punta_del_pene:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773181766015.jpg", audio: "" },
      chupando_solo_la_mitad_del_pene:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773181840410.jpg", audio: "" },
@@ -33,6 +33,7 @@ cowgirl: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDD
  ropa_idol: { url: "https://pbs.twimg.com/media/HFoblZNWIAA9Pgy?format=jpg&name=small", audio: "" },        
        mostrando_culo_tanga_negra: { url: "https://pbs.twimg.com/media/HGJ4KmyW8AAZfgm?format=jpg&name=small", audio: "" },     
             manos_alrededor_del_cuello: { url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1776630296732_1.png", audio: "" },    
+            licking_cock:  { url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD36/main/imagenes/img_1778618109261.jpg", audio: "" },
     },
     Nino: {
         besando:   { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD12/main/imagenes/img_1773506144298.png", audio: "https://files.catbox.moe/tu_audio_beso.mp3" },
@@ -75,7 +76,7 @@ anal: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDD
      follando_en_el_aire: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD23/main/imagenes/img_1774198361930.jpg", audio: "https://files.catbox.moe/tf8kb2.mp3" }, 
  me_corro_en_su_boca_de_nino: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854164065.jpg", audio: "" },
 manos_alrededor_del_cuello: { url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1776630311500_1.png", audio: "" },
-
+licking_cock:  { url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD36/main/imagenes/img_1778618613406.jpg", audio: "" },
 
         
     },
@@ -104,6 +105,8 @@ anal: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDD
      me_corro_en_su_boca_de_miku: { url: "https://raw.githubusercontent.com/SORFAR123123/XDXDXDXDXD/main/imagenes/img_1773021980596.jpg", audio: "" },
 ropa_idol: { url: "https://pbs.twimg.com/media/HFobfuKWMAAiAke?format=jpg&name=large", audio: "" },
 manos_alrededor_del_cuello: { url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1776630334116_1.png", audio: "" },
+
+        licking_cock:  { url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD36/main/imagenes/img_1778619219396.png", audio: "" },
         
     },
     Yotsuba: {
@@ -134,6 +137,10 @@ anal: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDD
        me_corro_en_su_boca_de_yotsuba: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772896690931.jpg", audio: "" },
   
 manos_alrededor_del_cuello: { url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1776630296732_1.png", audio: "" },
+
+licking_cock:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773182742634.jpg", audio: "" },
+
+        
     },
     Itsuki: {
         besando: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD12/main/imagenes/img_1773506379780.png", audio: "" },
@@ -159,7 +166,7 @@ manos_alrededor_del_cuello: { url: "https://raw.githubusercontent.com/Sorrow1217
  follando_en_el_aire: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD23/main/imagenes/img_1774198368440.jpg", audio: "" },
  me_corro_en_su_boca_de_itsuki: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772997286390.jpg", audio: "" },
 manos_alrededor_del_cuello: { url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1776630346039_1.png", audio: "" },
-
+licking_cock:  { url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD36/main/imagenes/img_1778620269955.png", audio: "" },
 
         
     },
