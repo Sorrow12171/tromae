@@ -986,6 +986,14 @@ const galeriaData_9 = {
             { id: 14, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD29/main/imagenes/img_1775225457447.webp" }
         ]
     },
+
+    '9_ninoMikuCosplayers': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes: []
+    },
 };
 
 if (typeof galeriaDatabase !== 'undefined') {
