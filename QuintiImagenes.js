@@ -6,7 +6,7 @@
 // ============================================================
 
 const QuintiImagenes = {
-    ichika: {
+    Ichika: {
         besando:  { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772901835049.jpg", audio: "https://files.catbox.moe/tu_audio_beso.mp3" },
           
     chupando_solo_la_punta_del_pene:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773181766015.jpg", audio: "" },
@@ -34,7 +34,7 @@ cowgirl: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDD
        mostrando_culo_tanga_negra: { url: "https://pbs.twimg.com/media/HGJ4KmyW8AAZfgm?format=jpg&name=small", audio: "" },     
             manos_alrededor_del_cuello: { url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1776630296732_1.png", audio: "" },    
     },
-    nino: {
+    Nino: {
         besando:   { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD12/main/imagenes/img_1773506144298.png", audio: "https://files.catbox.moe/tu_audio_beso.mp3" },
             //ROPAAA///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ropa_elegante:   { url: "https://is.gd/PNNwGd", audio: "" },
@@ -79,7 +79,7 @@ manos_alrededor_del_cuello: { url: "https://raw.githubusercontent.com/Sorrow1217
 
         
     },
-    miku: {
+    Miku: {
         besando: { url: "https://raw.githubusercontent.com/SORFAR123123/XDXDXDXDXD/main/imagenes/img_1773021246328.jpg", audio: "" },
             chupando_solo_la_punta_del_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773179179751.jpg", audio: "" },
     chupando_solo_la_mitad_del_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773179169491.jpg", audio: "" },
@@ -106,7 +106,7 @@ ropa_idol: { url: "https://pbs.twimg.com/media/HFobfuKWMAAiAke?format=jpg&name=l
 manos_alrededor_del_cuello: { url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1776630334116_1.png", audio: "" },
         
     },
-    yotsuba: {
+    Yotsuba: {
         hablando: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD11/main/imagenes/img_1773503723445.png", audio: "" },
             besando: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD18/main/imagenes/img_1773524623647.jpg", audio: "" },
             chupando_solo_la_cabeza_del_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773182799052.jpg", audio: "" },
@@ -135,7 +135,7 @@ anal: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDD
   
 manos_alrededor_del_cuello: { url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1776630296732_1.png", audio: "" },
     },
-    itsuki: {
+    Itsuki: {
         besando: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD12/main/imagenes/img_1773506379780.png", audio: "" },
     chupando_solo_la_cabeza_del_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773183720872.jpg", audio: "" },
     chupando_hasta_la_mitad_del_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773183743385.jpg", audio: "" },
