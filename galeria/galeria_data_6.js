@@ -1907,6 +1907,14 @@ const galeriaData_6 = {
         ]
     },
 
+    '6_28': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes: []
+    },
+
    
 
   
