@@ -1795,6 +1795,14 @@ const galeriaData_12 = {
     { id: 12, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD37/main/imagenes/img_1778710335911.jpg" }
 ]
     },
+
+    '12_calatas': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes: []
+    },
 };
 
 if (typeof galeriaDatabase !== 'undefined') {
