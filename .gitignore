@@ -1,1 +1,1 @@
-Nothing should be ignored based on the provided file changes. The only modified file is 'QuintiImagenes.js', which appears to be a source code file and should not be added to .gitignore.
+(personajes_y_dialogos.js, quint_prompts.js, quintillizas.js are all source code files, no build artifacts, dependencies, or temp files in the changes)
