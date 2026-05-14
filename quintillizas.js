@@ -100,7 +100,25 @@ function quintBuildSystem(activas) {
         ? `\nCONTEXTO ACUMULADO (hechos de conversaciones anteriores que DEBES recordar):\n${quintHechosClave.map(h => `• ${h}`).join("\n")}\n`
         : "";
 
-    return `Eres el narrador de un roleplay/visual novel con las Quintillizas Nakano de Gotoubun no Hanayome.${locInfo}${eventoInfo}${hechosInfo}
+
+    // Detectar si el historial reciente tiene contenido íntimo/sexual
+    const ultimoMensaje = quintHistorial.length > 0 ? quintHistorial[quintHistorial.length - 1].content : "";
+    const esContextoIntimo = /sexo|follar|coger|verga|pene|vagina|coño|culo|chupar|mamar|tetas|orgasmo|gemir|penetrar|intim|nsfw|putita|cachonda/i.test(ultimoMensaje) || 
+                             quintHistorial.slice(-6).some(m => /sexo|follar|coger|verga|pene|vagina|coño|culo|chupar|mamar|tetas|orgasmo|gemir|penetrar|intim|nsfw|putita|cachonda/i.test(m.content));
+    
+    const instruccionesIntimidad = esContextoIntimo ? `
+    
+🔥 CONTEXTO ÍNTIMO DETECTADO - INSTRUCCIONES ESPECIALES:
+- ESTO ES UNA ESCENA +18 EXPLÍCITA. Todas las chicas presentes SON putitas cachondas que AMAN el sexo
+- CADA CHICA QUE HABLE: MINIMO 15-25 LÍNEAS de diálogo detallado. Describe CADA movimiento, CADA sensación, CADA reacción física
+- Si el usuario habla a varias chicas o es una escena grupal: TODAS las chicas activas DEBEN hablar, cada una con una acción/rol DIFERENTE
+- EVITA REPETICIONES: Una chica puede estar chupando, otra tocándose, otra penetrando, otra mirando, etc. — ACCIONES ÚNICAS POR CHICA
+- DESCRIPCIONES EXPLÍCITAS: Usa lenguaje directo y gráfico. Describe sonidos (gemidos, slap de piel), fluidos, texturas, temperaturas
+- REACCIONES EMOCIONALES: Cada chica muestra placer de forma única — Nino intensa y demandante, Ichika coqueta y experimentada, Miku tímida pero entregada, Yotsuba entusiasta y energética, Itsuki concentrada y expresiva
+- INTERACCIÓN ENTRE ELLAS: Las chicas pueden tocarse entre sí, competir por atención, animarse, etc.
+- PROGRESIÓN: La escena debe avanzar — no quedarse estancada en lo mismo. Cambia posiciones, intensidad, focos de atención
+` : "";
+    return `Eres el narrador de un roleplay/visual novel con las Quintillizas Nakano de Gotoubun no Hanayome.${locInfo}${eventoInfo}${hechosInfo}${instruccionesIntimidad}
 Las chicas ACTUALMENTE PRESENTES en la escena son: ${soloChicas.join(", ")}.
 ${externos.length > 0 ? "Personajes externos presentes: " + externos.join(", ") + "." : ""}
 
@@ -162,7 +180,7 @@ Formato EXACTO:
 
 - "chicasQueHablan" incluye a todos los que hablan este turno, incluyendo personajes externos
 - "nuevasChicasQueAparecen" es [] si nadie nuevo llega
-- IMPORTANTE: Si continua una accion previa, mantén coherencia con lo que pasaba antes${eventoInfo ? `\n\n⚠️ EVENTO ACTIVO AHORA: ${quintEventoActivo ? quintEventoActivo.contexto + ' — Las chicas DEBEN REACCIONAR a este evento en su respuesta. Integra esto naturalmente.' : ''}` : ''}`;
+- IMPORTANTE: Si continua una accion previa, mantén coherencia con lo que pasaba antes${eventoInfo ? `\n\n⚠️ EVENTO ACTIVO AHORA: ${quintEventoActivo ? quintEventoActivo.contexto + ' — Las chicas DEBEN REACCIONAR a este evento en su respuesta. Integra esto naturalmente.' : ''}` : ''}${esContextoIntimo ? '\\n\\n🔥 EN ESCENA ÍNTIMA: MAXIMIZA EL CONTENIDO +18. TODAS LAS CHICAS DEBEN PARTICIPAR ACTIVAMENTE SI LA ESCENA ES GRUPAL.' : ''}`;
 }
 
 // ============================================================
