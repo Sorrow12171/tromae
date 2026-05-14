@@ -143,8 +143,8 @@ const ESTILO_DIALOGO = {
 // ============================================================
 
 // ——— Umbrales del sistema de resumen ———
-const QUINT_HISTORIAL_MAX    = 16;   // Mensajes raw a mantener antes de resumir
-const QUINT_RECENT_KEEP      = 6;    // Mensajes recientes SIN resumir (siempre se envían completos)
+const QUINT_HISTORIAL_MAX    = 24;   // Mensajes raw a mantener antes de resumir (aumentado para mas contexto)
+const QUINT_RECENT_KEEP      = 10;    // Mensajes recientes SIN resumir (siempre se envían completos)
 
 // ——— System prompt mínimo para fallback ———
 const QUINT_SYSTEM_MINIMO = `Eres el narrador de un roleplay con las Quintillizas Nakano. Responde SOLO con JSON valido.
