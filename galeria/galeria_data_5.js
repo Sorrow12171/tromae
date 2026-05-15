@@ -1872,11 +1872,16 @@ const galeriaData_5 = {
     },
 
     '5_26': {
-        titulo: "",
+        titulo: "ichikarda",
         descripcion: "",
         categoria: "",
-        imagen: "",
-        imagenes: []
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD39/main/imagenes/img_1778882274154.png",
+        imagenes: [
+    { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD39/main/imagenes/img_1778882128716.png" },
+    { id: 2, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD39/main/imagenes/img_1778882132015.png" },
+    { id: 3, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD39/main/imagenes/img_1778882134780.png" },
+    { id: 4, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD39/main/imagenes/img_1778882137765.png" }
+]
     },
     
     // CONTENEDOR 6 - Miku
