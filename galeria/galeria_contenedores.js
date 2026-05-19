@@ -228,6 +228,12 @@ const contenedoresGaleria = {
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD34/main/imagenes/img_1778341130470.jpg",
         descripcion: "trolitas",
         categoria: "trolas"
+    },
+    38: {
+        nombre: "BokuNoPutas",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD39/main/imagenes/img_1779228966740.jpg",
+        descripcion: "putasacademia",
+        categoria: "putonas"
     }
 };
 
