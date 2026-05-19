@@ -210,11 +210,26 @@ const galeriaData_25 = {
     },
 
     '25_6': {
-        titulo: "",
+        titulo: "marin putita",
         descripcion: "",
         categoria: "",
-        imagen: "",
-        imagenes: []
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD40/main/imagenes/img_1779234694037.jpg",
+        imagenes: [
+    { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD40/main/imagenes/img_1779234610285.jpg" },
+    { id: 2, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD40/main/imagenes/img_1779234612887.jpg" },
+    { id: 3, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD40/main/imagenes/img_1779234616250.jpg" },
+    { id: 4, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD40/main/imagenes/img_1779234618660.jpg" },
+    { id: 5, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD40/main/imagenes/img_1779234621237.jpg" },
+    { id: 6, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD40/main/imagenes/img_1779234623877.jpg" },
+    { id: 7, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD40/main/imagenes/img_1779234626899.jpg" },
+    { id: 8, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD40/main/imagenes/img_1779234630685.jpg" },
+    { id: 9, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD40/main/imagenes/img_1779234633951.jpg" },
+    { id: 10, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD40/main/imagenes/img_1779234636492.jpg" },
+    { id: 11, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD40/main/imagenes/img_1779234640377.jpg" },
+    { id: 12, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD40/main/imagenes/img_1779234643477.jpg" },
+    { id: 13, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD40/main/imagenes/img_1779234646320.jpg" },
+    { id: 14, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD40/main/imagenes/img_1779234649670.jpg" }
+]
     },
 };
 
