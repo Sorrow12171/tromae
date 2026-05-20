@@ -9,14 +9,11 @@ const galeriaData_13 = {
         categoria: "Prueba",
         imagen: "https://pbs.twimg.com/media/HC0LphVa8AAIWTj?format=jpg&name=large",
         imagenes: [
-          
-        
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773013760474.jpg" },
-            { id: 2, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773082979914.jpg" }
-        
-    { id: 3, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1779228854906_1.png" },
-    { id: 4, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1779237412818_1.png" }
-]
+            { id: 2, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773082979914.jpg" },
+            { id: 3, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1779228854906_1.png" },
+            { id: 4, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1779237412818_1.png" }
+        ]
     },
     '13_2': {
         titulo: "Emilia mi zorra",
