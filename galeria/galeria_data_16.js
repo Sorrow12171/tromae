@@ -425,6 +425,14 @@ const galeriaData_16 = {
     { id: 89, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD39/main/imagenes/img_1779229870455.webp" }
 ]
     },
+
+    '16_9': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes: []
+    },
 };
 
 // Registrar en galeriaDatabase global
