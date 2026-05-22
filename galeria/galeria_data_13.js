@@ -1493,6 +1493,14 @@ const galeriaData_13 = {
 ]
     },
 
+    '13_26': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes: []
+    },
+
     
 
 
