@@ -256,17 +256,9 @@ function iniciarRotacionPortadas(contenedor) {
         
         let imagenesParaRotar = [];
         
-        // Prioridad 1: imagenes_rotacion personalizada
+        // SOLO usar imagenes_rotacion personalizada (NO hacer fallback a imagenes)
         if (galeriaInfo.imagenes_rotacion && galeriaInfo.imagenes_rotacion.length > 0) {
             imagenesParaRotar = galeriaInfo.imagenes_rotacion;
-        } 
-        // Prioridad 2: fallback a las primeras imágenes del array imagenes
-        else if (galeriaInfo.imagenes && galeriaInfo.imagenes.length > 1) {
-            // Tomar hasta 5 imágenes para rotar
-            const maxImagenes = Math.min(5, galeriaInfo.imagenes.length);
-            for (let i = 0; i < maxImagenes; i++) {
-                imagenesParaRotar.push(galeriaInfo.imagenes[i].url);
-            }
         }
         
         // Solo agregar si hay más de 1 imagen para rotar
