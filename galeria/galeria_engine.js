@@ -6,6 +6,11 @@
 // galeriaDatabase se construye desde los archivos galeria_data_*.js
 const galeriaDatabase = {};
 
+// Variables para el carrusel automático
+let intervaloCarrusel = null;
+let imagenesRestantes = [];
+let esPrimeraImagenPrincipal = true;
+
 // ================================================
 // FUNCIONES DE ACCESO A CONTENEDORES
 // ================================================
@@ -318,6 +323,9 @@ function mostrarImagenGrande(indice) {
         contador.textContent = `${indice + 1} / ${galeriaActual.length}`;
         visor.style.display = 'flex';
         
+        // Iniciar carrusel automático al abrir el visor
+        iniciarCarruselAutomatico();
+        
         // Prevenir scroll del body
         document.body.style.overflow = 'hidden';
     }
@@ -328,10 +336,172 @@ function cerrarVisor() {
     if (visor) {
         visor.style.display = 'none';
         document.body.style.overflow = 'auto';
+        
+        // Detener carrusel al cerrar
+        detenerCarruselAutomatico();
+    }
+}
+
+// ================================================
+// CARRUSEL AUTOMÁTICO CON ORDEN ALEATORIO
+// ================================================
+
+function iniciarCarruselAutomatico() {
+    if (!galeriaActual || galeriaActual.length < 2) return;
+    
+    // Obtener la galería completa para verificar si tiene imagenes_rotacion
+    const galeriaInfo = obtenerGaleria(contenedorActual, subcontenedorActual);
+    
+    // Verificar si hay imágenes de rotación personalizadas
+    const tieneRotacionPersonalizada = galeriaInfo && 
+                                       galeriaInfo.imagenes_rotacion && 
+                                       Array.isArray(galeriaInfo.imagenes_rotacion) && 
+                                       galeriaInfo.imagenes_rotacion.length > 0;
+    
+    // Detener cualquier intervalo existente
+    detenerCarruselAutomatico();
+    
+    // Reiniciar estado
+    esPrimeraImagenPrincipal = true;
+    imagenesRestantes = [];
+    
+    // Esperar 2.5 segundos en la imagen principal antes de empezar el carrusel
+    setTimeout(() => {
+        if (document.getElementById('visor-grande')?.style.display !== 'flex') return;
+        
+        // Si hay rotación personalizada, usar esas imágenes; si no, usar las secundarias de la galería
+        if (tieneRotacionPersonalizada) {
+            // Usar imagenes_rotacion (todas son secundarias, la principal es la primera del array imagenes)
+            imagenesRestantes = [];
+            for (let i = 0; i < galeriaInfo.imagenes_rotacion.length; i++) {
+                imagenesRestantes.push({
+                    url: galeriaInfo.imagenes_rotacion[i],
+                    esPersonalizada: true
+                });
+            }
+        } else {
+            // Crear lista de índices restantes (excluyendo la imagen principal que es índice 0)
+            imagenesRestantes = [];
+            for (let i = 1; i < galeriaActual.length; i++) {
+                imagenesRestantes.push({
+                    url: galeriaActual[i].url,
+                    indice: i,
+                    esPersonalizada: false
+                });
+            }
+        }
+        
+        // Función para cambiar imagen
+        const cambiarImagen = () => {
+            if (document.getElementById('visor-grande')?.style.display !== 'flex') {
+                detenerCarruselAutomatico();
+                return;
+            }
+            
+            if (esPrimeraImagenPrincipal && imagenesRestantes.length > 0) {
+                // Primera transición: salir de la imagen principal
+                esPrimeraImagenPrincipal = false;
+                seleccionarYMostrarImagenAleatoria(tieneRotacionPersonalizada);
+            } else if (imagenesRestantes.length > 0) {
+                // Mostrar siguiente imagen aleatoria
+                seleccionarYMostrarImagenAleatoria(tieneRotacionPersonalizada);
+            } else {
+                // Todas las imágenes mostradas, volver a la principal y reiniciar
+                esPrimeraImagenPrincipal = true;
+                indiceImagenActual = 0;
+                actualizarVisor();
+                
+                // Reiniciar lista de imágenes restantes
+                if (tieneRotacionPersonalizada) {
+                    imagenesRestantes = [];
+                    for (let i = 0; i < galeriaInfo.imagenes_rotacion.length; i++) {
+                        imagenesRestantes.push({
+                            url: galeriaInfo.imagenes_rotacion[i],
+                            esPersonalizada: true
+                        });
+                    }
+                } else {
+                    imagenesRestantes = [];
+                    for (let i = 1; i < galeriaActual.length; i++) {
+                        imagenesRestantes.push({
+                            url: galeriaActual[i].url,
+                            indice: i,
+                            esPersonalizada: false
+                        });
+                    }
+                }
+            }
+        };
+        
+        // Ejecutar el primer cambio después del tiempo inicial
+        cambiarImagen();
+        
+        // Luego continuar cambiando cada 2-3 segundos (aleatorio entre 2000 y 3000 ms)
+        const programarSiguienteCambio = () => {
+            if (document.getElementById('visor-grande')?.style.display !== 'flex') {
+                detenerCarruselAutomatico();
+                return;
+            }
+            const tiempoAleatorio = Math.floor(Math.random() * 1000) + 2000;
+            intervaloCarrusel = setTimeout(() => {
+                cambiarImagen();
+                programarSiguienteCambio();
+            }, tiempoAleatorio);
+        };
+        
+        programarSiguienteCambio();
+    }, 2500); // Esperar 2.5 segundos iniciales en la imagen principal
+}
+
+function seleccionarYMostrarImagenAleatoria(tieneRotacionPersonalizada) {
+    if (imagenesRestantes.length === 0) return;
+    
+    // Seleccionar índice aleatorio de la lista restante
+    const indiceAleatorio = Math.floor(Math.random() * imagenesRestantes.length);
+    const imagenSeleccionada = imagenesRestantes[indiceAleatorio];
+    
+    // Remover la imagen seleccionada de la lista de restantes
+    imagenesRestantes.splice(indiceAleatorio, 1);
+    
+    // Actualizar el visor
+    const imagenGrande = document.getElementById('imagen-grande');
+    const contador = document.getElementById('contador-imagen');
+    
+    if (imagenGrande && contador && galeriaActual) {
+        if (tieneRotacionPersonalizada) {
+            // Usar URL personalizada directamente
+            imagenGrande.src = imagenSeleccionada.url;
+            contador.textContent = `Rotación / ${galeriaActual.length}`;
+        } else {
+            // Usar índice del array original
+            indiceImagenActual = imagenSeleccionada.indice;
+            imagenGrande.src = galeriaActual[indiceImagenActual].url;
+            contador.textContent = `${indiceImagenActual + 1} / ${galeriaActual.length}`;
+        }
+    }
+}
+
+function actualizarVisor() {
+    const imagenGrande = document.getElementById('imagen-grande');
+    const contador = document.getElementById('contador-imagen');
+    
+    if (imagenGrande && contador && galeriaActual) {
+        imagenGrande.src = galeriaActual[indiceImagenActual].url;
+        contador.textContent = `${indiceImagenActual + 1} / ${galeriaActual.length}`;
+    }
+}
+
+function detenerCarruselAutomatico() {
+    if (intervaloCarrusel) {
+        clearTimeout(intervaloCarrusel);
+        intervaloCarrusel = null;
     }
 }
 
 function imagenAnterior() {
+    // Detener carrusel cuando el usuario interactúa manualmente
+    detenerCarruselAutomatico();
+    
     if (!galeriaActual || galeriaActual.length === 0) return;
     
     indiceImagenActual--;
@@ -349,6 +519,9 @@ function imagenAnterior() {
 }
 
 function imagenSiguiente() {
+    // Detener carrusel cuando el usuario interactúa manualmente
+    detenerCarruselAutomatico();
+    
     if (!galeriaActual || galeriaActual.length === 0) return;
     
     indiceImagenActual++;
