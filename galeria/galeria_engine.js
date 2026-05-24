@@ -102,6 +102,13 @@ function existeGaleria(contenedor, subcontenedor) {
 function cargarPaginaGaleria() {
     modoActual = 'galeria';
     modoMazoDificil = false;
+    
+    // Detener cualquier rotación al volver a la página principal de galerías
+    if (intervaloRotacionPortada) {
+        clearInterval(intervaloRotacionPortada);
+        intervaloRotacionPortada = null;
+    }
+    
     ocultarHeader();
     
     const mangaSection = document.getElementById('manga-section');
@@ -142,8 +149,15 @@ function crearContenedoresGaleria() {
 
 function cargarSubcontenedoresGaleria(contenedor) {
     contenedorActual = contenedor;
+    subcontenedorActual = null; // Resetear subcontenedor
     modoActual = 'galeria';
     modoMazoDificil = false;
+    
+    // Detener cualquier rotación al cambiar de vista
+    if (intervaloRotacionPortada) {
+        clearInterval(intervaloRotacionPortada);
+        intervaloRotacionPortada = null;
+    }
     
     const mangaSection = document.getElementById('manga-section');
     mangaSection.innerHTML = crearSubcontenedoresGaleriaUI(contenedor);
@@ -189,8 +203,8 @@ function crearSubcontenedoresGaleriaUI(contenedor) {
                 }
                 
                 html += `
-                    <div class="subcontenedor-item" onclick="cargarGaleria(${contenedor}, '${subKey}')">
-                        <div class="subcontenedor-img" style="background-image: url('${galeriaInfo.imagen}')"></div>
+                    <div class="subcontenedor-item" onclick="cargarGaleria(${contenedor}, '${subKey}')" data-key="${contenedor}_${subKey}">
+                        <div class="subcontenedor-img" style="background-image: url('${galeriaInfo.imagen}')" data-key="${contenedor}_${subKey}"></div>
                         <h3>${tituloMostrar}</h3>
                         <p style="font-size: 0.85rem; opacity: 0.8;">${galeriaInfo.categoria} • ${galeriaInfo.imagenes.length} imágenes</p>
                         <div class="card-button" style="margin-top: 10px; padding: 10px 20px; font-size: 0.9rem; background: linear-gradient(135deg, #FF1493, #FF69B4);">
@@ -206,6 +220,8 @@ function crearSubcontenedoresGaleriaUI(contenedor) {
     return html;
 }
 // 5. Cargar galería específica
+let intervaloRotacionPortada = null;
+
 function cargarGaleria(contenedor, subcontenedor) {
     contenedorActual = contenedor;
     subcontenedorActual = subcontenedor;
@@ -216,11 +232,53 @@ function cargarGaleria(contenedor, subcontenedor) {
         return;
     }
     
+    // Detener cualquier rotación anterior
+    if (intervaloRotacionPortada) {
+        clearInterval(intervaloRotacionPortada);
+        intervaloRotacionPortada = null;
+    }
+    
+    // Iniciar rotación automática de la imagen de portada SI tiene imagenes_rotacion
+    const tieneRotacionPersonalizada = galeriaInfo && 
+                                       galeriaInfo.imagenes_rotacion && 
+                                       Array.isArray(galeriaInfo.imagenes_rotacion) && 
+                                       galeriaInfo.imagenes_rotacion.length > 0;
+    
+    if (tieneRotacionPersonalizada) {
+        let indiceRotacion = 0;
+        const imagenPortadaOriginal = galeriaInfo.imagen;
+        
+        // Mostrar la primera imagen de rotación inmediatamente
+        actualizarImagenPortada(galeriaInfo.imagenes_rotacion[0]);
+        
+        // Rotar cada 2.5 segundos
+        intervaloRotacionPortada = setInterval(() => {
+            indiceRotacion = (indiceRotacion + 1) % galeriaInfo.imagenes_rotacion.length;
+            actualizarImagenPortada(galeriaInfo.imagenes_rotacion[indiceRotacion]);
+        }, 2500);
+    }
+    
     const mangaSection = document.getElementById('manga-section');
     mangaSection.innerHTML = crearGaleriaUI(galeriaInfo);
     
-    const botonVolver = crearBotonVolver(() => cargarSubcontenedoresGaleria(contenedor));
+    const botonVolver = crearBotonVolver(() => {
+        // Detener rotación al salir de la galería
+        if (intervaloRotacionPortada) {
+            clearInterval(intervaloRotacionPortada);
+            intervaloRotacionPortada = null;
+        }
+        cargarSubcontenedoresGaleria(contenedor);
+    });
     mangaSection.insertBefore(botonVolver, mangaSection.firstChild);
+}
+
+function actualizarImagenPortada(nuevaUrl) {
+    // Buscar la imagen de portada de la galería actual usando el data-key
+    const claveBusqueda = contenedorActual + '_' + subcontenedorActual;
+    const imgElement = document.querySelector(`.subcontenedor-img[data-key="${claveBusqueda}"]`);
+    if (imgElement) {
+        imgElement.style.backgroundImage = `url('${nuevaUrl}')`;
+    }
 }
 
 // 6. Crear UI de la galería con vista en grande
@@ -323,8 +381,8 @@ function mostrarImagenGrande(indice) {
         contador.textContent = `${indice + 1} / ${galeriaActual.length}`;
         visor.style.display = 'flex';
         
-        // Iniciar carrusel automático al abrir el visor
-        iniciarCarruselAutomatico();
+        // NO iniciar carrusel automático - solo mostrar la imagen estática
+        // El carrusel automático ahora solo funciona en la portada de la galería
         
         // Prevenir scroll del body
         document.body.style.overflow = 'hidden';
