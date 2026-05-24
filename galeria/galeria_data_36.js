@@ -360,19 +360,19 @@ const galeriaData_36 = {
         categoria: "",
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD44/main/imagenes/img_1779641436536.webp",
         imagenes_rotacion: [
-                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD44/main/imagenes/img_1779641438436.jpg"
+                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD44/main/imagenes/img_1779641438436.jpg",
                            
-                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD44/main/imagenes/img_1779641440424.jpg"
+                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD44/main/imagenes/img_1779641440424.jpg",
                            
-                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD44/main/imagenes/img_1779641442344.jpg"
+                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD44/main/imagenes/img_1779641442344.jpg",
                            
-                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD44/main/imagenes/img_1779641444343.jpg"
+                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD44/main/imagenes/img_1779641444343.jpg",
                            
-                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD44/main/imagenes/img_1779641446397.jpg"
+                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD44/main/imagenes/img_1779641446397.jpg",
                            
-                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD44/main/imagenes/img_1779641448368.jpg"
+                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD44/main/imagenes/img_1779641448368.jpg",
                            
-                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD44/main/imagenes/img_1779641450334.jpg"
+                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD44/main/imagenes/img_1779641450334.jpg",
                            
                             "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD44/main/imagenes/img_1779641452330.jpg"
                            ],
