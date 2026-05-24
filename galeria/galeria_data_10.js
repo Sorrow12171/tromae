@@ -8,6 +8,7 @@ const galeriaData_10 = {
         descripcion: "Tres hermanas - Nino, Ichika y Miku",
         categoria: "Quintillizas - Trio",
         imagen: "https://pbs.twimg.com/media/HClB4sMWkAAZRK8?format=jpg&name=small",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772897713827.jpg" },
             { id: 2, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772897792586.jpg" },
@@ -31,6 +32,7 @@ const galeriaData_10 = {
         descripcion: "Nino, Ichika y Yotsuba juntas",
         categoria: "Quintillizas - Trio",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772842250442.jpg",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772842250442.jpg" }
         ]
@@ -40,6 +42,7 @@ const galeriaData_10 = {
         descripcion: "Nino, Ichika e Itsuki en trio",
         categoria: "Quintillizas - Trio",
         imagen: "https://pbs.twimg.com/media/HClC0beWIAAKAju?format=jpg&name=small",
+        imagenes_rotacion: [],
         imagenes: []
     },
     '10_Nino_Miku_Yotsuba': {
@@ -47,6 +50,7 @@ const galeriaData_10 = {
         descripcion: "Nino con Miku y Yotsuba",
         categoria: "Quintillizas - Trio",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772842066494.jpg",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772842066494.jpg" },
             { id: 2, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772842078371.jpg" },
@@ -61,6 +65,7 @@ const galeriaData_10 = {
         descripcion: "Nino, Miku e Itsuki",
         categoria: "Quintillizas - Trio",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772841970628.jpg",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772841970628.jpg" }
         ]
@@ -70,6 +75,7 @@ const galeriaData_10 = {
         descripcion: "Nino con Yotsuba e Itsuki",
         categoria: "Quintillizas - Trio",
         imagen: "https://pbs.twimg.com/media/HClCBCMXMAAd6qi?format=jpg&name=small",
+        imagenes_rotacion: [],
         imagenes: []
     },
     '10_Ichika_Miku_Yotsuba': {
@@ -77,6 +83,7 @@ const galeriaData_10 = {
         descripcion: "Ichika, Miku y Yotsuba",
         categoria: "Quintillizas - Trio",
         imagen: "https://pbs.twimg.com/media/HClCE68WYAAuFly?format=jpg&name=small",
+        imagenes_rotacion: [],
         imagenes: []
     },
     '10_Ichika_Miku_Itsuki': {
@@ -84,6 +91,7 @@ const galeriaData_10 = {
         descripcion: "Ichika, Miku e Itsuki",
         categoria: "Quintillizas - Trio",
         imagen: "https://pbs.twimg.com/media/HClCGqZakAA4SE4?format=jpg&name=small",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772891136642.jpg" }
         ]
@@ -93,6 +101,7 @@ const galeriaData_10 = {
         descripcion: "Ichika con Yotsuba e Itsuki",
         categoria: "Quintillizas - Trio",
         imagen: "https://pbs.twimg.com/media/HClCIlHa8AABwfo?format=jpg&name=small",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772896937651.jpg" },
             { id: 2, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772896955823.jpg" }
@@ -103,6 +112,7 @@ const galeriaData_10 = {
         descripcion: "Miku, Yotsuba e Itsuki",
         categoria: "Quintillizas - Trio",
         imagen: "https://pbs.twimg.com/media/HCqEZzsaoAAhtRm?format=jpg&name=small",
+        imagenes_rotacion: [],
         imagenes: []
     },
 
@@ -111,6 +121,7 @@ const galeriaData_10 = {
         descripcion: "",
         categoria: "",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD19/main/imagenes/img_1773599726687.png",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD19/main/imagenes/img_1773599421947.png" },
             { id: 2, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD19/main/imagenes/img_1773599424836.png" },
@@ -242,6 +253,7 @@ const galeriaData_10 = {
         descripcion: "",
         categoria: "",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1774104511041.png",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1774104450447.png" },
             { id: 2, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1774104453087.png" },

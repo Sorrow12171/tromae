@@ -1,1 +1,4 @@
-Nothing should be ignored based on the provided file changes. The only modified file is `galeria/galeria_engine.js`, which is a source code file and should not be added to .gitignore.
+```
+# Gallery data files - auto-generated
+galeria/galeria_data_*.js
+```
