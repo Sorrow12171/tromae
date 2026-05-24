@@ -194,17 +194,27 @@ function crearSubcontenedoresGaleriaUI(contenedor) {
             const galeriaInfo = obtenerGaleria(contenedor, subKey);
             if (galeriaInfo) {
                 // CORREGIDO: Usar el título original SIEMPRE
-                // Para todos los contenedores, mostramos el título original definido en galeriaInfo.titulo
                 let tituloMostrar = galeriaInfo.titulo;
                 
-                // Si por alguna razón el título está vacío, usamos un genérico
                 if (!tituloMostrar || tituloMostrar.trim() === '') {
                     tituloMostrar = `Galería ${subKey}`;
                 }
                 
+                // DETERMINAR IMAGEN INICIAL DE PORTADA
+                let imagenInicial = galeriaInfo.imagen;
+                
+                // Si tiene imagenes_rotacion, usar la primera
+                if (galeriaInfo.imagenes_rotacion && galeriaInfo.imagenes_rotacion.length > 0) {
+                    imagenInicial = galeriaInfo.imagenes_rotacion[0];
+                } 
+                // Si NO tiene imagenes_rotacion pero tiene imagenes, usar la primera del array imagenes
+                else if (galeriaInfo.imagenes && galeriaInfo.imagenes.length > 0) {
+                    imagenInicial = galeriaInfo.imagenes[0].url;
+                }
+                
                 html += `
                     <div class="subcontenedor-item" onclick="cargarGaleria(${contenedor}, '${subKey}')" data-key="${contenedor}_${subKey}">
-                        <div class="subcontenedor-img" style="background-image: url('${galeriaInfo.imagen}')" data-key="${contenedor}_${subKey}"></div>
+                        <div class="subcontenedor-img" style="background-image: url('${imagenInicial}')" data-key="${contenedor}_${subKey}"></div>
                         <h3>${tituloMostrar}</h3>
                         <p style="font-size: 0.85rem; opacity: 0.8;">${galeriaInfo.categoria} • ${galeriaInfo.imagenes.length} imágenes</p>
                         <div class="card-button" style="margin-top: 10px; padding: 10px 20px; font-size: 0.9rem; background: linear-gradient(135deg, #FF1493, #FF69B4);">
@@ -217,7 +227,73 @@ function crearSubcontenedoresGaleriaUI(contenedor) {
     }
     
     html += '</div>';
+    
+    // IMPORTANTE: Iniciar rotación después de un pequeño delay para asegurar que el DOM esté listo
+    setTimeout(() => iniciarRotacionPortadas(contenedor), 100);
+    
     return html;
+}
+
+// NUEVA FUNCIÓN: Iniciar rotación de portadas en las subgalerías
+function iniciarRotacionPortadas(contenedor) {
+    // Detener cualquier rotación previa
+    if (intervaloRotacionPortada) {
+        clearInterval(intervaloRotacionPortada);
+        intervaloRotacionPortada = null;
+    }
+    
+    const contenedores = obtenerContenedoresGaleriaDisponibles();
+    const subcontenedoresDisponibles = contenedores[contenedor] || [];
+    
+    if (subcontenedoresDisponibles.length === 0) return;
+    
+    // Recopilar todas las galerías con imágenes para rotar
+    const galeriasConRotacion = [];
+    
+    subcontenedoresDisponibles.forEach(subKey => {
+        const galeriaInfo = obtenerGaleria(contenedor, subKey);
+        if (!galeriaInfo) return;
+        
+        let imagenesParaRotar = [];
+        
+        // Prioridad 1: imagenes_rotacion personalizada
+        if (galeriaInfo.imagenes_rotacion && galeriaInfo.imagenes_rotacion.length > 0) {
+            imagenesParaRotar = galeriaInfo.imagenes_rotacion;
+        } 
+        // Prioridad 2: fallback a las primeras imágenes del array imagenes
+        else if (galeriaInfo.imagenes && galeriaInfo.imagenes.length > 1) {
+            // Tomar hasta 5 imágenes para rotar
+            const maxImagenes = Math.min(5, galeriaInfo.imagenes.length);
+            for (let i = 0; i < maxImagenes; i++) {
+                imagenesParaRotar.push(galeriaInfo.imagenes[i].url);
+            }
+        }
+        
+        // Solo agregar si hay más de 1 imagen para rotar
+        if (imagenesParaRotar.length > 1) {
+            galeriasConRotacion.push({
+                key: `${contenedor}_${subKey}`,
+                imagenes: imagenesParaRotar,
+                indice: 0
+            });
+        }
+    });
+    
+    if (galeriasConRotacion.length === 0) return;
+    
+    // Rotar todas las portadas cada 2.5 segundos
+    intervaloRotacionPortada = setInterval(() => {
+        galeriasConRotacion.forEach(galeria => {
+            // Avanzar al siguiente índice
+            galeria.indice = (galeria.indice + 1) % galeria.imagenes.length;
+            
+            // Actualizar la imagen de portada
+            const imgElement = document.querySelector(`.subcontenedor-img[data-key="${galeria.key}"]`);
+            if (imgElement) {
+                imgElement.style.backgroundImage = `url('${galeria.imagenes[galeria.indice]}')`;
+            }
+        });
+    }, 2500);
 }
 // 5. Cargar galería específica
 let intervaloRotacionPortada = null;
