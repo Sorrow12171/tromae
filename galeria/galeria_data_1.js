@@ -9,10 +9,10 @@ const galeriaData_1 = {
         categoria: "Mi puta novia culona tetona buen culo",
         imagen: "https://pbs.twimg.com/media/GrNWikuWsAAVYtt?format=jpg&name=4096x4096",
         imagenes_rotacion: [
-            "https://pbs.twimg.com/media/GztU8Y3XsAA5Yzm?format=png&name=small",
-            "https://pbs.twimg.com/media/HCrZxBIW8AE9F4E?format=jpg&name=small",
-            "https://pbs.twimg.com/media/HCrbuHAaUAI3sCB?format=jpg&name=small",
-            "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772756482259.jpg"
+            "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772812847734.jpg",
+            "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772840114115.jpg",
+              "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772902544781.jpg"
+          
         ],
         imagenes: [
             { id: 1, url: "https://pbs.twimg.com/media/GrNWikuWsAAVYtt?format=jpg&name=4096x4096" },
