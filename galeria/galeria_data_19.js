@@ -8,6 +8,7 @@ const galeriaData_19 = {
         descripcion: "",
         categoria: "pelirroja",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773069620083.jpg",
+        imagenes_rotacion: [],
         imagenes: []
     },
     '19_2': {
@@ -15,6 +16,7 @@ const galeriaData_19 = {
         descripcion: "",
         categoria: "kairo art",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/XDXDXDXDXD/main/imagenes/img_1773070507674.jpg",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/XDXDXDXDXD/main/imagenes/img_1773069759427.jpg" },
             { id: 2, url: "https://raw.githubusercontent.com/SORFAR123123/XDXDXDXDXD/main/imagenes/img_1773069765397.jpg" },
@@ -131,6 +133,7 @@ const galeriaData_19 = {
         descripcion: "",
         categoria: "",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD9/main/imagenes/img_1773445579714.jpg",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD9/main/imagenes/img_1773444260911.jpg" },
             { id: 2, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD9/main/imagenes/img_1773444262884.jpg" },

@@ -8,6 +8,7 @@ const galeriaData_20 = {
         descripcion: "",
         categoria: "",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1773159738987.jpg",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1773159801734.jpg" },
             { id: 2, url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1773159837753.jpg" }
@@ -18,6 +19,7 @@ const galeriaData_20 = {
         descripcion: "",
         categoria: "putarda",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD2/main/imagenes/img_1773160887305.jpg",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD2/main/imagenes/img_1773160797530.jpg" },
             { id: 2, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD2/main/imagenes/img_1773160799709.jpg" },
@@ -49,6 +51,7 @@ const galeriaData_20 = {
         descripcion: "",
         categoria: "artkoikoi",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD2/main/imagenes/img_1773161563223.jpg",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD2/main/imagenes/img_1773161495637.jpg" },
             { id: 2, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD2/main/imagenes/img_1773161497989.jpg" },
@@ -71,6 +74,7 @@ const galeriaData_20 = {
         descripcion: "",
         categoria: "okumix",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD2/main/imagenes/img_1773162367481.jpg",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD2/main/imagenes/img_1773162126578.jpg" },
             { id: 2, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD2/main/imagenes/img_1773162132106.jpg" },
@@ -164,6 +168,7 @@ const galeriaData_20 = {
         descripcion: "",
         categoria: "putonas okumix",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD2/main/imagenes/img_1773162674000.png",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD2/main/imagenes/img_1773162554178.png" },
             { id: 2, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD2/main/imagenes/img_1773162556571.png" },
@@ -207,6 +212,7 @@ const galeriaData_20 = {
         descripcion: "",
         categoria: "",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD23/main/imagenes/img_1774198718385.jpg",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD23/main/imagenes/img_1774198624863.jpg" },
             { id: 2, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD23/main/imagenes/img_1774198626780.jpg" },
@@ -252,6 +258,7 @@ const galeriaData_20 = {
         descripcion: "",
         categoria: "",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD24/main/imagenes/img_1774810289463.png",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD24/main/imagenes/img_1774810144835.png" },
             { id: 2, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD24/main/imagenes/img_1774810147276.png" },
@@ -296,6 +303,7 @@ const galeriaData_20 = {
         descripcion: "",
         categoria: "",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD27/main/imagenes/img_1774911126123.jpg",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD27/main/imagenes/img_1774910742918.jpg" },
             { id: 2, url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD27/main/imagenes/img_1774910745558.jpg" },
@@ -431,6 +439,7 @@ const galeriaData_20 = {
         descripcion: "",
         categoria: "",
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777142318098.png",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777142159419.png" },
             { id: 2, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777142164702.png" },
@@ -482,6 +491,7 @@ const galeriaData_20 = {
         descripcion: "",
         categoria: "",
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD32/main/imagenes/img_1777209122206.webp",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD32/main/imagenes/img_1777208948754.webp" },
             { id: 2, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD32/main/imagenes/img_1777208950254.webp" },
@@ -554,6 +564,7 @@ const galeriaData_20 = {
         descripcion: "",
         categoria: "",
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD32/main/imagenes/img_1777650127483.jpg",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD32/main/imagenes/img_1777648673256.jpg" },
             { id: 2, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD32/main/imagenes/img_1777648675826.jpg" },
@@ -585,6 +596,7 @@ const galeriaData_20 = {
         descripcion: "Primer subcontenedor de prueba",
         categoria: "Prueba",
         imagen: "https://pbs.twimg.com/media/HCrsaa6WcAEQbE6?format=jpg&name=large",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://pbs.twimg.com/media/HCrsaa6WcAEQbE6?format=jpg&name=large" },
             { id: 2, url: "https://pbs.twimg.com/media/HCrjyH_W8AEZXuN?format=png&name=small" }

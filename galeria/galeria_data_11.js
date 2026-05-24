@@ -8,6 +8,7 @@ const galeriaData_11 = {
         descripcion: "Cuarteto sin Itsuki",
         categoria: "Quintillizas - Cuarteto",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772841774913.jpg",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772841774913.jpg" },
             { id: 2, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772891182888.jpg" }
@@ -18,6 +19,7 @@ const galeriaData_11 = {
         descripcion: "Cuarteto sin Yotsuba",
         categoria: "Quintillizas - Cuarteto",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772842513938.jpg",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772842513938.jpg" },
             { id: 2, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772891201432.jpg" }
@@ -28,6 +30,7 @@ const galeriaData_11 = {
         descripcion: "Cuarteto sin Miku",
         categoria: "Quintillizas - Cuarteto",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772842732907.jpg",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772842732907.jpg" },
             { id: 2, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772843434180.jpg" },
@@ -39,6 +42,7 @@ const galeriaData_11 = {
         descripcion: "Cuarteto sin Ichika",
         categoria: "Quintillizas - Cuarteto",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772841739980.jpg",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772841739980.jpg" }
         ]
@@ -48,6 +52,7 @@ const galeriaData_11 = {
         descripcion: "Cuarteto sin Nino",
         categoria: "Quintillizas - Cuarteto",
         imagen: "https://pbs.twimg.com/media/HCrTLFgaUAExqjv?format=jpg&name=small",
+        imagenes_rotacion: [],
         imagenes: []
     }
 };

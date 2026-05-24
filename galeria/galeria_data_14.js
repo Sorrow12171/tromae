@@ -8,6 +8,7 @@ const galeriaData_14 = {
         descripcion: "",
         categoria: "Mi zorra",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772929248085.jpg",
+        imagenes_rotacion: [],
         imagenes: []
     },
     '14_2': {
@@ -15,6 +16,7 @@ const galeriaData_14 = {
         descripcion: "",
         categoria: "Puta chinarda",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/XDXDXDXDXD/main/imagenes/img_1773099852921.jpg",
+        imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/XDXDXDXDXD/main/imagenes/img_1773099582799.jpg" },
             { id: 2, url: "https://raw.githubusercontent.com/SORFAR123123/XDXDXDXDXD/main/imagenes/img_1773099588764.jpg" },
