@@ -107,7 +107,7 @@ const contenedoresGaleria = {
         categoria: "Rias"
     },
     18: {
-        nombre: "Ruby",
+        nombre: "OshiNoPutas",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772992045070.jpg",
         descripcion: "OshinoTrolas",
         categoria: "Ruby"
