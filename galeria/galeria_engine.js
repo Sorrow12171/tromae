@@ -286,6 +286,16 @@ function iniciarRotacionPortadas(contenedor) {
     let indiceGaleriaActual = 0;
     let timeoutId = null;
     
+    // PRIMERO: Establecer todas las portadas en su imagen principal (índice 0)
+    galeriasConRotacion.forEach(galeria => {
+        const imgElement = document.querySelector(`.subcontenedor-img[data-key="${galeria.key}"]`);
+        if (imgElement) {
+            imgElement.style.backgroundImage = `url('${galeria.imagenes[0]}')`;
+        }
+        // Resetear índice a 0 (imagen principal)
+        galeria.indice = 0;
+    });
+    
     // Función para rotar una galería específica
     function rotarSiguienteImagen() {
         if (galeriasConRotacion.length === 0) return;
@@ -312,8 +322,8 @@ function iniciarRotacionPortadas(contenedor) {
         }, tiempoEspera);
     }
     
-    // Iniciar la rotación después de 2.5 segundos iniciales
-    timeoutId = setTimeout(rotarSiguienteImagen, 2500);
+    // Iniciar la rotación después de 5 segundos (tiempo para mostrar la imagen principal)
+    timeoutId = setTimeout(rotarSiguienteImagen, 5000);
     
     // Guardar referencia para poder detenerla
     intervaloRotacionPortada = {
