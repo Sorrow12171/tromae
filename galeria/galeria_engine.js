@@ -256,9 +256,18 @@ function iniciarRotacionPortadas(contenedor) {
         
         let imagenesParaRotar = [];
         
-        // SOLO usar imagenes_rotacion personalizada (NO hacer fallback a imagenes)
+        // INCLUIR la imagen principal (imagen) al inicio del array de rotación
+        if (galeriaInfo.imagen && galeriaInfo.imagen.trim() !== '') {
+            imagenesParaRotar.push(galeriaInfo.imagen);
+        }
+        
+        // Agregar las imágenes de imagenes_rotacion si existen
         if (galeriaInfo.imagenes_rotacion && galeriaInfo.imagenes_rotacion.length > 0) {
-            imagenesParaRotar = galeriaInfo.imagenes_rotacion;
+            galeriaInfo.imagenes_rotacion.forEach(img => {
+                if (!imagenesParaRotar.includes(img)) {
+                    imagenesParaRotar.push(img);
+                }
+            });
         }
         
         // Solo agregar si hay más de 1 imagen para rotar
@@ -273,19 +282,48 @@ function iniciarRotacionPortadas(contenedor) {
     
     if (galeriasConRotacion.length === 0) return;
     
-    // Rotar todas las portadas cada 2.5 segundos
-    intervaloRotacionPortada = setInterval(() => {
-        galeriasConRotacion.forEach(galeria => {
-            // Avanzar al siguiente índice
-            galeria.indice = (galeria.indice + 1) % galeria.imagenes.length;
-            
-            // Actualizar la imagen de portada
-            const imgElement = document.querySelector(`.subcontenedor-img[data-key="${galeria.key}"]`);
-            if (imgElement) {
-                imgElement.style.backgroundImage = `url('${galeria.imagenes[galeria.indice]}')`;
+    // Variables para manejar tiempos diferentes
+    let indiceGaleriaActual = 0;
+    let timeoutId = null;
+    
+    // Función para rotar una galería específica
+    function rotarSiguienteImagen() {
+        if (galeriasConRotacion.length === 0) return;
+        
+        const galeria = galeriasConRotacion[indiceGaleriaActual];
+        
+        // Avanzar al siguiente índice
+        galeria.indice = (galeria.indice + 1) % galeria.imagenes.length;
+        
+        // Actualizar la imagen de portada
+        const imgElement = document.querySelector(`.subcontenedor-img[data-key="${galeria.key}"]`);
+        if (imgElement) {
+            imgElement.style.backgroundImage = `url('${galeria.imagenes[galeria.indice]}')`;
+        }
+        
+        // Determinar el tiempo según si es la imagen principal (índice 0)
+        const esImagenPrincipal = (galeria.indice === 0);
+        const tiempoEspera = esImagenPrincipal ? 5000 : 2500;
+        
+        // Programar la siguiente rotación
+        timeoutId = setTimeout(() => {
+            indiceGaleriaActual = (indiceGaleriaActual + 1) % galeriasConRotacion.length;
+            rotarSiguienteImagen();
+        }, tiempoEspera);
+    }
+    
+    // Iniciar la rotación después de 2.5 segundos iniciales
+    timeoutId = setTimeout(rotarSiguienteImagen, 2500);
+    
+    // Guardar referencia para poder detenerla
+    intervaloRotacionPortada = {
+        stop: () => {
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+                timeoutId = null;
             }
-        });
-    }, 2500);
+        }
+    };
 }
 // 5. Cargar galería específica
 let intervaloRotacionPortada = null;
@@ -302,12 +340,21 @@ function cargarGaleria(contenedor, subcontenedor) {
     
     // Detener cualquier rotación anterior
     if (intervaloRotacionPortada) {
-        clearInterval(intervaloRotacionPortada);
+        if (intervaloRotacionPortada.stop) {
+            intervaloRotacionPortada.stop();
+        } else {
+            clearInterval(intervaloRotacionPortada);
+        }
         intervaloRotacionPortada = null;
     }
     
-    // Determinar qué imágenes usar para rotación
+    // Determinar qué imágenes usar para rotación - INCLUYENDO la imagen principal
     let imagenesParaRotacion = [];
+    
+    // PRIMERO: Agregar la imagen principal (imagen) si existe
+    if (galeriaInfo.imagen && galeriaInfo.imagen.trim() !== '') {
+        imagenesParaRotacion.push(galeriaInfo.imagen);
+    }
     
     // Verificar si tiene imagenes_rotacion personalizada
     const tieneRotacionPersonalizada = galeriaInfo && 
@@ -316,30 +363,45 @@ function cargarGaleria(contenedor, subcontenedor) {
                                        galeriaInfo.imagenes_rotacion.length > 0;
     
     if (tieneRotacionPersonalizada) {
-        // Usar las imágenes de rotación personalizadas
-        imagenesParaRotacion = galeriaInfo.imagenes_rotacion;
+        // Agregar las imágenes de rotación personalizadas (sin duplicar la principal)
+        galeriaInfo.imagenes_rotacion.forEach(img => {
+            if (!imagenesParaRotacion.includes(img)) {
+                imagenesParaRotacion.push(img);
+            }
+        });
     } else if (galeriaInfo && galeriaInfo.imagenes && Array.isArray(galeriaInfo.imagenes) && galeriaInfo.imagenes.length > 1) {
         // Si no tiene rotación personalizada, usar las primeras imágenes del array imagenes
-        // Usamos hasta 5 imágenes o menos si hay menos disponibles
+        // Usamos hasta 5 imágenes o menos si hay menos disponibles (sin duplicar la principal)
         const maxImagenesRotacion = Math.min(5, galeriaInfo.imagenes.length);
         for (let i = 0; i < maxImagenesRotacion; i++) {
-            imagenesParaRotacion.push(galeriaInfo.imagenes[i].url);
+            if (!imagenesParaRotacion.includes(galeriaInfo.imagenes[i].url)) {
+                imagenesParaRotacion.push(galeriaInfo.imagenes[i].url);
+            }
         }
     }
     
     // Iniciar rotación automática si hay imágenes para rotar
     if (imagenesParaRotacion.length > 1) {
         let indiceRotacion = 0;
-        const imagenPortadaOriginal = galeriaInfo.imagen;
         
-        // Mostrar la primera imagen de rotación inmediatamente
+        // Mostrar la primera imagen inmediatamente (que es la principal)
         actualizarImagenPortada(imagenesParaRotacion[0]);
         
-        // Rotar cada 2.5 segundos
-        intervaloRotacionPortada = setInterval(() => {
+        // Función de rotación con tiempos diferentes
+        function rotarConTiemposDiferentes() {
             indiceRotacion = (indiceRotacion + 1) % imagenesParaRotacion.length;
             actualizarImagenPortada(imagenesParaRotacion[indiceRotacion]);
-        }, 2500);
+            
+            // Determinar el tiempo según si es la imagen principal (índice 0)
+            const esImagenPrincipal = (indiceRotacion === 0);
+            const tiempoEspera = esImagenPrincipal ? 5000 : 2500;
+            
+            intervaloRotacionPortada = setTimeout(rotarConTiemposDiferentes, tiempoEspera);
+        }
+        
+        // Iniciar la rotación después de mostrar la primera imagen
+        // La primera imagen (principal) se muestra por 5 segundos antes de cambiar
+        intervaloRotacionPortada = setTimeout(rotarConTiemposDiferentes, 5000);
     }
     
     const mangaSection = document.getElementById('manga-section');
@@ -348,7 +410,11 @@ function cargarGaleria(contenedor, subcontenedor) {
     const botonVolver = crearBotonVolver(() => {
         // Detener rotación al salir de la galería
         if (intervaloRotacionPortada) {
-            clearInterval(intervaloRotacionPortada);
+            if (intervaloRotacionPortada.stop) {
+                intervaloRotacionPortada.stop();
+            } else {
+                clearTimeout(intervaloRotacionPortada);
+            }
             intervaloRotacionPortada = null;
         }
         cargarSubcontenedoresGaleria(contenedor);
