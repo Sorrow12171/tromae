@@ -1,4 +1,41 @@
 ```
+# Build artifacts
+*.pyc
+__pycache__/
+*.o
+*.obj
+*.out
+dist/
+build/
+target/
+
+# Dependencies
+node_modules/
+venv/
+.venv/
+.env
+.env.local
+*.env.*
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Logs and temp files
+*.log
+*.tmp
+
+# Coverage reports
+coverage/
+htmlcov/
+.coverage
+
 # Compressed files
 *.zip
 *.gz
@@ -22,140 +59,4 @@
 *.tar.bz2
 *.tar.xz
 *.tar.zst
-
-# Logs
-*.log
-
-# Environment
-.env
-.env.local
-.env.*
-
-# Dependencies
-node_modules/
-**/node_modules/
-julia-*/
-zig*/
-
-# Build artifacts
-dist/
-build/
-target/
-
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
-venv/
-.venv/
-.ENV
-.venv.bak/
-pip-log.txt
-pip-delete-this-directory.txt
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.log
-.git/modules/
-*.sublime-workspace
-.pytest_cache/
-.hypothesis/
-.coverage/
-htmlcov/
-.installed.cfg
-.lib/
-.eggs/
-.egg-info/
-*.egg-info/
-*.egg
-
-# Compiled
-*.o
-*.obj
-*.a
-*.so
-*.dll
-*.exe
-*.out
-*.class
-*.jar
-*.war
-*.ear
-*.iml
-*.ipr
-*.iws
-*.swo
-*.swp
-
-# Editors
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# System
-.DS_Store
-Thumbs.db
-ehthumbs.db
-Icon?
-.directory
-.Trashes
-*.nib
-*~
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-desktop.ini
-
-# Gradle
-.gradle/
-build/
-
-# MyPy
-.mypy_cache/
-
-# PyTest
-.pytest_cache/
-
-# Coverage
-coverage/
-htmlcov/
-.coverage
-.coverage.*
-
-# Distribution / packaging
-.Python
-env/
-venv/
-.venv/
-ENV/
-env.bak/
-venv.bak/
-
-# IDE
-.vscode/settings.json
-.settings/
-.factorypath
-.project
-.classpath
-.pydevproject
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
 ```
