@@ -1612,6 +1612,14 @@ const galeriaData_13 = {
 ]
     },
 
+    '13_30': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes: []
+    },
+
     
 
 
