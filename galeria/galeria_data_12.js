@@ -1882,6 +1882,15 @@ const galeriaData_12 = {
     { id: 39, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD37/main/imagenes/img_1778711507012.jpg" }
 ]
     },
+
+    '12_putas_en_traje_de__escolar': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
 };
 
 if (typeof galeriaDatabase !== 'undefined') {
