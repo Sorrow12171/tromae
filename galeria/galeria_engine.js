@@ -203,14 +203,12 @@ function crearSubcontenedoresGaleriaUI(contenedor) {
                 // DETERMINAR IMAGEN INICIAL DE PORTADA
                 let imagenInicial = galeriaInfo.imagen;
                 
-                // Si tiene imagenes_rotacion, usar la primera
+                // Si tiene imagenes_rotacion, usar la primera de rotacion
                 if (galeriaInfo.imagenes_rotacion && galeriaInfo.imagenes_rotacion.length > 0) {
                     imagenInicial = galeriaInfo.imagenes_rotacion[0];
-                } 
-                // Si NO tiene imagenes_rotacion pero tiene imagenes, usar la primera del array imagenes
-                else if (galeriaInfo.imagenes && galeriaInfo.imagenes.length > 0) {
-                    imagenInicial = galeriaInfo.imagenes[0].url;
                 }
+                // Si NO tiene imagenes_rotacion, MANTENER la imagen de galeriaInfo.imagen
+                // No hacer nada aquí, ya que imagenInicial ya está configurado con galeriaInfo.imagen
                 
                 html += `
                     <div class="subcontenedor-item" onclick="cargarGaleria(${contenedor}, '${subKey}')" data-key="${contenedor}_${subKey}">
