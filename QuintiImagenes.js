@@ -171,7 +171,7 @@ laminedo_pene:  { url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDD
     },
     Emilia: {
         // Emilia de Re:Zero - Cabello plateado, medias blancas, vestido blanco con morado
-        normal: { url: "https://i.pinimg.com/736x/8f/3d/8c/8f3d8c8b8e8c8d8e8f8g8h8i8j8k8l8m.jpg", audio: "" },
+        mostrando_culo: { url: "https://pbs.twimg.com/media/HIhW093aIAAD1-i?format=jpg&name=large", audio: "" },
         hablando: { url: "https://i.pinimg.com/736x/emilia_hablando.jpg", audio: "" },
         sonriendo: { url: "https://i.pinimg.com/736x/emilia_sonriendo.jpg", audio: "" },
         sonrojada: { url: "https://i.pinimg.com/736x/emilia_sonrojada.jpg", audio: "" },
