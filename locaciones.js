@@ -222,6 +222,13 @@ const Locaciones = {
 - Te agarra del pelo y te besa mientras se frota contra la mesa`,
                 imagen: "",
             },
+            Emilia: {
+                mensaje: (nombre) => `*abre la puerta con su vestido blanco y morado, sus mejillas sonrojadas* Ah... ${nombre}, bienvenido. *baja la mirada tímidamente pero te sonríe* Estaba preparando té... pero ahora que llegaste, quizás podríamos hacer algo más divertido. *se acerca despacio y toma tu mano* ¿Te gustaría pasar un momento especial conmigo?
+- Emilia te guía hacia el sofá con suavidad
+- Se sienta a tu lado y apoya su cabeza en tu hombro
+- Te mira con sus ojos violetas brillantes mientras sonríe dulcemente`,
+                imagen: "",
+            },
         },
     },
 };
