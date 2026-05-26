@@ -154,6 +154,36 @@ const QUINT_ESCENARIOS = {
         imagen: "", // URL de la imagen para mostrar en el selector
     },
     
+    // ==================== EMILIA ====================
+    emilia_encuentro: {
+        id: "emilia_encuentro",
+        nombre: "Encuentro con Emilia",
+        chica: "Emilia",
+        descripcion: "Conoces a Emilia en un jardín mágico",
+        locacion: "jardin_magico",
+        contexto: "Te encontraste con Emilia en un hermoso jardín lleno de flores mágicas. Ella está admirando las flores.",
+        mensajeInicio: "*toca suavemente una flor brillante con sus dedos delicados* Oh... hola. *se voltea sorprendida y sonríe tímidamente* No esperaba encontrar a alguien aquí. Estas flores son hermosas, ¿verdad? *sus mejillas se sonrojan ligeramente* Me llamo Emilia. Es un placer conocerte.",
+        imagenInicio: "", // URL de la imagen inicial del chat
+        mensajeInicio2: "", // Segundo mensaje que aparece automáticamente después del primero
+        imagenInicio2: "", // URL de la segunda imagen que aparece después de la primera
+        chicaMensaje2: "", // Nombre de la chica que dice el segundo mensaje (opcional)
+        imagen: "", // URL de la imagen para mostrar en el selector
+    },
+    emilia_biblioteca: {
+        id: "emilia_biblioteca",
+        nombre: "Leyendo con Emilia",
+        chica: "Emilia",
+        descripcion: "Emilia lee un libro de magia contigo",
+        locacion: "biblioteca",
+        contexto: "Emilia te invitó a la biblioteca para mostrarte un libro antiguo sobre magia espiritual.",
+        mensajeInicio: "*abre un libro antiguo con cuidado* Este libro tiene hechizos muy antiguos. *te mira con ojos violetas brillantes* ¿Te interesa aprender sobre magia? *sonríe dulcemente* Podría enseñarte si quieres.",
+        imagenInicio: "", // URL de la imagen inicial del chat
+        mensajeInicio2: "", // Segundo mensaje que aparece automáticamente después del primero
+        imagenInicio2: "", // URL de la segunda imagen que aparece después de la primera
+        chicaMensaje2: "", // Nombre de la chica que dice el segundo mensaje (opcional)
+        imagen: "", // URL de la imagen para mostrar en el selector
+    },
+    
     // ==================== REZE (ESPECIAL) ====================
     reze_encuentro: {
         id: "reze_encuentro",
