@@ -240,6 +240,12 @@ const contenedoresGaleria = {
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD56/main/imagenes/img_1779922951930.jpg",
         descripcion: "a",
         categoria: "a"
+    },
+    40: {
+        nombre: "komiputas",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD56/main/imagenes/img_1779924558545.webp",
+        descripcion: "a",
+        categoria: "a"
     }
 };
 
