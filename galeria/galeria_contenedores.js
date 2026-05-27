@@ -234,6 +234,12 @@ const contenedoresGaleria = {
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD39/main/imagenes/img_1779228966740.jpg",
         descripcion: "putasacademia",
         categoria: "putonas"
+    },
+    39: {
+        nombre: "OnePutas",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD56/main/imagenes/img_1779922951930.jpg",
+        descripcion: "a",
+        categoria: "a"
     }
 };
 
