@@ -1940,6 +1940,15 @@ const galeriaData_13 = {
 ]
     },
 
+    '13_35': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
+
     
 
 
