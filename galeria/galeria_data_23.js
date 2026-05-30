@@ -7,7 +7,9 @@ const galeriaData_23 = {
         categoria: "Nobara",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774912583173.jpg",
         imagenes_rotacion: [],
-        imagenes: []
+        imagenes: [
+    { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1780167248153_1.png" }
+]
     },
 
     '23_2': {
