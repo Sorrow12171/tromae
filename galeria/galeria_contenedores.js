@@ -246,6 +246,12 @@ const contenedoresGaleria = {
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD56/main/imagenes/img_1779924558545.webp",
         descripcion: "a",
         categoria: "a"
+    },
+    41: {
+        nombre: "NaruPutas",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD57/main/imagenes/img_1780167748578.jpg",
+        descripcion: "pu",
+        categoria: "pu"
     }
 };
 
