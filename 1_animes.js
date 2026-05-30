@@ -630,8 +630,16 @@ const animesDatabase = {
         titulo: "Esposa pornera",
         driveIdEsp: "11Tixgrc8dzr1zTEGFXdfCOWM-ixeV7wM",
         driveIdJap: "",
+        timestampsEsp: [
+            { tiempo: 282, titulo: "Dedeo a la putona", imagen: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/timestamp_5_9_282_1780166655147.webp" },
+            { tiempo: 380, titulo: "En 4", imagen: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/timestamp_5_9_380_1780166674371.webp" },
+            { tiempo: 471, titulo: "Blowjob", imagen: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/timestamp_5_9_471_1780166710011.webp" },
+            { tiempo: 575, titulo: "Matting press", imagen: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/timestamp_5_9_575_1780166624923.webp" },
+            { tiempo: 637, titulo: "Paizuri", imagen: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/timestamp_5_9_637_1780166728651.webp" },
+            { tiempo: 698, titulo: "En 4 2", imagen: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/timestamp_5_9_698_1780166759443.webp" },
+            { tiempo: 982, titulo: "eN 4 3", imagen: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/timestamp_5_9_982_1780166807739.webp" }
+        ],
         descripcion: "",
-        timestampsEsp: [],
         timestampsJap: [],
         duracion: "0:00",
         categoria: "",
