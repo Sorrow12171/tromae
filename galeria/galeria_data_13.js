@@ -1892,6 +1892,15 @@ const galeriaData_13 = {
 ]
     },
 
+    '13_34': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
+
     
 
 
