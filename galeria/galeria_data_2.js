@@ -1179,6 +1179,15 @@ const galeriaData_2 = {
     { id: 76, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD45/main/imagenes/img_1779656991176.jpg" }
 ]
     },
+
+    '2_15': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
 };
 
 // Registrar en galeriaDatabase global
