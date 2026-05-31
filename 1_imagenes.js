@@ -2536,7 +2536,14 @@ const sistemaDescriptivo = {
                 duracion: '' 
             },
             
-                                                                                                                                                                                                                                                                                                                          '8_1': { 
+            '7_39': { 
+                nombre: 'emilia kachera',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_4140_1780239727155.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
+            
+                                                                                                                                                                                                                                                                                                                                      '8_1': { 
                 nombre: 'fabri putardo',
                 imagen: 'https://pbs.twimg.com/media/G_2dDpBX0AAcGz6?format=png&name=small', 
                 descripcion: '', 
