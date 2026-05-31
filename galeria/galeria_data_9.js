@@ -1081,6 +1081,15 @@ const galeriaData_9 = {
     { id: 18, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD58/main/imagenes/img_1780227653861.webp" }
 ]
     },
+
+    '9_Itsuki_y_yotsuba_kachadno_con_don': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
 };
 
 if (typeof galeriaDatabase !== 'undefined') {
