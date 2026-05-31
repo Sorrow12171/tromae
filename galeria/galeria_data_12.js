@@ -2059,6 +2059,15 @@ const galeriaData_12 = {
     { id: 66, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD58/main/imagenes/img_1780182237372.jpg" }
 ]
     },
+
+    '12_kachando_putas': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
 };
 
 if (typeof galeriaDatabase !== 'undefined') {
