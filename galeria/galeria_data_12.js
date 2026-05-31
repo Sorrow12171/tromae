@@ -2161,6 +2161,15 @@ const galeriaData_12 = {
     { id: 81, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD58/main/imagenes/img_1780228382398.jpg" }
 ]
     },
+
+    '12_Kachando_anal_2': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
 };
 
 if (typeof galeriaDatabase !== 'undefined') {
