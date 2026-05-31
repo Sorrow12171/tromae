@@ -2254,6 +2254,15 @@ const galeriaData_12 = {
 ]
     },
 
+    '12_Anal_a_mis_putonas_1': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
+
     
 };
 
