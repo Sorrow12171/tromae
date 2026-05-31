@@ -114,7 +114,9 @@ const galeriaData_3 = {
             { id: 64, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773003082513.jpg" },
         
             { id: 65, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773003088985.jpg" }
-        ]
+        
+    { id: 66, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1780233514151_1.png" }
+]
     },
     '3_2': {
         titulo: "Shotas se kachan a Nino",
