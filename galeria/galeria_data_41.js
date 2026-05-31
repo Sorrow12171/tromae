@@ -6,7 +6,16 @@ const galeriaData_41 = {
         categoria: "",
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD57/main/imagenes/img_1780167748578.jpg",
         imagenes: []
-    }
+    },
+
+    '41_2': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
 };
 if (typeof galeriaDatabase !== 'undefined') {
     Object.assign(galeriaDatabase, galeriaData_41);
