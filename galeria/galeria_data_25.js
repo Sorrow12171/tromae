@@ -8,7 +8,8 @@ const galeriaData_25 = {
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD30/main/imagenes/img_1777139325043.jpg",
         imagenes_rotacion: [],
         imagenes: [
-    { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1780228506287_1.png" }
+    { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1780228506287_1.png" },
+    { id: 2, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1780233563873_1.png" }
 ]
     },
 
