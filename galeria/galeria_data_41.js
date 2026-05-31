@@ -5,7 +5,9 @@ const galeriaData_41 = {
         descripcion: "",
         categoria: "",
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD57/main/imagenes/img_1780167748578.jpg",
-        imagenes: []
+        imagenes: [
+    { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1780234652186_1.png" }
+]
     },
 
     '41_2': {
