@@ -2758,8 +2758,7 @@ const galeriaData_4 = {
     { id: 156, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD41/main/imagenes/img_1779315893594.jpg" },
     { id: 157, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD41/main/imagenes/img_1779315896209.jpg" },
     { id: 158, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD41/main/imagenes/img_1779315899174.jpg" },
-    { id: 159, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD41/main/imagenes/img_1779315903230.jpg" },
-    { id: 160, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD41/main/imagenes/img_1779315906092.jpg" }
+    { id: 159, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD41/main/imagenes/img_1779315906092.jpg" }
 ]
     },
     
