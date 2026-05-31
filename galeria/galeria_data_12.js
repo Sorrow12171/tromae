@@ -2432,6 +2432,15 @@ const galeriaData_12 = {
 ]
     },
 
+    '12_Kachando_en_la_piscina': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
+
     
 };
 
