@@ -266,7 +266,7 @@ const galeriaData_1 = {
             { id: 154, url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774920436849_1.png" },
             { id: 155, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1776630311500_1.png" }
         
-    { id: 156, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1780341177750_1.png" }
+    { id: 156, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1780341303612_1.png" }
 ]
     },
     '1_2': {
