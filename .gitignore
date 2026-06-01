@@ -1,4 +1,1 @@
-```
-# Generated galeria data files
-galeria/galeria_data_*.js
-```
+Nothing should be ignored based on the provided file changes. The modification of 'galeria/galeria_engine.js' is a source code file and does not warrant being added to .gitignore.
