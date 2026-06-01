@@ -3,7 +3,7 @@
 const galeriaData_29 = {
     '29_1': {
         titulo: "Galería 29",
-        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD31/main/imagenes/img_1777153715050.webp"
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD31/main/imagenes/img_1777153715050.webp",
         imagenes_rotacion: [],
     }
 };
