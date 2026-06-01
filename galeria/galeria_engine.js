@@ -236,7 +236,11 @@ function crearSubcontenedoresGaleriaUI(contenedor) {
 function iniciarRotacionPortadas(contenedor) {
     // Detener cualquier rotación previa
     if (intervaloRotacionPortada) {
-        clearInterval(intervaloRotacionPortada);
+        if (intervaloRotacionPortada.stop) {
+            intervaloRotacionPortada.stop();
+        } else {
+            clearInterval(intervaloRotacionPortada);
+        }
         intervaloRotacionPortada = null;
     }
     
@@ -280,10 +284,6 @@ function iniciarRotacionPortadas(contenedor) {
     
     if (galeriasConRotacion.length === 0) return;
     
-    // Variables para manejar tiempos diferentes
-    let indiceGaleriaActual = 0;
-    let timeoutId = null;
-    
     // PRIMERO: Establecer todas las portadas en su imagen principal (índice 0)
     galeriasConRotacion.forEach(galeria => {
         const imgElement = document.querySelector(`.subcontenedor-img[data-key="${galeria.key}"]`);
@@ -294,42 +294,41 @@ function iniciarRotacionPortadas(contenedor) {
         galeria.indice = 0;
     });
     
-    // Función para rotar una galería específica
-    function rotarSiguienteImagen() {
-        if (galeriasConRotacion.length === 0) return;
-        
-        const galeria = galeriasConRotacion[indiceGaleriaActual];
-        
-        // Avanzar al siguiente índice
-        galeria.indice = (galeria.indice + 1) % galeria.imagenes.length;
-        
-        // Actualizar la imagen de portada
-        const imgElement = document.querySelector(`.subcontenedor-img[data-key="${galeria.key}"]`);
-        if (imgElement) {
-            imgElement.style.backgroundImage = `url('${galeria.imagenes[galeria.indice]}')`;
+    // AHORA: Iniciar rotación INDEPENDIENTE para cada galería (todas al mismo tiempo)
+    const timeoutsIds = [];
+    
+    galeriasConRotacion.forEach(galeria => {
+        // Función para rotar esta galería específica
+        function rotarEstaGaleria() {
+            // Avanzar al siguiente índice
+            galeria.indice = (galeria.indice + 1) % galeria.imagenes.length;
+            
+            // Actualizar la imagen de portada
+            const imgElement = document.querySelector(`.subcontenedor-img[data-key="${galeria.key}"]`);
+            if (imgElement) {
+                imgElement.style.backgroundImage = `url('${galeria.imagenes[galeria.indice]}')`;
+            }
+            
+            // Determinar el tiempo según si es la imagen principal (índice 0)
+            const esImagenPrincipal = (galeria.indice === 0);
+            const tiempoEspera = esImagenPrincipal ? 5000 : 2500;
+            
+            // Programar la siguiente rotación DE ESTA GALERÍA
+            const timeoutId = setTimeout(rotarEstaGaleria, tiempoEspera);
+            timeoutsIds.push(timeoutId);
         }
         
-        // Determinar el tiempo según si es la imagen principal (índice 0)
-        const esImagenPrincipal = (galeria.indice === 0);
-        const tiempoEspera = esImagenPrincipal ? 5000 : 2500;
-        
-        // Programar la siguiente rotación
-        timeoutId = setTimeout(() => {
-            indiceGaleriaActual = (indiceGaleriaActual + 1) % galeriasConRotacion.length;
-            rotarSiguienteImagen();
-        }, tiempoEspera);
-    }
+        // Iniciar la rotación de esta galería después de 5 segundos
+        const timeoutId = setTimeout(rotarEstaGaleria, 5000);
+        timeoutsIds.push(timeoutId);
+    });
     
-    // Iniciar la rotación después de 5 segundos (tiempo para mostrar la imagen principal)
-    timeoutId = setTimeout(rotarSiguienteImagen, 5000);
-    
-    // Guardar referencia para poder detenerla
+    // Guardar referencia para poder detener todas las rotaciones
     intervaloRotacionPortada = {
         stop: () => {
-            if (timeoutId) {
+            timeoutsIds.forEach(timeoutId => {
                 clearTimeout(timeoutId);
-                timeoutId = null;
-            }
+            });
         }
     };
 }
