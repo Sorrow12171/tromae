@@ -171,8 +171,15 @@ laminedo_pene:  { url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDD
     },
     Emilia: {
         // Emilia de Re:Zero - Cabello plateado, medias blancas, vestido blanco con morado
+        hablando: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773017610297.jpg", audio: "" },
+           besando: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773017616081.jpg", audio: "" },
+         chupando_solo_la_cabeza_del_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773017717220.jpg", audio: "" },
+        chupando_hasta_la_mitad_del_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773017829239.jpg", audio: "" },
+    chupando_todo_el_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773018592671.jpg", audio: "" },
+        doggystyle: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773018797868.jpg", audio: "" },
         mostrando_culo: { url: "https://pbs.twimg.com/media/HIhW093aIAAD1-i?format=jpg&name=large", audio: "" },
         pene_rozando_su_ano: { url: "https://files.catbox.moe/kaftvc.png", audio: "" },
+         emilia_se_sube_la_falda_y_muestra_su_tanga_morada: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD7/main/imagenes/img_1773342726489.jpg", audio: "" },
        
     },
 };
