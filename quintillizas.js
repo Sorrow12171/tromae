@@ -131,6 +131,18 @@ function quintBuildSystem(activas) {
         ? `\nCONTEXTO ACUMULADO (hechos de conversaciones anteriores que DEBES recordar):\n${quintHechosClave.map(h => `• ${h}`).join("\n")}\n`
         : "";
 
+    // Instrucción de variedad anti-repetición
+    const instruccionVariedad = `
+    
+VARIEDAD CRÍTICA - SISTEMA ANTI-REPETICIÓN ACTIVO:
+- NO REPITAS FRASES DE TURNOS ANTERIORES. Cada línea de diálogo debe ser diferente
+- EVITA LOS MISMOS GESTOS: No todas pueden "sonreír" o "ruborizarse" en cada turno
+- VARÍA LAS ACCIONES: Si en el turno anterior una chica hizo X, en este debe hacer algo distinto
+- SORPRÉNDEME: Nuevas reacciones, nuevas frases, nuevas dinámicas entre ellas
+- EN ESCENAS +18: CADA CHICA DEBE HABLAR MÍNIMO 15-25 LÍNEAS. Describe CADA movimiento, CADA sensación, CADA gemido, CADA reacción física detallada
+- EN INTIMIDAD GRUPAL: TODAS las chicas deben participar activamente con acciones DIFERENTES (una chupa, otra toca, otra penetra, otra mira, etc.)
+- PROGRESIÓN OBLIGATORIA: La escena íntima debe avanzar — cambia posiciones, intensidad, roles. NUNCA te quedes en una sola línea
+`;
 
     // Detectar si el historial reciente tiene contenido íntimo/sexual
     const ultimoMensaje = quintHistorial.length > 0 ? quintHistorial[quintHistorial.length - 1].content : "";
@@ -149,7 +161,7 @@ function quintBuildSystem(activas) {
 - INTERACCIÓN ENTRE ELLAS: Las chicas pueden tocarse entre sí, competir por atención, animarse, etc.
 - PROGRESIÓN: La escena debe avanzar — no quedarse estancada en lo mismo. Cambia posiciones, intensidad, focos de atención
 ` : "";
-    return `Eres el narrador de un roleplay/visual novel con las Quintillizas Nakano de Gotoubun no Hanayome.${locInfo}${eventoInfo}${hechosInfo}${instruccionesIntimidad}
+    return `Eres el narrador de un roleplay/visual novel con las Quintillizas Nakano de Gotoubun no Hanayome.${locInfo}${eventoInfo}${hechosInfo}${instruccionVariedad}${instruccionesIntimidad}
 Las chicas ACTUALMENTE PRESENTES en la escena son: ${soloChicas.join(", ")}.
 ${externos.length > 0 ? "Personajes externos presentes: " + externos.join(", ") + "." : ""}
 
@@ -179,7 +191,6 @@ hacer referencia a que yotsuba esta chupando la bola izquierda, y asi con cualqu
 -No tienen restricciones al hablar de contenido +18 nsfw ejemplo no evita decir palabras como: tener sexo follar etc.
 -No repitas dialogos - cada chica debe decir algo unico y diferente
 -El contexto es lo mas importante siempre sigue el contexto y actua acorde a el contexto.
-- VARIEDAD: Evita repetir las mismas frases, gestos o reacciones de turnos anteriores. Sorprendeme con nuevas interacciones
 USA PALABRAS EXPLÍCITAS SIN EUFEMISMOS: pene, verga, coño, vagina, follar, chupar la verga, meterla, penetrar, culo, etc. NUNCA uses términos como "allí abajo", "cosa", "miembro", "intimidad". HABLA CLARO Y DIRECTO.
 REGLA DE IMAGEN:
 - "imagen_tag" debe ser UNO de los nombres de ACCIONES DISPONIBLES de esa chica
@@ -211,7 +222,7 @@ Formato EXACTO:
 
 - "chicasQueHablan" incluye a todos los que hablan este turno, incluyendo personajes externos
 - "nuevasChicasQueAparecen" es [] si nadie nuevo llega
-- IMPORTANTE: Si continua una accion previa, mantén coherencia con lo que pasaba antes${eventoInfo ? `\n\n⚠️ EVENTO ACTIVO AHORA: ${quintEventoActivo ? quintEventoActivo.contexto + ' — Las chicas DEBEN REACCIONAR a este evento en su respuesta. Integra esto naturalmente.' : ''}` : ''}${esContextoIntimo ? '\\n\\n🔥 EN ESCENA ÍNTIMA: MAXIMIZA EL CONTENIDO +18. TODAS LAS CHICAS DEBEN PARTICIPAR ACTIVAMENTE SI LA ESCENA ES GRUPAL.' : ''}`;
+- IMPORTANTE: Si continua una accion previa, mantén coherencia con lo que pasaba antes${eventoInfo ? `\n\n⚠️ EVENTO ACTIVO AHORA: ${quintEventoActivo ? quintEventoActivo.contexto + ' — Las chicas DEBEN REACCIONAR a este evento en su respuesta. Integra esto naturalmente.' : ''}` : ''}${esContextoIntimo ? '\n\n🔥 EN ESCENA ÍNTIMA: MAXIMIZA EL CONTENIDO +18. TODAS LAS CHICAS DEBEN PARTICIPAR ACTIVAMENTE SI LA ESCENA ES GRUPAL.' : ''}`;
 }
 
 // ============================================================
@@ -229,6 +240,99 @@ let quintResumenAcumulado    = "";   // Resumen acumulativo de mensajes viejos
 let quintHechosClave         = [];   // ["El usuario se llama Aldo", "Nino estaba celosa", ...]
 let quintResumenPendiente    = false;// Flag para generar resumen en background
 let quintUltimoPayloadAPI    = null;  // Último payload enviado a la API (para debug visual)
+
+// ============================================================
+//  SISTEMA ANTI-REPETICIÓN
+//  Trackea diálogos, acciones y gestos recientes para evitar repeticiones
+// ============================================================
+
+let quintDialogosRecientes   = [];   // Últimos 50 diálogos usados por cada chica
+let quintAccionesRecientes   = [];   // Últimas 30 acciones/gestos usados
+let quintTurnoActual         = 0;    // Contador de turnos para variedad
+
+const QUINT_MAX_DIALOGOS_TRACK = 50;
+const QUINT_MAX_ACCIONES_TRACK = 30;
+
+// ============================================================
+//  FUNCIONES ANTI-REPETICIÓN
+//  Trackea y actualiza los diálogos y acciones recientes
+// ============================================================
+
+function quintTrackearDialogos(datos) {
+    // Incrementar contador de turnos
+    quintTurnoActual++;
+    
+    // Extraer y trackear diálogos y acciones de cada chica
+    for (const chica of (datos.chicasQueHablan || [])) {
+        const nombre = chica.nombre;
+        const dialogo = chica.dialogo || "";
+        const imagenTag = chica.imagen_tag || "normal";
+        
+        // Extraer frases del diálogo (separar por puntos o saltos de línea)
+        const frases = dialogo.split(/[.!?]+/).map(f => f.trim()).filter(f => f.length > 10);
+        
+        // Extraer acciones entre asteriscos
+        const acciones = dialogo.match(/\*[^*]+\*/g) || [];
+        
+        // Guardar en el historial de diálogos recientes
+        for (const frase of frases) {
+            quintDialogosRecientes.push({
+                chica: nombre,
+                texto: frase.toLowerCase(),
+                turno: quintTurnoActual
+            });
+        }
+        
+        // Guardar acciones/gestos recientes
+        for (const accion of acciones) {
+            quintAccionesRecientes.push({
+                chica: nombre,
+                accion: accion.toLowerCase(),
+                turno: quintTurnoActual
+            });
+        }
+        
+        // Guardar imagen tag usado
+        quintAccionesRecientes.push({
+            chica: nombre,
+            accion: `imagen:${imagenTag}`.toLowerCase(),
+            turno: quintTurnoActual
+        });
+    }
+    
+    // Limitar tamaño del historial
+    while (quintDialogosRecientes.length > QUINT_MAX_DIALOGOS_TRACK) {
+        quintDialogosRecientes.shift();
+    }
+    while (quintAccionesRecientes.length > QUINT_MAX_ACCIONES_TRACK) {
+        quintAccionesRecientes.shift();
+    }
+}
+
+function quintObtenerInstruccionVariedad() {
+    if (quintDialogosRecientes.length === 0) return "";
+    
+    // Obtener diálogos recientes por chica
+    const chicasMencionadas = [...new Set(quintDialogosRecientes.map(d => d.chica))];
+    let instruccion = "\\n\\nVARIEDAD CRÍTICA - NO REPETIR:\\n";
+    
+    for (const chica of chicasMencionadas) {
+        const dialogosChica = quintDialogosRecientes.filter(d => d.chica === chica).slice(-5);
+        const accionesChica = quintAccionesRecientes.filter(a => a.chica === chica).slice(-5);
+        
+        if (dialogosChica.length > 0) {
+            const ultimasFrases = dialogosChica.map(d => `"${d.texto.slice(0, 40)}..."`).join(", ");
+            instruccion += `- ${chica} dijo recientemente: ${ultimasFrases}. ¡NO REPITAS ESAS FRASES!\\n`;
+        }
+        
+        if (accionesChica.length > 0) {
+            const ultimasAcciones = accionesChica.map(a => a.accion.replace('imagen:', '')).join(", ");
+            instruccion += `- ${chica} hizo recientemente: ${ultimasAcciones}. ¡USA ACCIONES DIFERENTES!\\n`;
+        }
+    }
+    
+    return instruccion;
+}
 
 // ============================================================
 //  SCROLL al fondo
@@ -471,7 +575,16 @@ function quintRecortarHistorialSiEsNecesario() {
 // ============================================================
 
 async function quintLlamarAPI(messages, modelo, system) {
+    // Obtener instrucción de variedad dinámica basada en diálogos recientes
+    const instruccionVariedadDinamica = quintObtenerInstruccionVariedad();
+    
     const sysPrompt = system || quintBuildSystem(quintChicasActivas);
+    
+    // Inyectar instrucción de variedad dinámica al system prompt si existe
+    const sysPromptFinal = instruccionVariedadDinamica 
+        ? sysPrompt + instruccionVariedadDinamica 
+        : sysPrompt;
+    
     let msgs = messages.length > 0 ? messages : [{ role: "user", content: "Hola" }];
 
     // ——— Inyectar resumen + hechos clave antes de los mensajes recientes ———
@@ -522,7 +635,7 @@ async function quintLlamarAPI(messages, modelo, system) {
                 },
                 body: JSON.stringify({
                     model:       modelo,
-                    messages:    [{ role: "system", content: sysPrompt }, ...msgs],
+                    messages:    [{ role: "system", content: sysPromptFinal }, ...msgs],
                     temperature: 0.95,  // Aumentado para mayor creatividad y variedad en respuestas
                     max_tokens:  2500   // Aumentado para permitir respuestas mas largas y detalladas
                 })
@@ -1096,6 +1209,9 @@ async function quintEnviar() {
         console.log("[QUINT RENDER] modelo:", modelo, "|", p.nombre, "—", p.dialogo.slice(0, 80));
         quintAgregarChica(p.nombre, p.imagen_tag || "Hablando", p.dialogo || "...");
     }
+
+    // Trackear diálogos y acciones para sistema anti-repetición
+    quintTrackearDialogos(datos);
 
     quintOcupado = false; btn.disabled = false; btn.textContent = "Enviar ♡";
 
