@@ -180,6 +180,25 @@ laminedo_pene:  { url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDD
         mostrando_culo: { url: "https://pbs.twimg.com/media/HIhW093aIAAD1-i?format=jpg&name=large", audio: "" },
         pene_rozando_su_ano: { url: "https://files.catbox.moe/kaftvc.png", audio: "" },
          emilia_se_sube_la_falda_y_muestra_su_tanga_morada: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD7/main/imagenes/img_1773342726489.jpg", audio: "" },
+        misionero: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773018850123.jpg", audio: "" },
+        emilia_gimiendo_fuerte: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773018900456.jpg", audio: "https://files.catbox.moe/emilia_gime.mp3" },
+        emilia_tetas_pequeñas_apretadas: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773018950789.jpg", audio: "" },
        
+    },
+    Chizuru: {
+        // Chizuru Ichinose - Cabello castaño claro largo, ojos verdes esmeralda, belleza elegante
+        hablando: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773019000123.jpg", audio: "" },
+        besando: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773019050456.jpg", audio: "" },
+        chupando_solo_la_cabeza_del_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773019100789.jpg", audio: "" },
+        chupando_hasta_la_mitad_del_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773019150012.jpg", audio: "" },
+        chupando_todo_el_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773019200345.jpg", audio: "" },
+        doggystyle: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773019250678.jpg", audio: "https://files.catbox.moe/chizuru_gime.mp3" },
+        misionero: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773019300901.jpg", audio: "" },
+        chizuru_gimiendo_sin_control: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773019350234.jpg", audio: "https://files.catbox.moe/chizuru_orgasmo.mp3" },
+        chizuru_tetas_apretadas: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773019400567.jpg", audio: "" },
+        chizuru_mostrandose_humedecida: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773019450890.jpg", audio: "" },
+        chizuru_poniendose_en_cuatro: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773019500123.jpg", audio: "" },
+        chizuru_jalando_cabello_doggystyle: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773019550456.jpg", audio: "" },
+        
     },
 };
