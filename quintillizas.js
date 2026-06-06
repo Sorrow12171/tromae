@@ -1200,6 +1200,95 @@ async function quintEnviar() {
     });
 
     console.log("[QUINT RENDERING] modelo:", modelo, "| chicasQueHablan count:", (datos.chicasQueHablan || []).length);
+    
+    // Función para verificar si un imagen_tag existe para una chica
+    function quintVerificarImagenTag(nombreChica, imagenTag) {
+        const info = CHICAS[nombreChica];
+        if (!info || !info.imagenes) return false;
+        return imagenTag && info.imagenes[imagenTag] !== undefined;
+    }
+    
+    // Función para obtener lista de tags disponibles
+    function quintObtenerTagsDisponibles(nombreChica) {
+        const info = CHICAS[nombreChica];
+        if (!info || !info.imagenes) return ["normal"];
+        return Object.keys(info.imagenes);
+    }
+    
+    // Función para llamar a la API y corregir imagen_tag
+    async function quintCorregirImagenTag(chica, dialogoOriginal) {
+        const tagsDisponibles = quintObtenerTagsDisponibles(chica.nombre);
+        const promptCorreccion = `Tienes que elegir UN image_tag de esta lista EXACTA de imágenes disponibles para ${chica.nombre}:
+${tagsDisponibles.join(", ")}
+
+Contexto del diálogo original: "${chica.dialogo}"
+
+Elige SOLO el tag que mejor coincida con la acción descrita en el diálogo. 
+Responde ÚNICAMENTE con el nombre del tag, sin explicaciones, sin JSON, solo el nombre exacto del tag.`;
+
+        for (let k = 0; k < GROQ_KEYS.length; k++) {
+            const keyIdx = (quintKeyActual + k) % GROQ_KEYS.length;
+            const key = GROQ_KEYS[keyIdx];
+            
+            try {
+                const resp = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${key}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        model: MODELO_PRINCIPAL,
+                        messages: [
+                            { role: "system", content: "Eres un asistente que elige tags de imágenes. Responde solo con el nombre del tag." },
+                            { role: "user", content: promptCorreccion }
+                        ],
+                        temperature: 0.3,
+                        max_tokens: 50
+                    })
+                });
+
+                if (resp.status === 429 || resp.status === 401) {
+                    quintKeyActual = (keyIdx + 1) % GROQ_KEYS.length;
+                    continue;
+                }
+                
+                if (resp.ok) {
+                    const data = await resp.json();
+                    const tagElegido = data?.choices?.[0]?.message?.content?.trim().toLowerCase();
+                    
+                    // Verificar si el tag elegido existe realmente
+                    if (tagElegido && tagsDisponibles.some(t => t.toLowerCase() === tagElegido)) {
+                        // Encontrar el tag exacto (case-sensitive)
+                        const tagExacto = tagsDisponibles.find(t => t.toLowerCase() === tagElegido);
+                        console.log(`[QUINT CORRECCIÓN] ${chica.nombre}: "${chica.imagen_tag}" → "${tagExacto}"`);
+                        return tagExacto;
+                    }
+                }
+            } catch (e) {
+                console.log(`[QUINT CORRECCIÓN] Error: ${e.message}`);
+                quintKeyActual = (keyIdx + 1) % GROQ_KEYS.length;
+            }
+        }
+        
+        // Fallback: usar el primer tag disponible
+        console.log(`[QUINT CORRECCIÓN] Fallback para ${chica.nombre}: usando "${tagsDisponibles[0]}"`);
+        return tagsDisponibles[0] || "normal";
+    }
+    
+    // Verificar y corregir imágenes de todas las chicas
+    for (const p of (datos.chicasQueHablan || [])) {
+        if (!p.nombre || !p.dialogo) continue;
+        
+        const tagValido = quintVerificarImagenTag(p.nombre, p.imagen_tag);
+        if (!tagValido) {
+            console.log(`[QUINT VALIDACIÓN] ${p.nombre} NO tiene el tag "${p.imagen_tag}". Corrigiendo...`);
+            p.imagen_tag = await quintCorregirImagenTag(p, p.dialogo);
+        } else {
+            console.log(`[QUINT VALIDACIÓN] ${p.nombre} tag "${p.imagen_tag}" OK`);
+        }
+    }
+    
     for (const p of (datos.chicasQueHablan || [])) {
         if (!p.nombre || !p.dialogo) {
             console.log("[QUINT SKIP] nombre or dialogo missing:", p);
