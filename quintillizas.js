@@ -1215,16 +1215,46 @@ async function quintEnviar() {
         return Object.keys(info.imagenes);
     }
     
-    // Función para llamar a la API y corregir imagen_tag
-    async function quintCorregirImagenTag(chica, dialogoOriginal) {
+    // Función para llamar a la API y corregir imagen_tag Y diálogo
+    async function quintCorregirImagenYDialogo(chica, dialogoOriginal, historialReciente, dialogosOtrasChicas, mensajeUsuario) {
         const tagsDisponibles = quintObtenerTagsDisponibles(chica.nombre);
-        const promptCorreccion = `Tienes que elegir UN image_tag de esta lista EXACTA de imágenes disponibles para ${chica.nombre}:
+        
+        // Construir contexto completo
+        let contextoHistorial = "";
+        if (historialReciente && historialReciente.length > 0) {
+            contextoHistorial = "HISTORIAL RECIENTE DE CONVERSACIÓN:\n" + 
+                historialReciente.slice(-6).map(m => 
+                    `${m.role === 'user' ? 'Usuario' : (JSON.parse(m.content)?.chicasQueHablan?.[0]?.nombre || 'Chica')}: ${typeof m.content === 'string' ? m.content.slice(0, 150) : m.content}`
+                ).join("\n") + "\n\n";
+        }
+        
+        let contextoOtrasChicas = "";
+        if (dialogosOtrasChicas && dialogosOtrasChicas.length > 0) {
+            contextoOtrasChicas = "DIÁLOGOS ACTUALES DE OTRAS CHICAS EN ESTE TURNO:\n" + 
+                dialogosOtrasChicas.map(c => `${c.nombre}: ${c.dialogo}`).join("\n") + "\n\n";
+        }
+        
+        const promptCorreccion = `${contextoHistorial}${contextoOtrasChicas}MENSAJE DEL USUARIO: ${mensajeUsuario}\n\n` +
+`Ahora debes corregir la respuesta de ${chica.nombre}.
+
+PROBLEMA: El tag de imagen original "${chica.imagen_tag}" NO existe en su lista de imágenes disponibles.
+
+IMÁGENES DISPONIBLES PARA ${chica.nombre.toUpperCase()}:
 ${tagsDisponibles.join(", ")}
 
-Contexto del diálogo original: "${chica.dialogo}"
+DIÁLOGO ORIGINAL QUE DIJO: "${chica.dialogo}"
 
-Elige SOLO el tag que mejor coincida con la acción descrita en el diálogo. 
-Responde ÚNICAMENTE con el nombre del tag, sin explicaciones, sin JSON, solo el nombre exacto del tag.`;
+TAREA:
+1. Elige UN tag de imagen de la lista disponible que mejor coincida con la acción/contexto
+2. Reescribe el diálogo de ${chica.nombre} para que sea coherente con la NUEVA imagen elegida Y con lo que dijeron las demás chicas y el usuario
+
+FORMATO DE RESPUESTA (JSON exacto):
+{
+  "imagen_tag": "nombre_exacto_del_tag",
+  "dialogo": "nuevo diálogo aquí"
+}
+
+Responde SOLO con el JSON, sin explicaciones.`;
 
         for (let k = 0; k < GROQ_KEYS.length; k++) {
             const keyIdx = (quintKeyActual + k) % GROQ_KEYS.length;
@@ -1240,11 +1270,11 @@ Responde ÚNICAMENTE con el nombre del tag, sin explicaciones, sin JSON, solo el
                     body: JSON.stringify({
                         model: MODELO_PRINCIPAL,
                         messages: [
-                            { role: "system", content: "Eres un asistente que elige tags de imágenes. Responde solo con el nombre del tag." },
+                            { role: "system", content: "Eres un asistente que corrige respuestas de personajes. Responde SOLO con JSON válido." },
                             { role: "user", content: promptCorreccion }
                         ],
-                        temperature: 0.3,
-                        max_tokens: 50
+                        temperature: 0.7,
+                        max_tokens: 300
                     })
                 });
 
@@ -1255,14 +1285,22 @@ Responde ÚNICAMENTE con el nombre del tag, sin explicaciones, sin JSON, solo el
                 
                 if (resp.ok) {
                     const data = await resp.json();
-                    const tagElegido = data?.choices?.[0]?.message?.content?.trim().toLowerCase();
+                    const contenido = data?.choices?.[0]?.message?.content?.trim();
                     
-                    // Verificar si el tag elegido existe realmente
-                    if (tagElegido && tagsDisponibles.some(t => t.toLowerCase() === tagElegido)) {
-                        // Encontrar el tag exacto (case-sensitive)
-                        const tagExacto = tagsDisponibles.find(t => t.toLowerCase() === tagElegido);
-                        console.log(`[QUINT CORRECCIÓN] ${chica.nombre}: "${chica.imagen_tag}" → "${tagExacto}"`);
-                        return tagExacto;
+                    // Parsear JSON de respuesta
+                    const correccion = quintParsearJSON(contenido);
+                    
+                    if (correccion && correccion.imagen_tag && correccion.dialogo) {
+                        // Verificar si el tag elegido existe realmente
+                        const tagElegido = correccion.imagen_tag.toLowerCase();
+                        if (tagsDisponibles.some(t => t.toLowerCase() === tagElegido)) {
+                            const tagExacto = tagsDisponibles.find(t => t.toLowerCase() === tagElegido);
+                            console.log(`[QUINT CORRECCIÓN] ${chica.nombre}: imagen "${chica.imagen_tag}" → "${tagExacto}", diálogo actualizado`);
+                            return {
+                                imagen_tag: tagExacto,
+                                dialogo: correccion.dialogo
+                            };
+                        }
                     }
                 }
             } catch (e) {
@@ -1271,19 +1309,43 @@ Responde ÚNICAMENTE con el nombre del tag, sin explicaciones, sin JSON, solo el
             }
         }
         
-        // Fallback: usar el primer tag disponible
+        // Fallback: usar el primer tag disponible y mantener diálogo original
         console.log(`[QUINT CORRECCIÓN] Fallback para ${chica.nombre}: usando "${tagsDisponibles[0]}"`);
-        return tagsDisponibles[0] || "normal";
+        return {
+            imagen_tag: tagsDisponibles[0] || "normal",
+            dialogo: chica.dialogo
+        };
     }
     
-    // Verificar y corregir imágenes de todas las chicas
-    for (const p of (datos.chicasQueHablan || [])) {
+    // Verificar y corregir imágenes y diálogos de todas las chicas
+    // Primero recolectamos los diálogos de todas las chicas para el contexto
+    const todasLasChicas = datos.chicasQueHablan || [];
+    const mensajeUsuarioActual = quintHistorial.length > 0 && quintHistorial[quintHistorial.length - 1]?.role === 'user' 
+        ? (typeof quintHistorial[quintHistorial.length - 1].content === 'string' 
+            ? quintHistorial[quintHistorial.length - 1].content 
+            : String(quintHistorial[quintHistorial.length - 1].content || ""))
+        : "";
+    
+    for (const p of todasLasChicas) {
         if (!p.nombre || !p.dialogo) continue;
         
         const tagValido = quintVerificarImagenTag(p.nombre, p.imagen_tag);
         if (!tagValido) {
-            console.log(`[QUINT VALIDACIÓN] ${p.nombre} NO tiene el tag "${p.imagen_tag}". Corrigiendo...`);
-            p.imagen_tag = await quintCorregirImagenTag(p, p.dialogo);
+            console.log(`[QUINT VALIDACIÓN] ${p.nombre} NO tiene el tag "${p.imagen_tag}". Corrigiendo imagen y diálogo...`);
+            
+            // Obtener diálogos de las otras chicas (excluyendo la actual)
+            const otrasChicas = todasLasChicas.filter(c => c.nombre !== p.nombre);
+            
+            const correccion = await quintCorregirImagenYDialogo(
+                p, 
+                p.dialogo, 
+                quintHistorial, 
+                otrasChicas,
+                mensajeUsuarioActual
+            );
+            
+            p.imagen_tag = correccion.imagen_tag;
+            p.dialogo = correccion.dialogo;
         } else {
             console.log(`[QUINT VALIDACIÓN] ${p.nombre} tag "${p.imagen_tag}" OK`);
         }
