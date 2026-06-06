@@ -90,7 +90,9 @@ const galeriaData_8 = {
             { id: 78, url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1773270057060.jpg" },
             { id: 79, url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1773522784197.png" },
             { id: 80, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1780234136302_1.png" }
-        ]
+        
+    { id: 81, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1780752148789_1.png" }
+]
     },
     '8_2': {
         titulo: "Kurumi putarda",
