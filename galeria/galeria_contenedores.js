@@ -252,6 +252,12 @@ const contenedoresGaleria = {
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD57/main/imagenes/img_1780167748578.jpg",
         descripcion: "pu",
         categoria: "pu"
+    },
+    42: {
+        nombre: "UmaPutas",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD60/main/imagenes/img_1780749493554.png",
+        descripcion: "a",
+        categoria: "a"
     }
 };
 
