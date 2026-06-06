@@ -12,7 +12,9 @@ const galeriaData_16 = {
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772995724249.jpg" },
             { id: 2, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773026456160.jpg" }
-        ]
+        
+    { id: 3, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1780751597411_1.png" }
+]
     },
     '16_2': {
         titulo: "Uzaki kachera",
