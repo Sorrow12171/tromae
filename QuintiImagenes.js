@@ -57,7 +57,8 @@ cowgirl: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDD
     chupando_solo_la_punta_del_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD3/main/imagenes/img_1773178619655.jpg", audio: "https://files.catbox.moe/6dbsec.mp3" },
       chupando_solo_la_mitad_del_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD3/main/imagenes/img_1773178625831.jpg", audio: "https://files.catbox.moe/kmiq2j.mp3" },
     chupando_todo_el_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD3/main/imagenes/img_1773178636024.jpg", audio: "https://files.catbox.moe/nvgynw.mp3" },
-    chupando_bolas: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD3/main/imagenes/img_1773178631853.jpg", audio: "https://litter.catbox.moe/j3j8ldzk3jus6etx.mp3" },
+     chupando_todo_el_pene_mano_en_su_cabeza_empujandola: { url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD58/main/imagenes/img_1780182115874.jpg", audio: "https://files.catbox.moe/7dp26p.mp3" },
+        chupando_bolas: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD3/main/imagenes/img_1773178631853.jpg", audio: "https://litter.catbox.moe/j3j8ldzk3jus6etx.mp3" },
   chupando_bola_izquierda: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD3/main/imagenes/img_1773178590378.jpg", audio: "" },
 chupando_bola_derecha: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD3/main/imagenes/img_1773178598793.jpg", audio: "" },
       doggystyle: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD8/main/imagenes/img_1773407766732.jpg", audio: "https://files.catbox.moe/04emjp.mp3" },
@@ -175,10 +176,12 @@ laminedo_pene:  { url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDD
            besando: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773017616081.jpg", audio: "" },
          chupando_solo_la_cabeza_del_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773017717220.jpg", audio: "" },
         chupando_hasta_la_mitad_del_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773017829239.jpg", audio: "" },
-    chupando_todo_el_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773018592671.jpg", audio: "" },
+    chupando_todo_el_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/XDXDXDXDXD/main/imagenes/img_1773067940965.jpg", audio: "" },
+        chupando_todo_el_pene_mano_en_su_cabeza_empujandola: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773018592671.jpg", audio: "https://files.catbox.moe/7dp26p.mp3" },
         doggystyle: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773018797868.jpg", audio: "" },
         mostrando_culo: { url: "https://pbs.twimg.com/media/HIhW093aIAAD1-i?format=jpg&name=large", audio: "" },
         pene_rozando_su_ano: { url: "https://files.catbox.moe/kaftvc.png", audio: "" },
+       
          emilia_se_sube_la_falda_y_muestra_su_tanga_morada: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD7/main/imagenes/img_1773342726489.jpg", audio: "" },
      
        
