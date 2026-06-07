@@ -2451,12 +2451,17 @@ const galeriaData_13 = {
     },
 
     '13_42': {
-        titulo: "",
+        titulo: "Emilia orgia con echidna",
         descripcion: "",
         categoria: "",
-        imagen: "",
-        imagenes_rotacion: [],
-        imagenes: []
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD64/main/imagenes/img_1780854654045.png",
+        imagenes_rotacion: [
+                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD64/main/imagenes/img_1780854656817.png"
+                           ],
+        imagenes: [
+    { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD64/main/imagenes/img_1780854647965.png" },
+    { id: 2, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD64/main/imagenes/img_1780854650509.png" }
+]
     },
 
     
