@@ -2601,6 +2601,15 @@ const galeriaData_12 = {
 ]
     },
 
+    '12_calatasplayeras': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
+
     
 };
 
