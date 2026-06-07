@@ -3,7 +3,7 @@
 // ================================================
 
 const galeriaData_12 = {
-    '12_Las_Cinco': {
+    '12_1': {
         titulo: "LAS CINCO QUINTILLIZAS",
         descripcion: "Todas las hermanas Nakano juntas - Nino, Ichika, Miku, Yotsuba e Itsuki",
         categoria: "Quintillizas - Quinteto",
