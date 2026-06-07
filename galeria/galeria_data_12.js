@@ -2621,6 +2621,15 @@ const galeriaData_12 = {
 ]
     },
 
+    '12_Putitas_en_sus_trabajos': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
+
     
 };
 
