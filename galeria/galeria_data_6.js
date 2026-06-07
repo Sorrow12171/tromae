@@ -1981,6 +1981,15 @@ const galeriaData_6 = {
 ]
     },
 
+    '6_30': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
+
    
 
   
