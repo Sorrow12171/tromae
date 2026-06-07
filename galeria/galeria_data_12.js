@@ -2641,6 +2641,15 @@ const galeriaData_12 = {
 ]
     },
 
+    '12_Tetonas_putas': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
+
     
 };
 
