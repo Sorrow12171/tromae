@@ -393,6 +393,15 @@ const galeriaData_37 = {
     { id: 9, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD63/main/imagenes/img_1780852647274.png" }
 ]
     },
+
+    '37_11': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
 };
 if (typeof galeriaDatabase !== 'undefined') {
     Object.assign(galeriaDatabase, galeriaData_37);
