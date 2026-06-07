@@ -2661,6 +2661,15 @@ const galeriaData_12 = {
 ]
     },
 
+    '12_POTONAS': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
+
     
 };
 
