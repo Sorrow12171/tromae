@@ -144,12 +144,27 @@ const galeriaData_38 = {
     },
 
     '38_5': {
-        titulo: "",
+        titulo: "Kachando y celebrando",
         descripcion: "",
         categoria: "",
-        imagen: "",
-        imagenes_rotacion: [],
-        imagenes: []
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780849513906.jpg",
+        imagenes_rotacion: [
+                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780849516666.jpg",
+                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780849519470.jpg",
+                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780849522074.jpg"
+                           ],
+        imagenes: [
+    { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780849484922.jpg" },
+    { id: 2, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780849487659.jpg" },
+    { id: 3, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780849491496.jpg" },
+    { id: 4, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780849494183.jpg" },
+    { id: 5, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780849496854.jpg" },
+    { id: 6, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780849499915.jpg" },
+    { id: 7, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780849502493.jpg" },
+    { id: 8, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780849505207.jpg" },
+    { id: 9, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780849507810.jpg" },
+    { id: 10, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780849510412.jpg" }
+]
     },
 };
 if (typeof galeriaDatabase !== 'undefined') {
