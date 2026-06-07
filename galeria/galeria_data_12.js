@@ -2687,6 +2687,15 @@ const galeriaData_12 = {
 ]
     },
 
+    '12_Ricas_tangas': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
+
     
 };
 
