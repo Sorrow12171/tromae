@@ -187,12 +187,26 @@ const galeriaData_38 = {
     },
 
     '38_7': {
-        titulo: "",
+        titulo: "potona rica",
         descripcion: "",
         categoria: "",
-        imagen: "",
-        imagenes_rotacion: [],
-        imagenes: []
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780851030351.jpg",
+        imagenes_rotacion: [
+                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780851032306.jpg",
+                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780851034369.jpg",
+                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780851036318.jpg"
+                           ],
+        imagenes: [
+    { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780851011862.jpg" },
+    { id: 2, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780851013894.jpg" },
+    { id: 3, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780851015849.jpg" },
+    { id: 4, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780851017848.jpg" },
+    { id: 5, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780851019893.jpg" },
+    { id: 6, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780851021904.jpg" },
+    { id: 7, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780851023868.jpg" },
+    { id: 8, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780851025924.jpg" },
+    { id: 9, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD62/main/imagenes/img_1780851027847.jpg" }
+]
     },
 };
 if (typeof galeriaDatabase !== 'undefined') {
