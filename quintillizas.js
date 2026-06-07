@@ -12,7 +12,7 @@ const _K = [
 ];
 const GROQ_KEYS = _K.map(p => p.join(""));
 
-const MODELO_PRINCIPAL   = "meta-llama/llama-4-scout-17b-16e-instruct";
+const MODELO_PRINCIPAL   = "qwen/qwen3-32b";
 
 // Variable global para manejar los audios actuales (se detienen al llegar nuevo mensaje del usuario)
 let audiosActivos = []; // Array para mantener referencia a todos los audios que están sonando
