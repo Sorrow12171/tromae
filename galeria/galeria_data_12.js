@@ -34,7 +34,8 @@ const galeriaData_12 = {
             { id: 22, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772902312058.jpg" },
             { id: 23, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772977925237.jpg" },
         
-            { id: 24, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1780794417844.png" }
+            { id: 24, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1780794417844.png" },
+            { id: 25, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1780856804314.png" }
 ]
     },
 
