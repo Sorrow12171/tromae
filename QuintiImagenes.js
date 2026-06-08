@@ -180,7 +180,7 @@ laminedo_pene:  { url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDD
         chupando_todo_el_pene_mano_en_su_cabeza_empujandola: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773018592671.jpg", audio: "https://files.catbox.moe/7dp26p.mp3" },
         doggystyle: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773018797868.jpg", audio: "https://files.catbox.moe/cpu9th.mp3" },
       follando_en_el_aire: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772926402004.jpg", audio: "https://files.catbox.moe/iakcoo.mp3" }, 
-        mostrando_culo: { url: "https://pbs.twimg.com/media/HIhW093aIAAD1-i?format=jpg&name=large", audio: "" },
+        mostrando_culo_sin_ropa: { url: "https://pbs.twimg.com/media/HIhW093aIAAD1-i?format=jpg&name=large", audio: "" },
         pene_rozando_su_ano: { url: "https://files.catbox.moe/kaftvc.png", audio: "" },
        
          emilia_se_sube_la_falda_y_muestra_su_tanga_morada: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD7/main/imagenes/img_1773342726489.jpg", audio: "" },
