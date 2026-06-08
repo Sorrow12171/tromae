@@ -2708,6 +2708,15 @@ const galeriaData_12 = {
 ]
     },
 
+    '12_5_trolitas': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
+
     
 };
 
