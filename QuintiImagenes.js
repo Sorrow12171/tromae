@@ -177,7 +177,9 @@ laminedo_pene:  { url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDD
          chupando_solo_la_cabeza_del_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773017717220.jpg", audio: "" },
         chupando_hasta_la_mitad_del_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773017829239.jpg", audio: "" },
     chupando_todo_el_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/XDXDXDXDXD/main/imagenes/img_1773067940965.jpg", audio: "" },
+      
         chupando_todo_el_pene_mano_en_su_cabeza_empujandola: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773018592671.jpg", audio: "https://files.catbox.moe/7dp26p.mp3" },
+      chupando_bolas: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD5/main/imagenes/img_1773192778522.jpg", audio: "https://files.catbox.moe/fz1omb.mp3" },
         doggystyle: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773018797868.jpg", audio: "https://files.catbox.moe/cpu9th.mp3" },
       follando_en_el_aire: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772926402004.jpg", audio: "https://files.catbox.moe/iakcoo.mp3" }, 
         mostrando_culo_sin_ropa: { url: "https://pbs.twimg.com/media/HIhW093aIAAD1-i?format=jpg&name=large", audio: "" },
