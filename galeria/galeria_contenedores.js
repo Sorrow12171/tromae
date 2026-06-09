@@ -258,6 +258,12 @@ const contenedoresGaleria = {
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD60/main/imagenes/img_1780749493554.png",
         descripcion: "a",
         categoria: "a"
+    },
+    43: {
+        nombre: "OriPuta",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD65/main/imagenes/img_1781044263847.jpg",
+        descripcion: "pu",
+        categoria: "ta"
     }
 };
 
