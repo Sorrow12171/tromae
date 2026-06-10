@@ -174,6 +174,7 @@ laminedo_pene:  { url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDD
     Emilia: {
         // Emilia de Re:Zero - Cabello plateado, medias blancas, vestido blanco con morado
         hablando: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773017610297.jpg", audio: "" },
+           Caminando_al_cuarto: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD5/main/imagenes/img_1773192736226.jpg", audio: "" },
            besando: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773017616081.jpg", audio: "" },
          chupando_solo_la_cabeza_del_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773017717220.jpg", audio: "" },
         chupando_hasta_la_mitad_del_pene: { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773017829239.jpg", audio: "" },
