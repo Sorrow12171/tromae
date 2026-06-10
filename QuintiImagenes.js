@@ -9,7 +9,7 @@ const QuintiImagenes = {
     Ichika: {
         besando:  { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772901835049.jpg", audio: "" },
           
-    chupando_solo_la_punta_del_pene:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773181766015.jpg", audio: "" },
+    chupando_solo_la_punta_del_pene:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773181766015.jpg", audio: "https://files.catbox.moe/5q22c7.mp3" },
      chupando_solo_la_mitad_del_pene:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773181840410.jpg", audio: "" },
     chupando_todo_el_pene:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773181799822.jpg", audio: "" }, 
      chupando_bolas: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773181812025.jpg", audio: "https://files.catbox.moe/flsn1j.mp3" },
