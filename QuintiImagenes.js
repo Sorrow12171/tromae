@@ -11,8 +11,9 @@ const QuintiImagenes = {
           
     chupando_solo_la_punta_del_pene:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773181766015.jpg", audio: "https://files.catbox.moe/5q22c7.mp3" },
      chupando_solo_la_mitad_del_pene:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773181840410.jpg", audio: "https://files.catbox.moe/5q22c7.mp3" },
-    chupando_todo_el_pene:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773181799822.jpg", audio: "" }, 
-     chupando_bolas: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773181812025.jpg", audio: "https://files.catbox.moe/flsn1j.mp3" },
+    chupando_todo_el_pene:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773181799822.jpg", audio: "https://files.catbox.moe/kl8pp6.mp3" }, 
+    chupando_todo_el_pene_mano_en_su_cabeza_empujandola: { url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD58/main/imagenes/img_1780182119840.jpg", audio: "https://files.catbox.moe/2dh6ta.mp3" },
+        chupando_bolas: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773181812025.jpg", audio: "https://files.catbox.moe/flsn1j.mp3" },
     chupando_bola_izquierda: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773181842308.jpg", audio: "" },
     chupando_bola_derecha: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773181816117.jpg", audio: "https://files.catbox.moe/1rus7w.mp3" },
     doggystyle: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD8/main/imagenes/img_1773413911459.jpg", audio: "https://files.catbox.moe/13w483.mp3" },
