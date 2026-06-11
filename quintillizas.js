@@ -1776,15 +1776,6 @@ function cargarPaginaQuintillizas() {
 </div>
             </div>
 
-            <!-- BARRA SUPERIOR DE INSTRUCCIONES (DESTACADA) -->
-            <div id="quint-barra-instrucciones">
-                <span style="color:#2563eb; font-weight:700; font-size:14px;">⚙️ Configuración de Respuesta</span>
-                <button class="quint-btn-instrucciones-grande" onclick="quintToggleInstruccionesFijas()" title="Editar instrucciones de respuesta fijas">
-                    📋 Instrucciones Fijas
-                    <span id="quint-indicador-instrucciones" class="quint-indicador-activo" style="display:none;"></span>
-                </button>
-            </div>
-
             <!-- DEBUG PANEL -->
             <div id="quint-debug-panel" style="display:none;">
                 <div class="quint-debug-header">
@@ -1823,6 +1814,7 @@ function cargarPaginaQuintillizas() {
                 ></textarea>
                 <input type="file" id="quint-file-input" accept="image/*" style="display:none;" onchange="quintManejarImagen(this)">
                 <button id="quint-btn-adjuntar" onclick="document.getElementById('quint-file-input').click()" title="Adjuntar imagen">📷</button>
+                <button id="quint-btn-instrucciones-rapido" onclick="quintToggleInstruccionesFijas()" title="Editar instrucciones fijas" style="background: linear-gradient(135deg, #ffca28 0%, #ffa000 100%); color: #0d1526 !important; border: none; padding: 8px 14px; font-size: 13px; font-weight: 700; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 8px rgba(255, 202, 40, 0.4); display: flex; align-items: center; gap: 6px;">📋 Instrucciones</button>
                 <button id="quint-btn-enviar" onclick="quintEnviar()">Enviar ♡</button>
             </div>
         </div>
@@ -1869,46 +1861,31 @@ function cargarPaginaQuintillizas() {
             .quint-btn-danger       { color:#ff7b7b !important; border-color:#6e2e2e !important; }
             .quint-btn-danger:hover { background:#3a1010 !important; }
             
-            /* BARRA SUPERIOR DE INSTRUCCIONES */
-            #quint-barra-instrucciones {
-                background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
-                border-bottom: 2px solid #2563eb;
-                padding: 15px 20px;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-            }
-            
-            #quint-barra-instrucciones span {
-                color: #bbdefb !important;
-                font-weight: 700 !important;
-                font-size: 15px !important;
-                text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-            }
-
-            .quint-btn-instrucciones-grande {
+            /* Botón de Instrucciones junto a la cámara */
+            #quint-btn-instrucciones-rapido {
                 background: linear-gradient(135deg, #ffca28 0%, #ffa000 100%);
                 color: #0d1526 !important;
                 border: none;
-                padding: 14px 28px;
-                font-size: 16px;
-                font-weight: 800;
-                border-radius: 10px;
+                padding: 8px 14px;
+                font-size: 13px;
+                font-weight: 700;
+                border-radius: 6px;
                 cursor: pointer;
-                box-shadow: 0 4px 15px rgba(255, 202, 40, 0.4);
-                transition: all 0.2s ease;
+                box-shadow: 0 2px 8px rgba(255, 202, 40, 0.4);
                 display: flex;
                 align-items: center;
-                gap: 10px;
-                text-transform: uppercase;
-                letter-spacing: 0.8px;
+                gap: 6px;
+                transition: all 0.2s ease;
             }
-
-            .quint-btn-instrucciones-grande:hover {
-                transform: translateY(-3px) scale(1.05);
-                box-shadow: 0 8px 25px rgba(255, 202, 40, 0.6);
-                filter: brightness(1.15);
+            #quint-btn-instrucciones-rapido:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(255, 202, 40, 0.6);
+                filter: brightness(1.1);
+            }
+            
+            /* BARRA SUPERIOR DE INSTRUCCIONES (ELIMINADA - estilos保留留 para compatibilidad) */
+            #quint-barra-instrucciones {
+                display: none;
             }
 
             .quint-indicador-activo {
