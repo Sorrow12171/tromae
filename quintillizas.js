@@ -294,6 +294,14 @@ function quintGuardarInstruccionesEnLocalStorage() {
 // Cargar instrucciones al inicializar
 quintCargarInstruccionesDesdeLocalStorage();
 
+// Función para actualizar el indicador visual cuando se carga la página
+function quintActualizarIndicadorInstrucciones() {
+    const indicador = document.getElementById("quint-indicador-instrucciones");
+    if (indicador) {
+        indicador.style.display = quintInstruccionesFijas.length > 0 ? "inline-block" : "none";
+    }
+}
+
 // ============================================================
 //  SISTEMA ANTI-REPETICIÓN
 //  Trackea diálogos, acciones y gestos recientes para evitar repeticiones
@@ -1548,11 +1556,17 @@ function quintGuardarInstrucciones() {
     const textarea = document.getElementById("quint-instrucciones-textarea");
     if (!textarea) return;
     
-    const lineas = textarea.value.split("\\n").map(l => l.trim()).filter(l => l.length > 0);
+    const lineas = textarea.value.split("\n").map(l => l.trim()).filter(l => l.length > 0);
     quintInstruccionesFijas = lineas;
     
     // Guardar permanentemente en LocalStorage
     quintGuardarInstruccionesEnLocalStorage();
+    
+    // Actualizar indicador visual
+    const indicador = document.getElementById("quint-indicador-instrucciones");
+    if (indicador) {
+        indicador.style.display = quintInstruccionesFijas.length > 0 ? "inline-block" : "none";
+    }
     
     const panel = document.getElementById("quint-instrucciones-panel");
     if (panel) panel.remove();
@@ -1750,10 +1764,18 @@ function cargarPaginaQuintillizas() {
     <button class="quint-btn-top" onclick="quintImportar()">📂 Importar</button>
     <button class="quint-btn-top" onclick="quintExportar()">💾 Exportar</button>
     <button class="quint-btn-top" onclick="quintBorrarUltimo()">↩ Borrar último</button>
-    <button class="quint-btn-top" onclick="quintToggleInstruccionesFijas()" title="Editar instrucciones de respuesta fijas">📋 Instrucciones</button>
     <button class="quint-btn-top" onclick="quintToggleDebugAPI()" title="Ver qué se envía a la API">🔍 Debug API</button>
     <button class="quint-btn-top quint-btn-danger" onclick="quintLimpiar()">🗑 Limpiar</button>
 </div>
+            </div>
+
+            <!-- BARRA SUPERIOR DE INSTRUCCIONES (DESTACADA) -->
+            <div id="quint-barra-instrucciones">
+                <span style="color:#2563eb; font-weight:700; font-size:14px;">⚙️ Configuración de Respuesta</span>
+                <button class="quint-btn-instrucciones-grande" onclick="quintToggleInstruccionesFijas()" title="Editar instrucciones de respuesta fijas">
+                    📋 Instrucciones Fijas
+                    <span id="quint-indicador-instrucciones" class="quint-indicador-activo" style="display:none;"></span>
+                </button>
             </div>
 
             <!-- DEBUG PANEL -->
@@ -1840,20 +1862,55 @@ function cargarPaginaQuintillizas() {
             .quint-btn-danger       { color:#ff7b7b !important; border-color:#6e2e2e !important; }
             .quint-btn-danger:hover { background:#3a1010 !important; }
             
-            /* Botón de Instrucciones más grande y destacado */
-            .quint-btn-top[onclick*="quintToggleInstruccionesFijas"] {
-                background: linear-gradient(135deg, #1f2d45, #2d3f5a);
-                border-color: #4a6fa5;
-                color: #fff;
-                font-size: 14px;
-                padding: 10px 18px;
-                box-shadow: 0 2px 10px rgba(74, 111, 165, 0.3);
+            /* BARRA SUPERIOR DE INSTRUCCIONES */
+            #quint-barra-instrucciones {
+                background: linear-gradient(135deg, #f0f4ff 0%, #e6e9f0 100%);
+                border-bottom: 2px solid #d1d9e6;
+                padding: 12px 20px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             }
-            .quint-btn-top[onclick*="quintToggleInstruccionesFijas"]:hover {
-                background: linear-gradient(135deg, #2d3f5a, #3a5075);
-                border-color: #5a8fd4;
+
+            .quint-btn-instrucciones-grande {
+                background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                color: white !important;
+                border: none;
+                padding: 12px 24px;
+                font-size: 15px;
+                font-weight: 700;
+                border-radius: 8px;
+                cursor: pointer;
+                box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+                transition: all 0.2s ease;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .quint-btn-instrucciones-grande:hover {
                 transform: translateY(-2px);
-                box-shadow: 0 4px 15px rgba(74, 111, 165, 0.5);
+                box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+                filter: brightness(1.1);
+            }
+
+            .quint-indicador-activo {
+                width: 10px;
+                height: 10px;
+                background-color: #4ade80;
+                border-radius: 50%;
+                display: inline-block;
+                box-shadow: 0 0 8px #4ade80;
+                animation: quintPulse 2s infinite;
+            }
+
+            @keyframes quintPulse {
+                0% { opacity: 1; }
+                50% { opacity: 0.5; }
+                100% { opacity: 1; }
             }
             #quint-debug-panel {
                 background:#0d1526; border-bottom:1px solid #1f2d45;
