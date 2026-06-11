@@ -250,11 +250,49 @@ let quintUltimoPayloadAPI    = null;  // Último payload enviado a la API (para 
 //  INSTRUCCIONES DE RESPUESTA FIJAS
 //  Recordatorios que se envían SIEMPRE en cada generación
 //  El usuario puede editarlas desde la UI
+//  Se guardan permanentemente en LocalStorage
 // ============================================================
-let quintInstruccionesFijas = [
-    "Mantén coherencia con la personalidad de cada chica en todo momento",
-    "Sé creativo y evita respuestas genéricas o repetitivas",
-];
+
+// Clave para LocalStorage
+const QUINT_LOCALSTORAGE_KEY_INSTRUCCIONES = "quintInstruccionesFijas_v1";
+
+// Cargar instrucciones desde LocalStorage o usar valores por defecto
+let quintInstruccionesFijas = [];
+
+function quintCargarInstruccionesDesdeLocalStorage() {
+    try {
+        const guardado = localStorage.getItem(QUINT_LOCALSTORAGE_KEY_INSTRUCCIONES);
+        if (guardado) {
+            quintInstruccionesFijas = JSON.parse(guardado);
+            console.log("📋 Instrucciones cargadas desde LocalStorage:", quintInstruccionesFijas.length, "instrucciones");
+        } else {
+            // Valores por defecto si no hay nada guardado
+            quintInstruccionesFijas = [
+                "Mantén coherencia con la personalidad de cada chica en todo momento",
+                "Sé creativo y evita respuestas genéricas o repetitivas",
+            ];
+            console.log("📋 Usando instrucciones por defecto");
+        }
+    } catch (e) {
+        console.error("❌ Error al cargar instrucciones desde LocalStorage:", e);
+        quintInstruccionesFijas = [
+            "Mantén coherencia con la personalidad de cada chica en todo momento",
+            "Sé creativo y evita respuestas genéricas o repetitivas",
+        ];
+    }
+}
+
+function quintGuardarInstruccionesEnLocalStorage() {
+    try {
+        localStorage.setItem(QUINT_LOCALSTORAGE_KEY_INSTRUCCIONES, JSON.stringify(quintInstruccionesFijas));
+        console.log("💾 Instrucciones guardadas en LocalStorage:", quintInstruccionesFijas.length, "instrucciones");
+    } catch (e) {
+        console.error("❌ Error al guardar instrucciones en LocalStorage:", e);
+    }
+}
+
+// Cargar instrucciones al inicializar
+quintCargarInstruccionesDesdeLocalStorage();
 
 // ============================================================
 //  SISTEMA ANTI-REPETICIÓN
@@ -1513,6 +1551,9 @@ function quintGuardarInstrucciones() {
     const lineas = textarea.value.split("\\n").map(l => l.trim()).filter(l => l.length > 0);
     quintInstruccionesFijas = lineas;
     
+    // Guardar permanentemente en LocalStorage
+    quintGuardarInstruccionesEnLocalStorage();
+    
     const panel = document.getElementById("quint-instrucciones-panel");
     if (panel) panel.remove();
     
@@ -1789,15 +1830,31 @@ function cargarPaginaQuintillizas() {
                 transition:all 0.35s ease; font-weight:700;
                 font-family:'Noto Serif JP',serif;
             }
-            #quint-header-btns { display:flex; gap:6px; flex-wrap:wrap; }
+            #quint-header-btns { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
             .quint-btn-top {
                 background:#0d1526; color:#8ab0ff; border:1px solid #1f2d45;
-                padding:6px 12px; border-radius:8px; cursor:pointer; font-size:12px;
-                transition:background 0.2s; font-family:Arial,sans-serif;
+                padding:8px 14px; border-radius:8px; cursor:pointer; font-size:13px;
+                transition:all 0.2s; font-family:Arial,sans-serif; font-weight:600;
             }
-            .quint-btn-top:hover    { background:#162240; }
+            .quint-btn-top:hover    { background:#162240; transform:translateY(-1px); box-shadow:0 2px 8px rgba(138,176,255,0.2); }
             .quint-btn-danger       { color:#ff7b7b !important; border-color:#6e2e2e !important; }
             .quint-btn-danger:hover { background:#3a1010 !important; }
+            
+            /* Botón de Instrucciones más grande y destacado */
+            .quint-btn-top[onclick*="quintToggleInstruccionesFijas"] {
+                background: linear-gradient(135deg, #1f2d45, #2d3f5a);
+                border-color: #4a6fa5;
+                color: #fff;
+                font-size: 14px;
+                padding: 10px 18px;
+                box-shadow: 0 2px 10px rgba(74, 111, 165, 0.3);
+            }
+            .quint-btn-top[onclick*="quintToggleInstruccionesFijas"]:hover {
+                background: linear-gradient(135deg, #2d3f5a, #3a5075);
+                border-color: #5a8fd4;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 15px rgba(74, 111, 165, 0.5);
+            }
             #quint-debug-panel {
                 background:#0d1526; border-bottom:1px solid #1f2d45;
                 max-height:300px; overflow-y:auto; flex-shrink:0;
