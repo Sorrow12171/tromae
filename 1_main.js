@@ -3683,3 +3683,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, 2000);
 });
+
+// ========================================
+// FUNCIÓN PARA QUINTIAMIGAS CHAT
+// ========================================
+function cargarPaginaQuintiAmigas() {
+    window.location.href = 'quintillizasPrueba/chat.html';
+}

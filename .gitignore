@@ -1,1 +1,17 @@
-Nothing should be ignored since the modified files are JavaScript source files (.js) which are not build artifacts, dependencies, or temporary files.
+```
+# Dependencies
+node_modules/
+
+# Editors
+.vscode/
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+
+# Environment
+.env
+.env.local
+*.env.*
+```
