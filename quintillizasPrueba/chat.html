@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuintiAmigas - Chat</title>
+    <link rel="stylesheet" href="../1_style.css">
+    <style>
+        .chat-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .chat-header {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #FF69B4, #FF1493);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .chat-messages {
+            height: 400px;
+            overflow-y: auto;
+            border: 2px solid #ffb6c1;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #fff0f5;
+        }
+        
+        .message {
+            margin: 10px 0;
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        
+        .user-message {
+            background: linear-gradient(135deg, #4CAF50, #2196F3);
+            color: white;
+            margin-left: auto;
+            text-align: right;
+        }
+        
+        .bot-message {
+            background: linear-gradient(135deg, #FF69B4, #FF1493);
+            color: white;
+        }
+        
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ffb6c1;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .chat-input:focus {
+            border-color: #FF1493;
+        }
+        
+        .send-button {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #FF69B4, #FF1493);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        
+        .send-button:hover {
+            transform: scale(1.05);
+        }
+        
+        .send-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .typing-indicator {
+            display: none;
+            color: #FF1493;
+            font-style: italic;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <button id="boton-casa" class="btn-casa" onclick="volverAlInicio()" title="Volver al inicio">
+        🏠
+    </button>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>💬 QuintiAmigas</h2>
+            <p>Tus amigas virtuales están aquí para charlar</p>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot-message">
+                ¡Hola! Soy QuintiAmigas 🌸 ¿En qué puedo ayudarte hoy?
+            </div>
+        </div>
+        
+        <div class="typing-indicator" id="typingIndicator">
+            QuintiAmigas está escribiendo...
+        </div>
+        
+        <div class="chat-input-container">
+            <input type="text" class="chat-input" id="userInput" placeholder="Escribe tu mensaje..." onkeypress="handleKeyPress(event)">
+            <button class="send-button" id="sendButton" onclick="sendMessage()">Enviar</button>
+        </div>
+    </div>
+
+    <script src="logica.js"></script>
+    <script>
+        function volverAlInicio() {
+            window.location.href = '../index.html';
+        }
+        
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+        
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const sendBtn = document.getElementById('sendButton');
+            const messagesDiv = document.getElementById('chatMessages');
+            const typingIndicator = document.getElementById('typingIndicator');
+            
+            const message = input.value.trim();
+            if (!message) return;
+            
+            // Agregar mensaje del usuario
+            const userMsgDiv = document.createElement('div');
+            userMsgDiv.className = 'message user-message';
+            userMsgDiv.textContent = message;
+            messagesDiv.appendChild(userMsgDiv);
+            
+            input.value = '';
+            input.disabled = true;
+            sendBtn.disabled = true;
+            typingIndicator.style.display = 'block';
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            
+            try {
+                // Llamar a la función de logica.js
+                const response = await obtenerRespuestaGroq(message);
+                
+                typingIndicator.style.display = 'none';
+                
+                // Agregar respuesta del bot
+                const botMsgDiv = document.createElement('div');
+                botMsgDiv.className = 'message bot-message';
+                botMsgDiv.textContent = response;
+                messagesDiv.appendChild(botMsgDiv);
+                
+            } catch (error) {
+                typingIndicator.style.display = 'none';
+                const errorMsgDiv = document.createElement('div');
+                errorMsgDiv.className = 'message bot-message';
+                errorMsgDiv.textContent = 'Lo siento, hubo un error al procesar tu mensaje. 😅';
+                messagesDiv.appendChild(errorMsgDiv);
+                console.error('Error:', error);
+            }
+            
+            input.disabled = false;
+            sendBtn.disabled = false;
+            input.focus();
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+    </script>
+</body>
+</html>
