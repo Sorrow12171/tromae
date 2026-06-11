@@ -161,7 +161,12 @@ VARIEDAD CRÍTICA - SISTEMA ANTI-REPETICIÓN ACTIVO:
 - INTERACCIÓN ENTRE ELLAS: Las chicas pueden tocarse entre sí, competir por atención, animarse, etc.
 - PROGRESIÓN: La escena debe avanzar — no quedarse estancada en lo mismo. Cambia posiciones, intensidad, focos de atención
 ` : "";
-    return `Eres el narrador de un roleplay/visual novel con las Quintillizas Nakano de Gotoubun no Hanayome.${locInfo}${eventoInfo}${hechosInfo}${instruccionVariedad}${instruccionesIntimidad}
+    // Instrucciones fijas de respuesta (recordatorios del usuario)
+    const instruccionesFijasInfo = quintInstruccionesFijas && quintInstruccionesFijas.length > 0
+        ? `\\n\\n📌 INSTRUCCIONES DE RESPUESTA FIJAS (recordatorios permanentes):\\n${quintInstruccionesFijas.map(i => `• ${i}`).join("\\n")}`
+        : "";
+
+    return `Eres el narrador de un roleplay/visual novel con las Quintillizas Nakano de Gotoubun no Hanayome.${locInfo}${eventoInfo}${hechosInfo}${instruccionesFijasInfo}${instruccionVariedad}${instruccionesIntimidad}
 Las chicas ACTUALMENTE PRESENTES en la escena son: ${soloChicas.join(", ")}.
 ${externos.length > 0 ? "Personajes externos presentes: " + externos.join(", ") + "." : ""}
 
@@ -240,6 +245,16 @@ let quintResumenAcumulado    = "";   // Resumen acumulativo de mensajes viejos
 let quintHechosClave         = [];   // ["El usuario se llama Aldo", "Nino estaba celosa", ...]
 let quintResumenPendiente    = false;// Flag para generar resumen en background
 let quintUltimoPayloadAPI    = null;  // Último payload enviado a la API (para debug visual)
+
+// ============================================================
+//  INSTRUCCIONES DE RESPUESTA FIJAS
+//  Recordatorios que se envían SIEMPRE en cada generación
+//  El usuario puede editarlas desde la UI
+// ============================================================
+let quintInstruccionesFijas = [
+    "Mantén coherencia con la personalidad de cada chica en todo momento",
+    "Sé creativo y evita respuestas genéricas o repetitivas",
+];
 
 // ============================================================
 //  SISTEMA ANTI-REPETICIÓN
@@ -1461,6 +1476,49 @@ function quintToggleDebugAPI() {
     }
 }
 
+// ============================================================
+//  PANEL DE INSTRUCCIONES FIJAS
+// ============================================================
+
+function quintToggleInstruccionesFijas() {
+    const existing = document.getElementById("quint-instrucciones-panel");
+    if (existing) {
+        existing.remove();
+        return;
+    }
+    
+    const app = document.getElementById("quint-app");
+    const panel = document.createElement("div");
+    panel.id = "quint-instrucciones-panel";
+    panel.innerHTML = `
+        <div class="quint-inst-header">
+            <span>📋 Instrucciones de Respuesta Fijas</span>
+            <button onclick="quintToggleInstruccionesFijas()">✕</button>
+        </div>
+        <div class="quint-inst-content">
+            <p style="color:#8ab0ff; font-size:12px; margin-bottom:10px;">
+                Estas instrucciones se envían SIEMPRE en cada respuesta. Son recordatorios permanentes para el AI.
+            </p>
+            <textarea id="quint-instrucciones-textarea" placeholder="Escribe una instrucción por línea...">${quintInstruccionesFijas.join("\\n")}</textarea>
+            <button class="quint-btn-save" onclick="quintGuardarInstrucciones()">💾 Guardar</button>
+        </div>
+    `;
+    app.appendChild(panel);
+}
+
+function quintGuardarInstrucciones() {
+    const textarea = document.getElementById("quint-instrucciones-textarea");
+    if (!textarea) return;
+    
+    const lineas = textarea.value.split("\\n").map(l => l.trim()).filter(l => l.length > 0);
+    quintInstruccionesFijas = lineas;
+    
+    const panel = document.getElementById("quint-instrucciones-panel");
+    if (panel) panel.remove();
+    
+    quintAgregarSistema(`[ Instrucciones de respuesta actualizadas: ${quintInstruccionesFijas.length} recordatorios activos ]`);
+}
+
 function quintRenderDebugPanel() {
     const content = document.getElementById("quint-debug-content");
     if (!content) return;
@@ -1492,6 +1550,14 @@ function quintRenderDebugPanel() {
         html += `<div class="quint-debug-section">`;
         html += `<span class="quint-debug-label">📌 Hechos Clave (${p.hechosClave.length})</span>`;
         html += `<div class="quint-debug-box">${p.hechosClave.map(h => `• ${h}`).join("\n")}</div>`;
+        html += `</div>`;
+    }
+
+    // Instrucciones fijas de respuesta
+    if (quintInstruccionesFijas && quintInstruccionesFijas.length > 0) {
+        html += `<div class="quint-debug-section">`;
+        html += `<span class="quint-debug-label">📋 Instrucciones de Respuesta Fijas (${quintInstruccionesFijas.length})</span>`;
+        html += `<div class="quint-debug-box">${quintInstruccionesFijas.map(i => `• ${i}`).join("\n")}</div>`;
         html += `</div>`;
     }
 
@@ -1643,6 +1709,7 @@ function cargarPaginaQuintillizas() {
     <button class="quint-btn-top" onclick="quintImportar()">📂 Importar</button>
     <button class="quint-btn-top" onclick="quintExportar()">💾 Exportar</button>
     <button class="quint-btn-top" onclick="quintBorrarUltimo()">↩ Borrar último</button>
+    <button class="quint-btn-top" onclick="quintToggleInstruccionesFijas()" title="Editar instrucciones de respuesta fijas">📋 Instrucciones</button>
     <button class="quint-btn-top" onclick="quintToggleDebugAPI()" title="Ver qué se envía a la API">🔍 Debug API</button>
     <button class="quint-btn-top quint-btn-danger" onclick="quintLimpiar()">🗑 Limpiar</button>
 </div>
@@ -1764,6 +1831,43 @@ function cargarPaginaQuintillizas() {
             .quint-debug-box::-webkit-scrollbar-thumb { background:#1f2d45; border-radius:2px; }
             .quint-debug-stat { color:#7a8ba0; font-size:11px; font-family:Arial,sans-serif; margin:2px 0; }
             .quint-debug-stat span { color:#8ab0ff; }
+            
+            /* Panel de Instrucciones Fijas */
+            #quint-instrucciones-panel {
+                position:absolute; top:60px; right:0;
+                width:min(400px,90%); background:#0d1526;
+                border:1px solid #1f2d45; border-radius:12px;
+                z-index:200; box-shadow:0 8px 32px rgba(0,0,0,0.5);
+                animation:qmFadeIn 0.18s ease;
+            }
+            .quint-inst-header {
+                display:flex; justify-content:space-between; align-items:center;
+                padding:12px 16px; border-bottom:1px solid #1f2d45;
+                color:#8ab0ff; font-size:13px; font-weight:bold; font-family:Georgia,serif;
+            }
+            .quint-inst-header button {
+                background:none; border:none; color:#ff7b7b; font-size:16px;
+                cursor:pointer; padding:0 4px;
+            }
+            .quint-inst-content { padding:16px; }
+            .quint-inst-content textarea {
+                width:100%; min-height:200px; background:#0a0f18;
+                border:1px solid #1f2d45; border-radius:8px;
+                color:#c0d8ff; font-size:12px; padding:10px;
+                font-family:'Courier New',monospace; resize:vertical;
+                line-height:1.6;
+            }
+            .quint-inst-content textarea:focus {
+                outline:none; border-color:#3a5a90;
+            }
+            .quint-btn-save {
+                margin-top:10px; background:#1f2d45; color:#8ab0ff;
+                border:1px solid #3a5a90; border-radius:6px;
+                padding:8px 16px; cursor:pointer; font-size:12px;
+                font-weight:bold; transition:all 0.2s;
+            }
+            .quint-btn-save:hover { background:#2a3d5c; color:#ffffff; }
+            
             #quint-chat-mensajes {
                 flex:1; overflow-y:auto; padding:18px 16px;
                 display:flex; flex-direction:column; gap:10px;
