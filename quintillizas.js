@@ -1193,12 +1193,63 @@ setTimeout(function() {
 }, 500);
 
 // ============================================================
+//  PROCESAR COMANDOS ESPECIALES (/, /prueba, /instrucciones, etc.)
+// ============================================================
+function quintProcesarComando(comando) {
+    const texto = comando.trim();
+    const cmd = texto.toLowerCase();
+    
+    // Comando /prueba - Muestra el flujo de instrucciones como si se hubiera presionado el botón
+    if (cmd === '/prueba' || cmd === '/instrucciones') {
+        quintToggleInstruccionesFijas();
+        quintAgregarSistema("📋 Panel de Instrucciones Fijas abierto. Aquí puedes editar las instrucciones permanentes que se envían en cada respuesta del AI.");
+        return;
+    }
+    
+    // Comando /ayuda - Muestra lista de comandos disponibles
+    if (cmd === '/ayuda' || cmd === '/help') {
+        const ayuda = `📚 Comandos disponibles:
+• /prueba o /instrucciones - Abre el panel de instrucciones fijas
+• /ayuda - Muestra esta ayuda
+• /limpiar - Limpia el chat
+• /exportar - Exporta la conversación`;
+        quintAgregarSistema(ayuda);
+        return;
+    }
+    
+    // Comando /limpiar
+    if (cmd === '/limpiar') {
+        if (confirm('¿Estás seguro de que deseas limpiar todo el chat?')) {
+            quintLimpiar();
+        }
+        return;
+    }
+    
+    // Comando /exportar
+    if (cmd === '/exportar') {
+        quintExportar();
+        return;
+    }
+    
+    // Comando no reconocido
+    quintAgregarSistema(`❌ Comando no reconocido: "${texto}". Escribe /ayuda para ver los comandos disponibles.`);
+}
+
+// ============================================================
 //  ENVIAR
 // ============================================================
 async function quintEnviar() {
     if (quintOcupado) return;
     const input = document.getElementById("quint-input");
     const texto = input.value.trim();
+    
+    // Verificar si es un comando especial (empieza con /)
+    if (texto.startsWith('/')) {
+        quintProcesarComando(texto);
+        input.value = ""; input.style.height = "auto";
+        return;
+    }
+    
     input.value = ""; input.style.height = "auto";
     quintOcupado = true;
     const btn = document.getElementById("quint-btn-enviar");
@@ -1866,18 +1917,19 @@ function cargarPaginaQuintillizas() {
                 background: linear-gradient(135deg, #ffca28 0%, #ffa000 100%) !important;
                 color: #0d1526 !important;
                 border: none;
-                padding: 8px 14px;
+                padding: 9px 14px;
                 font-size: 13px;
                 font-weight: 700;
-                border-radius: 6px;
+                border-radius: 10px;
                 cursor: pointer;
                 box-shadow: 0 2px 8px rgba(255, 202, 40, 0.4);
                 display: flex;
                 align-items: center;
                 gap: 6px;
                 transition: all 0.2s ease;
-                height: auto !important;
+                height: 40px !important;
                 align-self: center;
+                white-space: nowrap;
             }
             #quint-btn-instrucciones-rapido:hover {
                 transform: translateY(-2px);
@@ -2083,7 +2135,7 @@ function cargarPaginaQuintillizas() {
             }
             #quint-input:focus        { border-color:#3a5a90; }
             #quint-input::placeholder { color:#3a5a90; }
-            #quint-btn-enviar, #quint-btn-adjuntar {
+            #quint-btn-enviar, #quint-btn-adjuntar, #quint-btn-instrucciones-rapido {
                 background:linear-gradient(135deg,#1f3a70,#3a6adf);
                 color:#c0d8ff; border:none; padding:9px 18px;
                 border-radius:10px; cursor:pointer;
