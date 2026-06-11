@@ -250,11 +250,49 @@ let quintUltimoPayloadAPI    = null;  // Último payload enviado a la API (para 
 //  INSTRUCCIONES DE RESPUESTA FIJAS
 //  Recordatorios que se envían SIEMPRE en cada generación
 //  El usuario puede editarlas desde la UI
+//  Se guardan permanentemente en LocalStorage
 // ============================================================
-let quintInstruccionesFijas = [
-    "Mantén coherencia con la personalidad de cada chica en todo momento",
-    "Sé creativo y evita respuestas genéricas o repetitivas",
-];
+
+// Clave para LocalStorage
+const QUINT_LOCALSTORAGE_KEY_INSTRUCCIONES = "quintInstruccionesFijas_v1";
+
+// Cargar instrucciones desde LocalStorage o usar valores por defecto
+let quintInstruccionesFijas = [];
+
+function quintCargarInstruccionesDesdeLocalStorage() {
+    try {
+        const guardado = localStorage.getItem(QUINT_LOCALSTORAGE_KEY_INSTRUCCIONES);
+        if (guardado) {
+            quintInstruccionesFijas = JSON.parse(guardado);
+            console.log("📋 Instrucciones cargadas desde LocalStorage:", quintInstruccionesFijas.length, "instrucciones");
+        } else {
+            // Valores por defecto si no hay nada guardado
+            quintInstruccionesFijas = [
+                "Mantén coherencia con la personalidad de cada chica en todo momento",
+                "Sé creativo y evita respuestas genéricas o repetitivas",
+            ];
+            console.log("📋 Usando instrucciones por defecto");
+        }
+    } catch (e) {
+        console.error("❌ Error al cargar instrucciones desde LocalStorage:", e);
+        quintInstruccionesFijas = [
+            "Mantén coherencia con la personalidad de cada chica en todo momento",
+            "Sé creativo y evita respuestas genéricas o repetitivas",
+        ];
+    }
+}
+
+function quintGuardarInstruccionesEnLocalStorage() {
+    try {
+        localStorage.setItem(QUINT_LOCALSTORAGE_KEY_INSTRUCCIONES, JSON.stringify(quintInstruccionesFijas));
+        console.log("💾 Instrucciones guardadas en LocalStorage:", quintInstruccionesFijas.length, "instrucciones");
+    } catch (e) {
+        console.error("❌ Error al guardar instrucciones en LocalStorage:", e);
+    }
+}
+
+// Cargar instrucciones al inicializar
+quintCargarInstruccionesDesdeLocalStorage();
 
 // ============================================================
 //  SISTEMA ANTI-REPETICIÓN
@@ -1512,6 +1550,9 @@ function quintGuardarInstrucciones() {
     
     const lineas = textarea.value.split("\\n").map(l => l.trim()).filter(l => l.length > 0);
     quintInstruccionesFijas = lineas;
+    
+    // Guardar permanentemente en LocalStorage
+    quintGuardarInstruccionesEnLocalStorage();
     
     const panel = document.getElementById("quint-instrucciones-panel");
     if (panel) panel.remove();
