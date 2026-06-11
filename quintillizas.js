@@ -296,10 +296,19 @@ quintCargarInstruccionesDesdeLocalStorage();
 
 // Función para actualizar el indicador visual cuando se carga la página
 function quintActualizarIndicadorInstrucciones() {
-    const indicador = document.getElementById("quint-indicador-instrucciones");
-    if (indicador) {
-        indicador.style.display = quintInstruccionesFijas.length > 0 ? "inline-block" : "none";
-    }
+    setTimeout(() => {
+        const indicador = document.getElementById("quint-indicador-instrucciones");
+        if (indicador) {
+            indicador.style.display = quintInstruccionesFijas.length > 0 ? "inline-block" : "none";
+        }
+    }, 100);
+}
+
+// Llamar a la función después de que el DOM esté listo
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', quintActualizarIndicadorInstrucciones);
+} else {
+    quintActualizarIndicadorInstrucciones();
 }
 
 // ============================================================
@@ -1544,6 +1553,7 @@ function quintToggleInstruccionesFijas() {
         <div class="quint-inst-content">
             <p style="color:#8ab0ff; font-size:12px; margin-bottom:10px;">
                 Estas instrucciones se envían SIEMPRE en cada respuesta. Son recordatorios permanentes para el AI.
+                Se guardan automáticamente en tu navegador y no se pierden al recargar.
             </p>
             <textarea id="quint-instrucciones-textarea" placeholder="Escribe una instrucción por línea...">${quintInstruccionesFijas.join("\\n")}</textarea>
             <button class="quint-btn-save" onclick="quintGuardarInstrucciones()">💾 Guardar</button>
@@ -1563,10 +1573,7 @@ function quintGuardarInstrucciones() {
     quintGuardarInstruccionesEnLocalStorage();
     
     // Actualizar indicador visual
-    const indicador = document.getElementById("quint-indicador-instrucciones");
-    if (indicador) {
-        indicador.style.display = quintInstruccionesFijas.length > 0 ? "inline-block" : "none";
-    }
+    quintActualizarIndicadorInstrucciones();
     
     const panel = document.getElementById("quint-instrucciones-panel");
     if (panel) panel.remove();
@@ -1864,37 +1871,44 @@ function cargarPaginaQuintillizas() {
             
             /* BARRA SUPERIOR DE INSTRUCCIONES */
             #quint-barra-instrucciones {
-                background: linear-gradient(135deg, #f0f4ff 0%, #e6e9f0 100%);
-                border-bottom: 2px solid #d1d9e6;
-                padding: 12px 20px;
+                background: linear-gradient(135deg, #1a237e 0%, #0d47a1 100%);
+                border-bottom: 2px solid #2563eb;
+                padding: 15px 20px;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+                box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            }
+            
+            #quint-barra-instrucciones span {
+                color: #bbdefb !important;
+                font-weight: 700 !important;
+                font-size: 15px !important;
+                text-shadow: 0 1px 3px rgba(0,0,0,0.3);
             }
 
             .quint-btn-instrucciones-grande {
-                background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-                color: white !important;
+                background: linear-gradient(135deg, #ffca28 0%, #ffa000 100%);
+                color: #0d1526 !important;
                 border: none;
-                padding: 12px 24px;
-                font-size: 15px;
-                font-weight: 700;
-                border-radius: 8px;
+                padding: 14px 28px;
+                font-size: 16px;
+                font-weight: 800;
+                border-radius: 10px;
                 cursor: pointer;
-                box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+                box-shadow: 0 4px 15px rgba(255, 202, 40, 0.4);
                 transition: all 0.2s ease;
                 display: flex;
                 align-items: center;
-                gap: 8px;
+                gap: 10px;
                 text-transform: uppercase;
-                letter-spacing: 0.5px;
+                letter-spacing: 0.8px;
             }
 
             .quint-btn-instrucciones-grande:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
-                filter: brightness(1.1);
+                transform: translateY(-3px) scale(1.05);
+                box-shadow: 0 8px 25px rgba(255, 202, 40, 0.6);
+                filter: brightness(1.15);
             }
 
             .quint-indicador-activo {
@@ -1948,10 +1962,10 @@ function cargarPaginaQuintillizas() {
             
             /* Panel de Instrucciones Fijas */
             #quint-instrucciones-panel {
-                position:absolute; top:60px; right:0;
-                width:min(400px,90%); background:#0d1526;
-                border:1px solid #1f2d45; border-radius:12px;
-                z-index:200; box-shadow:0 8px 32px rgba(0,0,0,0.5);
+                position:fixed; top:140px; right:20px;
+                width:min(450px,90%); background:#0d1526;
+                border:2px solid #2563eb; border-radius:12px;
+                z-index:1000; box-shadow:0 8px 32px rgba(37, 99, 235, 0.4);
                 animation:qmFadeIn 0.18s ease;
             }
             .quint-inst-header {
@@ -1975,12 +1989,23 @@ function cargarPaginaQuintillizas() {
                 outline:none; border-color:#3a5a90;
             }
             .quint-btn-save {
-                margin-top:10px; background:#1f2d45; color:#8ab0ff;
-                border:1px solid #3a5a90; border-radius:6px;
-                padding:8px 16px; cursor:pointer; font-size:12px;
-                font-weight:bold; transition:all 0.2s;
+                margin-top:10px; 
+                background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                color: white !important;
+                border: none;
+                border-radius: 8px;
+                padding: 10px 20px;
+                cursor: pointer;
+                font-size: 13px;
+                font-weight: 700;
+                transition: all 0.2s;
+                box-shadow: 0 3px 10px rgba(37, 99, 235, 0.3);
             }
-            .quint-btn-save:hover { background:#2a3d5c; color:#ffffff; }
+            .quint-btn-save:hover { 
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(37, 99, 235, 0.5);
+                filter: brightness(1.1);
+            }
             
             #quint-chat-mensajes {
                 flex:1; overflow-y:auto; padding:18px 16px;
