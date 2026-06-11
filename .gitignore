@@ -2,16 +2,57 @@
 # Dependencies
 node_modules/
 
-# Editors
-.vscode/
-
 # Logs and temp files
 *.log
 *.tmp
-*.swp
 
 # Environment
 .env
 .env.local
-*.env.*
+.env.*
+
+# Editors
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+dist/
+build/
+target/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git*
+!gitignore
+*.pot
+*.po
+*~
+.pydevproject
+.pytest_cache/
+.mypy_cache/
+.hypothesis/
+.coverage*
+htmlcov/
+.python-version
 ```
