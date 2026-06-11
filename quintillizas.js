@@ -1863,7 +1863,7 @@ function cargarPaginaQuintillizas() {
             
             /* Botón de Instrucciones junto a la cámara */
             #quint-btn-instrucciones-rapido {
-                background: linear-gradient(135deg, #ffca28 0%, #ffa000 100%);
+                background: linear-gradient(135deg, #ffca28 0%, #ffa000 100%) !important;
                 color: #0d1526 !important;
                 border: none;
                 padding: 8px 14px;
@@ -1876,6 +1876,8 @@ function cargarPaginaQuintillizas() {
                 align-items: center;
                 gap: 6px;
                 transition: all 0.2s ease;
+                height: auto !important;
+                align-self: center;
             }
             #quint-btn-instrucciones-rapido:hover {
                 transform: translateY(-2px);
@@ -2070,7 +2072,7 @@ function cargarPaginaQuintillizas() {
             #quint-input-area {
                 display:flex; gap:10px; padding:12px 16px;
                 background:#0d1526; border-top:1px solid #1f2d45;
-                flex-shrink:0; align-items:flex-end; flex-wrap:wrap;
+                flex-shrink:0; align-items:center; flex-wrap:wrap;
             }
             #quint-input {
                 flex:1; background:#101d35; color:#e8e8f0;
