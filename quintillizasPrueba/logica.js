@@ -52,6 +52,49 @@ let chicasEnChat = new Set(); // Conjunto de chicas que están participando en e
 let memoriaChat = []; // Sistema de memoria para recordar cosas puntuales durante la conversación
 const MAX_MEMORIA = 10; // Máximo número de recuerdos a mantener
 
+// Variables para mantener el estado de la acción en curso (persistencia natural de contexto)
+let accionEnCurso = null; // Acción actual (ej: 'besando', 'chupando')
+let contadorTurnosAccion = 0; // Turnos que lleva la acción actual
+const MAX_TURNOS_ACCION = 3; // Después de 3 turnos, la acción puede terminar naturalmente
+
+/**
+ * Actualiza el estado de la acción en curso desde logica.js
+ * @param {string|null} nuevaAccion - La acción detectada en el mensaje del usuario
+ */
+function actualizarAccionEnCurso(nuevaAccion) {
+    if (nuevaAccion) {
+        // Nueva acción detectada: reiniciar contador
+        if (accionEnCurso !== nuevaAccion) {
+            accionEnCurso = nuevaAccion;
+            contadorTurnosAccion = 1;
+            logQuinti('DEBUG', `Nueva acción iniciada en logica.js: ${nuevaAccion}`);
+        } else {
+            // Misma acción continúa
+            contadorTurnosAccion++;
+            logQuinti('DEBUG', `Acción ${nuevaAccion} continúa en logica.js (turno ${contadorTurnosAccion}/${MAX_TURNOS_ACCION})`);
+        }
+    } else {
+        // No hay acción explícita en el mensaje
+        if (accionEnCurso && contadorTurnosAccion >= MAX_TURNOS_ACCION) {
+            // La acción terminó naturalmente después de MAX_TURNOS_ACCION turnos
+            logQuinti('DEBUG', `Acción ${accionEnCurso} terminó naturalmente en logica.js`);
+            accionEnCurso = null;
+            contadorTurnosAccion = 0;
+        } else if (accionEnCurso) {
+            // La acción aún está en curso pero el usuario no la mencionó explícitamente
+            logQuinti('DEBUG', `Acción ${accionEnCurso} se mantiene implícita en logica.js (turno ${contadorTurnosAccion})`);
+        }
+    }
+}
+
+/**
+ * Obtiene la acción en curso actual
+ * @returns {string|null} - La acción en curso o null
+ */
+function getAccionEnCurso() {
+    return accionEnCurso;
+}
+
 // ============================================================
 //  SISTEMA DE LOGGING
 // ============================================================
@@ -1069,7 +1112,9 @@ export {
     logErrorAPI,
     formatearErrorUsuario,
     seleccionarImagenAutomatica,
-    obtenerTagsImagen
+    obtenerTagsImagen,
+    actualizarAccionEnCurso,
+    getAccionEnCurso
 };
 
 // Exportar para window (compatibilidad con browser)
@@ -1080,6 +1125,8 @@ if (typeof window !== 'undefined') {
     window.obtenerTagsImagen = obtenerTagsImagen;
     window.getChicasEnChat = getChicasEnChat;
     window.limpiarChicasEnChat = limpiarChicasEnChat;
+    window.actualizarAccionEnCurso = actualizarAccionEnCurso;
+    window.getAccionEnCurso = getAccionEnCurso;
 }
 
 // Exportar funciones para uso en otros módulos (CommonJS - compatibilidad)
@@ -1102,6 +1149,8 @@ if (typeof module !== 'undefined' && module.exports) {
         logQuinti,
         formatearErrorUsuario,
         seleccionarImagenAutomatica,
-        obtenerTagsImagen
+        obtenerTagsImagen,
+        actualizarAccionEnCurso,
+        getAccionEnCurso
     };
 }
