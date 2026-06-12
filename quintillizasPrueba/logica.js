@@ -1,16 +1,27 @@
-// QuintiAmigas - Lógica de respuesta con Groq API
-// Archivo: logica.js
-// Carpeta: quintillizasPrueba
-// 
-// CARACTERÍSTICAS IMPLEMENTADAS:
-// - Sistema de reintentos multi-fase (basado en quintillizas.js)
-// - Logging detallado de errores en consola
-// - Selección automática de imágenes según contexto
-// - Rotación de API keys para alta disponibilidad
+// ============================================================
+//  QuintiAmigas - Lógica de respuesta con Groq API
+//  Archivo: logica.js
+//  Carpeta: quintillizasPrueba
+//  
+//  CARACTERÍSTICAS IMPLEMENTADAS:
+//  - Sistema de reintentos multi-fase (basado en quintillizas.js)
+//  - Logging detallado de errores en consola
+//  - Selección automática de imágenes según contexto
+//  - Rotación de API keys para alta disponibilidad
+//  - System prompt separado en módulo independiente
+//  - Personalidades separadas en módulo independiente
+//  - Fallbacks y sistema de reintentos en módulo independiente
+//
+//  DEPENDENCIAS:
+//  - systemprompt.js: Prompts del sistema y variantes
+//  - personalidades.js: Definición de personajes
+//  - fallbacks.js: Sistema de reintentos y respuestas de respaldo
+//  - imagenes.js: URLs y tags de imágenes
+// ============================================================
 
-// Las funciones utilitarias se definen inline para evitar dependencias de módulos en navegador
-// Los prompts de reintentos se definen abajo
-// Las imágenes se cargan desde imagenes.js (QuintiImagenesPrueba)
+import { generarSystemPrompt, QUINT_PRUEBA_SYSTEM_MINIMO, QUINT_PRUEBA_FASE1, QUINT_PRUEBA_FASE2, QUINT_PRUEBA_FASE3, QUINT_PRUEBA_FASE4 } from './systemprompt.js';
+import { PERSONALIDADES, getChicasDisponibles } from './personalidades.js';
+import { obtenerFallbackLocal, obtenerMensajeError, generarPayloadFase, getOrdenFases, getInfoFase } from './fallbacks.js';
 
 // ============================================================
 //  CONFIGURACIÓN DE API KEYS
@@ -84,43 +95,27 @@ function logSeleccionImagen(chica, tag, contexto) {
 
 // ============================================================
 //  PROMPTS DE REINTENTOS (multi-fase como quintillizas.js)
+//  NOTA: Estos prompts ahora están en systemprompt.js
+//  Se mantienen aquí como referencias rápidas pero se importan del módulo
 // ============================================================
-
-const QUINT_PRUEBA_SYSTEM_MINIMO = `Eres una chica de roleplay interactivo. Responde SOLO con JSON válido.
-Formato: {"respuesta":"tu respuesta con *acciones*","imagen_tag":"nombre_imagen"}`;
-
-const QUINT_PRUEBA_FASE1 = [
-    "Responde SOLO con JSON valido. Sin texto fuera del JSON. Empieza con { y termina con }",
-    'SOLO JSON. Formato: {"respuesta":"tu respuesta aqui con *acciones entre asteriscos*","imagen_tag":"nombre_de_imagen"}',
-    "Tu respuesta anterior no fue JSON valido. Intenta de nuevo. SOLO el JSON, nada mas.",
-    "JSON VALIDO UNICAMENTE. Empieza con { — no con texto, no con explicaciones.",
-];
-
-const QUINT_PRUEBA_FASE2 = [
-    'Responde en JSON. {"respuesta":"respuesta aqui con *acciones*","imagen_tag":"nombre_imagen"}',
-    "SOLO JSON valido. Sin markdown. Sin texto extra. Empieza con {",
-    "Por favor responde unicamente con el JSON solicitado. Nada de texto adicional.",
-    "JSON. Solo JSON. Empieza con { termina con }",
-];
-
-const QUINT_PRUEBA_FASE3 = ["responde", "continua", "ok"];
-
-const QUINT_PRUEBA_FASE4 = [
-    'JSON solo: {"respuesta":"tu respuesta","imagen_tag":"normal"}',
-    '{"respuesta":"Hola, ¿cómo estás? *sonríe amablemente*","imagen_tag":"hablando"}',
-];
+// Importados desde systemprompt.js:
+// - QUINT_PRUEBA_SYSTEM_MINIMO
+// - QUINT_PRUEBA_FASE1
+// - QUINT_PRUEBA_FASE2
+// - QUINT_PRUEBA_FASE3
+// - QUINT_PRUEBA_FASE4
+// - generarSystemPrompt()
 
 // ============================================================
 //  PERSONALIDADES DE CHICAS
+//  NOTA: Las personalidades ahora están en personalidades.js
+//  Se mantiene el objeto PERSONALIDADES importado del módulo
 // ============================================================
-
-const PERSONALIDADES = {
-    Ichika: "Eres Ichika Nakano, la mayor de las quintillizas. Tienes 18 años. Eres madura, juguetona y protectora. Coqueta por naturaleza, te encanta bromear y flirtear con sonrisas y miradas sugerentes. Sabes usar tu encanto de forma sutil pero efectiva. Tienes cabello corto con pendiente en la oreja derecha. Eres voluptuosa y muy deseada en el colegio.",
-    Nino: "Eres Nino Nakano, la segunda de las quintillizas. Tienes 18 años. Eres tsundere intensa, directa y algo arrogante al principio. Muy protectora, fashionista y celosa. Cuando te interesas, tu forma de cuidar es bastante posesiva y apasionada. Tienes cabello largo con lazos mariposa. Eres voluptuosa y muy deseada en el colegio.",
-    Miku: "Eres Miku Nakano, la tercera de las quintillizas. Tienes 18 años. Eres callada, tímida y reservada, pero muy directa cuando quieres algo. Fan de Sengoku. Detrás de tu silencio hay una pasión profunda que sale cuando te sientes cómoda y cercana. Tienes cabello medio con mechón cubriendo el ojo derecho y auriculares azules grandes. Eres voluptuosa y muy deseada en el colegio.",
-    Yotsuba: "Eres Yotsuba Nakano, la cuarta de las quintillizas. Tienes 18 años. Eres súper energética, alegre, atlética y siempre positiva. Te encanta el contacto físico, los juegos y la diversión constante. Eres muy cariñosa y activa en todo lo que haces. Tienes cabello corto con un lazo grande de orejas de conejo verde. Eres voluptuosa y muy deseada en el colegio.",
-    Itsuki: "Eres Itsuki Nakano, la menor de las quintillizas. Tienes 18 años. Eres seria, estudiosa y tsundere fuerte. Honesta y responsable, pero cuando bajas la guardia te vuelves bastante expresiva y entregada. Tienes un apetito voraz (tanto literal como figurado). Tienes cabello medio con horquillas de estrella rojas. Eres voluptuosa y muy deseada en el colegio."
-};
+// Importado desde personalidades.js:
+// - PERSONALIDADES (objeto con todas las chicas)
+// - getPersonalidad(nombreChica)
+// - getChicasDisponibles()
+// - existeChica(nombreChica)
 
 // ============================================================
 //  SISTEMA DE SELECCIÓN DE IMÁGENES
@@ -257,22 +252,11 @@ function esRespuestaValida(datos) {
 
 /**
  * Formatea un error para mostrarlo al usuario de forma amigable
+ * Usa la función del módulo fallbacks.js
  */
 function formatearErrorUsuario(error) {
-    const mensajesError = [
-        "Ups, algo salió mal. ¡Intentemos de nuevo! 😅",
-        "Parece que las chicas están tímidas hoy. Prueba otra vez~",
-        "Hubo un pequeño problema técnico. ¡No te rindas! 💪",
-        "Las quintillizas se confundieron un poco. ¿Lo intentamos de nuevo?"
-    ];
-    
-    const mensajeBase = mensajesError[Math.floor(Math.random() * mensajesError.length)];
-    
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        return `${mensajeBase} (Debug: ${error.message})`;
-    }
-    
-    return mensajeBase;
+    const esDebug = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    return obtenerMensajeError(esDebug, error);
 }
 
 // ============================================================
@@ -418,16 +402,10 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
     // ========================================
     logQuinti('ERROR', 'Todas las fases fallaron - Usando fallback local');
     
-    const fallbacks = [
-        "*se rasca la cabeza confundida* E-eh... Creo que me perdí un poco. ¿Me repites eso? *sonríe nerviosa*",
-        "*frunce el ceño* ¡Oye! Algo falló por aquí... ¡Pero estoy bien! Prueba de nuevo~",
-        "*inclina la cabeza curiosa* Hm... *tamborilea los dedos* Creo que me confundí. ¿Lo intentamos de nuevo?",
-    ];
-    
     const fallbackTag = chicaSeleccionada && tagsImagen.includes('hablando') ? 'hablando' : 'normal';
     
     return {
-        respuesta: fallbacks[Math.floor(Math.random() * fallbacks.length)],
+        respuesta: obtenerFallbackLocal(),
         imagen_tag: fallbackTag,
         imagen_url: obtenerURLImagen(chicaSeleccionada, fallbackTag),
         modelo: "FALLBACK_LOCAL"
