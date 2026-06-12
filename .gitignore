@@ -1,1 +1,1 @@
-Nothing should be ignored based on the provided file changes, as they only include source files (.js, .html) without any build artifacts, dependencies, or temporary files.
+(quintillizasPrueba/.gitignore should remain empty since only HTML and JavaScript source files were modified)
