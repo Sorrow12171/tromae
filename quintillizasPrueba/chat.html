@@ -572,14 +572,56 @@
 
                 // Obtener la lista actualizada de chicas en el chat
                 const chicasEnChatSet = getChicasEnChat();
-                logQuinti('DEBUG', 'Chicas en chat', { chicas: Array.from(chicasEnChatSet), chicasRespondiendo: response.chicasRespondiendo });
+                logQuinti('DEBUG', 'Chicas en chat', { chicas: Array.from(chicasEnChatSet), chicasRespondiendo: response.chicasRespondiendo, tieneRespuestasIndividuales: !!response.respuestasIndividuales });
 
                 // Determinar si debemos mostrar múltiples respuestas separadas
                 // IMPORTANTE: Si hay múltiples chicas en el chat, TODAS deben responder en mensajes SEPARADOS
                 const hayMultiplesChicas = chicasEnChatSet.size > 1;
                 const hayRespuestasConFormato = matches.length > 0;
+                const hayRespuestasIndividuales = response.respuestasIndividuales && response.respuestasIndividuales.length > 0;
 
-                if (hayMultiplesChicas) {
+                if (hayRespuestasIndividuales) {
+                    // CASO ÓPTIMO: Tenemos respuestas individuales de cada chica desde la lógica
+                    // Mostrar CADA respuesta en un mensaje COMPLETAMENTE SEPARADO con su propia imagen
+                    for (let idx = 0; idx < response.respuestasIndividuales.length; idx++) {
+                        const respuestaIndividual = response.respuestasIndividuales[idx];
+                        const chicaNombre = respuestaIndividual.chica;
+                        const chicaRespuesta = respuestaIndividual.respuesta;
+                        
+                        if (!chicaRespuesta) continue;
+                        
+                        // Crear mensaje SEPARADO para esta chica específica
+                        const botMsgDiv = document.createElement('div');
+                        botMsgDiv.className = 'message bot-message';
+
+                        // Obtener imagen de esta chica específica usando SU PROPIO tag
+                        const infoChica = QuintiImagenesPrueba[chicaNombre];
+                        let imagenURL = null;
+                        if (infoChica) {
+                            // Seleccionar imagen basada en el contenido de la respuesta de esta chica
+                            const tagImagen = seleccionarTagImagen(chicaRespuesta, chicaNombre);
+                            imagenURL = obtenerURLImagen(chicaNombre, tagImagen);
+                            logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL });
+                        }
+
+                        // Construir contenido: PRIMERO TEXTO con nombre, luego imagen al final
+                        let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;"><strong>${chicaNombre}:</strong> ${chicaRespuesta}</div>`;
+                        if (imagenURL) {
+                            contenidoHTML += `<img src="${imagenURL}" alt="${chicaNombre}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
+                        }
+
+                        botMsgDiv.innerHTML = contenidoHTML;
+                        messagesDiv.appendChild(botMsgDiv);
+                        
+                        // Scroll después de cada mensaje
+                        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                        
+                        // Pequeña pausa entre mensajes de diferentes chicas para efecto visual
+                        if (idx < response.respuestasIndividuales.length - 1) {
+                            await new Promise(resolve => setTimeout(resolve, 400));
+                        }
+                    }
+                } else if (hayMultiplesChicas) {
                     // Hay múltiples chicas en el chat - cada una debe tener su propio mensaje
                     // Primero, obtener todas las chicas que deberían responder
                     const chicasQueDebenResponder = Array.from(chicasEnChatSet);
