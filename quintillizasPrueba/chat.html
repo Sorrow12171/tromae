@@ -574,13 +574,12 @@
                 const chicasEnChatSet = getChicasEnChat();
                 logQuinti('DEBUG', 'Chicas en chat', { chicas: Array.from(chicasEnChatSet), chicasRespondiendo: response.chicasRespondiendo });
 
-                // Determinar si debemos mostrar múltiples respuestas
+                // Determinar si debemos mostrar múltiples respuestas separadas
                 const hayMultiplesRespuestas = matches.length > 1 || 
-                    (matches.length === 1 && !response.respuesta.startsWith('[' + chicaSeleccionadaActual + ']')) ||
                     (chicasEnChatSet.size > 1 && matches.length > 0);
 
-                if (hayMultiplesRespuestas) {
-                    // Hay múltiples respuestas - dividir y mostrar cada una por separado
+                if (hayMultiplesRespuestas && matches.length > 0) {
+                    // Hay múltiples respuestas - dividir y mostrar CADA UNA en un mensaje SEPARADO
                     const responseParts = response.respuesta.split(/\[(Ichika|Nino|Miku|Yotsuba|Itsuki)\]:/gi);
 
                     // Procesar cada parte (el primer elemento puede estar vacío o ser texto introductorio)
@@ -589,7 +588,7 @@
                         const chicaRespuesta = responseParts[i + 1]?.trim() || '';
 
                         if (chicaRespuesta) {
-                            // Crear mensaje para esta chica específica
+                            // Crear mensaje SEPARADO para esta chica específica
                             const botMsgDiv = document.createElement('div');
                             botMsgDiv.className = 'message bot-message';
 
@@ -611,6 +610,14 @@
 
                             botMsgDiv.innerHTML = contenidoHTML;
                             messagesDiv.appendChild(botMsgDiv);
+                            
+                            // Scroll después de cada mensaje
+                            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                            
+                            // Pequeña pausa entre mensajes de diferentes chicas para efecto visual
+                            if (i + 2 < responseParts.length) {
+                                await new Promise(resolve => setTimeout(resolve, 300));
+                            }
                         }
                     }
                 } else {

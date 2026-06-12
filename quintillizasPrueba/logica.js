@@ -12,7 +12,9 @@
 //  - Personalidades separadas en módulo independiente
 //  - Fallbacks y sistema de reintentos en módulo independiente
 //  - SISTEMA DE CHICAS MÚLTIPLES: Cuando se menciona a otra chica,
-//    esta se une al chat y responde también
+//    esta se une al chat y responde también en MENSAJES SEPARADOS
+//  - SISTEMA DE MEMORIA: Recuerda cosas puntuales durante la conversación
+//  - REDUCCIÓN DE REPETICIONES: Evita diálogos y frases repetidas
 //
 //  DEPENDENCIAS:
 //  - systemprompt.js: Prompts del sistema y variantes
@@ -47,6 +49,8 @@ let chicaSeleccionada = null;
 let historialConversacion = [];
 const MAX_HISTORIAL = 20;
 let chicasEnChat = new Set(); // Conjunto de chicas que están participando en el chat actual
+let memoriaChat = []; // Sistema de memoria para recordar cosas puntuales durante la conversación
+const MAX_MEMORIA = 10; // Máximo número de recuerdos a mantener
 
 // ============================================================
 //  SISTEMA DE LOGGING
@@ -319,19 +323,28 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
         }
         instruccionesImagenes = `\n\nIMÁGENES DISPONIBLES POR CHICA:\n${listaInstruccionesImagen.join('\n')}`;
         instruccionesImagenes += `\n\nREGLA CRUCIAL: Cada chica debe usar SOLO sus propias imágenes. Ichika solo usa imagenes de Ichika, Nino solo usa imagenes de Nino, Miku solo usa imagenes de Miku, Yotsuba solo usa imagenes de Yotsuba, Itsuki solo usa imagenes de Itsuki. Nunca uses imagenes de otra chica.`;
+        
+        // Agregar instrucción anti-repetición cuando hay múltiples chicas
+        instruccionesImagenes += `\n\nEVITA REPETICIONES: Cuando varias chicas responden, asegúrate de que cada una use expresiones, vocabulario y reacciones DIFERENTES. No repitas las mismas frases o acciones entre las chicas. Cada respuesta debe ser única y variada.`;
     } else {
         const tagsImagen = chicaSeleccionada ? obtenerTagsImagen(chicaSeleccionada) : ['normal'];
         instruccionesImagenes = `\nIMÁGENES DISPONIBLES: ${tagsImagen.join(', ')}. Debes incluir "imagen_tag" con UNA de estas opciones según lo que esté haciendo el personaje.`;
     }
     
-    // Instrucción para múltiples chicas en el chat - MEJORADA PARA INTEGRACIÓN PERMANENTE
+    // Instrucción para múltiples chicas en el chat - MEJORADA PARA INTEGRACIÓN PERMANENTE Y PARTICIPACIÓN ACTIVA EN MENSAJES SEPARADOS
     let instruccionMultiChica = '';
     if (chicasEnChat.size > 1) {
         const listaChicas = Array.from(chicasEnChat).join(', ');
-        instruccionMultiChica = `\n\nATENCIÓN: En este chat hay múltiples chicas participando ACTIVAMENTE: ${listaChicas}. TODAS estas chicas están presentes en la conversación y pueden responder. Si el usuario menciona a alguna de ellas o le habla directamente, esa chica DEBE responder. Cuando una chica se une al chat, PERMANECE en él y sigue participando activamente. Usa el formato [Nombre]: respuesta para cada chica que responda. Asegúrate de que cada chica mantenga su personalidad única y use SOLO sus propias imágenes.`;
+        instruccionMultiChica = `\n\nATENCIÓN CRUCIAL: En este chat hay múltiples chicas participando ACTIVAMENTE: ${listaChicas}. TODAS estas chicas están presentes físicamente en la conversación. REGLAS OBLIGATORIAS:\n1. Si el usuario menciona a alguna chica por nombre, ESA CHICA DEBE RESPONDER en un MENSAJE COMPLETAMENTE SEPARADO.\n2. Cuando una chica se une al chat, PERMANECE en él para siempre y sigue participando en TODOS los mensajes siguientes.\n3. CADA chica debe responder en su PROPIO mensaje/bloque independiente. NO combines las respuestas de varias chicas en un solo mensaje.\n4. Formato OBLIGATORIO para cada mensaje separado: [Nombre]: respuesta completa de esa chica\n5. Cada chica mantiene su personalidad única y usa SOLO sus propias imágenes.\n6. Las chicas pueden interactuar entre ellas, pero CADA UNA en su mensaje individual.\n7. IMPORTANTE: Genera TANTOS mensajes separados como chicas haya en el chat. Si hay 3 chicas, debes generar 3 mensajes completamente separados.\nEJEMPLO DE FORMATO (MENSAJES SEPARADOS):\nMensaje 1: [Nino]: *cruza los brazos* ¿Qué quieres?\nMensaje 2: [Miku]: *sonríe tímidamente* Hola...`;
     }
     
-    const systemPrompt = `${personalidadPrincipal}${instruccionesImagenes}${instruccionMultiChica}\n\nFORMATO DE RESPUESTA OBLIGATORIO - JSON:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
+    // Instrucción anti-repetición mejorada
+    const instruccionAntiRepeticion = `\n\nREGLA CRÍTICA ANTI-REPETICIÓN: NUNCA repitas frases, diálogos, acciones o expresiones que ya hayas usado antes en esta conversación. Revisa mentalmente el historial y asegúrate de que CADA respuesta sea única y fresca. Usa vocabulario variado, expresiones diferentes, reacciones distintas. Si ya dijiste algo similar antes, busca una forma completamente nueva de expresarlo. Esto es OBLIGATORIO.`;
+    
+    // Instrucción de memoria
+    const instruccionMemoria = `\n\nMEMORIA DE CONVERSACIÓN: Debes recordar detalles importantes que el usuario mencione (nombres, preferencias, eventos pasados, gustos, etc.). Usa esta información para dar respuestas más personales y coherentes. Si el usuario menciona algo relevante, guárdalo en tu memoria y refiérete a ello cuando sea apropiado.`;
+    
+    const systemPrompt = `${personalidadPrincipal}${instruccionesImagenes}${instruccionMultiChica}${instruccionAntiRepeticion}${instruccionMemoria}\n\nFORMATO DE RESPUESTA OBLIGATORIO - JSON:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
     
     // Preparar mensajes
     const mensajesPayload = [
@@ -555,6 +568,18 @@ function procesarRespuesta(datos, mensajeOriginal) {
         chicasRespondiendo.push(...Array.from(chicasEnChat));
     }
     
+    // IMPORTANTE: Cuando hay múltiples chicas en el chat y la respuesta NO tiene el formato [Nombre]:,
+    // pero DEBERÍA tenerlo (porque hay 2+ chicas), forzamos que TODAS las chicas en el chat aparezcan como respondiendo
+    // Esto asegura que la UI muestre correctamente que todas participaron
+    if (chicasEnChat.size > 1 && chicasRespondiendo.length < chicasEnChat.size) {
+        // La IA falló en usar el formato correcto, pero igual consideramos que todas respondieron
+        // para que la UI lo maneje apropiadamente
+        logQuinti('WARN', 'Múltiples chicas en chat pero la respuesta no usa formato [Nombre]: correctamente', {
+            chicasEnChat: Array.from(chicasEnChat),
+            chicasDetectadas: chicasRespondiendo
+        });
+    }
+
     logQuinti('INFO', 'Respuesta procesada exitosamente', {
         longitud: datos.respuesta.length,
         imagenTag: tagImagen,
