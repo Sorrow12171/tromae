@@ -11,6 +11,8 @@
 //  - System prompt separado en módulo independiente
 //  - Personalidades separadas en módulo independiente
 //  - Fallbacks y sistema de reintentos en módulo independiente
+//  - SISTEMA DE CHICAS MÚLTIPLES: Cuando se menciona a otra chica,
+//    esta se une al chat y responde también
 //
 //  DEPENDENCIAS:
 //  - systemprompt.js: Prompts del sistema y variantes
@@ -20,7 +22,7 @@
 // ============================================================
 
 import { generarSystemPrompt, QUINT_PRUEBA_SYSTEM_MINIMO, QUINT_PRUEBA_FASE1, QUINT_PRUEBA_FASE2, QUINT_PRUEBA_FASE3, QUINT_PRUEBA_FASE4, SYSTEM_PROMPT_INICIAL } from './systemPrompt.js';
-import { PERSONALIDADES, getChicasDisponibles } from './personalidades.js';
+import { PERSONALIDADES, getChicasDisponibles, existeChica } from './personalidades.js';
 import { obtenerFallbackLocal, obtenerMensajeError, generarPayloadFase, getOrdenFases, getInfoFase } from './fallbacks.js';
 import { QuintiImagenesPrueba } from './imagenes.js';
 
@@ -44,6 +46,7 @@ let indiceKeyActual = 0;
 let chicaSeleccionada = null;
 let historialConversacion = [];
 const MAX_HISTORIAL = 20;
+let chicasEnChat = new Set(); // Conjunto de chicas que están participando en el chat actual
 
 // ============================================================
 //  SISTEMA DE LOGGING
@@ -269,11 +272,37 @@ function formatearErrorUsuario(error) {
  * Basado en el sistema de quintillizas.js
  * @param {string} mensaje - Mensaje del usuario
  * @param {Array} historialPrevio - Historial de conversación opcional
- * @returns {Promise<object>} - Objeto con {respuesta, imagen_tag, imagen_url}
+ * @returns {Promise<object>} - Objeto con {respuesta, imagen_tag, imagen_url, chicasRespondiendo}
  */
 async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
     const url = "https://api.groq.com/openai/v1/chat/completions";
     const tiempoInicio = Date.now();
+    
+    // Detectar si se menciona a alguna otra chica en el mensaje
+    const mensajeLower = mensaje.toLowerCase();
+    const chicasMencionadas = [];
+    
+    for (const nombreChica of getChicasDisponibles()) {
+        // Buscar el nombre de la chica en el mensaje (como palabra completa)
+        const regex = new RegExp(`\\b${nombreChica.toLowerCase()}\\b`, 'i');
+        if (regex.test(mensajeLower)) {
+            chicasMencionadas.push(nombreChica);
+        }
+    }
+    
+    // Agregar las chicas mencionadas al conjunto de chicas en el chat
+    // La chica seleccionada siempre está en el chat
+    if (chicaSeleccionada) {
+        chicasEnChat.add(chicaSeleccionada);
+    }
+    
+    // Agregar chicas mencionadas al chat
+    for (const chica of chicasMencionadas) {
+        if (existeChica(chica)) {
+            chicasEnChat.add(chica);
+            logQuinti('INFO', `Chica mencionada y agregada al chat: ${chica}`);
+        }
+    }
     
     // Determinar personalidad y tags de imagen disponibles
     const personalidad = chicaSeleccionada 
@@ -285,7 +314,14 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
         ? `\nIMÁGENES DISPONIBLES: ${tagsImagen.join(', ')}. Debes incluir "imagen_tag" con UNA de estas opciones según lo que esté haciendo el personaje.`
         : '';
     
-    const systemPrompt = `${personalidad}${instruccionImagen}\n\nFORMATO DE RESPUESTA OBLIGATORIO - JSON:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
+    // Instrucción para múltiples chicas en el chat
+    let instruccionMultiChica = '';
+    if (chicasEnChat.size > 1) {
+        const listaChicas = Array.from(chicasEnChat).join(', ');
+        instruccionMultiChica = `\n\nATENCIÓN: En este chat hay múltiples chicas participando: ${listaChicas}. Si el usuario menciona a alguna de ellas o le habla directamente, esa chica DEBE responder también. Usa el formato [Nombre]: respuesta para cada chica que responda.`;
+    }
+    
+    const systemPrompt = `${personalidad}${instruccionImagen}${instruccionMultiChica}\n\nFORMATO DE RESPUESTA OBLIGATORIO - JSON:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
     
     // Preparar mensajes
     const mensajesPayload = [
@@ -294,7 +330,7 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
         { role: "user", content: mensaje }
     ];
     
-    logQuinti('INFO', 'Iniciando solicitud a API Groq', { modelo: MODELO_PRINCIPAL, chica: chicaSeleccionada });
+    logQuinti('INFO', 'Iniciando solicitud a API Groq', { modelo: MODELO_PRINCIPAL, chica: chicaSeleccionada, chicasEnChat: Array.from(chicasEnChat) });
     
     // ========================================
     // FASE 0: Intento normal con historial completo
@@ -475,7 +511,7 @@ async function intentarLlamadaAPI(mensajes, modelo) {
  * Procesa la respuesta de la IA: selecciona imagen y actualiza historial
  * @param {object} datos - Datos de la respuesta
  * @param {string} mensajeOriginal - Mensaje original del usuario
- * @returns {object} - Respuesta procesada con URL de imagen
+ * @returns {object} - Respuesta procesada con URL de imagen y lista de chicas respondiendo
  */
 function procesarRespuesta(datos, mensajeOriginal) {
     // Agregar al historial
@@ -489,14 +525,31 @@ function procesarRespuesta(datos, mensajeOriginal) {
         historialConversacion = historialConversacion.slice(-MAX_HISTORIAL * 2);
     }
     
-    // Seleccionar imagen automáticamente
+    // Seleccionar imagen automáticamente para la chica principal
     const tagImagen = datos.imagen_tag || 'normal';
     const urlImagen = obtenerURLImagen(chicaSeleccionada, tagImagen);
+    
+    // Detectar qué chicas están respondiendo en el mensaje
+    const chicasRespondiendo = [];
+    const responsePattern = /\[(Ichika|Nino|Miku|Yotsuba|Itsuki)\]:/gi;
+    let match;
+    while ((match = responsePattern.exec(datos.respuesta)) !== null) {
+        const nombreChica = match[1];
+        if (!chicasRespondiendo.includes(nombreChica)) {
+            chicasRespondiendo.push(nombreChica);
+        }
+    }
+    
+    // Si no hay formato [Nombre]: pero hay múltiples chicas en chat, agregar la principal
+    if (chicasRespondiendo.length === 0 && chicasEnChat.size > 0) {
+        chicasRespondiendo.push(...Array.from(chicasEnChat));
+    }
     
     logQuinti('INFO', 'Respuesta procesada exitosamente', {
         longitud: datos.respuesta.length,
         imagenTag: tagImagen,
-        tieneImagen: !!urlImagen
+        tieneImagen: !!urlImagen,
+        chicasRespondiendo: chicasRespondiendo
     });
     
     return {
@@ -504,7 +557,8 @@ function procesarRespuesta(datos, mensajeOriginal) {
         imagen_tag: tagImagen,
         imagen_url: urlImagen,
         modelo: MODELO_PRINCIPAL,
-        chicaPrincipal: chicaSeleccionada
+        chicaPrincipal: chicaSeleccionada,
+        chicasRespondiendo: chicasRespondiendo
     };
 }
 
@@ -541,11 +595,32 @@ function seleccionarChica(nombreChica) {
     if (PERSONALIDADES[nombreChica]) {
         chicaSeleccionada = nombreChica;
         historialConversacion = []; // Resetear historial al cambiar de chica
+        chicasEnChat = new Set([nombreChica]); // Resetear conjunto de chicas en chat
         logQuinti('INFO', `Chica seleccionada: ${nombreChica}`);
         return true;
     }
     logQuinti('ERROR', `Intento de seleccionar chica inválida: ${nombreChica}`);
     return false;
+}
+
+/**
+ * Obtiene el conjunto de chicas que están participando en el chat actual
+ * @returns {Set} - Conjunto con los nombres de las chicas en el chat
+ */
+function getChicasEnChat() {
+    return new Set(chicasEnChat);
+}
+
+/**
+ * Limpia el conjunto de chicas en el chat (para cuando se cambia de chica o se reinicia)
+ */
+function limpiarChicasEnChat() {
+    if (chicaSeleccionada) {
+        chicasEnChat = new Set([chicaSeleccionada]);
+    } else {
+        chicasEnChat = new Set();
+    }
+    logQuinti('INFO', 'Chicas en chat reseteadas');
 }
 
 function getChicaSeleccionada() {
@@ -597,6 +672,8 @@ export {
     getChicaSeleccionada,
     getImagenSelector,
     getChicasDisponibles,
+    getChicasEnChat,
+    limpiarChicasEnChat,
     getHistorial,
     limpiarHistorial,
     GROQ_KEYS,
@@ -616,6 +693,8 @@ if (typeof window !== 'undefined') {
     window.formatearErrorUsuario = formatearErrorUsuario;
     window.seleccionarImagenAutomatica = seleccionarImagenAutomatica;
     window.obtenerTagsImagen = obtenerTagsImagen;
+    window.getChicasEnChat = getChicasEnChat;
+    window.limpiarChicasEnChat = limpiarChicasEnChat;
 }
 
 // Exportar funciones para uso en otros módulos (CommonJS - compatibilidad)
@@ -627,6 +706,8 @@ if (typeof module !== 'undefined' && module.exports) {
         getChicaSeleccionada,
         getImagenSelector,
         getChicasDisponibles,
+        getChicasEnChat,
+        limpiarChicasEnChat,
         getHistorial,
         limpiarHistorial,
         GROQ_KEYS,
