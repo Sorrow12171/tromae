@@ -1,1 +1,8 @@
-(quintillizasPrueba/.gitignore should remain empty since only HTML and JavaScript source files were modified)
+(quintillizasPrueba/.vscode/
+quintillizasPrueba/node_modules/
+quintillizasPrueba/dist/
+quintillizasPrueba/build/
+quintillizasPrueba/.env
+quintillizasPrueba/*.log
+quintillizasPrueba/*.tmp
+)
