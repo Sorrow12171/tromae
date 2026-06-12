@@ -385,7 +385,7 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
             const instruccionAntiRepeticion = `\n\n⚠️ ANTI-REPETICIÓN OBLIGATORIA: Tu respuesta debe ser COMPLETAMENTE DIFERENTE a las de las otras chicas. Prohibido usar las mismas frases, gestos, acciones o vocabulario.`;
             
             // Instrucción para respuestas basadas en acciones del usuario (múltiples chicas)
-            const instruccionAccionUsuario = `\n\nACCIONES DEL USUARIO: Cuando el usuario mencione una acción (besar, tocar, chupar, penetrar, etc.), MUESTRALA DIRECTAMENTE: "*se acerca y te besa*" seguido del diálogo.`;
+            const instruccionAccionUsuario = `\n\nACCIONES DEL USUARIO: Cuando el usuario mencione una acción (besar, tocar, chupar, penetrar, etc.), MUESTRALA DIRECTAMENTE: "*se acerca y te besa*" seguido del diálogo.\n\nIMAGEN_TAG OBLIGATORIA: Si el usuario menciona una acción específica como "beso", "chupar", "doggy", etc., DEBES usar el imagen_tag que corresponda a esa acción. Ejemplo: si dice "beso" → usa "besando". Esto es CRÍTICO.`;
             
             // Instrucción de contexto sobre otras chicas (solo para chicas después de la primera)
             let instruccionContextoOtrasChicas = '';
@@ -393,7 +393,7 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
                 const respuestasPrevias = respuestasPorChica.map(r => 
                     `• ${r.chica}: ${r.respuesta.substring(0, 200)}...`
                 ).join('\n');
-                instruccionContextoOtrasChicas = `\n\n📋 CONTEXTO - OTRAS CHICAS YA RESPONDIERON:\n${respuestasPrevias}\n\n⚡ TU RESPUESTA DEBE SER DIFERENTE: No repitas sus palabras, acciones o ideas. Aporta algo nuevo y único con tu personalidad.`;
+                instruccionContextoOtrasChicas = `\n\n📋 CONTEXTO - OTRAS CHICAS YA RESPONDIERON:\n${respuestasPrevias}\n\n⚡ TU RESPUESTA DEBE SER DIFERENTE: No repitas sus palabras, acciones o ideas. Aporta algo nuevo y único con tu personalidad.\n\n🖼️ IMAGEN COORDINADA: Todas las chicas deben mostrar imágenes acordes a la acción del usuario. Si el usuario dijo "beso", TODAS deben usar una imagen de beso.`;
             }
             
             // Construir system prompt individualizado
