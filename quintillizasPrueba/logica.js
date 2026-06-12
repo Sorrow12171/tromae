@@ -222,18 +222,39 @@ function seleccionarImagenAutomatica(dialogo, nombreChica) {
  * @returns {object|null} - Objeto parseado o null si falla
  */
 function parsearJSON(raw) {
-    if (!raw) return null;
+    if (!raw) {
+        logQuinti('ERROR', 'parsearJSON: contenido vacío o null');
+        return null;
+    }
+    
+    const rawLimpio = raw.replace(/```json/g, "").replace(/```/g, "").trim();
+    
     try {
-        return JSON.parse(raw.replace(/```json/g, "").replace(/```/g, "").trim());
-    } catch {}
+        const resultado = JSON.parse(rawLimpio);
+        return resultado;
+    } catch (error) {
+        logQuinti('DEBUG', `parsearJSON: primer intento falló - ${error.message}`, { 
+            contenido: raw.substring(0, 150) 
+        });
+    }
     
     // Intentar extraer JSON del texto
     const match = raw.match(/\{[\s\S]*\}/);
     if (match) {
         try {
-            return JSON.parse(match[0]);
-        } catch {}
+            const resultado = JSON.parse(match[0]);
+            logQuinti('DEBUG', 'parsearJSON: extracción exitosa del JSON del texto');
+            return resultado;
+        } catch (error) {
+            logQuinti('ERROR', `parsearJSON: segundo intento falló - ${error.message}`, {
+                jsonExtraido: match[0].substring(0, 150)
+            });
+        }
     }
+    
+    logQuinti('ERROR', 'parsearJSON: no se pudo extraer JSON válido', {
+        contenidoCompleto: raw.substring(0, 300)
+    });
     return null;
 }
 
@@ -313,6 +334,7 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
     // Cuando hay múltiples chicas, hacer llamadas individuales
     // de forma SECUENCIAL para mantener coherencia contextual
     // IMPORTANTE: Cada chica responde SOLO al mensaje actual del usuario
+    // PERO con contexto completo de lo que dijeron las demás
     // ============================================
     
     if (chicasEnChat.size > 1) {
@@ -320,6 +342,7 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
         
         const chicasArray = Array.from(chicasEnChat);
         const respuestasPorChica = [];
+        let errorGlobal = null;
         // Usar solo el último mensaje del historial para que cada chica responda al texto actual
         let contextoAcumulado = historialPrevio.length > 0 ? [historialPrevio[historialPrevio.length - 1]] : [];
         
@@ -335,25 +358,27 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
             
             // Construir instrucciones de imágenes SOLO para esta chica
             const tagsDisponibles = obtenerTagsImagen(nombreChica);
-            const instruccionesImagen = `\n\nIMÁGENES DISPONIBLES PARA ${nombreChica.toUpperCase()}: [${tagsDisponibles.join(', ')}]. Debes incluir "imagen_tag" con UNA de estas opciones según lo que esté haciendo el personaje. NUNCA uses imágenes de otras chicas.`;
+            const instruccionesImagen = `\n\nTU IMAGEN_TAG: Debes incluir "imagen_tag" con UNA de estas opciones: [${tagsDisponibles.join(', ')}]. Elige según lo que esté haciendo el personaje.`;
             
             // Instrucción anti-repetición reforzada para múltiples chicas
-            const instruccionAntiRepeticion = `\n\nREGLA CRÍTICA ANTI-REPETICIÓN: Tu respuesta debe ser COMPLETAMENTE DIFERENTE a las de las otras chicas. No repitas frases, acciones, expresiones o vocabulario que otras chicas ya hayan usado. Revisa el contexto acumulado y asegúrate de que tu respuesta sea única, con tu propio estilo y personalidad distintiva.`;
+            const instruccionAntiRepeticion = `\n\n⚠️ ANTI-REPETICIÓN OBLIGATORIA: Tu respuesta debe ser COMPLETAMENTE DIFERENTE a las de las otras chicas. Prohibido usar las mismas frases, gestos, acciones o vocabulario.`;
             
             // Instrucción para respuestas basadas en acciones del usuario (múltiples chicas)
-            const instruccionAccionUsuario = `\n\nRESPUESTA BASADA EN ACCIONES DEL USUARIO: Cuando el usuario mencione una acción específica (como "besar", "abrazar", "tocar", "acariciar", "chupar", "penetrar", etc.), DEBES MOSTRAR DIRECTAMENTE LA ACCIÓN EN TU RESPUESTA sin dudar. Ejemplo: Si el usuario dice "quiero besarte" o "besar", tu respuesta debe mostrar la acción inmediatamente: "*se acerca y te besa apasionadamente*" seguido del diálogo. La acción va PRIMERO entre asteriscos, luego el diálogo.`;
+            const instruccionAccionUsuario = `\n\nACCIONES DEL USUARIO: Cuando el usuario mencione una acción (besar, tocar, chupar, penetrar, etc.), MUESTRALA DIRECTAMENTE: "*se acerca y te besa*" seguido del diálogo.`;
             
             // Instrucción de contexto sobre otras chicas (solo para chicas después de la primera)
             let instruccionContextoOtrasChicas = '';
             if (!esPrimeraChica && respuestasPorChica.length > 0) {
-                const respuestasPrevias = respuestasPorChica.map(r => `[${r.chica}]: ${r.respuesta}`).join('\n');
-                instruccionContextoOtrasChicas = `\n\nCONTEXTO DE OTRAS CHICAS: Antes de ti, estas chicas ya respondieron:\n${respuestasPrevias}\n\nTu respuesta debe ser REACCIONAR o AÑADIR algo nuevo, NO repetir lo que ellas dijeron. Mantén tu personalidad única.`;
+                const respuestasPrevias = respuestasPorChica.map(r => 
+                    `• ${r.chica}: ${r.respuesta.substring(0, 200)}...`
+                ).join('\n');
+                instruccionContextoOtrasChicas = `\n\n📋 CONTEXTO - OTRAS CHICAS YA RESPONDIERON:\n${respuestasPrevias}\n\n⚡ TU RESPUESTA DEBE SER DIFERENTE: No repitas sus palabras, acciones o ideas. Aporta algo nuevo y único con tu personalidad.`;
             }
             
             // Construir system prompt individualizado
-            const systemPromptIndividual = `${personalidadChica}${instruccionesImagen}${instruccionAntiRepeticion}${instruccionAccionUsuario}${instruccionContextoOtrasChicas}\n\nFORMATO DE RESPUESTA OBLIGATORIO - JSON:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
+            const systemPromptIndividual = `${personalidadChica}${instruccionesImagen}${instruccionAntiRepeticion}${instruccionAccionUsuario}${instruccionContextoOtrasChicas}\n\nFORMATO JSON OBLIGATORIO:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"una_imagen_disponible"}`;
             
-            // Preparar mensajes para esta chica (SOLO el mensaje actual del usuario)
+            // Preparar mensajes para esta chica (SOLO el mensaje actual del usuario + contexto acumulado de respuestas previas)
             const mensajesPayload = [
                 { role: "system", content: systemPromptIndividual },
                 ...contextoAcumulado,
@@ -362,29 +387,31 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
             
             // Llamar a la API para esta chica
             let datos;
+            let errorOcurrido = null;
             try {
                 datos = await intentarLlamadaAPI(mensajesPayload, MODELO_PRINCIPAL);
             } catch (error) {
-                // Si la PRIMERA chica falla, lanzar error real
+                errorOcurrido = error;
+                // Si la PRIMERA chica falla, guardar error pero continuar con fallback para no romper todo el chat
                 if (esPrimeraChica) {
-                    logQuinti('ERROR', `La primera chica (${nombreChica}) falló - propagando error`);
-                    throw error;
+                    logQuinti('ERROR', `La primera chica (${nombreChica}) falló`, { error: error.message });
+                    errorGlobal = error;
+                } else {
+                    // Para chicas secundarias, registrar error pero continuar
+                    logQuinti('ERROR', `Chica secundaria ${nombreChica} falló: ${error.message}`, { error: error.message });
                 }
-                // Para chicas secundarias, usar fallback del sistema (no local)
-                logQuinti('WARN', `Chica secundaria ${nombreChica} falló, usando fallback del sistema`);
-                const fallbackTag = tagsDisponibles.includes('hablando') ? 'hablando' : tagsDisponibles[0] || 'normal';
-                datos = {
-                    respuesta: "*parece confundida por un momento* Disculpa, ¿podrías repetir eso?",
-                    imagen_tag: fallbackTag
-                };
             }
             
             // Sistema de reintentos simplificado para llamadas individuales (validación de respuesta)
             if (!datos || !esRespuestaValida(datos)) {
-                logQuinti('WARN', `Llamada para ${nombreChica} falló (respuesta inválida), usando fallback del sistema`);
+                const razon = !datos ? 'datos nulos' : 'respuesta inválida';
+                logQuinti('ERROR', `Llamada para ${nombreChica} falló (${razon}), usando fallback del sistema`, { 
+                    datosRecibidos: datos,
+                    errorPrevio: errorOcurrido?.message 
+                });
                 const fallbackTag = tagsDisponibles.includes('hablando') ? 'hablando' : tagsDisponibles[0] || 'normal';
                 datos = {
-                    respuesta: "*parece confundida por un momento* Disculpa, ¿podrías repetir eso?",
+                    respuesta: `*parece confundida por un momento* Disculpa, ¿podrías repetir eso?`,
                     imagen_tag: fallbackTag
                 };
             }
@@ -412,6 +439,11 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
         const respuestaCombinada = respuestasPorChica
             .map(r => `[${r.chica}]: ${r.respuesta}`)
             .join('\n\n');
+        
+        logQuinti('INFO', `Múltiples chicas respondieron exitosamente: ${respuestasPorChica.length} respuestas`, {
+            chicas: respuestasPorChica.map(r => r.chica),
+            longitudes: respuestasPorChica.map(r => `${r.chica}: ${r.respuesta.length} chars`)
+        });
         
         // Usar la imagen de la chica principal (primera en responder)
         const chicaPrincipal = respuestasPorChica[0]?.chica || chicaSeleccionada;
@@ -660,7 +692,21 @@ async function intentarLlamadaAPI(mensajes, modelo) {
             
             if (contenido) {
                 indiceKeyActual = (keyIdx + 1) % GROQ_KEYS.length;
-                return parsearJSON(contenido);
+                const resultadoJSON = parsearJSON(contenido);
+                
+                // Si el parseo falla y devuelve null, registrar error detallado
+                if (resultadoJSON === null) {
+                    logQuinti('ERROR', 'API devolvió contenido pero no es JSON válido', {
+                        contenido: contenido.substring(0, 200),
+                        keyUsada: keyNumero
+                    });
+                }
+                
+                return resultadoJSON;
+            } else {
+                logQuinti('WARN', `API devolvió respuesta vacía - Key ${keyNumero}`, {
+                    dataCompleta: JSON.stringify(data).substring(0, 500)
+                });
             }
             
         } catch (error) {
