@@ -129,22 +129,6 @@
 
     <script src="logica.js"></script>
     <script>
-        // CONFIGURACIÓN: Ingresa aquí tu API Key de Groq
-        // Opción A: Para pruebas rápidas, pégala aquí entre las comillas.
-        // Opción B: Déjalo vacío y el navegador te la pedirá al cargar.
-        let GROQ_API_KEY = ""; 
-
-        function verificarApiKey() {
-            if (!GROQ_API_KEY) {
-                GROQ_API_KEY = prompt("Por favor, ingresa tu API Key de Groq para usar QuintiAmigas:");
-                if (!GROQ_API_KEY) {
-                    alert("Se necesita una API Key para que el chat funcione.");
-                    return false;
-                }
-            }
-            return true;
-        }
-
         function volverAlInicio() {
             window.location.href = '../index.html';
         }
@@ -156,9 +140,6 @@
         }
         
         async function sendMessage() {
-            // Verificar clave antes de enviar
-            if (!verificarApiKey()) return;
-
             const input = document.getElementById('userInput');
             const sendBtn = document.getElementById('sendButton');
             const messagesDiv = document.getElementById('chatMessages');
@@ -180,8 +161,8 @@
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
             
             try {
-                // Llamar a la función de logica.js PASANDO LA API KEY
-                const response = await obtenerRespuestaGroq(message, GROQ_API_KEY);
+                // Llamar a la función de logica.js (usa las APIs definidas internamente con rotación)
+                const response = await obtenerRespuestaGroq(message);
                 
                 typingIndicator.style.display = 'none';
                 
