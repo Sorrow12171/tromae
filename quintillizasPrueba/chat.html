@@ -276,11 +276,12 @@
         </div>
     </div>
 
-    <!-- Cargar primero imagenes.js, luego logica.js -->
+    <!-- Cargar scripts en orden: imagenes, logica (con reintentos y logs), luego UI -->
     <script src="imagenes.js"></script>
     <script src="logica.js"></script>
     <script>
         let chicaSeleccionadaActual = null;
+        let historialMensajesUI = []; // Historial local para la UI
         
         // Inicializar el selector cuando carga la página
         function inicializarSelector() {
@@ -348,6 +349,7 @@
             
             // Limpiar mensajes y agregar saludo personalizado
             const messagesDiv = document.getElementById('chatMessages');
+            historialMensajesUI = [];
             messagesDiv.innerHTML = `
                 <div class="message bot-message">
                     ¡Hola! Soy ${infoChica.nombre.split(' ')[0]} 🌸 ¿En qué puedo ayudarte hoy?
@@ -365,6 +367,10 @@
             }
         }
         
+        /**
+         * Función principal para enviar mensajes
+         * Implementa logging de errores y muestra imágenes según respuesta de IA
+         */
         async function sendMessage() {
             const input = document.getElementById('userInput');
             const sendBtn = document.getElementById('sendButton');
@@ -374,7 +380,7 @@
             const message = input.value.trim();
             if (!message) return;
             
-            // Agregar mensaje del usuario
+            // Agregar mensaje del usuario al historial UI
             const userMsgDiv = document.createElement('div');
             userMsgDiv.className = 'message user-message';
             userMsgDiv.textContent = message;
@@ -387,24 +393,45 @@
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
             
             try {
-                // Llamar a la función de logica.js (usa las APIs definidas internamente con rotación)
-                const response = await obtenerRespuestaGroq(message);
+                // Llamar a la función conversar que usa el sistema de reintentos
+                logQuinti('INFO', 'Enviando mensaje a la IA', { mensaje: message.slice(0, 50) + '...' });
+                
+                const response = await conversar(message);
                 
                 typingIndicator.style.display = 'none';
                 
-                // Agregar respuesta del bot
+                // Agregar respuesta del bot con imagen si está disponible
                 const botMsgDiv = document.createElement('div');
                 botMsgDiv.className = 'message bot-message';
-                botMsgDiv.textContent = response;
+                
+                // Construir contenido con imagen si existe
+                let contenidoHTML = '';
+                if (response.imagen_url) {
+                    contenidoHTML += `<img src="${response.imagen_url}" alt="${response.imagen_tag}" style="max-width: 200px; max-height: 200px; border-radius: 10px; display: block; margin-bottom: 10px;">`;
+                }
+                contenidoHTML += response.respuesta;
+                
+                botMsgDiv.innerHTML = contenidoHTML;
                 messagesDiv.appendChild(botMsgDiv);
+                
+                logQuinti('INFO', 'Mensaje respondido exitosamente', { 
+                    longitudRespuesta: response.respuesta.length,
+                    tieneImagen: !!response.imagen_url,
+                    modelo: response.modelo
+                });
                 
             } catch (error) {
                 typingIndicator.style.display = 'none';
+                
+                // Log detallado del error
+                logErrorAPI('sendMessage', error, { mensaje: message });
+                
                 const errorMsgDiv = document.createElement('div');
                 errorMsgDiv.className = 'message bot-message';
-                errorMsgDiv.textContent = 'Error: ' + error.message + ' 😅';
+                errorMsgDiv.textContent = formatearErrorUsuario(error);
                 messagesDiv.appendChild(errorMsgDiv);
-                console.error('Error:', error);
+                
+                console.error('[CHAT ERROR]', error);
             }
             
             input.disabled = false;
