@@ -6,6 +6,74 @@
     <title>QuintiAmigas - Chat</title>
     <link rel="stylesheet" href="../1_style.css">
     <style>
+        /* Selector de chicas */
+        .selector-container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .selector-header {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #FF69B4, #FF1493);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .chicas-selector {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .chica-button {
+            position: relative;
+            width: 150px;
+            height: 200px;
+            border: 3px solid #ffb6c1;
+            border-radius: 15px;
+            cursor: pointer;
+            overflow: hidden;
+            transition: transform 0.3s, border-color 0.3s;
+            background: #fff0f5;
+        }
+        
+        .chica-button:hover {
+            transform: scale(1.05);
+            border-color: #FF1493;
+        }
+        
+        .chica-button.selected {
+            border-color: #FF1493;
+            box-shadow: 0 0 20px rgba(255, 20, 147, 0.6);
+        }
+        
+        .chica-button img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .chica-button .nombre-chica {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 20, 147, 0.9);
+            color: white;
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
         .chat-container {
             max-width: 600px;
             margin: 20px auto;
@@ -13,6 +81,11 @@
             background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: none;
+        }
+        
+        .chat-container.active {
+            display: block;
         }
         
         .chat-header {
@@ -22,6 +95,35 @@
             color: white;
             border-radius: 10px;
             margin-bottom: 20px;
+        }
+        
+        .chica-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #fff0f5;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .chica-info img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #FF1493;
+        }
+        
+        .chica-info-text h3 {
+            margin: 0;
+            color: #FF1493;
+        }
+        
+        .chica-info-text p {
+            margin: 5px 0 0;
+            color: #666;
+            font-size: 14px;
         }
         
         .chat-messages {
@@ -98,6 +200,29 @@
             font-style: italic;
             margin: 10px 0;
         }
+        
+        .start-chat-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #FF69B4, #FF1493);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        
+        .start-chat-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .start-chat-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -105,20 +230,44 @@
         🏠
     </button>
 
-    <div class="chat-container">
+    <!-- Selector de Chicas -->
+    <div class="selector-container" id="selectorContainer">
+        <div class="selector-header">
+            <h2>💕 Selecciona tu Chica 💕</h2>
+            <p>Elige a una de las quintillizas Nakano para chatear</p>
+        </div>
+        
+        <div class="chicas-selector" id="chicasSelector">
+            <!-- Los botones se generan dinámicamente con JS -->
+        </div>
+        
+        <button class="start-chat-btn" id="startChatBtn" onclick="iniciarChat()" disabled>
+            💬 Comenzar Chat
+        </button>
+    </div>
+
+    <!-- Chat Container -->
+    <div class="chat-container" id="chatContainer">
         <div class="chat-header">
-            <h2>💬 QuintiAmigas</h2>
-            <p>Tus amigas virtuales están aquí para charlar</p>
+            <h2>💬 Chat con <span id="chicaNombreHeader"></span></h2>
+        </div>
+        
+        <div class="chica-info">
+            <img id="chicaImagenPerfil" src="" alt="Perfil">
+            <div class="chica-info-text">
+                <h3 id="chicaNombreInfo"></h3>
+                <p id="chicaDescripcion"></p>
+            </div>
         </div>
         
         <div class="chat-messages" id="chatMessages">
             <div class="message bot-message">
-                ¡Hola! Soy QuintiAmigas 🌸 ¿En qué puedo ayudarte hoy?
+                ¡Hola! Soy <span id="chicaNombreSaludo"></span> 🌸 ¿En qué puedo ayudarte hoy?
             </div>
         </div>
         
         <div class="typing-indicator" id="typingIndicator">
-            QuintiAmigas está escribiendo...
+            <span id="chicaNombreEscribiendo"></span> está escribiendo...
         </div>
         
         <div class="chat-input-container">
@@ -127,8 +276,85 @@
         </div>
     </div>
 
+    <!-- Cargar primero imagenes.js, luego logica.js -->
+    <script src="imagenes.js"></script>
     <script src="logica.js"></script>
     <script>
+        let chicaSeleccionadaActual = null;
+        
+        // Inicializar el selector cuando carga la página
+        function inicializarSelector() {
+            const selectorDiv = document.getElementById('chicasSelector');
+            const chicas = getChicasDisponibles();
+            
+            selectorDiv.innerHTML = '';
+            
+            chicas.forEach(nombre => {
+                const infoChica = QuintiImagenesPrueba[nombre];
+                if (infoChica) {
+                    const btn = document.createElement('div');
+                    btn.className = 'chica-button';
+                    btn.onclick = () => seleccionarChicaVisual(nombre);
+                    
+                    const img = document.createElement('img');
+                    img.src = infoChica.imagenSelector;
+                    img.alt = infoChica.nombre;
+                    
+                    const nombreDiv = document.createElement('div');
+                    nombreDiv.className = 'nombre-chica';
+                    nombreDiv.textContent = infoChica.nombre;
+                    
+                    btn.appendChild(img);
+                    btn.appendChild(nombreDiv);
+                    selectorDiv.appendChild(btn);
+                }
+            });
+        }
+        
+        // Seleccionar una chica visualmente
+        function seleccionarChicaVisual(nombre) {
+            // Remover selección previa
+            document.querySelectorAll('.chica-button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // Marcar como seleccionada
+            event.currentTarget.classList.add('selected');
+            chicaSeleccionadaActual = nombre;
+            
+            // Habilitar botón de comenzar chat
+            document.getElementById('startChatBtn').disabled = false;
+        }
+        
+        // Iniciar el chat con la chica seleccionada
+        function iniciarChat() {
+            if (!chicaSeleccionadaActual) return;
+            
+            // Seleccionar la chica en la lógica
+            seleccionarChica(chicaSeleccionadaActual);
+            
+            // Ocultar selector, mostrar chat
+            document.getElementById('selectorContainer').style.display = 'none';
+            document.getElementById('chatContainer').classList.add('active');
+            
+            // Actualizar información de la chica en el chat
+            const infoChica = QuintiImagenesPrueba[chicaSeleccionadaActual];
+            document.getElementById('chicaNombreHeader').textContent = infoChica.nombre;
+            document.getElementById('chicaNombreInfo').textContent = infoChica.nombre;
+            document.getElementById('chicaDescripcion').textContent = infoChica.descripcion;
+            document.getElementById('chicaImagenPerfil').src = infoChica.imagenSelector;
+            document.getElementById('chicaNombreSaludo').textContent = infoChica.nombre.split(' ')[0];
+            document.getElementById('chicaNombreEscribiendo').textContent = infoChica.nombre.split(' ')[0];
+            
+            // Limpiar mensajes y agregar saludo personalizado
+            const messagesDiv = document.getElementById('chatMessages');
+            messagesDiv.innerHTML = `
+                <div class="message bot-message">
+                    ¡Hola! Soy ${infoChica.nombre.split(' ')[0]} 🌸 ¿En qué puedo ayudarte hoy?
+                </div>
+            `;
+        }
+        
         function volverAlInicio() {
             window.location.href = '../index.html';
         }
@@ -186,6 +412,9 @@
             input.focus();
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
+        
+        // Inicializar cuando carga la página
+        window.onload = inicializarSelector;
     </script>
 </body>
 </html>

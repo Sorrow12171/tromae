@@ -2,6 +2,9 @@
 // Archivo: logica.js
 // Carpeta: quintillizasPrueba
 
+// Importar imágenes de las quintillizas
+// const QuintiImagenesPrueba se carga desde imagenes.js
+
 // Configuración de API Keys encriptadas/rotas (mismo esquema que quintillizas.js)
 const _K = [
     ["gsk_Ab4b","EufREWBZFunx","DuzgWGdyb3FYvUfnaETyrJ7JpsXENg65Mknn"],
@@ -18,6 +21,18 @@ const MODELO_PRINCIPAL = "meta-llama/llama-4-scout-17b-16e-instruct";
 
 let indiceKeyActual = 0;
 
+// Chica seleccionada actualmente
+let chicaSeleccionada = null;
+
+// Personalidades de cada chica para el prompt del sistema
+const PERSONALIDADES = {
+    Ichika: "Eres Ichika Nakano, la mayor de las quintillizas. Tienes 18 años. Eres madura, juguetona y protectora. Coqueta por naturaleza, te encanta bromear y flirtear con sonrisas y miradas sugerentes. Sabes usar tu encanto de forma sutil pero efectiva. Tienes cabello corto con pendiente en la oreja derecha. Eres voluptuosa y muy deseada en el colegio.",
+    Nino: "Eres Nino Nakano, la segunda de las quintillizas. Tienes 18 años. Eres tsundere intensa, directa y algo arrogante al principio. Muy protectora, fashionista y celosa. Cuando te interesas, tu forma de cuidar es bastante posesiva y apasionada. Tienes cabello largo con lazos mariposa. Eres voluptuosa y muy deseada en el colegio.",
+    Miku: "Eres Miku Nakano, la tercera de las quintillizas. Tienes 18 años. Eres callada, tímida y reservada, pero muy directa cuando quieres algo. Fan de Sengoku. Detrás de tu silencio hay una pasión profunda que sale cuando te sientes cómoda y cercana. Tienes cabello medio con mechón cubriendo el ojo derecho y auriculares azules grandes. Eres voluptuosa y muy deseada en el colegio.",
+    Yotsuba: "Eres Yotsuba Nakano, la cuarta de las quintillizas. Tienes 18 años. Eres súper energética, alegre, atlética y siempre positiva. Te encanta el contacto físico, los juegos y la diversión constante. Eres muy cariñosa y activa en todo lo que haces. Tienes cabello corto con un lazo grande de orejas de conejo verde. Eres voluptuosa y muy deseada en el colegio.",
+    Itsuki: "Eres Itsuki Nakano, la menor de las quintillizas. Tienes 18 años. Eres seria, estudiosa y tsundere fuerte. Honesta y responsable, pero cuando bajas la guardia te vuelves bastante expresiva y entregada. Tienes un apetito voraz (tanto literal como figurado). Tienes cabello medio con horquillas de estrella rojas. Eres voluptuosa y muy deseada en el colegio."
+};
+
 /**
  * Función principal para obtener respuestas de la API de Groq
  * @param {string} mensaje - El mensaje del usuario
@@ -27,11 +42,16 @@ let indiceKeyActual = 0;
 async function obtenerRespuestaGroq(mensaje, historial = []) {
     const url = "https://api.groq.com/openai/v1/chat/completions";
     
+    // Determinar la personalidad según la chica seleccionada
+    const personalidad = chicaSeleccionada 
+        ? PERSONALIDADES[chicaSeleccionada] 
+        : "Eres QuintiAmigas, una amiga virtual divertida y útil.";
+    
     // Preparar el payload para Groq
     const mensajesPayload = [
         {
             role: "system",
-            content: "Eres QuintiAmigas, una amiga virtual divertida y útil."
+            content: personalidad
         },
         ...historial,
         { role: "user", content: mensaje }
@@ -84,6 +104,47 @@ async function obtenerRespuestaGroq(mensaje, historial = []) {
 }
 
 /**
+ * Función para seleccionar una chica
+ * @param {string} nombreChica - El nombre de la chica (Ichika, Nino, Miku, Yotsuba, Itsuki)
+ */
+function seleccionarChica(nombreChica) {
+    if (PERSONALIDADES[nombreChica]) {
+        chicaSeleccionada = nombreChica;
+        console.log(`Chica seleccionada: ${nombreChica}`);
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Función para obtener la chica seleccionada actualmente
+ * @returns {string|null} - El nombre de la chica seleccionada o null
+ */
+function getChicaSeleccionada() {
+    return chicaSeleccionada;
+}
+
+/**
+ * Función para obtener la imagen de selector de una chica
+ * @param {string} nombreChica - El nombre de la chica
+ * @returns {string|null} - La URL de la imagen o null
+ */
+function getImagenSelector(nombreChica) {
+    if (QuintiImagenesPrueba && QuintiImagenesPrueba[nombreChica]) {
+        return QuintiImagenesPrueba[nombreChica].imagenSelector;
+    }
+    return null;
+}
+
+/**
+ * Función para obtener todas las chicas disponibles
+ * @returns {Array} - Array con los nombres de las chicas
+ */
+function getChicasDisponibles() {
+    return Object.keys(PERSONALIDADES);
+}
+
+/**
  * Función para manejar conversación con historial (wrapper sobre obtenerRespuestaGroq)
  * @param {Array} mensajes - Array de objetos {role, content}
  * @returns {Promise<string>} - La respuesta generada por la IA
@@ -101,7 +162,12 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         obtenerRespuestaGroq,
         conversarConHistorial,
+        seleccionarChica,
+        getChicaSeleccionada,
+        getImagenSelector,
+        getChicasDisponibles,
         GROQ_KEYS,
-        MODELO_PRINCIPAL
+        MODELO_PRINCIPAL,
+        PERSONALIDADES
     };
 }
