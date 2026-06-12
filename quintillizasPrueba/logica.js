@@ -629,7 +629,3 @@ if (typeof module !== 'undefined' && module.exports) {
         obtenerTagsImagen
     };
 }
-        MODELO_PRINCIPAL,
-        PERSONALIDADES
-    };
-}
