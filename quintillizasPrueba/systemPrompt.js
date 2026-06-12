@@ -1,20 +1,25 @@
 // ============================================================
-//  SYSTEM PROMPTS - Quintillizas Prueba
-//  Archivo: systemprompt.js
-//  Descripción: Define el system prompt base y variantes para reintentos
+//  SYSTEM PROMPT INICIAL - Quintillizas Prueba
+//  Archivo: systemPrompt.js
+//  Descripción: System prompt que se envía desde el primer mensaje
+//  INSTRUCCIÓN: Cambia el texto de abajo por lo que necesites
+// ============================================================
+
+export const SYSTEM_PROMPT_INICIAL = `PROBANDOOO`;
+
+// ============================================================
+//  FALLBACKS - Prompts para reintentos multi-fase
+//  Estos prompts se usan cuando la respuesta inicial falla
 // ============================================================
 
 /**
  * System prompt mínimo usado en fases avanzadas de reintento (FASE 3 y 4)
- * Este prompt debe ser corto y directo para maximizar chances de respuesta JSON
  */
 export const QUINT_PRUEBA_SYSTEM_MINIMO = `Eres una chica de roleplay interactivo. Responde SOLO con JSON válido.
 Formato: {"respuesta":"tu respuesta con *acciones*","imagen_tag":"nombre_imagen"}`;
 
 /**
  * FASE 1: Prompts de corrección JSON
- * Se usan cuando la respuesta inicial no es JSON válido
- * Se agregan al historial existente como mensajes adicionales del usuario
  */
 export const QUINT_PRUEBA_FASE1 = [
     "Responde SOLO con JSON valido. Sin texto fuera del JSON. Empieza con { y termina con }",
@@ -25,7 +30,6 @@ export const QUINT_PRUEBA_FASE1 = [
 
 /**
  * FASE 2: Prompts con historial reducido
- * Similar a FASE 1 pero se usa con un historial más corto (últimos 4 mensajes)
  */
 export const QUINT_PRUEBA_FASE2 = [
     'Responde en JSON. {"respuesta":"respuesta aqui con *acciones*","imagen_tag":"nombre_imagen"}',
@@ -36,13 +40,11 @@ export const QUINT_PRUEBA_FASE2 = [
 
 /**
  * FASE 3: Prompts de contexto mínimo
- * Mensajes muy cortos para intentar obtener respuesta con mínimo contexto
  */
 export const QUINT_PRUEBA_FASE3 = ["responde", "continua", "ok"];
 
 /**
  * FASE 4: Prompts agresivos directos
- * Ejemplos concretos de JSON para que el modelo copie el formato
  */
 export const QUINT_PRUEBA_FASE4 = [
     'JSON solo: {"respuesta":"tu respuesta","imagen_tag":"normal"}',
@@ -66,6 +68,7 @@ export function generarSystemPrompt(personalidad, tagsImagen = []) {
 // Exportación para compatibilidad con CommonJS (opcional)
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
+        SYSTEM_PROMPT_INICIAL,
         QUINT_PRUEBA_SYSTEM_MINIMO,
         QUINT_PRUEBA_FASE1,
         QUINT_PRUEBA_FASE2,

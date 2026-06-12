@@ -277,9 +277,13 @@
     </div>
 
     <!-- Cargar scripts en orden: imagenes, logica (con reintentos y logs), luego UI -->
-    <script src="imagenes.js"></script>
-    <script src="logica.js"></script>
-    <script>
+    <script type="module" src="imagenes.js"></script>
+    <script type="module" src="logica.js"></script>
+    <script type="module">
+        // Importar funciones necesarias de logica.js e imagenes.js
+        import { getChicasDisponibles, seleccionarChica, conversar, logQuinti, logErrorAPI, formatearErrorUsuario } from './logica.js';
+        import { QuintiImagenesPrueba } from './imagenes.js';
+        
         let chicaSeleccionadaActual = null;
         let historialMensajesUI = []; // Historial local para la UI
         
@@ -439,6 +443,14 @@
             input.focus();
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
+        
+        // Exponer funciones globalmente para que sean accesibles desde HTML
+        window.inicializarSelector = inicializarSelector;
+        window.seleccionarChicaVisual = seleccionarChicaVisual;
+        window.iniciarChat = iniciarChat;
+        window.volverAlInicio = volverAlInicio;
+        window.handleKeyPress = handleKeyPress;
+        window.sendMessage = sendMessage;
         
         // Inicializar cuando carga la página
         window.onload = inicializarSelector;

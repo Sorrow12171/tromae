@@ -19,9 +19,10 @@
 //  - imagenes.js: URLs y tags de imágenes
 // ============================================================
 
-import { generarSystemPrompt, QUINT_PRUEBA_SYSTEM_MINIMO, QUINT_PRUEBA_FASE1, QUINT_PRUEBA_FASE2, QUINT_PRUEBA_FASE3, QUINT_PRUEBA_FASE4 } from './systemprompt.js';
+import { generarSystemPrompt, QUINT_PRUEBA_SYSTEM_MINIMO, QUINT_PRUEBA_FASE1, QUINT_PRUEBA_FASE2, QUINT_PRUEBA_FASE3, QUINT_PRUEBA_FASE4, SYSTEM_PROMPT_INICIAL } from './systemPrompt.js';
 import { PERSONALIDADES, getChicasDisponibles } from './personalidades.js';
 import { obtenerFallbackLocal, obtenerMensajeError, generarPayloadFase, getOrdenFases, getInfoFase } from './fallbacks.js';
+import { QuintiImagenesPrueba } from './imagenes.js';
 
 // ============================================================
 //  CONFIGURACIÓN DE API KEYS
@@ -567,6 +568,11 @@ function getChicasDisponibles() {
  * @returns {Promise<object>} - Respuesta procesada
  */
 async function conversar(mensaje) {
+    // Agregar system prompt inicial solo si es el primer mensaje
+    if (historialConversacion.length === 0 && chicaSeleccionada) {
+        historialConversacion.push({ role: "system", content: SYSTEM_PROMPT_INICIAL });
+        logQuinti('INFO', 'System prompt inicial agregado', { prompt: SYSTEM_PROMPT_INICIAL });
+    }
     return obtenerRespuestaGroq(mensaje, historialConversacion);
 }
 
@@ -586,7 +592,35 @@ function limpiarHistorial() {
     logQuinti('INFO', 'Historial limpiado');
 }
 
-// Exportar funciones para uso en otros módulos
+// Exportar funciones para uso en otros módulos (ES6 modules)
+export {
+    obtenerRespuestaGroq,
+    conversar,
+    seleccionarChica,
+    getChicaSeleccionada,
+    getImagenSelector,
+    getChicasDisponibles,
+    getHistorial,
+    limpiarHistorial,
+    GROQ_KEYS,
+    MODELO_PRINCIPAL,
+    PERSONALIDADES,
+    // Funciones de utilidad
+    logQuinti,
+    formatearErrorUsuario,
+    seleccionarImagenAutomatica,
+    obtenerTagsImagen
+};
+
+// Exportar para window (compatibilidad con browser)
+if (typeof window !== 'undefined') {
+    window.logQuinti = logQuinti;
+    window.formatearErrorUsuario = formatearErrorUsuario;
+    window.seleccionarImagenAutomatica = seleccionarImagenAutomatica;
+    window.obtenerTagsImagen = obtenerTagsImagen;
+}
+
+// Exportar funciones para uso en otros módulos (CommonJS - compatibilidad)
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         obtenerRespuestaGroq,

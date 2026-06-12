@@ -175,3 +175,11 @@ const QuintiImagenesPrueba = {
         }
     }
 };
+
+// Exportar para ES6 modules
+export { QuintiImagenesPrueba };
+
+// Compatibilidad con entornos no-module (window global)
+if (typeof window !== 'undefined') {
+    window.QuintiImagenesPrueba = QuintiImagenesPrueba;
+}
