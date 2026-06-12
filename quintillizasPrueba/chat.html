@@ -536,6 +536,8 @@
             return chicaData.imagenes?.[tag] || chicaData.imagenes?.['hablando'] || chicaData.imagenSelector || null;
         }
 
+        let lastUserMessage = null; // Para permitir reintentar después de un error
+        
         async function sendMessage() {
             const input = document.getElementById('userInput');
             const sendBtn = document.getElementById('sendButton');
@@ -544,6 +546,9 @@
             
             const message = input.value.trim();
             if (!message) return;
+            
+            // Guardar el último mensaje para permitir reintentar
+            lastUserMessage = message;
             
             // Agregar mensaje del usuario al historial UI
             const userMsgDiv = document.createElement('div');
@@ -774,7 +779,18 @@
                 
                 const errorMsgDiv = document.createElement('div');
                 errorMsgDiv.className = 'message bot-message';
-                errorMsgDiv.textContent = formatearErrorUsuario(error);
+                errorMsgDiv.style.backgroundColor = '#ffebee';
+                errorMsgDiv.style.borderLeft = '4px solid #f44336';
+                errorMsgDiv.style.color = '#c62828';
+                
+                // Mostrar error detallado con formato específico
+                const errorMessage = formatearErrorUsuario(error);
+                errorMsgDiv.innerHTML = `
+                    <div style="margin-bottom: 10px; font-weight: bold;">${errorMessage.replace(/\n/g, '<br>')}</div>
+                    <button onclick="retryLastMessage()" style="background-color: #f44336; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; margin-top: 10px;">
+                        🔄 Reintentar
+                    </button>
+                `;
                 messagesDiv.appendChild(errorMsgDiv);
                 
                 console.error('[CHAT ERROR]', error);
@@ -786,6 +802,25 @@
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
         
+        // Función para reintentar el último mensaje después de un error
+        async function retryLastMessage() {
+            if (!lastUserMessage) {
+                alert('No hay ningún mensaje para reintentar');
+                return;
+            }
+            
+            const input = document.getElementById('userInput');
+            input.value = lastUserMessage;
+            
+            // Eliminar el mensaje de error anterior
+            const messagesDiv = document.getElementById('chatMessages');
+            const errorMessages = messagesDiv.querySelectorAll('.message.bot-message[style*="background-color: #ffebee"]');
+            errorMessages.forEach(msg => msg.remove());
+            
+            // Reenviar el mensaje
+            await sendMessage();
+        }
+        
         // Exponer funciones globalmente para que sean accesibles desde HTML
         window.inicializarSelector = inicializarSelector;
         window.seleccionarChicaVisual = seleccionarChicaVisual;
@@ -793,6 +828,7 @@
         window.volverAlInicio = volverAlInicio;
         window.handleKeyPress = handleKeyPress;
         window.sendMessage = sendMessage;
+        window.retryLastMessage = retryLastMessage;
         
         // Inicializar cuando carga la página
         window.onload = inicializarSelector;

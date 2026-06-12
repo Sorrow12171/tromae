@@ -359,11 +359,27 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
             ];
             
             // Llamar a la API para esta chica
-            let datos = await intentarLlamadaAPI(mensajesPayload, MODELO_PRINCIPAL);
+            let datos;
+            try {
+                datos = await intentarLlamadaAPI(mensajesPayload, MODELO_PRINCIPAL);
+            } catch (error) {
+                // Si la PRIMERA chica falla, lanzar error real
+                if (esPrimeraChica) {
+                    logQuinti('ERROR', `La primera chica (${nombreChica}) falló - propagando error`);
+                    throw error;
+                }
+                // Para chicas secundarias, usar fallback local
+                logQuinti('WARN', `Chica secundaria ${nombreChica} falló, usando fallback local`);
+                const fallbackTag = tagsDisponibles.includes('hablando') ? 'hablando' : tagsDisponibles[0] || 'normal';
+                datos = {
+                    respuesta: obtenerFallbackLocal(),
+                    imagen_tag: fallbackTag
+                };
+            }
             
-            // Sistema de reintentos simplificado para llamadas individuales
+            // Sistema de reintentos simplificado para llamadas individuales (validación de respuesta)
             if (!datos || !esRespuestaValida(datos)) {
-                logQuinti('WARN', `Llamada para ${nombreChica} falló, intentando fallback local`);
+                logQuinti('WARN', `Llamada para ${nombreChica} falló (respuesta inválida), intentando fallback local`);
                 const fallbackTag = tagsDisponibles.includes('hablando') ? 'hablando' : tagsDisponibles[0] || 'normal';
                 datos = {
                     respuesta: obtenerFallbackLocal(),
@@ -451,7 +467,14 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
     // FASE 0: Intento normal con historial completo
     // ========================================
     logQuinti('DEBUG', 'FASE 0: Intento normal con historial completo');
-    let datos = await intentarLlamadaAPI(mensajesPayload, MODELO_PRINCIPAL);
+    let datos;
+    try {
+        datos = await intentarLlamadaAPI(mensajesPayload, MODELO_PRINCIPAL);
+    } catch (error) {
+        // Propagar error real al usuario en caso de una sola chica
+        logQuinti('ERROR', 'Error en llamada API - propagando al usuario', { error: error.message });
+        throw error;
+    }
     
     if (datos && esRespuestaValida(datos)) {
         logRespuestaExitosa(MODELO_PRINCIPAL, datos.respuesta.length, Date.now() - tiempoInicio);
@@ -466,7 +489,12 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
         logReintento(i + 1, QUINT_PRUEBA_FASE1.length, 'Corrección JSON');
         
         mensajesPayload.push({ role: "user", content: QUINT_PRUEBA_FASE1[i] });
-        datos = await intentarLlamadaAPI(mensajesPayload, MODELO_PRINCIPAL);
+        try {
+            datos = await intentarLlamadaAPI(mensajesPayload, MODELO_PRINCIPAL);
+        } catch (error) {
+            // Continuar al siguiente reintento
+            logQuinti('WARN', `FASE 1 intento ${i + 1} falló: ${error.message}`);
+        }
         mensajesPayload.pop(); // Remover prompt de corrección
         
         if (datos && esRespuestaValida(datos)) {
@@ -492,7 +520,11 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
         logReintento(i + 1, QUINT_PRUEBA_FASE2.length, 'Historial reducido');
         
         mensajesPayload.push({ role: "user", content: QUINT_PRUEBA_FASE2[i] });
-        datos = await intentarLlamadaAPI(mensajesPayload, MODELO_PRINCIPAL);
+        try {
+            datos = await intentarLlamadaAPI(mensajesPayload, MODELO_PRINCIPAL);
+        } catch (error) {
+            logQuinti('WARN', `FASE 2 intento ${i + 1} falló: ${error.message}`);
+        }
         mensajesPayload.pop();
         
         if (datos && esRespuestaValida(datos)) {
@@ -520,7 +552,11 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
             { role: "user", content: QUINT_PRUEBA_FASE3[i] }
         ];
         
-        datos = await intentarLlamadaAPI(minimo, MODELO_PRINCIPAL);
+        try {
+            datos = await intentarLlamadaAPI(minimo, MODELO_PRINCIPAL);
+        } catch (error) {
+            logQuinti('WARN', `FASE 3 intento ${i + 1} falló: ${error.message}`);
+        }
         
         if (datos && esRespuestaValida(datos)) {
             logQuinti('INFO', `FASE 3 exitosa en intento ${i + 1}`);
@@ -541,7 +577,11 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
             { role: "user", content: QUINT_PRUEBA_FASE4[i] }
         ];
         
-        datos = await intentarLlamadaAPI(agresivo, MODELO_PRINCIPAL);
+        try {
+            datos = await intentarLlamadaAPI(agresivo, MODELO_PRINCIPAL);
+        } catch (error) {
+            logQuinti('WARN', `FASE 4 intento ${i + 1} falló: ${error.message}`);
+        }
         
         if (datos && esRespuestaValida(datos)) {
             logQuinti('INFO', `FASE 4 exitosa en intento ${i + 1}`);
@@ -550,9 +590,9 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
     }
     
     // ========================================
-    // FALLBACK LOCAL: Si todo falla
+    // FALLBACK LOCAL: Si todo falla (último recurso)
     // ========================================
-    logQuinti('ERROR', 'Todas las fases fallaron - Usando fallback local');
+    logQuinti('ERROR', 'Todas las fases fallaron - Usando fallback local como último recurso');
     
     const fallbackTag = chicaSeleccionada && tagsImagen.includes('hablando') ? 'hablando' : 'normal';
     
@@ -568,14 +608,17 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
  * Intenta hacer una llamada a la API con rotación de keys
  * @param {Array} mensajes - Array de mensajes para la API
  * @param {string} modelo - Modelo a usar
- * @returns {Promise<object|null>} - Datos parseados o null
+ * @returns {Promise<object>} - Datos parseados
+ * @throws {Error} - Error con detalles específicos de cada key intentada
  */
 async function intentarLlamadaAPI(mensajes, modelo) {
     const url = "https://api.groq.com/openai/v1/chat/completions";
+    const erroresAcumulados = [];
     
     for (let k = 0; k < GROQ_KEYS.length; k++) {
         const keyIdx = (indiceKeyActual + k) % GROQ_KEYS.length;
         const apiKey = GROQ_KEYS[keyIdx];
+        const keyNumero = keyIdx + 1;
         
         try {
             const response = await fetch(url, {
@@ -592,15 +635,27 @@ async function intentarLlamadaAPI(mensajes, modelo) {
                 })
             });
             
-            if (response.status === 429 || response.status === 401) {
-                logQuinti('WARN', `Key ${keyIdx + 1} rate limited o inválida, rotando...`);
+            if (response.status === 429) {
+                const errorMsg = `Key ${keyNumero}: Rate limit excedido (429)`;
+                logQuinti('WARN', errorMsg);
+                erroresAcumulados.push(errorMsg);
+                indiceKeyActual = (keyIdx + 1) % GROQ_KEYS.length;
+                continue;
+            }
+            
+            if (response.status === 401) {
+                const errorMsg = `Key ${keyNumero}: API Key inválida o expirada (401)`;
+                logQuinti('WARN', errorMsg);
+                erroresAcumulados.push(errorMsg);
                 indiceKeyActual = (keyIdx + 1) % GROQ_KEYS.length;
                 continue;
             }
             
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
+                const errorMsg = `Key ${keyNumero}: Error HTTP ${response.status} - ${errorData.error?.message || 'Sin detalles'}`;
                 logErrorAPI('Groq API', new Error(`Status ${response.status}`), { errorData, keyIdx });
+                erroresAcumulados.push(errorMsg);
                 indiceKeyActual = (keyIdx + 1) % GROQ_KEYS.length;
                 continue;
             }
@@ -614,12 +669,19 @@ async function intentarLlamadaAPI(mensajes, modelo) {
             }
             
         } catch (error) {
+            const errorMsg = `Key ${keyNumero}: Timeout o error de conexión - ${error.message}`;
             logErrorAPI('Fetch Groq', error, { keyIdx, modelo });
+            erroresAcumulados.push(errorMsg);
             indiceKeyActual = (keyIdx + 1) % GROQ_KEYS.length;
         }
     }
     
-    return null;
+    // Todas las keys fallaron - lanzar error con detalles acumulados
+    const errorDetalle = erroresAcumulados.length > 0 
+        ? `Todas las API keys fallaron:\n${erroresAcumulados.join('\n')}`
+        : 'Error desconocido al llamar a la API';
+    
+    throw new Error(errorDetalle);
 }
 
 /**

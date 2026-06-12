@@ -26,12 +26,28 @@ const FALLBACKS_LOCALES = [
 ];
 
 /**
- * Obtiene un mensaje de error aleatorio para mostrar al usuario
- * @param {boolean} esDebug - Si es true, incluye detalles técnicos del error
- * @param {Error} error - Objeto de error opcional para incluir detalles
- * @returns {string} - Mensaje formateado
+ * Obtiene un mensaje de error detallado para mostrar al usuario
+ * Muestra el error técnico real con formato específico
+ * @param {boolean} esDebug - Si es true, incluye detalles técnicos completos
+ * @param {Error} error - Objeto de error con los detalles del fallo
+ * @returns {string} - Mensaje formateado con detalles específicos
  */
 export function obtenerMensajeError(esDebug = false, error = null) {
+    if (error && error.message) {
+        // Mostrar error técnico detallado con formato específico
+        const erroresDetallados = error.message.split('\n')
+            .filter(linea => linea.includes('Key') || linea.includes('Rate limit') || linea.includes('API Key') || linea.includes('Error HTTP') || linea.includes('Timeout'))
+            .map(linea => `❌ ${linea}`)
+            .join('\n');
+        
+        if (erroresDetallados) {
+            return `⚠️ Error técnico:\n${erroresDetallados}`;
+        }
+        
+        // Fallback si no se pudieron parsear los errores
+        return `⚠️ Error técnico: ${error.message}`;
+    }
+    
     const mensajeBase = MENSAJES_ERROR[Math.floor(Math.random() * MENSAJES_ERROR.length)];
     
     if (esDebug && error) {
