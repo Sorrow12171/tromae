@@ -395,7 +395,7 @@
     <script type="module" src="logica.js"></script>
     <script type="module">
         // Importar funciones necesarias de logica.js e imagenes.js
-        import { getChicasDisponibles, seleccionarChica, conversar, logQuinti, logErrorAPI, formatearErrorUsuario } from './logica.js';
+        import { getChicasDisponibles, seleccionarChica, conversar, logQuinti, logErrorAPI, formatearErrorUsuario, getChicasEnChat } from './logica.js';
         import { QuintiImagenesPrueba } from './imagenes.js';
         
         let chicaSeleccionadaActual = null;
@@ -570,6 +570,10 @@
                 const multipleResponsesPattern = /\[(Ichika|Nino|Miku|Yotsuba|Itsuki)\]:/gi;
                 const matches = [...response.respuesta.matchAll(multipleResponsesPattern)];
 
+                // También verificar si la respuesta contiene menciones a otras chicas
+                const chicasEnChatSet = getChicasEnChat();
+                logQuinti('DEBUG', 'Chicas en chat', { chicas: Array.from(chicasEnChatSet) });
+
                 if (matches.length > 1 || (matches.length === 1 && !response.respuesta.startsWith('[' + chicaSeleccionadaActual + ']'))) {
                     // Hay múltiples respuestas - dividir y mostrar cada una por separado
                     const responseParts = response.respuesta.split(/\[(Ichika|Nino|Miku|Yotsuba|Itsuki)\]:/gi);
@@ -621,7 +625,8 @@
                 logQuinti('INFO', 'Mensaje respondido exitosamente', { 
                     longitudRespuesta: response.respuesta.length,
                     tieneImagen: !!response.imagen_url,
-                    modelo: response.modelo
+                    modelo: response.modelo,
+                    chicasRespondiendo: response.chicasRespondiendo
                 });
                 
             } catch (error) {
