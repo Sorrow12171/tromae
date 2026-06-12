@@ -489,6 +489,53 @@
          * Función principal para enviar mensajes
          * Implementa logging de errores y muestra imágenes según respuesta de IA
          */
+
+        /**
+         * Selecciona un tag de imagen basado en el contenido de la respuesta
+         */
+        function seleccionarTagImagen(respuesta, chicaNombre) {
+            const respuestaLower = respuesta.toLowerCase();
+            const infoChica = QuintiImagenesPrueba[chicaNombre];
+            if (!infoChica || !infoChica.imagenes) return 'hablando';
+            
+            const tagsDisponibles = Object.keys(infoChica.imagenes);
+            
+            // Buscar coincidencias
+            for (const tag of tagsDisponibles) {
+                const tagNormalizado = tag.toLowerCase().replace(/_/g, ' ');
+                if (respuestaLower.includes(tagNormalizado)) {
+                    return tag;
+                }
+            }
+            
+            // Búsquedas específicas
+            if (respuestaLower.includes('bes') || respuestaLower.includes('kiss')) {
+                if (tagsDisponibles.includes('besando')) return 'besando';
+            }
+            if (respuestaLower.includes('desnud') || respuestaLower.includes('sin ropa')) {
+                if (tagsDisponibles.includes('desnuda')) return 'desnuda';
+            }
+            
+            return tagsDisponibles.includes('hablando') ? 'hablando' : tagsDisponibles[0] || 'normal';
+        }
+        
+        /**
+         * Obtiene la URL de una imagen para una chica y tag específicos
+         */
+        function obtenerURLImagen(nombreChica, tag) {
+            if (!QuintiImagenesPrueba || !QuintiImagenesPrueba[nombreChica]) {
+                return null;
+            }
+            
+            const chicaData = QuintiImagenesPrueba[nombreChica];
+            
+            if (tag === 'normal' || tag === 'hablando') {
+                return chicaData.imagenSelector || chicaData.imagenes?.['hablando'] || null;
+            }
+            
+            return chicaData.imagenes?.[tag] || chicaData.imagenes?.['hablando'] || chicaData.imagenSelector || null;
+        }
+
         async function sendMessage() {
             const input = document.getElementById('userInput');
             const sendBtn = document.getElementById('sendButton');
@@ -517,22 +564,60 @@
                 const response = await conversar(message);
                 
                 typingIndicator.style.display = 'none';
-                
-                // Agregar respuesta del bot con imagen si está disponible
-                const botMsgDiv = document.createElement('div');
-                botMsgDiv.className = 'message bot-message';
-                
-                // Construir contenido con imagen si existe (imagen PRIMERO, luego texto)
-                let contenidoHTML = '';
-                if (response.imagen_url) {
-                    contenidoHTML += `<img src="${response.imagen_url}" alt="${response.imagen_tag}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
+
+                // Detectar si hay múltiples respuestas de diferentes chicas
+                // El formato esperado es: [Nombre]: respuesta
+                const multipleResponsesPattern = /\[(Ichika|Nino|Miku|Yotsuba|Itsuki)\]:/gi;
+                const matches = [...response.respuesta.matchAll(multipleResponsesPattern)];
+
+                if (matches.length > 1 || (matches.length === 1 && !response.respuesta.startsWith('[' + chicaSeleccionadaActual + ']'))) {
+                    // Hay múltiples respuestas - dividir y mostrar cada una por separado
+                    const responseParts = response.respuesta.split(/\[(Ichika|Nino|Miku|Yotsuba|Itsuki)\]:/gi);
+
+                    // Procesar cada parte (el primer elemento puede estar vacío o ser texto introductorio)
+                    for (let i = 1; i < responseParts.length; i += 2) {
+                        const chicaNombre = responseParts[i];
+                        const chicaRespuesta = responseParts[i + 1]?.trim() || '';
+
+                        if (chicaRespuesta) {
+                            // Crear mensaje para esta chica específica
+                            const botMsgDiv = document.createElement('div');
+                            botMsgDiv.className = 'message bot-message';
+
+                            // Obtener imagen de esta chica específica
+                            const infoChica = QuintiImagenesPrueba[chicaNombre];
+                            let imagenURL = null;
+                            if (infoChica) {
+                                // Seleccionar imagen basada en el contenido de la respuesta
+                                const tagImagen = seleccionarTagImagen(chicaRespuesta, chicaNombre);
+                                imagenURL = obtenerURLImagen(chicaNombre, tagImagen);
+                            }
+
+                            // Construir contenido: PRIMERO TEXTO con nombre, luego imagen al final
+                            let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;"><strong>${chicaNombre}:</strong> ${chicaRespuesta}</div>`;
+                            if (imagenURL) {
+                                contenidoHTML += `<img src="${imagenURL}" alt="${chicaNombre}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
+                            }
+
+                            botMsgDiv.innerHTML = contenidoHTML;
+                            messagesDiv.appendChild(botMsgDiv);
+                        }
+                    }
+                } else {
+                    // Respuesta simple de una sola chica
+                    const botMsgDiv = document.createElement('div');
+                    botMsgDiv.className = 'message bot-message';
+
+                    // Construir contenido: PRIMERO TEXTO, luego imagen al final
+                    let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;">${response.respuesta}</div>`;
+                    if (response.imagen_url) {
+                        contenidoHTML += `<img src="${response.imagen_url}" alt="${response.imagen_tag}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
+                    }
+
+                    botMsgDiv.innerHTML = contenidoHTML;
+                    messagesDiv.appendChild(botMsgDiv);
                 }
-                // Agregar el texto de la respuesta DESPUÉS de la imagen
-                contenidoHTML += `<div style="margin-top: 10px; line-height: 1.6;">${response.respuesta}</div>`;
-                
-                botMsgDiv.innerHTML = contenidoHTML;
-                messagesDiv.appendChild(botMsgDiv);
-                
+
                 logQuinti('INFO', 'Mensaje respondido exitosamente', { 
                     longitudRespuesta: response.respuesta.length,
                     tieneImagen: !!response.imagen_url,

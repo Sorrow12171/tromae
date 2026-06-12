@@ -503,7 +503,8 @@ function procesarRespuesta(datos, mensajeOriginal) {
         respuesta: datos.respuesta,
         imagen_tag: tagImagen,
         imagen_url: urlImagen,
-        modelo: MODELO_PRINCIPAL
+        modelo: MODELO_PRINCIPAL,
+        chicaPrincipal: chicaSeleccionada
     };
 }
 
