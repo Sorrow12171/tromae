@@ -603,6 +603,7 @@ export {
     PERSONALIDADES,
     // Funciones de utilidad
     logQuinti,
+    logErrorAPI,
     formatearErrorUsuario,
     seleccionarImagenAutomatica,
     obtenerTagsImagen
