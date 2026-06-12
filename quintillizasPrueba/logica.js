@@ -338,6 +338,9 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
             // Instrucción anti-repetición reforzada para múltiples chicas
             const instruccionAntiRepeticion = `\n\nREGLA CRÍTICA ANTI-REPETICIÓN: Tu respuesta debe ser COMPLETAMENTE DIFERENTE a las de las otras chicas. No repitas frases, acciones, expresiones o vocabulario que otras chicas ya hayan usado. Revisa el contexto acumulado y asegúrate de que tu respuesta sea única, con tu propio estilo y personalidad distintiva.`;
             
+            // Instrucción para respuestas basadas en acciones del usuario (múltiples chicas)
+            const instruccionAccionUsuario = `\n\nRESPUESTA BASADA EN ACCIONES DEL USUARIO: Cuando el usuario mencione una acción específica (como "besar", "abrazar", "tocar", "acariciar", "chupar", "penetrar", etc.), DEBES MOSTRAR DIRECTAMENTE LA ACCIÓN EN TU RESPUESTA sin dudar. Ejemplo: Si el usuario dice "quiero besarte" o "besar", tu respuesta debe mostrar la acción inmediatamente: "*se acerca y te besa apasionadamente*" seguido del diálogo. La acción va PRIMERO entre asteriscos, luego el diálogo.`;
+            
             // Instrucción de contexto sobre otras chicas
             let instruccionContextoOtrasChicas = '';
             if (!esPrimeraChica && respuestasPorChica.length > 0) {
@@ -346,7 +349,7 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
             }
             
             // Construir system prompt individualizado
-            const systemPromptIndividual = `${personalidadChica}${instruccionesImagen}${instruccionAntiRepeticion}${instruccionContextoOtrasChicas}\n\nFORMATO DE RESPUESTA OBLIGATORIO - JSON:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
+            const systemPromptIndividual = `${personalidadChica}${instruccionesImagen}${instruccionAntiRepeticion}${instruccionAccionUsuario}${instruccionContextoOtrasChicas}\n\nFORMATO DE RESPUESTA OBLIGATORIO - JSON:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
             
             // Preparar mensajes para esta chica
             const mensajesPayload = [
@@ -430,7 +433,10 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
     // Instrucción de memoria
     const instruccionMemoria = `\n\nMEMORIA DE CONVERSACIÓN: Debes recordar detalles importantes que el usuario mencione (nombres, preferencias, eventos pasados, gustos, etc.). Usa esta información para dar respuestas más personales y coherentes. Si el usuario menciona algo relevante, guárdalo en tu memoria y refiérete a ello cuando sea apropiado.`;
     
-    const systemPrompt = `${personalidadPrincipal}${instruccionesImagenes}${instruccionAntiRepeticion}${instruccionMemoria}\n\nFORMATO DE RESPUESTA OBLIGATORIO - JSON:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
+    // Instrucción para respuestas basadas en acciones del usuario
+    const instruccionAccionUsuario = `\n\nRESPUESTA BASADA EN ACCIONES DEL USUARIO: Cuando el usuario mencione una acción específica (como "besar", "abrazar", "tocar", "acariciar", "chupar", "penetrar", etc.), DEBES MOSTRAR DIRECTAMENTE LA ACCIÓN EN TU RESPUESTA sin dudar. Ejemplo: Si el usuario dice "quiero besarte" o "besar", tu respuesta debe mostrar la acción inmediatamente: "*se acerca y te besa apasionadamente*" seguido del diálogo. La acción va PRIMERO entre asteriscos, luego el diálogo.`;
+    
+    const systemPrompt = `${personalidadPrincipal}${instruccionesImagenes}${instruccionAntiRepeticion}${instruccionMemoria}${instruccionAccionUsuario}\n\nFORMATO DE RESPUESTA OBLIGATORIO - JSON:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
     
     // Preparar mensajes
     const mensajesPayload = [
