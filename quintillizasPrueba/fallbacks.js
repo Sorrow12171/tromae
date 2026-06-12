@@ -4,7 +4,7 @@
 //  Descripción: Sistema de reintentos multi-fase y respuestas de respaldo
 // ============================================================
 
-import { QUINT_PRUEBA_SYSTEM_MINIMO, QUINT_PRUEBA_FASE1, QUINT_PRUEBA_FASE2, QUINT_PRUEBA_FASE3, QUINT_PRUEBA_FASE4 } from './systemprompt.js';
+import { QUINT_PRUEBA_SYSTEM_MINIMO, QUINT_PRUEBA_FASE1, QUINT_PRUEBA_FASE2, QUINT_PRUEBA_FASE3, QUINT_PRUEBA_FASE4 } from './systemPrompt.js';
 
 /**
  * Mensajes de error amigables para mostrar al usuario cuando todo falla
