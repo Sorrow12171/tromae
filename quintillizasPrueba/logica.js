@@ -304,24 +304,34 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
         }
     }
     
-    // Determinar personalidad y tags de imagen disponibles
-    const personalidad = chicaSeleccionada 
+    // Determinar personalidad y tags de imagen disponibles para CADA chica en el chat
+    const personalidadPrincipal = chicaSeleccionada 
         ? PERSONALIDADES[chicaSeleccionada] 
         : "Eres QuintiAmigas, una amiga virtual divertida y útil.";
     
-    const tagsImagen = chicaSeleccionada ? obtenerTagsImagen(chicaSeleccionada) : ['normal'];
-    const instruccionImagen = chicaSeleccionada 
-        ? `\nIMÁGENES DISPONIBLES: ${tagsImagen.join(', ')}. Debes incluir "imagen_tag" con UNA de estas opciones según lo que esté haciendo el personaje.`
-        : '';
+    // Construir instrucciones de imágenes para cada chica
+    let instruccionesImagenes = '';
+    if (chicasEnChat.size > 0) {
+        const listaInstruccionesImagen = [];
+        for (const nombreChica of chicasEnChat) {
+            const tagsDisponibles = obtenerTagsImagen(nombreChica);
+            listaInstruccionesImagen.push(`${nombreChica}: [${tagsDisponibles.join(', ')}]`);
+        }
+        instruccionesImagenes = `\n\nIMÁGENES DISPONIBLES POR CHICA:\n${listaInstruccionesImagen.join('\n')}`;
+        instruccionesImagenes += `\n\nREGLA CRUCIAL: Cada chica debe usar SOLO sus propias imágenes. Ichika solo usa imagenes de Ichika, Nino solo usa imagenes de Nino, Miku solo usa imagenes de Miku, Yotsuba solo usa imagenes de Yotsuba, Itsuki solo usa imagenes de Itsuki. Nunca uses imagenes de otra chica.`;
+    } else {
+        const tagsImagen = chicaSeleccionada ? obtenerTagsImagen(chicaSeleccionada) : ['normal'];
+        instruccionesImagenes = `\nIMÁGENES DISPONIBLES: ${tagsImagen.join(', ')}. Debes incluir "imagen_tag" con UNA de estas opciones según lo que esté haciendo el personaje.`;
+    }
     
-    // Instrucción para múltiples chicas en el chat
+    // Instrucción para múltiples chicas en el chat - MEJORADA PARA INTEGRACIÓN PERMANENTE
     let instruccionMultiChica = '';
     if (chicasEnChat.size > 1) {
         const listaChicas = Array.from(chicasEnChat).join(', ');
-        instruccionMultiChica = `\n\nATENCIÓN: En este chat hay múltiples chicas participando: ${listaChicas}. Si el usuario menciona a alguna de ellas o le habla directamente, esa chica DEBE responder también. Usa el formato [Nombre]: respuesta para cada chica que responda.`;
+        instruccionMultiChica = `\n\nATENCIÓN: En este chat hay múltiples chicas participando ACTIVAMENTE: ${listaChicas}. TODAS estas chicas están presentes en la conversación y pueden responder. Si el usuario menciona a alguna de ellas o le habla directamente, esa chica DEBE responder. Cuando una chica se une al chat, PERMANECE en él y sigue participando activamente. Usa el formato [Nombre]: respuesta para cada chica que responda. Asegúrate de que cada chica mantenga su personalidad única y use SOLO sus propias imágenes.`;
     }
     
-    const systemPrompt = `${personalidad}${instruccionImagen}${instruccionMultiChica}\n\nFORMATO DE RESPUESTA OBLIGATORIO - JSON:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
+    const systemPrompt = `${personalidadPrincipal}${instruccionesImagenes}${instruccionMultiChica}\n\nFORMATO DE RESPUESTA OBLIGATORIO - JSON:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
     
     // Preparar mensajes
     const mensajesPayload = [
@@ -549,7 +559,8 @@ function procesarRespuesta(datos, mensajeOriginal) {
         longitud: datos.respuesta.length,
         imagenTag: tagImagen,
         tieneImagen: !!urlImagen,
-        chicasRespondiendo: chicasRespondiendo
+        chicasRespondiendo: chicasRespondiendo,
+        chicasEnChat: Array.from(chicasEnChat)
     });
     
     return {
@@ -558,7 +569,8 @@ function procesarRespuesta(datos, mensajeOriginal) {
         imagen_url: urlImagen,
         modelo: MODELO_PRINCIPAL,
         chicaPrincipal: chicaSeleccionada,
-        chicasRespondiendo: chicasRespondiendo
+        chicasRespondiendo: chicasRespondiendo,
+        chicasEnChat: Array.from(chicasEnChat)
     };
 }
 

@@ -570,11 +570,16 @@
                 const multipleResponsesPattern = /\[(Ichika|Nino|Miku|Yotsuba|Itsuki)\]:/gi;
                 const matches = [...response.respuesta.matchAll(multipleResponsesPattern)];
 
-                // También verificar si la respuesta contiene menciones a otras chicas
+                // Obtener la lista actualizada de chicas en el chat
                 const chicasEnChatSet = getChicasEnChat();
-                logQuinti('DEBUG', 'Chicas en chat', { chicas: Array.from(chicasEnChatSet) });
+                logQuinti('DEBUG', 'Chicas en chat', { chicas: Array.from(chicasEnChatSet), chicasRespondiendo: response.chicasRespondiendo });
 
-                if (matches.length > 1 || (matches.length === 1 && !response.respuesta.startsWith('[' + chicaSeleccionadaActual + ']'))) {
+                // Determinar si debemos mostrar múltiples respuestas
+                const hayMultiplesRespuestas = matches.length > 1 || 
+                    (matches.length === 1 && !response.respuesta.startsWith('[' + chicaSeleccionadaActual + ']')) ||
+                    (chicasEnChatSet.size > 1 && matches.length > 0);
+
+                if (hayMultiplesRespuestas) {
                     // Hay múltiples respuestas - dividir y mostrar cada una por separado
                     const responseParts = response.respuesta.split(/\[(Ichika|Nino|Miku|Yotsuba|Itsuki)\]:/gi);
 
@@ -588,13 +593,14 @@
                             const botMsgDiv = document.createElement('div');
                             botMsgDiv.className = 'message bot-message';
 
-                            // Obtener imagen de esta chica específica
+                            // Obtener imagen de esta chica específica (SOLO usa sus propias imágenes)
                             const infoChica = QuintiImagenesPrueba[chicaNombre];
                             let imagenURL = null;
                             if (infoChica) {
                                 // Seleccionar imagen basada en el contenido de la respuesta
                                 const tagImagen = seleccionarTagImagen(chicaRespuesta, chicaNombre);
                                 imagenURL = obtenerURLImagen(chicaNombre, tagImagen);
+                                logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL });
                             }
 
                             // Construir contenido: PRIMERO TEXTO con nombre, luego imagen al final
@@ -626,7 +632,8 @@
                     longitudRespuesta: response.respuesta.length,
                     tieneImagen: !!response.imagen_url,
                     modelo: response.modelo,
-                    chicasRespondiendo: response.chicasRespondiendo
+                    chicasRespondiendo: response.chicasRespondiendo,
+                    chicasEnChat: response.chicasEnChat
                 });
                 
             } catch (error) {
