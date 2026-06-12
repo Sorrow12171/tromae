@@ -344,11 +344,25 @@
         🏠
     </button>
 
+    <!-- Pantalla de ingreso del nombre -->
+    <div class="selector-container" id="nombreContainer">
+        <div class="selector-header">
+            <h2>💕 Bienvenido a QuintiAmigas 💕</h2>
+            <p>Antes de comenzar, ¿cuál es tu nombre?</p>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 30px;">
+            <input type="text" id="nombreUsuarioInput" class="chat-input" placeholder="Escribe tu nombre aquí..." style="max-width: 400px; text-align: center; font-size: 18px; padding: 15px;" onkeypress="if(event.key === 'Enter') guardarNombre()">
+            <button class="start-chat-btn" onclick="guardarNombre()" style="margin-top: 10px;">
+                💫 Comenzar Aventura
+            </button>
+        </div>
+    </div>
+
     <!-- Selector de Chicas -->
-    <div class="selector-container" id="selectorContainer">
+    <div class="selector-container" id="selectorContainer" style="display: none;">
         <div class="selector-header">
             <h2>💕 Selecciona tu Chica 💕</h2>
-            <p>Elige a una de las quintillizas Nakano para chatear</p>
+            <p>Hola <span id="nombreUsuarioDisplay"></span>, elige a una de las quintillizas Nakano para chatear</p>
         </div>
         
         <div class="chicas-selector" id="chicasSelector">
@@ -821,7 +835,48 @@
             await sendMessage();
         }
         
+        // Variable global para almacenar el nombre del usuario
+        let nombreUsuario = '';
+        
+        // Función para guardar el nombre del usuario y mostrar el selector
+        function guardarNombre() {
+            const input = document.getElementById('nombreUsuarioInput');
+            const nombre = input.value.trim();
+            
+            if (!nombre) {
+                alert('Por favor, escribe tu nombre para comenzar 💕');
+                return;
+            }
+            
+            nombreUsuario = nombre;
+            localStorage.setItem('quintiNombreUsuario', nombre);
+            
+            // Mostrar el nombre en el selector de chicas
+            document.getElementById('nombreUsuarioDisplay').textContent = nombre;
+            
+            // Ocultar pantalla de nombre, mostrar selector de chicas
+            document.getElementById('nombreContainer').style.display = 'none';
+            document.getElementById('selectorContainer').style.display = 'block';
+            
+            // Inicializar el selector de chicas
+            inicializarSelector();
+        }
+        
+        // Cargar nombre guardado si existe
+        function cargarNombreGuardado() {
+            const nombreGuardado = localStorage.getItem('quintiNombreUsuario');
+            if (nombreGuardado) {
+                nombreUsuario = nombreGuardado;
+                document.getElementById('nombreUsuarioDisplay').textContent = nombreGuardado;
+                document.getElementById('nombreContainer').style.display = 'none';
+                document.getElementById('selectorContainer').style.display = 'block';
+                inicializarSelector();
+            }
+        }
+        
         // Exponer funciones globalmente para que sean accesibles desde HTML
+        window.guardarNombre = guardarNombre;
+        window.cargarNombreGuardado = cargarNombreGuardado;
         window.inicializarSelector = inicializarSelector;
         window.seleccionarChicaVisual = seleccionarChicaVisual;
         window.iniciarChat = iniciarChat;
@@ -831,7 +886,7 @@
         window.retryLastMessage = retryLastMessage;
         
         // Inicializar cuando carga la página
-        window.onload = inicializarSelector;
+        window.onload = cargarNombreGuardado;
     </script>
 </body>
 </html>

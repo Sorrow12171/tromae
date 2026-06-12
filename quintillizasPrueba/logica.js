@@ -25,7 +25,7 @@
 
 import { generarSystemPrompt, QUINT_PRUEBA_SYSTEM_MINIMO, QUINT_PRUEBA_FASE1, QUINT_PRUEBA_FASE2, QUINT_PRUEBA_FASE3, QUINT_PRUEBA_FASE4, SYSTEM_PROMPT_INICIAL } from './systemPrompt.js';
 import { PERSONALIDADES, getChicasDisponibles, existeChica } from './personalidades.js';
-import { obtenerFallbackLocal, obtenerMensajeError, generarPayloadFase, getOrdenFases, getInfoFase } from './fallbacks.js';
+import { obtenerMensajeError, generarPayloadFase, getOrdenFases, getInfoFase } from './fallbacks.js';
 import { QuintiImagenesPrueba } from './imagenes.js';
 
 // ============================================================
@@ -312,6 +312,7 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
     // SISTEMA DE LLAMADAS SEPARADAS POR CHICA
     // Cuando hay múltiples chicas, hacer llamadas individuales
     // de forma SECUENCIAL para mantener coherencia contextual
+    // IMPORTANTE: Cada chica responde SOLO al mensaje actual del usuario
     // ============================================
     
     if (chicasEnChat.size > 1) {
@@ -319,7 +320,8 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
         
         const chicasArray = Array.from(chicasEnChat);
         const respuestasPorChica = [];
-        let contextoAcumulado = [...historialPrevio.slice(-MAX_HISTORIAL)];
+        // Usar solo el último mensaje del historial para que cada chica responda al texto actual
+        let contextoAcumulado = historialPrevio.length > 0 ? [historialPrevio[historialPrevio.length - 1]] : [];
         
         // Procesar cada chica de forma secuencial
         for (let idx = 0; idx < chicasArray.length; idx++) {
@@ -341,7 +343,7 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
             // Instrucción para respuestas basadas en acciones del usuario (múltiples chicas)
             const instruccionAccionUsuario = `\n\nRESPUESTA BASADA EN ACCIONES DEL USUARIO: Cuando el usuario mencione una acción específica (como "besar", "abrazar", "tocar", "acariciar", "chupar", "penetrar", etc.), DEBES MOSTRAR DIRECTAMENTE LA ACCIÓN EN TU RESPUESTA sin dudar. Ejemplo: Si el usuario dice "quiero besarte" o "besar", tu respuesta debe mostrar la acción inmediatamente: "*se acerca y te besa apasionadamente*" seguido del diálogo. La acción va PRIMERO entre asteriscos, luego el diálogo.`;
             
-            // Instrucción de contexto sobre otras chicas
+            // Instrucción de contexto sobre otras chicas (solo para chicas después de la primera)
             let instruccionContextoOtrasChicas = '';
             if (!esPrimeraChica && respuestasPorChica.length > 0) {
                 const respuestasPrevias = respuestasPorChica.map(r => `[${r.chica}]: ${r.respuesta}`).join('\n');
@@ -351,7 +353,7 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
             // Construir system prompt individualizado
             const systemPromptIndividual = `${personalidadChica}${instruccionesImagen}${instruccionAntiRepeticion}${instruccionAccionUsuario}${instruccionContextoOtrasChicas}\n\nFORMATO DE RESPUESTA OBLIGATORIO - JSON:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
             
-            // Preparar mensajes para esta chica
+            // Preparar mensajes para esta chica (SOLO el mensaje actual del usuario)
             const mensajesPayload = [
                 { role: "system", content: systemPromptIndividual },
                 ...contextoAcumulado,
@@ -368,21 +370,21 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
                     logQuinti('ERROR', `La primera chica (${nombreChica}) falló - propagando error`);
                     throw error;
                 }
-                // Para chicas secundarias, usar fallback local
-                logQuinti('WARN', `Chica secundaria ${nombreChica} falló, usando fallback local`);
+                // Para chicas secundarias, usar fallback del sistema (no local)
+                logQuinti('WARN', `Chica secundaria ${nombreChica} falló, usando fallback del sistema`);
                 const fallbackTag = tagsDisponibles.includes('hablando') ? 'hablando' : tagsDisponibles[0] || 'normal';
                 datos = {
-                    respuesta: obtenerFallbackLocal(),
+                    respuesta: "*parece confundida por un momento* Disculpa, ¿podrías repetir eso?",
                     imagen_tag: fallbackTag
                 };
             }
             
             // Sistema de reintentos simplificado para llamadas individuales (validación de respuesta)
             if (!datos || !esRespuestaValida(datos)) {
-                logQuinti('WARN', `Llamada para ${nombreChica} falló (respuesta inválida), intentando fallback local`);
+                logQuinti('WARN', `Llamada para ${nombreChica} falló (respuesta inválida), usando fallback del sistema`);
                 const fallbackTag = tagsDisponibles.includes('hablando') ? 'hablando' : tagsDisponibles[0] || 'normal';
                 datos = {
-                    respuesta: obtenerFallbackLocal(),
+                    respuesta: "*parece confundida por un momento* Disculpa, ¿podrías repetir eso?",
                     imagen_tag: fallbackTag
                 };
             }
@@ -590,18 +592,11 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
     }
     
     // ========================================
-    // FALLBACK LOCAL: Si todo falla (último recurso)
+    // FALLBACK: Si todo falla (último recurso) - Mostrar error al usuario
     // ========================================
-    logQuinti('ERROR', 'Todas las fases fallaron - Usando fallback local como último recurso');
+    logQuinti('ERROR', 'Todas las fases fallaron - Lanzando error para mostrar al usuario');
     
-    const fallbackTag = chicaSeleccionada && tagsImagen.includes('hablando') ? 'hablando' : 'normal';
-    
-    return {
-        respuesta: obtenerFallbackLocal(),
-        imagen_tag: fallbackTag,
-        imagen_url: obtenerURLImagen(chicaSeleccionada, fallbackTag),
-        modelo: "FALLBACK_LOCAL"
-    };
+    throw new Error('No se pudo obtener una respuesta después de múltiples intentos. Por favor, intenta de nuevo.');
 }
 
 /**
