@@ -217,7 +217,7 @@ function seleccionarImagenAutomatica(dialogo, nombreChica) {
 // ============================================================
 
 /**
- * Parsea JSON eliminando posibles bloques de código markdown
+ * Parsea JSON eliminando posibles bloques de código markdown y texto extra
  * @param {string} raw - Texto crudo de la respuesta
  * @returns {object|null} - Objeto parseado o null si falla
  */
@@ -227,7 +227,8 @@ function parsearJSON(raw) {
         return null;
     }
     
-    const rawLimpio = raw.replace(/```json/g, "").replace(/```/g, "").trim();
+    // Limpiar bloques de código markdown
+    let rawLimpio = raw.replace(/```json/g, "").replace(/```/g, "").trim();
     
     try {
         const resultado = JSON.parse(rawLimpio);
@@ -238,17 +239,37 @@ function parsearJSON(raw) {
         });
     }
     
-    // Intentar extraer JSON del texto
-    const match = raw.match(/\{[\s\S]*\}/);
+    // Intentar extraer JSON del texto (buscar el primer { hasta el último })
+    const match = rawLimpio.match(/\{[\s\S]*\}/);
     if (match) {
         try {
             const resultado = JSON.parse(match[0]);
             logQuinti('DEBUG', 'parsearJSON: extracción exitosa del JSON del texto');
             return resultado;
         } catch (error) {
-            logQuinti('ERROR', `parsearJSON: segundo intento falló - ${error.message}`, {
+            logQuinti('DEBUG', `parsearJSON: segundo intento falló - ${error.message}`, {
                 jsonExtraido: match[0].substring(0, 150)
             });
+        }
+    }
+    
+    // Intento adicional: buscar JSON incluso si hay texto antes (como *acciones*)
+    // Buscar desde el primer { hasta encontrar un } válido
+    const primerLLave = rawLimpio.indexOf('{');
+    if (primerLLave !== -1) {
+        const desdeLLave = rawLimpio.substring(primerLLave);
+        const ultimaLLaveCierre = desdeLLave.lastIndexOf('}');
+        if (ultimaLLaveCierre !== -1) {
+            const posibleJSON = desdeLLave.substring(0, ultimaLLaveCierre + 1);
+            try {
+                const resultado = JSON.parse(posibleJSON);
+                logQuinti('DEBUG', 'parsearJSON: extracción exitosa tras limpiar texto inicial');
+                return resultado;
+            } catch (error) {
+                logQuinti('DEBUG', `parsearJSON: tercer intento falló - ${error.message}`, {
+                    posibleJSON: posibleJSON.substring(0, 150)
+                });
+            }
         }
     }
     
