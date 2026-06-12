@@ -25,7 +25,7 @@
 
 import { generarSystemPrompt, QUINT_PRUEBA_SYSTEM_MINIMO, QUINT_PRUEBA_FASE1, QUINT_PRUEBA_FASE2, QUINT_PRUEBA_FASE3, QUINT_PRUEBA_FASE4, SYSTEM_PROMPT_INICIAL } from './systemPrompt.js';
 import { PERSONALIDADES, getChicasDisponibles, existeChica } from './personalidades.js';
-import { obtenerMensajeError, generarPayloadFase, getOrdenFases, getInfoFase } from './fallbacks.js';
+import { obtenerMensajeError, generarPayloadFase, getOrdenFases, getInfoFase, obtenerFallbackLocal } from './fallbacks.js';
 import { QuintiImagenesPrueba } from './imagenes.js';
 
 // ============================================================
@@ -423,18 +423,136 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
                 }
             }
             
-            // Sistema de reintentos simplificado para llamadas individuales (validación de respuesta)
+            // SISTEMA DE REINTENTOS MULTI-FASE PARA CADA CHICA (igual que caso de una sola chica)
+            // Si la llamada inicial falla o devuelve datos inválidos, intentar todas las fases de fallback
             if (!datos || !esRespuestaValida(datos)) {
                 const razon = !datos ? 'datos nulos' : 'respuesta inválida';
-                logQuinti('ERROR', `Llamada para ${nombreChica} falló (${razon}), usando fallback del sistema`, { 
+                logQuinti('WARN', `Llamada para ${nombreChica} falló (${razon}), iniciando sistema de reintentos multi-fase`, { 
                     datosRecibidos: datos,
                     errorPrevio: errorOcurrido?.message 
                 });
-                const fallbackTag = tagsDisponibles.includes('hablando') ? 'hablando' : tagsDisponibles[0] || 'normal';
-                datos = {
-                    respuesta: `*parece confundida por un momento* Disculpa, ¿podrías repetir eso?`,
-                    imagen_tag: fallbackTag
-                };
+                
+                // ========================================
+                // FASE 1: Reintentos con prompts de corrección JSON
+                // ========================================
+                logQuinti('DEBUG', `${nombreChica} - FASE 1: Reintentos con corrección JSON`);
+                const payloadFase1 = [...mensajesPayload];
+                for (let i = 0; i < QUINT_PRUEBA_FASE1.length; i++) {
+                    logReintento(i + 1, QUINT_PRUEBA_FASE1.length, `Corrección JSON (${nombreChica})`);
+                    
+                    payloadFase1.push({ role: "user", content: QUINT_PRUEBA_FASE1[i] });
+                    try {
+                        datos = await intentarLlamadaAPI(payloadFase1, MODELO_PRINCIPAL);
+                    } catch (error) {
+                        logQuinti('WARN', `${nombreChica} - FASE 1 intento ${i + 1} falló: ${error.message}`);
+                    }
+                    payloadFase1.pop(); // Remover prompt de corrección
+                    
+                    if (datos && esRespuestaValida(datos)) {
+                        logQuinti('INFO', `${nombreChica} - FASE 1 exitosa en intento ${i + 1}`);
+                        break;
+                    }
+                }
+                
+                // ========================================
+                // FASE 2: Historial reducido (si FASE 1 falló)
+                // ========================================
+                if (!datos || !esRespuestaValida(datos)) {
+                    logQuinti('WARN', `${nombreChica} - FASE 1 fallida, iniciando FASE 2: Historial reducido`);
+                    const ultimos4 = historialPrevio.slice(-4);
+                    const payloadFase2 = [
+                        { role: "system", content: systemPromptIndividual },
+                        ...ultimos4,
+                        { role: "user", content: mensaje }
+                    ];
+                    
+                    for (let i = 0; i < QUINT_PRUEBA_FASE2.length; i++) {
+                        logReintento(i + 1, QUINT_PRUEBA_FASE2.length, `Historial reducido (${nombreChica})`);
+                        
+                        payloadFase2.push({ role: "user", content: QUINT_PRUEBA_FASE2[i] });
+                        try {
+                            datos = await intentarLlamadaAPI(payloadFase2, MODELO_PRINCIPAL);
+                        } catch (error) {
+                            logQuinti('WARN', `${nombreChica} - FASE 2 intento ${i + 1} falló: ${error.message}`);
+                        }
+                        payloadFase2.pop();
+                        
+                        if (datos && esRespuestaValida(datos)) {
+                            logQuinti('INFO', `${nombreChica} - FASE 2 exitosa en intento ${i + 1}`);
+                            break;
+                        }
+                    }
+                }
+                
+                // ========================================
+                // FASE 3: Contexto mínimo (si FASE 2 falló)
+                // ========================================
+                if (!datos || !esRespuestaValida(datos)) {
+                    logQuinti('WARN', `${nombreChica} - FASE 2 fallida, iniciando FASE 3: Contexto mínimo`);
+                    const ultimoMsgUser = historialPrevio.filter(m => m.role === "user").slice(-1);
+                    
+                    for (let i = 0; i < QUINT_PRUEBA_FASE3.length; i++) {
+                        logReintento(i + 1, QUINT_PRUEBA_FASE3.length, `Contexto mínimo (${nombreChica})`);
+                        
+                        const minimo = [
+                            { role: "system", content: QUINT_PRUEBA_SYSTEM_MINIMO },
+                            ...ultimoMsgUser,
+                            { role: "user", content: QUINT_PRUEBA_FASE3[i] }
+                        ];
+                        
+                        try {
+                            datos = await intentarLlamadaAPI(minimo, MODELO_PRINCIPAL);
+                        } catch (error) {
+                            logQuinti('WARN', `${nombreChica} - FASE 3 intento ${i + 1} falló: ${error.message}`);
+                        }
+                        
+                        if (datos && esRespuestaValida(datos)) {
+                            logQuinti('INFO', `${nombreChica} - FASE 3 exitosa en intento ${i + 1}`);
+                            break;
+                        }
+                    }
+                }
+                
+                // ========================================
+                // FASE 4: Prompt agresivo directo (si FASE 3 falló)
+                // ========================================
+                if (!datos || !esRespuestaValida(datos)) {
+                    logQuinti('WARN', `${nombreChica} - FASE 3 fallida, iniciando FASE 4: Prompt agresivo`);
+                    const ultimoMsgUser = historialPrevio.filter(m => m.role === "user").slice(-1);
+                    
+                    for (let i = 0; i < QUINT_PRUEBA_FASE4.length; i++) {
+                        logReintento(i + 1, QUINT_PRUEBA_FASE4.length, `Prompt agresivo (${nombreChica})`);
+                        
+                        const agresivo = [
+                            { role: "system", content: QUINT_PRUEBA_SYSTEM_MINIMO },
+                            ...ultimoMsgUser,
+                            { role: "user", content: QUINT_PRUEBA_FASE4[i] }
+                        ];
+                        
+                        try {
+                            datos = await intentarLlamadaAPI(agresivo, MODELO_PRINCIPAL);
+                        } catch (error) {
+                            logQuinti('WARN', `${nombreChica} - FASE 4 intento ${i + 1} falló: ${error.message}`);
+                        }
+                        
+                        if (datos && esRespuestaValida(datos)) {
+                            logQuinti('INFO', `${nombreChica} - FASE 4 exitosa en intento ${i + 1}`);
+                            break;
+                        }
+                    }
+                }
+                
+                // ========================================
+                // FALLBACK LOCAL: Si TODAS las fases fallan (último recurso)
+                // ========================================
+                if (!datos || !esRespuestaValida(datos)) {
+                    logQuinti('ERROR', `${nombreChica} - Todas las fases de reintento fallaron, usando fallback local`);
+                    const fallbackTag = tagsDisponibles.includes('hablando') ? 'hablando' : tagsDisponibles[0] || 'normal';
+                    datos = {
+                        respuesta: obtenerFallbackLocal(),
+                        imagen_tag: fallbackTag
+                    };
+                }
             }
             
             // Guardar respuesta de esta chica
