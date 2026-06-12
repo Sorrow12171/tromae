@@ -308,35 +308,121 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
         }
     }
     
-    // Determinar personalidad y tags de imagen disponibles para CADA chica en el chat
+    // ============================================
+    // SISTEMA DE LLAMADAS SEPARADAS POR CHICA
+    // Cuando hay múltiples chicas, hacer llamadas individuales
+    // de forma SECUENCIAL para mantener coherencia contextual
+    // ============================================
+    
+    if (chicasEnChat.size > 1) {
+        logQuinti('INFO', `Múltiples chicas detectadas (${chicasEnChat.size}). Iniciando llamadas secuenciales individuales.`);
+        
+        const chicasArray = Array.from(chicasEnChat);
+        const respuestasPorChica = [];
+        let contextoAcumulado = [...historialPrevio.slice(-MAX_HISTORIAL)];
+        
+        // Procesar cada chica de forma secuencial
+        for (let idx = 0; idx < chicasArray.length; idx++) {
+            const nombreChica = chicasArray[idx];
+            const esPrimeraChica = idx === 0;
+            
+            logQuinti('DEBUG', `Procesando llamada individual para: ${nombreChica} (${idx + 1}/${chicasArray.length})`);
+            
+            // Obtener personalidad específica de esta chica
+            const personalidadChica = PERSONALIDADES[nombreChica] || "Eres una chica amigable.";
+            
+            // Construir instrucciones de imágenes SOLO para esta chica
+            const tagsDisponibles = obtenerTagsImagen(nombreChica);
+            const instruccionesImagen = `\n\nIMÁGENES DISPONIBLES PARA ${nombreChica.toUpperCase()}: [${tagsDisponibles.join(', ')}]. Debes incluir "imagen_tag" con UNA de estas opciones según lo que esté haciendo el personaje. NUNCA uses imágenes de otras chicas.`;
+            
+            // Instrucción anti-repetición reforzada para múltiples chicas
+            const instruccionAntiRepeticion = `\n\nREGLA CRÍTICA ANTI-REPETICIÓN: Tu respuesta debe ser COMPLETAMENTE DIFERENTE a las de las otras chicas. No repitas frases, acciones, expresiones o vocabulario que otras chicas ya hayan usado. Revisa el contexto acumulado y asegúrate de que tu respuesta sea única, con tu propio estilo y personalidad distintiva.`;
+            
+            // Instrucción de contexto sobre otras chicas
+            let instruccionContextoOtrasChicas = '';
+            if (!esPrimeraChica && respuestasPorChica.length > 0) {
+                const respuestasPrevias = respuestasPorChica.map(r => `[${r.chica}]: ${r.respuesta}`).join('\n');
+                instruccionContextoOtrasChicas = `\n\nCONTEXTO DE OTRAS CHICAS: Antes de ti, estas chicas ya respondieron:\n${respuestasPrevias}\n\nTu respuesta debe ser REACCIONAR o AÑADIR algo nuevo, NO repetir lo que ellas dijeron. Mantén tu personalidad única.`;
+            }
+            
+            // Construir system prompt individualizado
+            const systemPromptIndividual = `${personalidadChica}${instruccionesImagen}${instruccionAntiRepeticion}${instruccionContextoOtrasChicas}\n\nFORMATO DE RESPUESTA OBLIGATORIO - JSON:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
+            
+            // Preparar mensajes para esta chica
+            const mensajesPayload = [
+                { role: "system", content: systemPromptIndividual },
+                ...contextoAcumulado,
+                { role: "user", content: mensaje }
+            ];
+            
+            // Llamar a la API para esta chica
+            let datos = await intentarLlamadaAPI(mensajesPayload, MODELO_PRINCIPAL);
+            
+            // Sistema de reintentos simplificado para llamadas individuales
+            if (!datos || !esRespuestaValida(datos)) {
+                logQuinti('WARN', `Llamada para ${nombreChica} falló, intentando fallback local`);
+                const fallbackTag = tagsDisponibles.includes('hablando') ? 'hablando' : tagsDisponibles[0] || 'normal';
+                datos = {
+                    respuesta: obtenerFallbackLocal(),
+                    imagen_tag: fallbackTag
+                };
+            }
+            
+            // Guardar respuesta de esta chica
+            respuestasPorChica.push({
+                chica: nombreChica,
+                respuesta: datos.respuesta,
+                imagen_tag: datos.imagen_tag || 'hablando'
+            });
+            
+            // Agregar esta respuesta al contexto acumulado para la siguiente chica
+            contextoAcumulado.push(
+                { role: "user", content: mensaje },
+                { role: "assistant", content: `[${nombreChica}]: ${datos.respuesta}` }
+            );
+            
+            // Mantener contexto dentro del límite
+            if (contextoAcumulado.length > MAX_HISTORIAL * 2) {
+                contextoAcumulado = contextoAcumulado.slice(-MAX_HISTORIAL * 2);
+            }
+        }
+        
+        // Combinar todas las respuestas en formato [Nombre]: respuesta
+        const respuestaCombinada = respuestasPorChica
+            .map(r => `[${r.chica}]: ${r.respuesta}`)
+            .join('\n\n');
+        
+        // Usar la imagen de la chica principal (primera en responder)
+        const chicaPrincipal = respuestasPorChica[0]?.chica || chicaSeleccionada;
+        const tagImagenPrincipal = respuestasPorChica[0]?.imagen_tag || 'hablando';
+        const urlImagenPrincipal = obtenerURLImagen(chicaPrincipal, tagImagenPrincipal);
+        
+        logRespuestaExitosa(MODELO_PRINCIPAL, respuestaCombinada.length, Date.now() - tiempoInicio);
+        
+        return {
+            respuesta: respuestaCombinada,
+            imagen_tag: tagImagenPrincipal,
+            imagen_url: urlImagenPrincipal,
+            modelo: MODELO_PRINCIPAL,
+            chicaPrincipal: chicaPrincipal,
+            chicasRespondiendo: chicasArray,
+            chicasEnChat: Array.from(chicasEnChat),
+            respuestasIndividuales: respuestasPorChica
+        };
+    }
+    
+    // ============================================
+    // CASO DE UNA SOLA CHICA (flujo original)
+    // ============================================
+    
+    // Determinar personalidad y tags de imagen disponibles
     const personalidadPrincipal = chicaSeleccionada 
         ? PERSONALIDADES[chicaSeleccionada] 
         : "Eres QuintiAmigas, una amiga virtual divertida y útil.";
     
-    // Construir instrucciones de imágenes para cada chica
-    let instruccionesImagenes = '';
-    if (chicasEnChat.size > 0) {
-        const listaInstruccionesImagen = [];
-        for (const nombreChica of chicasEnChat) {
-            const tagsDisponibles = obtenerTagsImagen(nombreChica);
-            listaInstruccionesImagen.push(`${nombreChica}: [${tagsDisponibles.join(', ')}]`);
-        }
-        instruccionesImagenes = `\n\nIMÁGENES DISPONIBLES POR CHICA:\n${listaInstruccionesImagen.join('\n')}`;
-        instruccionesImagenes += `\n\nREGLA CRUCIAL: Cada chica debe usar SOLO sus propias imágenes. Ichika solo usa imagenes de Ichika, Nino solo usa imagenes de Nino, Miku solo usa imagenes de Miku, Yotsuba solo usa imagenes de Yotsuba, Itsuki solo usa imagenes de Itsuki. Nunca uses imagenes de otra chica.`;
-        
-        // Agregar instrucción anti-repetición cuando hay múltiples chicas
-        instruccionesImagenes += `\n\nEVITA REPETICIONES: Cuando varias chicas responden, asegúrate de que cada una use expresiones, vocabulario y reacciones DIFERENTES. No repitas las mismas frases o acciones entre las chicas. Cada respuesta debe ser única y variada.`;
-    } else {
-        const tagsImagen = chicaSeleccionada ? obtenerTagsImagen(chicaSeleccionada) : ['normal'];
-        instruccionesImagenes = `\nIMÁGENES DISPONIBLES: ${tagsImagen.join(', ')}. Debes incluir "imagen_tag" con UNA de estas opciones según lo que esté haciendo el personaje.`;
-    }
-    
-    // Instrucción para múltiples chicas en el chat - MEJORADA PARA INTEGRACIÓN PERMANENTE Y PARTICIPACIÓN ACTIVA EN MENSAJES SEPARADOS
-    let instruccionMultiChica = '';
-    if (chicasEnChat.size > 1) {
-        const listaChicas = Array.from(chicasEnChat).join(', ');
-        instruccionMultiChica = `\n\nATENCIÓN CRUCIAL: En este chat hay múltiples chicas participando ACTIVAMENTE: ${listaChicas}. TODAS estas chicas están presentes físicamente en la conversación. REGLAS OBLIGATORIAS:\n1. Si el usuario menciona a alguna chica por nombre, ESA CHICA DEBE RESPONDER en un MENSAJE COMPLETAMENTE SEPARADO.\n2. Cuando una chica se une al chat, PERMANECE en él para siempre y sigue participando en TODOS los mensajes siguientes.\n3. CADA chica debe responder en su PROPIO mensaje/bloque independiente. NO combines las respuestas de varias chicas en un solo mensaje.\n4. Formato OBLIGATORIO para cada mensaje separado: [Nombre]: respuesta completa de esa chica\n5. Cada chica mantiene su personalidad única y usa SOLO sus propias imágenes.\n6. Las chicas pueden interactuar entre ellas, pero CADA UNA en su mensaje individual.\n7. IMPORTANTE: Genera TANTOS mensajes separados como chicas haya en el chat. Si hay 3 chicas, debes generar 3 mensajes completamente separados.\nEJEMPLO DE FORMATO (MENSAJES SEPARADOS):\nMensaje 1: [Nino]: *cruza los brazos* ¿Qué quieres?\nMensaje 2: [Miku]: *sonríe tímidamente* Hola...`;
-    }
+    // Construir instrucciones de imágenes
+    const tagsImagen = chicaSeleccionada ? obtenerTagsImagen(chicaSeleccionada) : ['normal'];
+    const instruccionesImagenes = `\n\nIMÁGENES DISPONIBLES: ${tagsImagen.join(', ')}. Debes incluir "imagen_tag" con UNA de estas opciones según lo que esté haciendo el personaje.`;
     
     // Instrucción anti-repetición mejorada
     const instruccionAntiRepeticion = `\n\nREGLA CRÍTICA ANTI-REPETICIÓN: NUNCA repitas frases, diálogos, acciones o expresiones que ya hayas usado antes en esta conversación. Revisa mentalmente el historial y asegúrate de que CADA respuesta sea única y fresca. Usa vocabulario variado, expresiones diferentes, reacciones distintas. Si ya dijiste algo similar antes, busca una forma completamente nueva de expresarlo. Esto es OBLIGATORIO.`;
@@ -344,7 +430,7 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
     // Instrucción de memoria
     const instruccionMemoria = `\n\nMEMORIA DE CONVERSACIÓN: Debes recordar detalles importantes que el usuario mencione (nombres, preferencias, eventos pasados, gustos, etc.). Usa esta información para dar respuestas más personales y coherentes. Si el usuario menciona algo relevante, guárdalo en tu memoria y refiérete a ello cuando sea apropiado.`;
     
-    const systemPrompt = `${personalidadPrincipal}${instruccionesImagenes}${instruccionMultiChica}${instruccionAntiRepeticion}${instruccionMemoria}\n\nFORMATO DE RESPUESTA OBLIGATORIO - JSON:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
+    const systemPrompt = `${personalidadPrincipal}${instruccionesImagenes}${instruccionAntiRepeticion}${instruccionMemoria}\n\nFORMATO DE RESPUESTA OBLIGATORIO - JSON:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
     
     // Preparar mensajes
     const mensajesPayload = [
@@ -548,9 +634,21 @@ function procesarRespuesta(datos, mensajeOriginal) {
         historialConversacion = historialConversacion.slice(-MAX_HISTORIAL * 2);
     }
     
-    // Seleccionar imagen automáticamente para la chica principal
-    const tagImagen = datos.imagen_tag || 'normal';
-    const urlImagen = obtenerURLImagen(chicaSeleccionada, tagImagen);
+    // Verificar si tenemos respuestas individuales de múltiples chicas
+    const tieneRespuestasIndividuales = datos.respuestasIndividuales && datos.respuestasIndividuales.length > 0;
+    
+    let tagImagen, urlImagen;
+    
+    if (tieneRespuestasIndividuales) {
+        // Usar la imagen de la primera chica como principal (para compatibilidad)
+        const primeraChica = datos.respuestasIndividuales[0];
+        tagImagen = primeraChica.imagen_tag || 'hablando';
+        urlImagen = obtenerURLImagen(primeraChica.chica, tagImagen);
+    } else {
+        // Seleccionar imagen automáticamente para la chica principal (caso de una sola chica)
+        tagImagen = datos.imagen_tag || 'normal';
+        urlImagen = obtenerURLImagen(chicaSeleccionada, tagImagen);
+    }
     
     // Detectar qué chicas están respondiendo en el mensaje
     const chicasRespondiendo = [];
@@ -585,7 +683,8 @@ function procesarRespuesta(datos, mensajeOriginal) {
         imagenTag: tagImagen,
         tieneImagen: !!urlImagen,
         chicasRespondiendo: chicasRespondiendo,
-        chicasEnChat: Array.from(chicasEnChat)
+        chicasEnChat: Array.from(chicasEnChat),
+        tieneRespuestasIndividuales: tieneRespuestasIndividuales
     });
     
     return {
@@ -593,9 +692,10 @@ function procesarRespuesta(datos, mensajeOriginal) {
         imagen_tag: tagImagen,
         imagen_url: urlImagen,
         modelo: MODELO_PRINCIPAL,
-        chicaPrincipal: chicaSeleccionada,
+        chicaPrincipal: datos.chicaPrincipal || chicaSeleccionada,
         chicasRespondiendo: chicasRespondiendo,
-        chicasEnChat: Array.from(chicasEnChat)
+        chicasEnChat: Array.from(chicasEnChat),
+        respuestasIndividuales: datos.respuestasIndividuales || []
     };
 }
 
