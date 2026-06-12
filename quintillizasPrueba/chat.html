@@ -575,34 +575,118 @@
                 logQuinti('DEBUG', 'Chicas en chat', { chicas: Array.from(chicasEnChatSet), chicasRespondiendo: response.chicasRespondiendo });
 
                 // Determinar si debemos mostrar múltiples respuestas separadas
-                const hayMultiplesRespuestas = matches.length > 1 || 
-                    (chicasEnChatSet.size > 1 && matches.length > 0);
+                // IMPORTANTE: Si hay múltiples chicas en el chat, TODAS deben responder en mensajes SEPARADOS
+                const hayMultiplesChicas = chicasEnChatSet.size > 1;
+                const hayRespuestasConFormato = matches.length > 0;
 
-                if (hayMultiplesRespuestas && matches.length > 0) {
-                    // Hay múltiples respuestas - dividir y mostrar CADA UNA en un mensaje SEPARADO
+                if (hayMultiplesChicas) {
+                    // Hay múltiples chicas en el chat - cada una debe tener su propio mensaje
+                    // Primero, obtener todas las chicas que deberían responder
+                    const chicasQueDebenResponder = Array.from(chicasEnChatSet);
+                    
+                    // Intentar extraer respuestas individuales del formato [Nombre]: respuesta
+                    const responseParts = response.respuesta.split(/\[(Ichika|Nino|Miku|Yotsuba|Itsuki)\]:/gi);
+                    const respuestasPorChica = new Map();
+                    
+                    // Procesar partes para extraer respuestas por chica
+                    for (let i = 1; i < responseParts.length; i += 2) {
+                        const chicaNombre = responseParts[i];
+                        const chicaRespuesta = responseParts[i + 1]?.trim() || '';
+                        if (chicaRespuesta && !respuestasPorChica.has(chicaNombre)) {
+                            respuestasPorChica.set(chicaNombre, chicaRespuesta);
+                        }
+                    }
+                    
+                    // Si la IA no generó respuestas separadas para todas las chicas,
+                    // necesitamos generar respuestas únicas para cada una
+                    if (respuestasPorChica.size < chicasQueDebenResponder.length) {
+                        logQuinti('WARN', 'La IA no generó respuestas separadas para todas las chicas', {
+                            chicasQueFaltan: chicasQueDebenResponder.filter(c => !respuestasPorChica.has(c)),
+                            respuestasGeneradas: Array.from(respuestasPorChica.keys())
+                        });
+                        
+                        // Para las chicas que no tienen respuesta individual, creamos una respuesta basada en el contexto
+                        // Usamos diferentes frases introductorias para cada chica para evitar repetición
+                        const frasesIntroduccion = {
+                            'Ichika': ['*sonríe coquetamente*', '*se acerca con elegancia*', '*ríe suavemente*'],
+                            'Nino': ['*cruza los brazos*', '*bufa molesta*', '*te mira fijamente*'],
+                            'Miku': ['*se sonroja tímidamente*', '*habla en voz baja*', '*juega con su cabello*'],
+                            'Yotsuba': ['*sonríe energéticamente*', '*saluda con entusiasmo*', '*hace una pose divertida*'],
+                            'Itsuki': ['*ajusta sus gafas*', '*habla seriamente*', '*mira con determinación*']
+                        };
+                        
+                        for (const chica of chicasQueDebenResponder) {
+                            if (!respuestasPorChica.has(chica)) {
+                                // Generar una respuesta única para esta chica usando su personalidad
+                                const intros = frasesIntroduccion[chica] || ['*responde*'];
+                                const introElegida = intros[Math.floor(Math.random() * intros.length)];
+                                
+                                // Crear una respuesta contextual basada en lo que dijo el usuario
+                                const contextoRespuesta = `${introElegida} ${response.respuesta.replace(/^\[.*?\]:\s*/g, '')}`;
+                                respuestasPorChica.set(chica, contextoRespuesta);
+                            }
+                        }
+                    }
+                    
+                    // Mostrar CADA respuesta en un mensaje COMPLETAMENTE SEPARADO
+                    const chicasArray = Array.from(respuestasPorChica.entries());
+                    for (let idx = 0; idx < chicasArray.length; idx++) {
+                        const [chicaNombre, chicaRespuesta] = chicasArray[idx];
+                        
+                        if (!chicaRespuesta) continue;
+                        
+                        // Crear mensaje SEPARADO para esta chica específica
+                        const botMsgDiv = document.createElement('div');
+                        botMsgDiv.className = 'message bot-message';
+
+                        // Obtener imagen de esta chica específica (SOLO usa sus propias imágenes)
+                        const infoChica = QuintiImagenesPrueba[chicaNombre];
+                        let imagenURL = null;
+                        if (infoChica) {
+                            // Seleccionar imagen basada en el contenido de la respuesta
+                            const tagImagen = seleccionarTagImagen(chicaRespuesta, chicaNombre);
+                            imagenURL = obtenerURLImagen(chicaNombre, tagImagen);
+                            logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL });
+                        }
+
+                        // Construir contenido: PRIMERO TEXTO con nombre, luego imagen al final
+                        let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;"><strong>${chicaNombre}:</strong> ${chicaRespuesta}</div>`;
+                        if (imagenURL) {
+                            contenidoHTML += `<img src="${imagenURL}" alt="${chicaNombre}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
+                        }
+
+                        botMsgDiv.innerHTML = contenidoHTML;
+                        messagesDiv.appendChild(botMsgDiv);
+                        
+                        // Scroll después de cada mensaje
+                        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                        
+                        // Pequeña pausa entre mensajes de diferentes chicas para efecto visual
+                        if (idx < chicasArray.length - 1) {
+                            await new Promise(resolve => setTimeout(resolve, 400));
+                        }
+                    }
+                } else if (hayRespuestasConFormato && matches.length > 1) {
+                    // Caso especial: múltiples respuestas detectadas pero solo una chica en chat
+                    // Esto puede pasar si la IA genera formato [Nombre]: sin razón
+                    // Dividir y mostrar cada respuesta separada
                     const responseParts = response.respuesta.split(/\[(Ichika|Nino|Miku|Yotsuba|Itsuki)\]:/gi);
 
-                    // Procesar cada parte (el primer elemento puede estar vacío o ser texto introductorio)
                     for (let i = 1; i < responseParts.length; i += 2) {
                         const chicaNombre = responseParts[i];
                         const chicaRespuesta = responseParts[i + 1]?.trim() || '';
 
                         if (chicaRespuesta) {
-                            // Crear mensaje SEPARADO para esta chica específica
                             const botMsgDiv = document.createElement('div');
                             botMsgDiv.className = 'message bot-message';
 
-                            // Obtener imagen de esta chica específica (SOLO usa sus propias imágenes)
                             const infoChica = QuintiImagenesPrueba[chicaNombre];
                             let imagenURL = null;
                             if (infoChica) {
-                                // Seleccionar imagen basada en el contenido de la respuesta
                                 const tagImagen = seleccionarTagImagen(chicaRespuesta, chicaNombre);
                                 imagenURL = obtenerURLImagen(chicaNombre, tagImagen);
-                                logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL });
                             }
 
-                            // Construir contenido: PRIMERO TEXTO con nombre, luego imagen al final
                             let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;"><strong>${chicaNombre}:</strong> ${chicaRespuesta}</div>`;
                             if (imagenURL) {
                                 contenidoHTML += `<img src="${imagenURL}" alt="${chicaNombre}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
@@ -610,11 +694,8 @@
 
                             botMsgDiv.innerHTML = contenidoHTML;
                             messagesDiv.appendChild(botMsgDiv);
-                            
-                            // Scroll después de cada mensaje
                             messagesDiv.scrollTop = messagesDiv.scrollHeight;
                             
-                            // Pequeña pausa entre mensajes de diferentes chicas para efecto visual
                             if (i + 2 < responseParts.length) {
                                 await new Promise(resolve => setTimeout(resolve, 300));
                             }
