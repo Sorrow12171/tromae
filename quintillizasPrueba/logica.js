@@ -558,10 +558,6 @@ function getImagenSelector(nombreChica) {
     return null;
 }
 
-function getChicasDisponibles() {
-    return Object.keys(PERSONALIDADES);
-}
-
 /**
  * Conversa usando el historial acumulado internamente
  * @param {string} mensaje - Mensaje del usuario
