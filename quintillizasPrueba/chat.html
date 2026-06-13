@@ -539,7 +539,7 @@
             </div>
         </div>
         
-        <div class="typing-indicator" id="typingIndicator">
+        <div class="typing-indicator" id="typingIndicator" style="display: none;">
             <span id="chicaNombreEscribiendo"></span> está escribiendo...
         </div>
         
@@ -1221,17 +1221,43 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
             document.getElementById('chicaNombreInfo').textContent = historia.nombre;
             document.getElementById('chicaDescripcion').textContent = historia.descripcion;
             document.getElementById('chicaImagenPerfil').src = historia.imagenSelector;
-            document.getElementById('chicaNombreSaludo').textContent = historia.nombre.split(' ')[0];
-            document.getElementById('chicaNombreEscribiendo').textContent = historia.nombre.split(' ')[0];
             
             // Limpiar mensajes y agregar saludo personalizado
             const messagesDiv = document.getElementById('chatMessages');
             historialMensajesUI = [];
-            messagesDiv.innerHTML = `
-                <div class="message bot-message">
-                    ¡Bienvenido a ${historia.nombre}! 🎮 ${historia.descripcion}
-                </div>
-            `;
+            
+            // Obtener y mostrar el mensaje de bienvenida personalizado de la historia
+            const mensajeBienvenida = getMensajeBienvenidaHistoria(historiaId);
+            if (mensajeBienvenida) {
+                logQuinti('INFO', `Mensaje de bienvenida de historia cargado: ${historiaId}`);
+                // Mostrar el mensaje de bienvenida como primer mensaje del bot
+                messagesDiv.innerHTML = '';
+                historialMensajesUI = [];
+                
+                // Crear el mensaje de bienvenida manualmente
+                const botMsgDiv = document.createElement('div');
+                botMsgDiv.className = 'message bot-message';
+                
+                let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;">${mensajeBienvenida}</div>`;
+                if (historia.imagenSelector) {
+                    contenidoHTML += `<img src="${historia.imagenSelector}" alt="${historia.nombre}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
+                }
+                
+                botMsgDiv.innerHTML = contenidoHTML;
+                messagesDiv.appendChild(botMsgDiv);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            } else {
+                // Mensaje por defecto si no hay mensaje de bienvenida personalizado
+                messagesDiv.innerHTML = `
+                    <div class="message bot-message">
+                        ¡Bienvenido a ${historia.nombre}! 🎮 ${historia.descripcion}
+                    </div>
+                `;
+            }
+            
+            // Actualizar nombres después de limpiar mensajes (para evitar error de null)
+            document.getElementById('chicaNombreSaludo').textContent = historia.nombre.split(' ')[0];
+            document.getElementById('chicaNombreEscribiendo').textContent = historia.nombre.split(' ')[0];
             
             // IMPORTANTE: Configurar la lógica para usar el system prompt de la historia
             // Obtener el system prompt específico de esta historia
@@ -1241,16 +1267,6 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                 // Guardar el system prompt en una variable global para que logica.js pueda usarlo
                 window.systemPromptHistoriaActual = systemPromptHistoria;
                 window.historiaParalelaActiva = historiaId;
-            }
-            
-            // Obtener y mostrar el mensaje de bienvenida personalizado de la historia
-            const mensajeBienvenida = getMensajeBienvenidaHistoria(historiaId);
-            if (mensajeBienvenida) {
-                logQuinti('INFO', `Mensaje de bienvenida de historia cargado: ${historiaId}`);
-                // Mostrar el mensaje de bienvenida como primer mensaje del bot
-                messagesDiv.innerHTML = '';
-                historialMensajesUI = [];
-                agregarMensaje(mensajeBienvenida, 'bot', historia.imagenSelector);
             }
             
             // Resetear el historial de conversación para empezar con el nuevo system prompt
