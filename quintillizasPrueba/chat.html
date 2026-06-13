@@ -1204,7 +1204,7 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
             const historia = getHistoriaParalela(historiaId);
             
             if (!historia) {
-                alert('Historia no encontrada');
+                alert('Historia no encontrada: ' + historiaId);
                 return;
             }
             
@@ -1233,8 +1233,21 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                 </div>
             `;
             
-            // Inicializar lógica específica para esta historia
-            // (se puede expandir para usar el system prompt específico)
+            // IMPORTANTE: Configurar la lógica para usar el system prompt de la historia
+            // Obtener el system prompt específico de esta historia
+            const systemPromptHistoria = getSystemPromptHistoria(historiaId);
+            if (systemPromptHistoria) {
+                logQuinti('INFO', `System prompt de historia cargado: ${historiaId}`, { promptLength: systemPromptHistoria.length });
+                // Guardar el system prompt en una variable global para que logica.js pueda usarlo
+                window.systemPromptHistoriaActual = systemPromptHistoria;
+                window.historiaParalelaActiva = historiaId;
+            }
+            
+            // Resetear el historial de conversación para empezar con el nuevo system prompt
+            if (window.limpiarHistorialConversacion) {
+                window.limpiarHistorialConversacion();
+            }
+            
             logQuinti('INFO', `Iniciando historia paralela: ${historiaId}`);
         }
         

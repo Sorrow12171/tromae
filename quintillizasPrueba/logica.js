@@ -1260,8 +1260,11 @@ function getImagenSelector(nombreChica) {
  * @returns {Promise<object>} - Respuesta procesada
  */
 async function conversar(mensaje) {
-    // Agregar system prompt inicial solo si es el primer mensaje
-    if (historialConversacion.length === 0 && chicaSeleccionada) {
+    // VERIFICAR si hay una historia paralela activa con su propio system prompt
+    const hayHistoriaParalela = window.historiaParalelaActiva && window.systemPromptHistoriaActual;
+    
+    // Agregar system prompt inicial solo si es el primer mensaje y NO hay historia paralela
+    if (historialConversacion.length === 0 && chicaSeleccionada && !hayHistoriaParalela) {
         // Obtener el nombre del usuario desde la función global
         let nombreUsuario = 'usuario';
         if (typeof window !== 'undefined' && window.getNombreUsuario) {
@@ -1271,7 +1274,13 @@ async function conversar(mensaje) {
         const systemPromptConNombre = SYSTEM_PROMPT_INICIAL.replace(/{nombreUsuario}/g, nombreUsuario);
         historialConversacion.push({ role: "system", content: systemPromptConNombre });
         logQuinti('INFO', 'System prompt inicial agregado', { prompt: systemPromptConNombre, nombreUsuario });
+    } else if (historialConversacion.length === 0 && hayHistoriaParalela) {
+        // Si hay una historia paralela activa, usar SU system prompt exclusivo
+        const systemPromptHistoria = window.systemPromptHistoriaActual;
+        historialConversacion.push({ role: "system", content: systemPromptHistoria });
+        logQuinti('INFO', 'System prompt de historia paralela agregado', { historia: window.historiaParalelaActiva, promptLength: systemPromptHistoria.length });
     }
+    
     return obtenerRespuestaGroq(mensaje, historialConversacion);
 }
 
@@ -1332,6 +1341,7 @@ if (typeof window !== 'undefined') {
     window.getEstadoAccion = getEstadoAccion;
     window.getMemoriaEventosIntimos = getMemoriaEventosIntimos;
     window.registrarEventoImportante = registrarEventoImportante;
+    window.limpiarHistorialConversacion = limpiarHistorial; // Para usar desde chat.html
 }
 
 // Exportar funciones para uso en otros módulos (CommonJS - compatibilidad)
