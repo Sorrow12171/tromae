@@ -1200,7 +1200,7 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
         }
         
         async function iniciarHistoriaParalela(historiaId) {
-            const { getHistoriaParalela, getSystemPromptHistoria } = await import('./historiasParalelas.js');
+            const { getHistoriaParalela, getSystemPromptHistoria, getMensajeBienvenidaHistoria } = await import('./historiasParalelas.js');
             const historia = getHistoriaParalela(historiaId);
             
             if (!historia) {
@@ -1241,6 +1241,16 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                 // Guardar el system prompt en una variable global para que logica.js pueda usarlo
                 window.systemPromptHistoriaActual = systemPromptHistoria;
                 window.historiaParalelaActiva = historiaId;
+            }
+            
+            // Obtener y mostrar el mensaje de bienvenida personalizado de la historia
+            const mensajeBienvenida = getMensajeBienvenidaHistoria(historiaId);
+            if (mensajeBienvenida) {
+                logQuinti('INFO', `Mensaje de bienvenida de historia cargado: ${historiaId}`);
+                // Mostrar el mensaje de bienvenida como primer mensaje del bot
+                messagesDiv.innerHTML = '';
+                historialMensajesUI = [];
+                agregarMensaje(mensajeBienvenida, 'bot', historia.imagenSelector);
             }
             
             // Resetear el historial de conversación para empezar con el nuevo system prompt

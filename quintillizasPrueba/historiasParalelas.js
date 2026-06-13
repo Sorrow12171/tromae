@@ -6,7 +6,7 @@
 //  IMPORTA las historias desde la carpeta /historias/ en formato JSON
 // ============================================================
 
-import { HISTORIAS_DATA, getHistoriaById, getHistoriasActivas as getHistoriasActivasFromData, existeHistoria as existeHistoriaFromData, getSystemPromptHistoria as getSystemPromptHistoriaFromData, getPersonajesHistoria as getPersonajesHistoriaFromData } from './historias/nino_rpg.js';
+import { HISTORIAS_DATA, getHistoriaById, getHistoriasActivas as getHistoriasActivasFromData, existeHistoria as existeHistoriaFromData, getSystemPromptHistoria as getSystemPromptHistoriaFromData, getMensajeBienvenidaHistoria as getMensajeBienvenidaHistoriaFromData, getPersonajesHistoria as getPersonajesHistoriaFromData } from './historias/nino_rpg.js';
 
 /**
  * Configuración de historias paralelas disponibles
@@ -56,6 +56,15 @@ export function getSystemPromptHistoria(historiaId) {
 }
 
 /**
+ * Obtiene el mensaje de bienvenida específico para una historia paralela
+ * @param {string} historiaId - ID de la historia
+ * @returns {string|null} - Mensaje de bienvenida o null si no existe
+ */
+export function getMensajeBienvenidaHistoria(historiaId) {
+    return getMensajeBienvenidaHistoriaFromData(historiaId);
+}
+
+/**
  * Obtiene los personajes disponibles en una historia paralela
  * @param {string} historiaId - ID de la historia
  * @returns {Array} - Array de nombres de personajes o array vacío
@@ -72,6 +81,7 @@ if (typeof module !== 'undefined' && module.exports) {
         getHistoriasActivas,
         existeHistoria,
         getSystemPromptHistoria,
+        getMensajeBienvenidaHistoria,
         getPersonajesHistoria
     };
 }
