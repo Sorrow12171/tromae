@@ -588,8 +588,34 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
         const chicasArray = Array.from(chicasEnChat);
         const respuestasPorChica = [];
         let errorGlobal = null;
-        // Usar solo el último mensaje del historial para que cada chica responda al texto actual
-        let contextoAcumulado = historialPrevio.length > 0 ? [historialPrevio[historialPrevio.length - 1]] : [];
+        
+        // SOLUCIÓN PROBLEMA #2: Unificar todo el historial en un solo mensaje de contexto
+        // Esto mejora la coherencia y evita que mensajes se pierdan o no estén relacionados
+        let contextoUnificado = '';
+        if (historialPrevio.length > 0) {
+            // Crear un resumen unificado del historial como un solo bloque narrativo
+            contextoUnificado = '📜 CONTEXTO UNIFICADO DE LA CONVERSACIÓN (TODO LO QUE HA PASADO HASTA AHORA):\n';
+            contextoUnificado += historialPrevio.map((msg, idx) => {
+                if (msg.role === 'system') return '';
+                const tipo = msg.role === 'user' ? 'Tú' : 'Respuesta';
+                return `${idx}. ${tipo}: ${msg.content}`;
+            }).filter(line => line).join('\n\n');
+            contextoUnificado += '\n\n⚠️ ESTE ES EL HISTORIAL COMPLETO. USA ESTE CONTEXTO PARA MANTENER COHERENCIA.';
+        }
+        
+        // SOLUCIÓN PROBLEMA #3: Agregar estado actual de acciones y posición
+        if (accionEnCurso || Object.values(estadoAccionesExplicitas).some(v => v)) {
+            const accionesActivas = Object.entries(estadoAccionesExplicitas)
+                .filter(([_, activo]) => activo)
+                .map(([accion, _]) => accion)
+                .join(', ');
+            
+            contextoUnificado += `\n\n🔥 ESTADO ACTUAL DE LA ACCIÓN EN CURSO:\n`;
+            contextoUnificado += `- Acción activa: ${accionEnCurso || 'Ninguna'}\n`;
+            contextoUnificado += `- Acciones explícitas activas: ${accionesActivas || 'Ninguna'}\n`;
+            contextoUnificado += `- Turnos llevando esta acción: ${contadorTurnosAccion}\n`;
+            contextoUnificado += `⚠️ CRÍTICO: DEBES MANTENER ESTA POSICIÓN/ACCIÓN A MENOS QUE EL USUARIO INDIQUE EXPLÍCITAMENTE CAMBIARLA. NO LA OLVIDES.`;
+        }
         
         // Procesar cada chica de forma secuencial
         for (let idx = 0; idx < chicasArray.length; idx++) {
@@ -608,14 +634,17 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
             // Instrucción anti-repetición reforzada para múltiples chicas
             const instruccionAntiRepeticion = `\n\n⚠️ ANTI-REPETICIÓN OBLIGATORIA: Tu respuesta debe ser COMPLETAMENTE DIFERENTE a las de las otras chicas. Prohibido usar las mismas frases, gestos, acciones o vocabulario.`;
             
-            // Instrucción para respuestas basadas en acciones del usuario (múltiples chicas)
+            // SOLUCIÓN PROBLEMA #1: Instrucción reforzada para acciones en tiempo presente
             const instruccionAccionUsuario = `
+🚨 ACCIÓN DEL USUARIO DETECTADA - TIEMPO PRESENTE:
+Cuando el usuario use verbos en PRESENTE (ej: "beso", "chupo", "toco") o mencione una acción en curso, significa que la acción YA ESTÁ SUCEDIENDO.
 
-🚨 ACCIÓN DEL USUARIO DETECTADA: El usuario ha mencionado una acción específica. DEBES HACER DOS COSAS OBLIGATORIAMENTE:
-1. TU TEXTO: Describe ESA acción explícitamente en tu respuesta usando *acciones entre asteriscos*. Ejemplo: si el usuario dice "beso", tú debes escribir "*te besa apasionadamente*" o "*se acerca para besarte*" seguido de diálogo coherente con esa acción.
+DEBES HACER TRES COSAS OBLIGATORIAMENTE:
+1. TU TEXTO: Describe ESA acción EXPLÍCITAMENTE en tu respuesta usando *acciones entre asteriscos* en TIEMPO PRESENTE. Ejemplo: si el usuario dice "beso", tú debes escribir "*te besa apasionadamente ahora mismo*" o "*mientras te besa, dice...*". La acción YA está ocurriendo.
 2. TU IMAGEN_TAG: DEBE coincidir EXACTAMENTE con la acción mencionada por el usuario. Si dice "beso" → usa "besando". Si dice "chupar" → usa la tag de chupar correspondiente.
+3. MANTÉN EL CONTEXTO: Si ya había una acción en curso (ver "ESTADO ACTUAL" arriba), DEBES CONTINUAR ESA ACCIÓN a menos que el usuario indique explícitamente cambiarla.
 
-⚠️ CRÍTICO: NO puedes decir que estás haciendo una cosa en el texto y mostrar otra en la imagen. TEXTO E IMAGEN DEBEN ESTAR 100% ALINEADOS CON LA ACCIÓN DEL USUARIO.`;
+⚠️ CRÍTICO: NO puedes decir que estás haciendo una cosa en el texto y mostrar otra en la imagen. TEXTO E IMAGEN DEBEN ESTAR 100% ALINEADOS CON LA ACCIÓN DEL USUARIO Y EL ESTADO ACTUAL.`;
             
             // Instrucción de contexto sobre otras chicas (solo para chicas después de la primera)
             let instruccionContextoOtrasChicas = '';
@@ -626,13 +655,12 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
                 instruccionContextoOtrasChicas = `\n\n📋 CONTEXTO - OTRAS CHICAS YA RESPONDIERON:\n${respuestasPrevias}\n\n⚡ TU RESPUESTA DEBE SER DIFERENTE: No repitas sus palabras exactas, pero TODAS deben estar realizando la MISMA ACCIÓN que el usuario mencionó. Cada una con su estilo único pero la misma acción base.\n\n🖼️ IMAGEN COORDINADA OBLIGATORIA: Si el usuario dijo "beso", TODAS las chicas deben estar besando en su texto Y en su imagen_tag. La acción es la misma, la expresión de cada personalidad es diferente.`;
             }
             
-            // Construir system prompt individualizado
-            const systemPromptIndividual = `${personalidadChica}${instruccionesImagen}${instruccionAntiRepeticion}${instruccionAccionUsuario}${instruccionContextoOtrasChicas}\n\nFORMATO JSON OBLIGATORIO:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"una_imagen_disponible"}`;
+            // SOLUCIÓN PROBLEMA #2: Incluir contexto unificado en el system prompt
+            const systemPromptIndividual = `${personalidadChica}${instruccionesImagen}${instruccionAntiRepeticion}${instruccionAccionUsuario}${instruccionContextoOtrasChicas}\n\n${contextoUnificado ? contextoUnificado + '\n\n' : ''}FORMATO JSON OBLIGATORIO:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"una_imagen_disponible"}`;
             
-            // Preparar mensajes para esta chica (SOLO el mensaje actual del usuario + contexto acumulado de respuestas previas)
+            // Preparar mensajes para esta chica (SOLO el mensaje actual del usuario)
             const mensajesPayload = [
                 { role: "system", content: systemPromptIndividual },
-                ...contextoAcumulado,
                 { role: "user", content: mensaje }
             ];
             
@@ -792,16 +820,8 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
                 imagen_tag: datos.imagen_tag || 'hablando'
             });
             
-            // Agregar esta respuesta al contexto acumulado para la siguiente chica
-            contextoAcumulado.push(
-                { role: "user", content: mensaje },
-                { role: "assistant", content: `[${nombreChica}]: ${datos.respuesta}` }
-            );
-            
-            // Mantener contexto dentro del límite
-            if (contextoAcumulado.length > MAX_HISTORIAL * 2) {
-                contextoAcumulado = contextoAcumulado.slice(-MAX_HISTORIAL * 2);
-            }
+            // Ya no se usa contextoAcumulado porque ahora todo el historial va en contextoUnificado
+            // Esto evita que los mensajes se acumulen de forma fragmentada y mejora la coherencia
         }
         
         // Combinar todas las respuestas en formato [Nombre]: respuesta
@@ -852,10 +872,34 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
     // Instrucción de memoria
     const instruccionMemoria = `\n\nMEMORIA DE CONVERSACIÓN: Debes recordar detalles importantes que el usuario mencione (nombres, preferencias, eventos pasados, gustos, etc.). Usa esta información para dar respuestas más personales y coherentes. Si el usuario menciona algo relevante, guárdalo en tu memoria y refiérete a ello cuando sea apropiado.`;
     
-    // Instrucción para respuestas basadas en acciones del usuario
-    const instruccionAccionUsuario = `\n\nRESPUESTA BASADA EN ACCIONES DEL USUARIO: Cuando el usuario mencione una acción específica (como "besar", "abrazar", "tocar", "acariciar", "chupar", "penetrar", etc.), DEBES MOSTRAR DIRECTAMENTE LA ACCIÓN EN TU RESPUESTA sin dudar. Ejemplo: Si el usuario dice "quiero besarte" o "besar", tu respuesta debe mostrar la acción inmediatamente: "*se acerca y te besa apasionadamente*" seguido del diálogo. La acción va PRIMERO entre asteriscos, luego el diálogo.`;
+    // SOLUCIÓN PROBLEMA #1: Instrucción reforzada para acciones en tiempo presente (caso una sola chica)
+    const instruccionAccionUsuario = `
+🚨 ACCIÓN DEL USUARIO DETECTADA - TIEMPO PRESENTE:
+Cuando el usuario use verbos en PRESENTE (ej: "beso", "chupo", "toco") o mencione una acción en curso, significa que la acción YA ESTÁ SUCEDIENDO.
+
+DEBES HACER TRES COSAS OBLIGATORIAMENTE:
+1. TU TEXTO: Describe ESA acción EXPLÍCITAMENTE en tu respuesta usando *acciones entre asteriscos* en TIEMPO PRESENTE. Ejemplo: si el usuario dice "beso", tú debes escribir "*te besa apasionadamente ahora mismo*" o "*mientras te besa, dice...*". La acción YA está ocurriendo.
+2. TU IMAGEN_TAG: DEBE coincidir EXACTAMENTE con la acción mencionada por el usuario. Si dice "beso" → usa "besando". Si dice "chupar" → usa la tag de chupar correspondiente.
+3. MANTÉN EL CONTEXTO: Si ya había una acción en curso, DEBES CONTINUAR ESA ACCIÓN a menos que el usuario indique explícitamente cambiarla. NO olvides la posición actual (ej: si estaban de pie, siguen de pie hasta que se indique lo contrario).
+
+⚠️ CRÍTICO: NO puedes decir que estás haciendo una cosa en el texto y mostrar otra en la imagen. TEXTO E IMAGEN DEBEN ESTAR 100% ALINEADOS CON LA ACCIÓN DEL USUARIO Y EL ESTADO ACTUAL.`;
     
-    const systemPrompt = `${personalidadPrincipal}${instruccionesImagenes}${instruccionAntiRepeticion}${instruccionMemoria}${instruccionAccionUsuario}\n\nFORMATO DE RESPUESTA OBLIGATORIO - JSON:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
+    // SOLUCIÓN PROBLEMA #3: Agregar estado actual de acciones al prompt
+    let contextoEstadoActual = '';
+    if (accionEnCurso || Object.values(estadoAccionesExplicitas).some(v => v)) {
+        const accionesActivas = Object.entries(estadoAccionesExplicitas)
+            .filter(([_, activo]) => activo)
+            .map(([accion, _]) => accion)
+            .join(', ');
+        
+        contextoEstadoActual = `\n\n🔥 ESTADO ACTUAL DE LA ACCIÓN EN CURSO:\n`;
+        contextoEstadoActual += `- Acción activa: ${accionEnCurso || 'Ninguna'}\n`;
+        contextoEstadoActual += `- Acciones explícitas activas: ${accionesActivas || 'Ninguna'}\n`;
+        contextoEstadoActual += `- Turnos llevando esta acción: ${contadorTurnosAccion}\n`;
+        contextoEstadoActual += `⚠️ CRÍTICO: DEBES MANTENER ESTA POSICIÓN/ACCIÓN A MENOS QUE EL USUARIO INDIQUE EXPLÍCITAMENTE CAMBIARLA. NO LA OLVIDES.`;
+    }
+    
+    const systemPrompt = `${personalidadPrincipal}${instruccionesImagenes}${instruccionAntiRepeticion}${instruccionMemoria}${instruccionAccionUsuario}${contextoEstadoActual}\n\nFORMATO DE RESPUESTA OBLIGATORIO - JSON:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
     
     // Preparar mensajes
     const mensajesPayload = [
