@@ -838,7 +838,8 @@ DEBES HACER TRES COSAS OBLIGATORIAMENTE:
         // Usar la imagen de la chica principal (primera en responder)
         const chicaPrincipal = respuestasPorChica[0]?.chica || chicaSeleccionada;
         const tagImagenPrincipal = respuestasPorChica[0]?.imagen_tag || 'hablando';
-        const urlImagenPrincipal = obtenerURLImagen(chicaPrincipal, tagImagenPrincipal);
+        const historiaId = window.historiaParalelaActiva || null;
+        const urlImagenPrincipal = obtenerURLImagen(chicaPrincipal, tagImagenPrincipal, historiaId);
         
         logRespuestaExitosa(MODELO_PRINCIPAL, respuestaCombinada.length, Date.now() - tiempoInicio);
         
@@ -1162,15 +1163,18 @@ function procesarRespuesta(datos, mensajeOriginal) {
     
     let tagImagen, urlImagen;
     
+    // Obtener el ID de la historia paralela activa si existe
+    const historiaId = window.historiaParalelaActiva || null;
+    
     if (tieneRespuestasIndividuales) {
         // Usar la imagen de la primera chica como principal (para compatibilidad)
         const primeraChica = datos.respuestasIndividuales[0];
         tagImagen = primeraChica.imagen_tag || 'hablando';
-        urlImagen = obtenerURLImagen(primeraChica.chica, tagImagen);
+        urlImagen = obtenerURLImagen(primeraChica.chica, tagImagen, historiaId);
     } else {
         // Seleccionar imagen automáticamente para la chica principal (caso de una sola chica)
         tagImagen = datos.imagen_tag || 'normal';
-        urlImagen = obtenerURLImagen(chicaSeleccionada, tagImagen);
+        urlImagen = obtenerURLImagen(chicaSeleccionada, tagImagen, historiaId);
     }
     
     // Detectar qué chicas están respondiendo en el mensaje
