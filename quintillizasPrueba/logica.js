@@ -29,6 +29,7 @@ import { ALDO_PERSONALIDAD, ALDO_INSTRUCCIONES_SISTEMA, getAldoPersonalidad, esA
 import { obtenerMensajeError, generarPayloadFase, getOrdenFases, getInfoFase, obtenerFallbackLocal } from './fallbacks.js';
 import { QuintiImagenesPrueba } from './imagenes.js';
 import { getImagenTagsMapping as getImagenTagsMappingHistoria } from './historiasParalelas.js';
+import { detectarRepeticion, detectarRepeticionEntreChicas, agregarDialogoAlHistorial, generarPromptAntiRepeticion } from './antiRepeticion.js';
 
 // ============================================================
 //  CONFIGURACIÓN DE API KEYS
@@ -1235,19 +1236,62 @@ async function intentarLlamadaAPI(mensajes, modelo) {
  * @returns {object} - Respuesta procesada con URL de imagen y lista de chicas respondiendo
  */
 function procesarRespuesta(datos, mensajeOriginal) {
-    // Agregar al historial
+    // Verificar si tenemos respuestas individuales de múltiples chicas
+    const tieneRespuestasIndividuales = datos.respuestasIndividuales && datos.respuestasIndividuales.length > 0;
+    
+    // SISTEMA ANTI-REPETICION: Verificar y almacenar dialogos
+    if (tieneRespuestasIndividuales) {
+        // Verificar repeticion para cada chica individualmente
+        for (const respuestaIndividual of datos.respuestasIndividuales) {
+            const nombreChica = respuestaIndividual.chica;
+            const dialogo = respuestaIndividual.respuesta;
+            
+            // Detectar repeticion en el historial de esta chica
+            const deteccionRepeticion = detectarRepeticion(dialogo, nombreChica);
+            if (deteccionRepeticion.esRepetido) {
+                logQuinti('WARN', `Repeticion detectada en ${nombreChica}`, { 
+                    similitud: deteccionRepeticion.similitudMaxima,
+                    dialogoSimilar: deteccionRepeticion.dialogoSimilar.substring(0, 100)
+                });
+            }
+            
+            // Detectar repeticion con otras chicas
+            const otrasChicas = datos.respuestasIndividuales
+                .filter(r => r.chica !== nombreChica)
+                .map(r => r.chica);
+            
+            const deteccionEntreChicas = detectarRepeticionEntreChicas(dialogo, nombreChica, otrasChicas);
+            if (deteccionEntreChicas.tieneConflicto) {
+                logQuinti('WARN', `Repeticion entre chicas detectada: ${nombreChica} similar a ${deteccionEntreChicas.chicaSimilar}`, {
+                    similitud: deteccionEntreChicas.similitud
+                });
+            }
+            
+            // Agregar al historial (siempre, incluso si hay repeticion para mantener registro)
+            agregarDialogoAlHistorial(dialogo, nombreChica);
+        }
+    } else if (chicaSeleccionada) {
+        // Caso de una sola chica
+        const deteccionRepeticion = detectarRepeticion(datos.respuesta, chicaSeleccionada);
+        if (deteccionRepeticion.esRepetido) {
+            logQuinti('WARN', `Repeticion detectada en ${chicaSeleccionada}`, { 
+                similitud: deteccionRepeticion.similitudMaxima,
+                dialogoSimilar: deteccionRepeticion.dialogoSimilar.substring(0, 100)
+            });
+        }
+        agregarDialogoAlHistorial(datos.respuesta, chicaSeleccionada);
+    }
+    
+    // Agregar al historial general de conversacion
     historialConversacion.push(
         { role: "user", content: mensajeOriginal },
         { role: "assistant", content: datos.respuesta }
     );
     
-    // Mantener historial dentro del límite
+    // Mantener historial dentro del limite
     if (historialConversacion.length > MAX_HISTORIAL * 2) {
         historialConversacion = historialConversacion.slice(-MAX_HISTORIAL * 2);
     }
-    
-    // Verificar si tenemos respuestas individuales de múltiples chicas
-    const tieneRespuestasIndividuales = datos.respuestasIndividuales && datos.respuestasIndividuales.length > 0;
     
     let tagImagen, urlImagen;
     
@@ -1260,12 +1304,12 @@ function procesarRespuesta(datos, mensajeOriginal) {
         tagImagen = primeraChica.imagen_tag || 'hablando';
         urlImagen = obtenerURLImagen(primeraChica.chica, tagImagen, historiaId);
     } else {
-        // Seleccionar imagen automáticamente para la chica principal (caso de una sola chica)
+        // Seleccionar imagen automaticamente para la chica principal (caso de una sola chica)
         tagImagen = datos.imagen_tag || 'normal';
         urlImagen = obtenerURLImagen(chicaSeleccionada, tagImagen, historiaId);
     }
     
-    // Detectar qué chicas están respondiendo en el mensaje
+    // Detectar que chicas estan respondiendo en el mensaje
     const chicasRespondiendo = [];
     const responsePattern = /\[(Ichika|Nino|Miku|Yotsuba|Itsuki)\]:/gi;
     let match;
@@ -1276,18 +1320,18 @@ function procesarRespuesta(datos, mensajeOriginal) {
         }
     }
     
-    // Si no hay formato [Nombre]: pero hay múltiples chicas en chat, agregar la principal
+    // Si no hay formato [Nombre]: pero hay multiples chicas en chat, agregar la principal
     if (chicasRespondiendo.length === 0 && chicasEnChat.size > 0) {
         chicasRespondiendo.push(...Array.from(chicasEnChat));
     }
     
-    // IMPORTANTE: Cuando hay múltiples chicas en el chat y la respuesta NO tiene el formato [Nombre]:,
-    // pero DEBERÍA tenerlo (porque hay 2+ chicas), forzamos que TODAS las chicas en el chat aparezcan como respondiendo
+    // IMPORTANTE: Cuando hay multiples chicas en el chat y la respuesta NO tiene el formato [Nombre]:,
+    // pero DEBERIA tenerlo (porque hay 2+ chicas), forzamos que TODAS las chicas en el chat aparezcan como respondiendo
     // Esto asegura que la UI muestre correctamente que todas participaron
     if (chicasEnChat.size > 1 && chicasRespondiendo.length < chicasEnChat.size) {
-        // La IA falló en usar el formato correcto, pero igual consideramos que todas respondieron
+        // La IA fallo en usar el formato correcto, pero igual consideramos que todas respondieron
         // para que la UI lo maneje apropiadamente
-        logQuinti('WARN', 'Múltiples chicas en chat pero la respuesta no usa formato [Nombre]: correctamente', {
+        logQuinti('WARN', 'Multiples chicas en chat pero la respuesta no usa formato [Nombre]: correctamente', {
             chicasEnChat: Array.from(chicasEnChat),
             chicasDetectadas: chicasRespondiendo
         });
@@ -1527,7 +1571,13 @@ export {
     getAccionEnCurso,
     getEstadoAccion,
     getMemoriaEventosIntimos,
-    registrarEventoImportante
+    registrarEventoImportante,
+    // Funciones anti-repeticion
+    detectarRepeticion,
+    detectarRepeticionEntreChicas,
+    agregarDialogoAlHistorial,
+    generarPromptAntiRepeticion,
+    getEstadisticasRepeticion
 };
 
 // Exportar para window (compatibilidad con browser)
