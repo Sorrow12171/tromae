@@ -8,7 +8,7 @@
 //  Ambos se combinan para dar contexto completo a la IA
 // ============================================================
 
-import { HISTORIAS_DATA, getHistoriaById, getHistoriasActivas as getHistoriasActivasFromData, existeHistoria as existeHistoriaFromData, getSystemPromptHistoria as getSystemPromptHistoriaFromData, getMensajeBienvenidaHistoria as getMensajeBienvenidaHistoriaFromData, getPersonajesHistoria as getPersonajesHistoriaFromData, getImagenSelectorHistoria as getImagenSelectorHistoriaFromData } from './historias/nino_rpg.js';
+import { HISTORIAS_DATA, getHistoriaById, getHistoriasActivas as getHistoriasActivasFromData, existeHistoria as existeHistoriaFromData, getSystemPromptHistoria as getSystemPromptHistoriaFromData, getMensajeBienvenidaHistoria as getMensajeBienvenidaHistoriaFromData, getPersonajesHistoria as getPersonajesHistoriaFromData, getImagenSelectorHistoria as getImagenSelectorHistoriaFromData, getImagenTagsMapping as getImagenTagsMappingFromData } from './historias/nino_rpg.js';
 
 /**
  * Configuración de historias paralelas disponibles
@@ -84,6 +84,15 @@ export function getImagenSelectorHistoria(historiaId) {
     return getImagenSelectorHistoriaFromData(historiaId);
 }
 
+/**
+ * Obtiene el mapeo de imagen_tag a URL para una historia paralela
+ * @param {string} historiaId - ID de la historia
+ * @returns {object|null} - Objeto con el mapeo de tags a URLs o null
+ */
+export function getImagenTagsMapping(historiaId) {
+    return getImagenTagsMappingFromData(historiaId);
+}
+
 // Exportación para compatibilidad con CommonJS (opcional)
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
@@ -94,6 +103,7 @@ if (typeof module !== 'undefined' && module.exports) {
         getSystemPromptHistoria,
         getMensajeBienvenidaHistoria,
         getPersonajesHistoria,
-        getImagenSelectorHistoria
+        getImagenSelectorHistoria,
+        getImagenTagsMapping
     };
 }
