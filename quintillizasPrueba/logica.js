@@ -498,6 +498,32 @@ function parsearJSON(raw) {
         }
     }
     
+    // NUEVO INTENTO: Eliminar texto narrativo (acciones entre asteriscos) antes del JSON
+    // Esto maneja casos como "*me acerco...* {\"respuesta\": \"hola\"}"
+    const textoSinAcciones = rawLimpio.replace(/^\s*(\*[^*]*\*\s*)+/gi, '').trim();
+    if (textoSinAcciones !== rawLimpio) {
+        logQuinti('DEBUG', 'parsearJSON: detectado texto narrativo antes del JSON, intentando con texto limpio');
+        try {
+            const resultado = JSON.parse(textoSinAcciones);
+            logQuinti('DEBUG', 'parsearJSON: extracción exitosa tras eliminar acciones narrativas');
+            return resultado;
+        } catch (error) {
+            logQuinti('DEBUG', `parsearJSON: intento con texto sin acciones falló - ${error.message}`);
+        }
+        
+        // Si aún falla, intentar extraer JSON del texto ya limpio de acciones
+        const matchLimpio = textoSinAcciones.match(/\{[\s\S]*\}/);
+        if (matchLimpio) {
+            try {
+                const resultado = JSON.parse(matchLimpio[0]);
+                logQuinti('DEBUG', 'parsearJSON: extracción exitosa de JSON tras limpiar acciones narrativas');
+                return resultado;
+            } catch (error) {
+                logQuinti('DEBUG', `parsearJSON: extracción de JSON limpia falló - ${error.message}`);
+            }
+        }
+    }
+    
     logQuinti('ERROR', 'parsearJSON: no se pudo extraer JSON válido', {
         contenidoCompleto: raw.substring(0, 300)
     });
