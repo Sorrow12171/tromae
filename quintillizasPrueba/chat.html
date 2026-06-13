@@ -995,16 +995,14 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
             inicializarSelector();
         }
         
-        // Cargar nombre guardado si existe
+        // Cargar nombre guardado si existe - PERO SIEMPRE MOSTRAR PANTALLA DE NOMBRE
         function cargarNombreGuardado() {
-            const nombreGuardado = localStorage.getItem('quintiNombreUsuario');
-            if (nombreGuardado) {
-                nombreUsuario = nombreGuardado;
-                document.getElementById('nombreUsuarioDisplay').textContent = nombreGuardado;
-                document.getElementById('nombreContainer').style.display = 'none';
-                document.getElementById('selectorContainer').style.display = 'block';
-                inicializarSelector();
-            }
+            // Limpiar nombre guardado para que siempre pida el nombre al entrar
+            localStorage.removeItem('quintiNombreUsuario');
+            // Mostrar siempre la pantalla de ingreso de nombre
+            document.getElementById('nombreContainer').style.display = 'block';
+            document.getElementById('selectorContainer').style.display = 'none';
+            document.getElementById('chatContainer').classList.remove('active');
         }
         
         // Exponer funciones globalmente para que sean accesibles desde HTML
@@ -1017,6 +1015,7 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
         window.handleKeyPress = handleKeyPress;
         window.sendMessage = sendMessage;
         window.retryLastMessage = retryLastMessage;
+        window.getNombreUsuario = function() { return nombreUsuario; }; // Exponer nombreUsuario para logica.js
         
         // Inicializar cuando carga la página
         window.onload = cargarNombreGuardado;
