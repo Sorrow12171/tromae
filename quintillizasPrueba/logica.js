@@ -24,7 +24,7 @@
 // ============================================================
 
 import { generarSystemPrompt, QUINT_PRUEBA_SYSTEM_MINIMO, QUINT_PRUEBA_FASE1, QUINT_PRUEBA_FASE2, QUINT_PRUEBA_FASE3, QUINT_PRUEBA_FASE4, SYSTEM_PROMPT_INICIAL } from './systemPrompt.js';
-import { PERSONALIDADES, getChicasDisponibles, existeChica } from './personalidades.js';
+import { PERSONALIDADES, getChicasDisponibles, existeChica, tieneImagenes } from './personalidades.js';
 import { obtenerMensajeError, generarPayloadFase, getOrdenFases, getInfoFase, obtenerFallbackLocal } from './fallbacks.js';
 import { QuintiImagenesPrueba } from './imagenes.js';
 
@@ -1003,6 +1003,11 @@ function procesarRespuesta(datos, mensajeOriginal) {
  * @returns {string|null} - URL de la imagen o null
  */
 function obtenerURLImagen(nombreChica, tag) {
+    // Aldo no tiene imágenes
+    if (!tieneImagenes(nombreChica)) {
+        return null;
+    }
+    
     if (!QuintiImagenesPrueba || !QuintiImagenesPrueba[nombreChica]) {
         return null;
     }
@@ -1076,8 +1081,15 @@ function getImagenSelector(nombreChica) {
 async function conversar(mensaje) {
     // Agregar system prompt inicial solo si es el primer mensaje
     if (historialConversacion.length === 0 && chicaSeleccionada) {
-        historialConversacion.push({ role: "system", content: SYSTEM_PROMPT_INICIAL });
-        logQuinti('INFO', 'System prompt inicial agregado', { prompt: SYSTEM_PROMPT_INICIAL });
+        // Obtener el nombre del usuario desde la función global
+        let nombreUsuario = 'usuario';
+        if (typeof window !== 'undefined' && window.getNombreUsuario) {
+            nombreUsuario = window.getNombreUsuario() || 'usuario';
+        }
+        // Reemplazar {nombreUsuario} en el prompt con el nombre real
+        const systemPromptConNombre = SYSTEM_PROMPT_INICIAL.replace(/{nombreUsuario}/g, nombreUsuario);
+        historialConversacion.push({ role: "system", content: systemPromptConNombre });
+        logQuinti('INFO', 'System prompt inicial agregado', { prompt: systemPromptConNombre, nombreUsuario });
     }
     return obtenerRespuestaGroq(mensaje, historialConversacion);
 }
