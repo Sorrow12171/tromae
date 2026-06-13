@@ -1,8 +1,1 @@
-(quintillizasPrueba/.vscode/
-quintillizasPrueba/node_modules/
-quintillizasPrueba/dist/
-quintillizasPrueba/build/
-quintillizasPrueba/.env
-quintillizasPrueba/*.log
-quintillizasPrueba/*.tmp
-)
+Nothing should be ignored based on the provided file changes. The modification of 'quintillizasPrueba/logica.js' is a source code file change, which does not warrant any new ignore rules.
