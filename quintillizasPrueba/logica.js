@@ -446,14 +446,22 @@ function seleccionarImagenAutomatica(dialogo, nombreChica) {
  * @param {string} raw - Texto crudo de la respuesta
  * @returns {object|null} - Objeto parseado o null si falla
  */
+/**
+ * Parsea contenido JSON de respuesta de la IA con múltiples estrategias de fallback
+ * @param {string} raw - Contenido crudo de la respuesta
+ * @returns {object|null} - Objeto JSON parseado o null si falla
+ */
 function parsearJSON(raw) {
     if (!raw) {
         logQuinti('ERROR', 'parsearJSON: contenido vacío o null');
         return null;
     }
     
-    // Limpiar bloques de código markdown
+    // Limpiar bloques de código markdown y caracteres invisibles al inicio
     let rawLimpio = raw.replace(/```json/g, "").replace(/```/g, "").trim();
+    
+    // Eliminar caracteres BOM (Byte Order Mark) y otros caracteres especiales al inicio
+    rawLimpio = rawLimpio.replace(/^\uFEFF/, '').replace(/^[\u200B-\u200D\uFEFF]+/, '').trim();
     
     try {
         const resultado = JSON.parse(rawLimpio);
@@ -464,7 +472,7 @@ function parsearJSON(raw) {
         });
     }
     
-    // Intentar extraer JSON del texto (buscar el primer { hasta el último })
+    // ESTRATEGIA 1: Buscar JSON entre llaves (buscar el primer { hasta el último })
     const match = rawLimpio.match(/\{[\s\S]*\}/);
     if (match) {
         try {
@@ -478,8 +486,7 @@ function parsearJSON(raw) {
         }
     }
     
-    // Intento adicional: buscar JSON incluso si hay texto antes (como *acciones*)
-    // Buscar desde el primer { hasta encontrar un } válido
+    // ESTRATEGIA 2: Buscar desde el primer { hasta encontrar un } válido
     const primerLLave = rawLimpio.indexOf('{');
     if (primerLLave !== -1) {
         const desdeLLave = rawLimpio.substring(primerLLave);
@@ -498,8 +505,7 @@ function parsearJSON(raw) {
         }
     }
     
-    // NUEVO INTENTO: Eliminar texto narrativo (acciones entre asteriscos) antes del JSON
-    // Esto maneja casos como "*me acerco...* {\"respuesta\": \"hola\"}"
+    // ESTRATEGIA 3: Eliminar texto narrativo (acciones entre asteriscos) antes del JSON
     const textoSinAcciones = rawLimpio.replace(/^\s*(\*[^*]*\*\s*)+/gi, '').trim();
     if (textoSinAcciones !== rawLimpio) {
         logQuinti('DEBUG', 'parsearJSON: detectado texto narrativo antes del JSON, intentando con texto limpio');
@@ -521,6 +527,49 @@ function parsearJSON(raw) {
             } catch (error) {
                 logQuinti('DEBUG', `parsearJSON: extracción de JSON limpia falló - ${error.message}`);
             }
+        }
+    }
+    
+    // ESTRATEGIA 4: NUEVA - Eliminar cualquier texto antes del primer { incluyendo frases completas
+    // Maneja casos como "Mi expresión... {\"respuesta\": ...}" o "¡No te equivoques! {...}"
+    const indicePrimerLLave = rawLimpio.indexOf('{');
+    if (indicePrimerLLave > 0) {
+        const textoDesdeLLave = rawLimpio.substring(indicePrimerLLave);
+        logQuinti('DEBUG', `parsearJSON: detectado texto antes de JSON (${indicePrimerLLave} chars), intentando desde la primera llave`);
+        try {
+            const resultado = JSON.parse(textoDesdeLLave);
+            logQuinti('DEBUG', 'parsearJSON: extracción exitosa desde primera llave');
+            return resultado;
+        } catch (error) {
+            logQuinti('DEBUG', `parsearJSON: intento desde primera llave falló - ${error.message}`);
+        }
+    }
+    
+    // ESTRATEGIA 5: NUEVA - Intentar reparar JSON comúnmente roto (comillas simples, comas faltantes, etc.)
+    let jsonReparado = rawLimpio;
+    // Reemplazar comillas simples por dobles (solo si parece JSON)
+    if (rawLimpio.includes("'") && rawLimpio.includes('{')) {
+        jsonReparado = jsonReparado.replace(/'/g, '"');
+        try {
+            const resultado = JSON.parse(jsonReparado);
+            logQuinti('DEBUG', 'parsearJSON: extracción exitosa tras reparar comillas');
+            return resultado;
+        } catch (error) {
+            logQuinti('DEBUG', `parsearJSON: reparación de comillas falló - ${error.message}`);
+        }
+    }
+    
+    // ESTRATEGIA 6: NUEVA - Buscar patrón de JSON aunque esté incompleto
+    // Intentar encontrar un objeto JSON mínimo válido
+    const patronJSONMinimo = /\{\s*"respuesta"\s*:\s*"[^"]*"\s*(,\s*"imagen_tag"\s*:\s*"[^"]*")?\s*\}/i;
+    const matchMinimo = rawLimpio.match(patronJSONMinimo);
+    if (matchMinimo) {
+        try {
+            const resultado = JSON.parse(matchMinimo[0]);
+            logQuinti('DEBUG', 'parsearJSON: extracción exitosa de JSON mínimo');
+            return resultado;
+        } catch (error) {
+            logQuinti('DEBUG', `parsearJSON: JSON mínimo falló - ${error.message}`);
         }
     }
     
@@ -1292,7 +1341,22 @@ function obtenerURLImagen(nombreChica, tag, historiaId = null) {
         return chicaData.imagenSelector || chicaData.imagenes?.['hablando'] || null;
     }
     
-    return chicaData.imagenes?.[tag] || chicaData.imagenes?.['hablando'] || chicaData.imagenSelector || null;
+    // Intentar obtener la imagen por tag
+    let urlImagen = chicaData.imagenes?.[tag];
+    
+    // FALLBACK: Si no encuentra el tag específico, usar la PRIMERA imagen disponible
+    if (!urlImagen && chicaData.imagenes && Object.keys(chicaData.imagenes).length > 0) {
+        const primerTag = Object.keys(chicaData.imagenes)[0];
+        urlImagen = chicaData.imagenes[primerTag];
+        logQuinti('WARN', `Tag "${tag}" no encontrado para ${nombreChica}, usando primera imagen disponible: "${primerTag}"`);
+    }
+    
+    // Último fallback: imagenSelector
+    if (!urlImagen) {
+        urlImagen = chicaData.imagenSelector || null;
+    }
+    
+    return urlImagen;
 }
 
 // ============================================================
@@ -1380,9 +1444,16 @@ async function conversar(mensaje) {
         }
     } else if (historialConversacion.length === 0 && !chicaSeleccionada && hayHistoriaParalela) {
         // Caso especial: historia paralela sin chica seleccionada (solo para RPG)
-        // Primero agregar system prompt minimo de logica.js
-        historialConversacion.push({ role: "system", content: SYSTEM_PROMPT_INICIAL });
-        logQuinti('INFO', 'System prompt inicial de logica.js agregado (modo historia paralela)');
+        // Obtener el nombre del usuario desde la función global
+        let nombreUsuario = 'usuario';
+        if (typeof window !== 'undefined' && window.getNombreUsuario) {
+            nombreUsuario = window.getNombreUsuario() || 'usuario';
+        }
+        
+        // Primero agregar system prompt minimo de logica.js con nombre de usuario
+        const systemPromptConNombre = SYSTEM_PROMPT_INICIAL.replace(/{nombreUsuario}/g, nombreUsuario);
+        historialConversacion.push({ role: "system", content: systemPromptConNombre });
+        logQuinti('INFO', 'System prompt inicial de logica.js agregado (modo historia paralela)', { nombreUsuario });
         
         // Luego agregar el system prompt ADICIONAL de la historia
         const systemPromptHistoria = window.systemPromptHistoriaActual;
