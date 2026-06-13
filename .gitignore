@@ -1,28 +1,3 @@
-```
-# Compiled and build artifacts
-*.pyc
-__pycache__/
-*.o
-*.obj
-dist/
-build/
+(quintillizasPrueba/ is a directory containing HTML and JS files, which are source code and should not be ignored unless it's a build artifact directory. Since only source files are being modified and no build artifacts, dependencies, or temporary files are present in the changes, nothing needs to be ignored.)
 
-# Dependencies
-.venv/
-venv/
-node_modules/
-
-# Logs and temp files
-*.log
-*.tmp
-*.swp
-
-# Environment
-.env
-.env.local
-*.env.*
-
-# Editors
-.vscode/
-.idea/
-```
+(No output)

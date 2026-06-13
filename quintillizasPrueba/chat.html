@@ -1183,17 +1183,7 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
             document.getElementById('chatContainer').classList.remove('active');
         }
         
-        // Exponer funciones globalmente para que sean accesibles desde HTML
-        window.guardarNombre = guardarNombre;
-        window.cargarNombreGuardado = cargarNombreGuardado;
-        window.inicializarSelector = inicializarSelector;
-        window.seleccionarChicaVisual = seleccionarChicaVisual;
-        window.iniciarChat = iniciarChat;
-        window.volverAlInicio = volverAlInicio;
-        window.handleKeyPress = handleKeyPress;
-        window.sendMessage = sendMessage;
-        window.retryLastMessage = retryLastMessage;
-        window.getNombreUsuario = function() { return nombreUsuario; }; // Exponer nombreUsuario para logica.js
+        // Las funciones se exponen en DOMContentLoaded más abajo
         
         // Funciones de Historias Paralelas
         async function abrirHistoriasParalelas() {
@@ -1329,8 +1319,25 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
         window.cerrarHistoriasParalelas = cerrarHistoriasParalelas;
         window.iniciarHistoriaParalela = iniciarHistoriaParalela;
         
-        // Inicializar cuando carga la página
-        window.onload = cargarNombreGuardado;
+        // Asegurar que las funciones estén disponibles antes de que se llamen
+        document.addEventListener('DOMContentLoaded', function() {
+            window.guardarNombre = guardarNombre;
+            window.cargarNombreGuardado = cargarNombreGuardado;
+            window.inicializarSelector = inicializarSelector;
+            window.seleccionarChicaVisual = seleccionarChicaVisual;
+            window.iniciarChat = iniciarChat;
+            window.volverAlInicio = volverAlInicio;
+            window.handleKeyPress = handleKeyPress;
+            window.sendMessage = sendMessage;
+            window.retryLastMessage = retryLastMessage;
+            window.getNombreUsuario = function() { return nombreUsuario; };
+            window.abrirHistoriasParalelas = abrirHistoriasParalelas;
+            window.cerrarHistoriasParalelas = cerrarHistoriasParalelas;
+            window.iniciarHistoriaParalela = iniciarHistoriaParalela;
+            
+            // Inicializar cuando carga la página
+            cargarNombreGuardado();
+        });
     </script>
 </body>
 </html>
