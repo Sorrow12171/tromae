@@ -57,6 +57,33 @@ let accionEnCurso = null; // Acción actual (ej: 'besando', 'chupando')
 let contadorTurnosAccion = 0; // Turnos que lleva la acción actual
 const MAX_TURNOS_ACCION = 3; // Después de 3 turnos, la acción puede terminar naturalmente
 
+// SISTEMA DE BOOLEANOS DE ACCIONES EXPLÍCITAS - Estado detallado de cada acción
+let estadoAccionesExplicitas = {
+    besando: false,
+    mamando: false,
+    follando: false,
+    siendoFollada: false,
+    chupandoBolas: false,
+    haciendoHandjob: false,
+    enDoggystyle: false,
+    enMisionero: false,
+    enReverseCowgirl: false,
+    haciendoAnal: false,
+    desnuda: false,
+    mostrandoCulo: false,
+    lamiendoAno: false
+};
+
+// MEMORIA DE EVENTOS ÍNTIMOS - Contador de acciones realizadas
+let memoriaEventosIntimos = {
+    totalBesos: 0,
+    totalMamadas: 0,
+    totalFolladas: 0,
+    totalAnal: 0,
+    totalHandjobs: 0,
+    eventosImportantes: [] // Array de eventos importantes con timestamp y descripción
+};
+
 /**
  * Actualiza el estado de la acción en curso desde logica.js
  * @param {string|null} nuevaAccion - La acción detectada en el mensaje del usuario
@@ -68,6 +95,12 @@ function actualizarAccionEnCurso(nuevaAccion) {
             accionEnCurso = nuevaAccion;
             contadorTurnosAccion = 1;
             logQuinti('DEBUG', `Nueva acción iniciada en logica.js: ${nuevaAccion}`);
+            
+            // Actualizar booleanos de acciones explícitas
+            actualizarEstadoAccionesExplicitas(nuevaAccion, true);
+            
+            // Registrar evento importante en memoria
+            registrarEventoImportante(`Inicio de acción: ${nuevaAccion}`);
         } else {
             // Misma acción continúa
             contadorTurnosAccion++;
@@ -78,6 +111,13 @@ function actualizarAccionEnCurso(nuevaAccion) {
         if (accionEnCurso && contadorTurnosAccion >= MAX_TURNOS_ACCION) {
             // La acción terminó naturalmente después de MAX_TURNOS_ACCION turnos
             logQuinti('DEBUG', `Acción ${accionEnCurso} terminó naturalmente en logica.js`);
+            
+            // Actualizar contadores de memoria de eventos íntimos
+            actualizarMemoriaEventosIntimos(accionEnCurso);
+            
+            // Resetear booleanos de acciones explícitas
+            resetearEstadoAccionesExplicitas();
+            
             accionEnCurso = null;
             contadorTurnosAccion = 0;
         } else if (accionEnCurso) {
@@ -85,6 +125,147 @@ function actualizarAccionEnCurso(nuevaAccion) {
             logQuinti('DEBUG', `Acción ${accionEnCurso} se mantiene implícita en logica.js (turno ${contadorTurnosAccion})`);
         }
     }
+}
+
+/**
+ * Actualiza los booleanos de acciones explícitas según la acción detectada
+ * @param {string} accion - La acción a activar
+ * @param {boolean} estado - True para activar, false para desactivar
+ */
+function actualizarEstadoAccionesExplicitas(accion, estado) {
+    // Primero resetear todos los booleanos
+    resetearEstadoAccionesExplicitas();
+    
+    // Luego activar solo la acción correspondiente
+    switch (accion.toLowerCase()) {
+        case 'besando':
+            estadoAccionesExplicitas.besando = estado;
+            break;
+        case 'mamando':
+        case 'chupando':
+            estadoAccionesExplicitas.mamando = estado;
+            break;
+        case 'follando':
+        case 'siendoFollada':
+            estadoAccionesExplicitas.follando = estado;
+            estadoAccionesExplicitas.siendoFollada = estado;
+            break;
+        case 'chupandoBolas':
+            estadoAccionesExplicitas.chupandoBolas = estado;
+            break;
+        case 'handjob':
+        case 'paja':
+            estadoAccionesExplicitas.haciendoHandjob = estado;
+            break;
+        case 'doggystyle':
+            estadoAccionesExplicitas.enDoggystyle = estado;
+            break;
+        case 'misionero':
+            estadoAccionesExplicitas.enMisionero = estado;
+            break;
+        case 'reverse_cowgirl':
+        case 'cowgirl':
+            estadoAccionesExplicitas.enReverseCowgirl = estado;
+            break;
+        case 'anal':
+            estadoAccionesExplicitas.haciendoAnal = estado;
+            break;
+        case 'desnuda':
+            estadoAccionesExplicitas.desnuda = estado;
+            break;
+        case 'mostrandoCulo':
+            estadoAccionesExplicitas.mostrandoCulo = estado;
+            break;
+        case 'lamiendoAno':
+            estadoAccionesExplicitas.lamiendoAno = estado;
+            break;
+        default:
+            // Acción genérica - intentar detectar automáticamente
+            for (const key of Object.keys(estadoAccionesExplicitas)) {
+                if (accion.toLowerCase().includes(key)) {
+                    estadoAccionesExplicitas[key] = estado;
+                    break;
+                }
+            }
+    }
+    
+    logQuinti('DEBUG', `Estado de acciones explícitas actualizado: ${JSON.stringify(estadoAccionesExplicitas)}`);
+}
+
+/**
+ * Resetea todos los booleanos de acciones explícitas a false
+ */
+function resetearEstadoAccionesExplicitas() {
+    for (const key of Object.keys(estadoAccionesExplicitas)) {
+        estadoAccionesExplicitas[key] = false;
+    }
+}
+
+/**
+ * Actualiza la memoria de eventos íntimos cuando una acción termina
+ * @param {string} accion - La acción que terminó
+ */
+function actualizarMemoriaEventosIntimos(accion) {
+    switch (accion.toLowerCase()) {
+        case 'besando':
+            memoriaEventosIntimos.totalBesos++;
+            break;
+        case 'mamando':
+        case 'chupando':
+            memoriaEventosIntimos.totalMamadas++;
+            break;
+        case 'follando':
+        case 'siendoFollada':
+            memoriaEventosIntimos.totalFolladas++;
+            break;
+        case 'anal':
+            memoriaEventosIntimos.totalAnal++;
+            break;
+        case 'handjob':
+        case 'paja':
+            memoriaEventosIntimos.totalHandjobs++;
+            break;
+    }
+    
+    logQuinti('INFO', `Memoria de eventos íntimos actualizada: ${JSON.stringify(memoriaEventosIntimos)}`);
+}
+
+/**
+ * Registra un evento importante en la memoria
+ * @param {string} descripcion - Descripción del evento
+ */
+function registrarEventoImportante(descripcion) {
+    const evento = {
+        timestamp: new Date().toISOString(),
+        descripcion: descripcion,
+        turno: historialConversacion.length
+    };
+    
+    memoriaEventosIntimos.eventosImportantes.push(evento);
+    
+    // Mantener solo los últimos 20 eventos importantes
+    if (memoriaEventosIntimos.eventosImportantes.length > 20) {
+        memoriaEventosIntimos.eventosImportantes.shift();
+    }
+    
+    logQuinti('INFO', `Evento importante registrado: ${descripcion}`);
+}
+
+/**
+ * Obtiene el estado de una acción específica
+ * @param {string} accion - Nombre de la acción a verificar
+ * @returns {boolean} - True si la acción está activa
+ */
+function getEstadoAccion(accion) {
+    return estadoAccionesExplicitas[accion] || false;
+}
+
+/**
+ * Obtiene toda la memoria de eventos íntimos
+ * @returns {object} - Objeto con contadores y eventos
+ */
+function getMemoriaEventosIntimos() {
+    return { ...memoriaEventosIntimos };
 }
 
 /**
@@ -1132,7 +1313,10 @@ export {
     seleccionarImagenAutomatica,
     obtenerTagsImagen,
     actualizarAccionEnCurso,
-    getAccionEnCurso
+    getAccionEnCurso,
+    getEstadoAccion,
+    getMemoriaEventosIntimos,
+    registrarEventoImportante
 };
 
 // Exportar para window (compatibilidad con browser)
@@ -1145,6 +1329,9 @@ if (typeof window !== 'undefined') {
     window.limpiarChicasEnChat = limpiarChicasEnChat;
     window.actualizarAccionEnCurso = actualizarAccionEnCurso;
     window.getAccionEnCurso = getAccionEnCurso;
+    window.getEstadoAccion = getEstadoAccion;
+    window.getMemoriaEventosIntimos = getMemoriaEventosIntimos;
+    window.registrarEventoImportante = registrarEventoImportante;
 }
 
 // Exportar funciones para uso en otros módulos (CommonJS - compatibilidad)
@@ -1169,6 +1356,9 @@ if (typeof module !== 'undefined' && module.exports) {
         seleccionarImagenAutomatica,
         obtenerTagsImagen,
         actualizarAccionEnCurso,
-        getAccionEnCurso
+        getAccionEnCurso,
+        getEstadoAccion,
+        getMemoriaEventosIntimos,
+        registrarEventoImportante
     };
 }
