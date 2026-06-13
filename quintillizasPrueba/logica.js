@@ -27,6 +27,7 @@ import { generarSystemPrompt, QUINT_PRUEBA_SYSTEM_MINIMO, QUINT_PRUEBA_FASE1, QU
 import { PERSONALIDADES, getChicasDisponibles, existeChica, tieneImagenes } from './personalidades.js';
 import { obtenerMensajeError, generarPayloadFase, getOrdenFases, getInfoFase, obtenerFallbackLocal } from './fallbacks.js';
 import { QuintiImagenesPrueba } from './imagenes.js';
+import { getImagenTagsMapping as getImagenTagsMappingHistoria } from './historiasParalelas.js';
 
 // ============================================================
 //  CONFIGURACIÓN DE API KEYS
@@ -1225,9 +1226,27 @@ function procesarRespuesta(datos, mensajeOriginal) {
  * Obtiene la URL de una imagen específica
  * @param {string} nombreChica - Nombre de la chica
  * @param {string} tag - Tag de la imagen
+ * @param {string} historiaId - ID de la historia paralela (opcional)
  * @returns {string|null} - URL de la imagen o null
  */
-function obtenerURLImagen(nombreChica, tag) {
+function obtenerURLImagen(nombreChica, tag, historiaId = null) {
+    // Si hay una historia paralela activa, intentar usar su mapeo de imagenTagsMapping
+    if (historiaId) {
+        const mappingHistoria = getImagenTagsMappingHistoria(historiaId);
+        if (mappingHistoria && mappingHistoria[tag]) {
+            return mappingHistoria[tag];
+        }
+        // Si el tag no existe en el mapping pero existe el mapping, intentar con variantes
+        if (mappingHistoria) {
+            // Buscar tags que contengan el nombre del tag original
+            for (const [mapTag, url] of Object.entries(mappingHistoria)) {
+                if (mapTag.includes(tag) || tag.includes(mapTag.replace('nino_', ''))) {
+                    return url;
+                }
+            }
+        }
+    }
+    
     // Aldo no tiene imágenes
     if (!tieneImagenes(nombreChica)) {
         return null;
