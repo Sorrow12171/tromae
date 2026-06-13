@@ -1304,25 +1304,44 @@ function getImagenSelector(nombreChica) {
  * @returns {Promise<object>} - Respuesta procesada
  */
 async function conversar(mensaje) {
-    // VERIFICAR si hay una historia paralela activa con su propio system prompt
+    // VERIFICAR si hay una historia paralela activa con su propio system prompt ADICIONAL
     const hayHistoriaParalela = window.historiaParalelaActiva && window.systemPromptHistoriaActual;
     
-    // Agregar system prompt inicial solo si es el primer mensaje y NO hay historia paralela
-    if (historialConversacion.length === 0 && chicaSeleccionada && !hayHistoriaParalela) {
+    // Agregar system prompt inicial solo si es el primer mensaje
+    if (historialConversacion.length === 0 && chicaSeleccionada) {
         // Obtener el nombre del usuario desde la función global
         let nombreUsuario = 'usuario';
         if (typeof window !== 'undefined' && window.getNombreUsuario) {
             nombreUsuario = window.getNombreUsuario() || 'usuario';
         }
-        // Reemplazar {nombreUsuario} en el prompt con el nombre real
+        
+        // SIEMPRE agregar el system prompt base de logica.js primero
         const systemPromptConNombre = SYSTEM_PROMPT_INICIAL.replace(/{nombreUsuario}/g, nombreUsuario);
         historialConversacion.push({ role: "system", content: systemPromptConNombre });
-        logQuinti('INFO', 'System prompt inicial agregado', { prompt: systemPromptConNombre, nombreUsuario });
-    } else if (historialConversacion.length === 0 && hayHistoriaParalela) {
-        // Si hay una historia paralela activa, usar SU system prompt exclusivo
+        logQuinti('INFO', 'System prompt inicial de logica.js agregado', { prompt: systemPromptConNombre, nombreUsuario });
+        
+        // Si hay una historia paralela activa, agregar SU system prompt ADICIONAL después
+        if (hayHistoriaParalela) {
+            const systemPromptHistoria = window.systemPromptHistoriaActual;
+            historialConversacion.push({ role: "system", content: systemPromptHistoria });
+            logQuinti('INFO', 'System prompt ADICIONAL de historia paralela agregado', { 
+                historia: window.historiaParalelaActiva, 
+                promptLength: systemPromptHistoria.length 
+            });
+        }
+    } else if (historialConversacion.length === 0 && !chicaSeleccionada && hayHistoriaParalela) {
+        // Caso especial: historia paralela sin chica seleccionada (solo para RPG)
+        // Primero agregar system prompt minimo de logica.js
+        historialConversacion.push({ role: "system", content: SYSTEM_PROMPT_INICIAL });
+        logQuinti('INFO', 'System prompt inicial de logica.js agregado (modo historia paralela)');
+        
+        // Luego agregar el system prompt ADICIONAL de la historia
         const systemPromptHistoria = window.systemPromptHistoriaActual;
         historialConversacion.push({ role: "system", content: systemPromptHistoria });
-        logQuinti('INFO', 'System prompt de historia paralela agregado', { historia: window.historiaParalelaActiva, promptLength: systemPromptHistoria.length });
+        logQuinti('INFO', 'System prompt ADICIONAL de historia paralela agregado', { 
+            historia: window.historiaParalelaActiva, 
+            promptLength: systemPromptHistoria.length 
+        });
     }
     
     return obtenerRespuestaGroq(mensaje, historialConversacion);

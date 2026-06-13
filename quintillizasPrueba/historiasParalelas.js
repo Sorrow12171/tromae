@@ -2,11 +2,13 @@
 //  HISTORIAS PARALELAS - Quintillizas Prueba
 //  Archivo: historiasParalelas.js
 //  Descripción: Sistema de historias paralelas con prompts independientes
-//  Cada historia tiene su propio system prompt y configuración
+//  Cada historia tiene su propio system prompt ADICIONAL y configuración
 //  IMPORTA las historias desde la carpeta /historias/ en formato JSON
+//  IMPORTANTE: El system prompt de las historias es ADICIONAL al normal
+//  Ambos se combinan para dar contexto completo a la IA
 // ============================================================
 
-import { HISTORIAS_DATA, getHistoriaById, getHistoriasActivas as getHistoriasActivasFromData, existeHistoria as existeHistoriaFromData, getSystemPromptHistoria as getSystemPromptHistoriaFromData, getMensajeBienvenidaHistoria as getMensajeBienvenidaHistoriaFromData, getPersonajesHistoria as getPersonajesHistoriaFromData } from './historias/nino_rpg.js';
+import { HISTORIAS_DATA, getHistoriaById, getHistoriasActivas as getHistoriasActivasFromData, existeHistoria as existeHistoriaFromData, getSystemPromptHistoria as getSystemPromptHistoriaFromData, getMensajeBienvenidaHistoria as getMensajeBienvenidaHistoriaFromData, getPersonajesHistoria as getPersonajesHistoriaFromData, getImagenSelectorHistoria as getImagenSelectorHistoriaFromData } from './historias/nino_rpg.js';
 
 /**
  * Configuración de historias paralelas disponibles
@@ -73,6 +75,15 @@ export function getPersonajesHistoria(historiaId) {
     return getPersonajesHistoriaFromData(historiaId);
 }
 
+/**
+ * Obtiene la URL de la imagen selector para una historia paralela
+ * @param {string} historiaId - ID de la historia
+ * @returns {string|null} - URL de la imagen o null
+ */
+export function getImagenSelectorHistoria(historiaId) {
+    return getImagenSelectorHistoriaFromData(historiaId);
+}
+
 // Exportación para compatibilidad con CommonJS (opcional)
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
@@ -82,6 +93,7 @@ if (typeof module !== 'undefined' && module.exports) {
         existeHistoria,
         getSystemPromptHistoria,
         getMensajeBienvenidaHistoria,
-        getPersonajesHistoria
+        getPersonajesHistoria,
+        getImagenSelectorHistoria
     };
 }

@@ -555,7 +555,7 @@
     <script type="module" src="historiasParalelas.js"></script>
     <script type="module">
         // Importar funciones necesarias de logica.js e imagenes.js
-        import { getChicasDisponibles, seleccionarChica, conversar, logQuinti, logErrorAPI, formatearErrorUsuario, getChicasEnChat, actualizarAccionEnCurso, getAccionEnCurso } from './logica.js';
+        import { getChicasDisponibles, seleccionarChica, conversar, logQuinti, logErrorAPI, formatearErrorUsuario, getChicasEnChat, actualizarAccionEnCurso, getAccionEnCurso, getChicaSeleccionada, getImagenSelector } from './logica.js';
         import { QuintiImagenesPrueba } from './imagenes.js';
         
         let chicaSeleccionadaActual = null;
@@ -808,6 +808,12 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
          * Obtiene la URL de una imagen para una chica y tag específicos
          */
         function obtenerURLImagen(nombreChica, tag) {
+            // Si hay una historia paralela activa con su propia imagen selector, usarla
+            if (window.imagenSelectorHistoria && window.historiaParalelaActiva) {
+                logQuinti('DEBUG', 'Usando imagen selector de historia paralela', { historia: window.historiaParalelaActiva });
+                return window.imagenSelectorHistoria;
+            }
+            
             if (!QuintiImagenesPrueba || !QuintiImagenesPrueba[nombreChica]) {
                 return null;
             }
@@ -1200,7 +1206,7 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
         }
         
         async function iniciarHistoriaParalela(historiaId) {
-            const { getHistoriaParalela, getSystemPromptHistoria, getMensajeBienvenidaHistoria } = await import('./historiasParalelas.js');
+            const { getHistoriaParalela, getSystemPromptHistoria, getMensajeBienvenidaHistoria, getImagenSelectorHistoria } = await import('./historiasParalelas.js');
             const historia = getHistoriaParalela(historiaId);
             
             if (!historia) {
@@ -1225,6 +1231,18 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
             // Limpiar mensajes y agregar saludo personalizado
             const messagesDiv = document.getElementById('chatMessages');
             historialMensajesUI = [];
+            
+            // Actualizar nombres ANTES de limpiar mensajes (para evitar error de null)
+            // Verificar que los elementos existan antes de modificarlos
+            const nombreSaludoEl = document.getElementById('chicaNombreSaludo');
+            const nombreEscribiendoEl = document.getElementById('chicaNombreEscribiendo');
+            
+            if (nombreSaludoEl) {
+                nombreSaludoEl.textContent = historia.nombre.split(' ')[0];
+            }
+            if (nombreEscribiendoEl) {
+                nombreEscribiendoEl.textContent = historia.nombre.split(' ')[0];
+            }
             
             // Obtener y mostrar el mensaje de bienvenida personalizado de la historia
             const mensajeBienvenida = getMensajeBienvenidaHistoria(historiaId);
@@ -1255,21 +1273,24 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                 `;
             }
             
-            // Actualizar nombres después de limpiar mensajes (para evitar error de null)
-            document.getElementById('chicaNombreSaludo').textContent = historia.nombre.split(' ')[0];
-            document.getElementById('chicaNombreEscribiendo').textContent = historia.nombre.split(' ')[0];
-            
-            // IMPORTANTE: Configurar la lógica para usar el system prompt de la historia
-            // Obtener el system prompt específico de esta historia
+            // IMPORTANTE: Configurar la lógica para usar el system prompt ADICIONAL de la historia
+            // Este se COMBINARA con el system prompt normal de logica.js
             const systemPromptHistoria = getSystemPromptHistoria(historiaId);
             if (systemPromptHistoria) {
-                logQuinti('INFO', `System prompt de historia cargado: ${historiaId}`, { promptLength: systemPromptHistoria.length });
+                logQuinti('INFO', `System prompt ADICIONAL de historia cargado: ${historiaId}`, { promptLength: systemPromptHistoria.length });
                 // Guardar el system prompt en una variable global para que logica.js pueda usarlo
                 window.systemPromptHistoriaActual = systemPromptHistoria;
                 window.historiaParalelaActiva = historiaId;
+                
+                // También guardar la imagen selector para mostrar imágenes correctamente
+                const imagenSelector = getImagenSelectorHistoria(historiaId);
+                if (imagenSelector) {
+                    window.imagenSelectorHistoria = imagenSelector;
+                    logQuinti('INFO', `Imagen selector de historia guardada: ${historiaId}`);
+                }
             }
             
-            // Resetear el historial de conversación para empezar con el nuevo system prompt
+            // Resetear el historial de conversación para empezar con los nuevos system prompts
             if (window.limpiarHistorialConversacion) {
                 window.limpiarHistorialConversacion();
             }
