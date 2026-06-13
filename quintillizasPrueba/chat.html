@@ -6,31 +6,32 @@
     <title>QuintiAmigas - Chat</title>
     <link rel="stylesheet" href="../1_style.css">
     <style>
-        /* Selector de chicas */
+        /* Selector de chicas - UI OSCURA MEJORADA */
         .selector-container {
             max-width: 1000px;
             margin: 20px auto;
             padding: 25px;
-            background: rgba(255, 255, 255, 0.98);
+            background: rgba(20, 20, 30, 0.95);
             border-radius: 20px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
             backdrop-filter: blur(10px);
+            border: 2px solid rgba(147, 112, 219, 0.3);
         }
         
         .selector-header {
             text-align: center;
             padding: 20px;
-            background: linear-gradient(135deg, #FF69B4, #FF1493, #C71585);
+            background: linear-gradient(135deg, #667eea, #764ba2, #8B5CF6);
             color: white;
             border-radius: 15px;
             margin-bottom: 25px;
-            box-shadow: 0 4px 15px rgba(255, 20, 147, 0.4);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
         }
         
         .selector-header h2 {
             font-size: 28px;
             margin: 0 0 10px 0;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
         
         .chicas-selector {
@@ -45,30 +46,30 @@
             position: relative;
             width: 180px;
             height: 240px;
-            border: 4px solid #ffb6c1;
+            border: 4px solid #8B5CF6;
             border-radius: 20px;
             cursor: pointer;
             overflow: hidden;
             transition: all 0.3s ease;
-            background: #fff0f5;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            background: #1a1a2e;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
         }
         
         .chica-button:hover {
             transform: translateY(-5px) scale(1.03);
-            border-color: #FF1493;
-            box-shadow: 0 8px 25px rgba(255, 20, 147, 0.5);
+            border-color: #A78BFA;
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.6);
         }
         
         .chica-button.selected {
-            border-color: #FF1493;
-            box-shadow: 0 0 30px rgba(255, 20, 147, 0.8), inset 0 0 20px rgba(255, 20, 147, 0.3);
+            border-color: #C4B5FD;
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.9), inset 0 0 20px rgba(139, 92, 246, 0.4);
             animation: pulse 1.5s infinite;
         }
         
         @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 30px rgba(255, 20, 147, 0.8); }
-            50% { box-shadow: 0 0 50px rgba(255, 20, 147, 1); }
+            0%, 100% { box-shadow: 0 0 30px rgba(139, 92, 246, 0.9); }
+            50% { box-shadow: 0 0 50px rgba(139, 92, 246, 1); }
         }
         
         .chica-button img {
@@ -87,24 +88,25 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(transparent, rgba(255, 20, 147, 0.95));
+            background: linear-gradient(transparent, rgba(139, 92, 246, 0.95));
             color: white;
             padding: 12px;
             text-align: center;
             font-weight: bold;
             font-size: 16px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
         }
         
         .chat-container {
             max-width: 800px;
             margin: 20px auto;
             padding: 25px;
-            background: rgba(255, 255, 255, 0.98);
+            background: rgba(20, 20, 30, 0.95);
             border-radius: 20px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
             backdrop-filter: blur(10px);
             display: none;
+            border: 2px solid rgba(139, 92, 246, 0.3);
         }
         
         .chat-container.active {
@@ -114,17 +116,17 @@
         .chat-header {
             text-align: center;
             padding: 20px;
-            background: linear-gradient(135deg, #FF69B4, #FF1493, #C71585);
+            background: linear-gradient(135deg, #667eea, #764ba2, #8B5CF6);
             color: white;
             border-radius: 15px;
             margin-bottom: 25px;
-            box-shadow: 0 4px 15px rgba(255, 20, 147, 0.4);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
         }
         
         .chat-header h2 {
             font-size: 26px;
             margin: 0;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
         
         .chica-info {
@@ -132,11 +134,11 @@
             align-items: center;
             gap: 20px;
             padding: 20px;
-            background: linear-gradient(135deg, #fff0f5, #ffe4e9);
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
             border-radius: 15px;
             margin-bottom: 25px;
-            box-shadow: 0 4px 15px rgba(255, 20, 147, 0.2);
-            border: 2px solid #ffb6c1;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            border: 2px solid #8B5CF6;
         }
         
         .chica-info img {
@@ -144,20 +146,20 @@
             height: 100px;
             border-radius: 50%;
             object-fit: cover;
-            border: 4px solid #FF1493;
-            box-shadow: 0 4px 15px rgba(255, 20, 147, 0.4);
+            border: 4px solid #A78BFA;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.5);
         }
         
         .chica-info-text h3 {
             margin: 0;
-            color: #FF1493;
+            color: #C4B5FD;
             font-size: 24px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
         
         .chica-info-text p {
             margin: 8px 0 0;
-            color: #666;
+            color: #a0a0b0;
             font-size: 15px;
             line-height: 1.5;
         }
@@ -165,12 +167,12 @@
         .chat-messages {
             height: 500px;
             overflow-y: auto;
-            border: 2px solid #ffb6c1;
+            border: 2px solid #8B5CF6;
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 15px;
-            background: #fff0f5;
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
+            background: #0f0f1a;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
         }
         
         .message {
@@ -184,17 +186,34 @@
         }
         
         .user-message {
-            background: linear-gradient(135deg, #4CAF50, #2196F3);
-            color: white;
+            background: linear-gradient(135deg, #1e3a5f, #2d5a87);
+            color: #e0e0ff;
             margin-left: auto;
             text-align: right;
-            box-shadow: 0 3px 10px rgba(76, 175, 80, 0.3);
+            box-shadow: 0 3px 10px rgba(30, 58, 95, 0.5);
+            border: 1px solid rgba(139, 92, 246, 0.3);
         }
         
         .bot-message {
-            background: linear-gradient(135deg, #FF69B4, #FF1493);
-            color: white;
-            box-shadow: 0 3px 10px rgba(255, 20, 147, 0.3);
+            background: linear-gradient(135deg, #2d1b4e, #1a1a2e);
+            color: #e0e0ff;
+            box-shadow: 0 3px 10px rgba(45, 27, 78, 0.5);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+        
+        /* NARRACIÓN CON ESTILO DIFERENTE */
+        .bot-message em,
+        .bot-message i,
+        .narracion {
+            color: #FCD34D;
+            font-style: italic;
+            font-weight: 500;
+        }
+        
+        /* Acciones entre asteriscos con color dorado/ámbar */
+        .bot-message strong + *,
+        .bot-message span[style*="color: #FCD34D"] {
+            color: #FCD34D;
         }
         
         .bot-message img {
@@ -205,8 +224,8 @@
             border-radius: 12px;
             display: block;
             margin: 15px auto 10px auto;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            border: 3px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            border: 3px solid rgba(139, 92, 246, 0.5);
         }
         
         .chat-input-container {
@@ -217,19 +236,22 @@
         .chat-input {
             flex: 1;
             padding: 12px;
-            border: 2px solid #ffb6c1;
+            border: 2px solid #8B5CF6;
             border-radius: 25px;
             font-size: 16px;
             outline: none;
+            background: #1a1a2e;
+            color: #e0e0ff;
         }
         
         .chat-input:focus {
-            border-color: #FF1493;
+            border-color: #A78BFA;
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
         }
         
         .send-button {
             padding: 12px 25px;
-            background: linear-gradient(135deg, #FF69B4, #FF1493);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
             border-radius: 25px;
@@ -240,6 +262,7 @@
         
         .send-button:hover {
             transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.5);
         }
         
         .send-button:disabled {
@@ -249,16 +272,17 @@
         
         .typing-indicator {
             display: none;
-            color: #FF1493;
+            color: #A78BFA;
             font-style: italic;
             margin: 10px 0;
+            font-weight: bold;
         }
         
         .start-chat-btn {
             display: block;
             margin: 25px auto;
             padding: 18px 50px;
-            background: linear-gradient(135deg, #FF69B4, #FF1493, #C71585);
+            background: linear-gradient(135deg, #667eea, #764ba2, #8B5CF6);
             color: white;
             border: none;
             border-radius: 30px;
@@ -266,13 +290,13 @@
             font-size: 20px;
             font-weight: bold;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 20, 147, 0.4);
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.5);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
         
         .start-chat-btn:hover {
             transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(255, 20, 147, 0.6);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.7);
         }
         
         .start-chat-btn:disabled {
@@ -283,7 +307,7 @@
         
         .typing-indicator {
             display: none;
-            color: #FF1493;
+            color: #A78BFA;
             font-style: italic;
             margin: 15px 0;
             font-size: 16px;
@@ -299,23 +323,23 @@
         .chat-input {
             flex: 1;
             padding: 15px 20px;
-            border: 3px solid #ffb6c1;
+            border: 3px solid #8B5CF6;
             border-radius: 30px;
             font-size: 17px;
             outline: none;
             transition: all 0.3s ease;
-            background: #fff0f5;
+            background: #1a1a2e;
+            color: #e0e0ff;
         }
         
         .chat-input:focus {
-            border-color: #FF1493;
-            background: white;
-            box-shadow: 0 0 15px rgba(255, 20, 147, 0.3);
+            border-color: #A78BFA;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
         }
         
         .send-button {
             padding: 15px 30px;
-            background: linear-gradient(135deg, #FF69B4, #FF1493, #C71585);
+            background: linear-gradient(135deg, #667eea, #764ba2, #8B5CF6);
             color: white;
             border: none;
             border-radius: 30px;
@@ -323,13 +347,13 @@
             font-weight: bold;
             font-size: 17px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 20, 147, 0.4);
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.5);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
         
         .send-button:hover {
             transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(255, 20, 147, 0.6);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.7);
         }
         
         .send-button:disabled {
@@ -344,21 +368,21 @@
             bottom: 30px;
             right: 30px;
             padding: 15px 25px;
-            background: linear-gradient(135deg, #9C27B0, #673AB7);
+            background: linear-gradient(135deg, #8B5CF6, #6D28D9);
             color: white;
             border: none;
             border-radius: 30px;
             cursor: pointer;
             font-size: 18px;
             font-weight: bold;
-            box-shadow: 0 4px 20px rgba(156, 39, 176, 0.5);
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.6);
             transition: all 0.3s ease;
             z-index: 100;
         }
 
         .historias-paralelas-btn:hover {
             transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 8px 30px rgba(156, 39, 176, 0.7);
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.8);
         }
 
         /* Modal de Historias Paralelas */
@@ -368,7 +392,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.85);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -377,15 +401,15 @@
         }
 
         .modal-content {
-            background: linear-gradient(135deg, #fff0f5, #ffe4e9);
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
             border-radius: 25px;
             padding: 30px;
             max-width: 600px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
-            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
-            border: 3px solid #FF1493;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.7);
+            border: 3px solid #8B5CF6;
         }
 
         .modal-header {
@@ -394,18 +418,18 @@
             align-items: center;
             margin-bottom: 25px;
             padding-bottom: 15px;
-            border-bottom: 2px solid #FF1493;
+            border-bottom: 2px solid #8B5CF6;
         }
 
         .modal-header h2 {
-            color: #FF1493;
+            color: #C4B5FD;
             margin: 0;
             font-size: 26px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .close-btn {
-            background: linear-gradient(135deg, #FF69B4, #FF1493);
+            background: linear-gradient(135deg, #8B5CF6, #6D28D9);
             color: white;
             border: none;
             border-radius: 50%;
@@ -421,7 +445,7 @@
 
         .close-btn:hover {
             transform: rotate(90deg) scale(1.1);
-            box-shadow: 0 4px 15px rgba(255, 20, 147, 0.5);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.6);
         }
 
         .historias-lista {
@@ -430,28 +454,28 @@
         }
 
         .historia-card {
-            background: white;
+            background: #0f0f1a;
             border-radius: 20px;
             padding: 20px;
-            border: 2px solid #ffb6c1;
+            border: 2px solid #8B5CF6;
             transition: all 0.3s ease;
             cursor: pointer;
         }
 
         .historia-card:hover {
             transform: translateY(-5px);
-            border-color: #FF1493;
-            box-shadow: 0 8px 25px rgba(255, 20, 147, 0.4);
+            border-color: #A78BFA;
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5);
         }
 
         .historia-card h3 {
-            color: #FF1493;
+            color: #C4B5FD;
             margin: 0 0 10px 0;
             font-size: 22px;
         }
 
         .historia-card p {
-            color: #666;
+            color: #a0a0b0;
             margin: 0;
             line-height: 1.6;
         }
@@ -462,7 +486,7 @@
             object-fit: cover;
             border-radius: 15px;
             margin-bottom: 15px;
-            border: 2px solid #FF1493;
+            border: 2px solid #8B5CF6;
         }
     </style>
 </head>
@@ -553,9 +577,11 @@
     <script type="module" src="imagenes.js"></script>
     <script type="module" src="logica.js"></script>
     <script type="module" src="historiasParalelas.js"></script>
+    <script type="module" src="antiRepeticion.js"></script>
     <script type="module">
         // Importar funciones necesarias de logica.js e imagenes.js
         import { getChicasDisponibles, seleccionarChica, conversar, logQuinti, logErrorAPI, formatearErrorUsuario, getChicasEnChat, actualizarAccionEnCurso, getAccionEnCurso, getChicaSeleccionada, getImagenSelector } from './logica.js';
+        import { detectarRepeticion, detectarRepeticionEntreChicas, agregarDialogoAlHistorial, generarPromptAntiRepeticion, getEstadisticasRepeticion } from './antiRepeticion.js';
         import { QuintiImagenesPrueba } from './imagenes.js';
         
         let chicaSeleccionadaActual = null;
