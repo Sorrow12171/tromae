@@ -825,44 +825,6 @@ function parsearJSON(raw) {
         }
     }
     
-    // ESTRATEGIA 7: EXTRA-ROBUSTA - Buscar TODOS los posibles bloques JSON en el texto
-    // Útil cuando hay múltiples { } o el JSON está muy enterrado en texto narrativo
-    const patronTodosJSON = /\{[^{}]*"[^"]*"[^{}]*:[[^{}]*"[^"]*"[^{}]*\}/g;
-    const todosLosPosiblesJSON = rawLimpio.match(patronTodosJSON);
-    if (todosLosPosiblesJSON) {
-        for (const posibleJSON of todosLosPosiblesJSON) {
-            try {
-                const resultado = JSON.parse(posibleJSON);
-                logQuinti('DEBUG', 'parsearJSON: extracción exitosa buscando todos los bloques JSON');
-                return resultado;
-            } catch (error) {
-                continue; // Probar con el siguiente
-            }
-        }
-    }
-    
-    // ESTRATEGIA 8: FALLBACK EXTREMO - Si hay texto narrativo mezclado, intentar construir respuesta básica
-    // Esto previene que se pierda completamente la respuesta cuando el JSON está corrupto
-    const tieneImagenTag = raw.includes('*imagen_tag:') || raw.includes('imagen_tag');
-    if (tieneImagenTag) {
-        logQuinti('WARN', 'parsearJSON: detectado imagen_tag en texto narrativo, intentando fallback');
-        // Extraer tag de imagen si existe
-        const matchImagenTag = raw.match(/\*imagen_tag:\s*"([^"]+)"\*/i) || raw.match(/imagen_tag["']?\s*[:=]\s*["']?([^"'\s,}]+)/i);
-        const imagenTag = matchImagenTag ? matchImagenTag[1] : null;
-        
-        // Extraer cualquier texto que parezca diálogo (entre comillas o después de asteriscos)
-        const matchDialogo = raw.match(/\*\s*([^*]+)\s*\*/);
-        const dialogoExtraido = matchDialogo ? matchDialogo[1].trim() : raw.substring(0, 200);
-        
-        if (dialogoExtraido && dialogoExtraido.length > 10) {
-            logQuinti('DEBUG', 'parsearJSON: fallback construyó respuesta desde texto narrativo');
-            return {
-                respuesta: dialogoExtraido,
-                imagen_tag: imagenTag
-            };
-        }
-    }
-    
     logQuinti('ERROR', 'parsearJSON: no se pudo extraer JSON válido', {
         contenidoCompleto: raw.substring(0, 300)
     });
