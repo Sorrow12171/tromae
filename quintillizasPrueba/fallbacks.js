@@ -26,6 +26,18 @@ const FALLBACKS_LOCALES = [
 ];
 
 /**
+ * Fallback ANTI-REPETICIÓN: Se usa ANTES del primer fallback cuando se detecta que
+ * las chicas están repitiendo diálogos o copiando a otras chicas.
+ * Instruye específicamente a responder al mensaje anterior sin repetir lo dicho por otras.
+ */
+const FALLBACK_ANTI_REPETICION = [
+    "*respira hondo y te mira con determinación* Espera, quiero responderte bien esto... *piensa un momento* Lo que dijiste antes es importante para mí, déjame contestarte de una forma diferente y más sincera~ *sonríe suavemente*",
+    "*te toma de las manos* No quiero sonar repetitiva... *baja la mirada pensativa* Déjame decirte lo que realmente pienso sobre lo que hablamos antes... *su voz se vuelve más cálida*",
+    "*se lleva un dedo al mentón* Mmm... creo que ya hablé de eso pero quiero responderte de otra manera~ *ríe suavemente* Porque cada vez que dices algo, me hace pensar diferente...",
+    "*te mira fijamente* Sabes, lo que dijiste antes me quedó dando vueltas... *se acerca un poco más* Déjame responderte desde el corazón, sin repetir lo mismo...",
+];
+
+/**
  * Obtiene un mensaje de error detallado para mostrar al usuario
  * Muestra el error técnico real con formato específico
  * @param {boolean} esDebug - Si es true, incluye detalles técnicos completos
@@ -63,6 +75,15 @@ export function obtenerMensajeError(esDebug = false, error = null) {
  */
 export function obtenerFallbackLocal() {
     return FALLBACKS_LOCALES[Math.floor(Math.random() * FALLBACKS_LOCALES.length)];
+}
+
+/**
+ * Obtiene un fallback ANTI-REPETICIÓN para usar antes del fallback normal
+ * cuando se detecta que las chicas están repitiendo diálogos o copiando a otras.
+ * @returns {string} - Respuesta de fallback anti-repetición
+ */
+export function obtenerFallbackAntiRepeticion() {
+    return FALLBACK_ANTI_REPETICION[Math.floor(Math.random() * FALLBACK_ANTI_REPETICION.length)];
 }
 
 /**
@@ -186,8 +207,10 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         MENSAJES_ERROR,
         FALLBACKS_LOCALES,
+        FALLBACK_ANTI_REPETICION,
         obtenerMensajeError,
         obtenerFallbackLocal,
+        obtenerFallbackAntiRepeticion,
         CONFIG_REINTENTOS,
         generarPayloadFase,
         getOrdenFases,

@@ -26,7 +26,7 @@
 import { generarSystemPrompt, QUINT_PRUEBA_SYSTEM_MINIMO, QUINT_PRUEBA_FASE1, QUINT_PRUEBA_FASE2, QUINT_PRUEBA_FASE3, QUINT_PRUEBA_FASE4, SYSTEM_PROMPT_INICIAL } from './systemPrompt.js';
 import { PERSONALIDADES, getChicasDisponibles, existeChica, tieneImagenes } from './personalidades.js';
 import { ALDO_PERSONALIDAD, ALDO_INSTRUCCIONES_SISTEMA, getAldoPersonalidad, esAldo, aldoDebeResponder } from './aldo.js';
-import { obtenerMensajeError, generarPayloadFase, getOrdenFases, getInfoFase, obtenerFallbackLocal } from './fallbacks.js';
+import { obtenerMensajeError, generarPayloadFase, getOrdenFases, getInfoFase, obtenerFallbackLocal, obtenerFallbackAntiRepeticion } from './fallbacks.js';
 import { QuintiImagenesPrueba } from './imagenes.js';
 import { getImagenTagsMapping as getImagenTagsMappingHistoria } from './historiasParalelas.js';
 import { detectarRepeticion, detectarRepeticionEntreChicas, agregarDialogoAlHistorial, generarPromptAntiRepeticion, getEstadisticasRepeticion } from './antiRepeticion.js';
@@ -985,7 +985,7 @@ DEBES HACER TRES COSAS OBLIGATORIAMENTE:
                 const respuestasPrevias = respuestasPorChica.map(r => 
                     `• ${r.chica}: ${r.respuesta.substring(0, 200)}...`
                 ).join('\n');
-                instruccionContextoOtrasChicas = `\n\n📋 CONTEXTO - OTRAS CHICAS YA RESPONDIERON:\n${respuestasPrevias}\n\n⚡ TU RESPUESTA DEBE SER DIFERENTE: No repitas sus palabras exactas, pero TODAS deben estar realizando la MISMA ACCIÓN que el usuario mencionó. Cada una con su estilo único pero la misma acción base.\n\n🖼️ IMAGEN COORDINADA OBLIGATORIA: Si el usuario dijo "beso", TODAS las chicas deben estar besando en su texto Y en su imagen_tag. La acción es la misma, la expresión de cada personalidad es diferente.`;
+                instruccionContextoOtrasChicas = `\n\n📋 CONTEXTO - OTRAS CHICAS YA RESPONDIERON:\n${respuestasPrevias}\n\n⚡ TU RESPUESTA DEBE SER DIFERENTE: No repitas sus palabras exactas, pero TODAS deben estar realizando la MISMA ACCIÓN que el usuario mencionó. Cada una con su estilo único pero la misma acción base.\n\n🖼️ IMAGEN COORDINADA OBLIGATORIA: Si el usuario dijo "beso", TODAS las chicas deben estar besando en su texto Y en su imagen_tag. La acción es la misma, la expresión de cada personalidad es diferente.\n\n🚫 PROHIBIDO HABLAR COMO OTRA CHICA: Tú eres ${nombreChica}. NO uses el estilo, vocabulario o frases de las otras chicas. Mantén TU propia personalidad y forma de hablar.`;
             }
             
             // SOLUCIÓN PROBLEMA #2: Incluir contexto unificado en el system prompt
@@ -1134,13 +1134,14 @@ DEBES HACER TRES COSAS OBLIGATORIAMENTE:
                 }
                 
                 // ========================================
-                // FALLBACK LOCAL: Si TODAS las fases fallan (último recurso)
+                // FALLBACK ANTI-REPETICIÓN: Si se detecta repetición entre chicas (nuevo)
+                // Se usa ANTES del fallback local normal para evitar que las chicas copien diálogos
                 // ========================================
                 if (!datos || !esRespuestaValida(datos)) {
-                    logQuinti('ERROR', `${nombreChica} - Todas las fases de reintento fallaron, usando fallback local`);
+                    logQuinti('ERROR', `${nombreChica} - Todas las fases de reintento fallaron, usando fallback anti-repetición primero`);
                     const fallbackTag = tagsDisponibles.includes('hablando') ? 'hablando' : tagsDisponibles[0] || 'normal';
                     datos = {
-                        respuesta: obtenerFallbackLocal(),
+                        respuesta: obtenerFallbackAntiRepeticion(),
                         imagen_tag: fallbackTag
                     };
                 }
