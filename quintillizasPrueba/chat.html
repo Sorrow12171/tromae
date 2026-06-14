@@ -330,6 +330,7 @@
             transition: all 0.3s ease;
             background: #1a1a2e;
             color: #e0e0ff;
+            min-width: 0; /* Previene desbordamiento en móviles */
         }
         
         .chat-input:focus {
@@ -349,6 +350,7 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(139, 92, 246, 0.5);
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            white-space: nowrap; /* Evita que el texto se rompa en móviles */
         }
         
         .send-button:hover {
@@ -360,6 +362,222 @@
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
+        }
+
+        /* ============================================
+           MEDIA QUERIES PARA CELULARES (MEJORA UI)
+           ============================================ */
+        
+        /* Pantallas menores a 768px (tablets y celulares) */
+        @media (max-width: 768px) {
+            .selector-container,
+            .chat-container {
+                margin: 10px auto;
+                padding: 15px;
+                max-width: 95%;
+            }
+            
+            .selector-header h2 {
+                font-size: 22px;
+            }
+            
+            .chicas-selector {
+                gap: 15px;
+            }
+            
+            .chica-button {
+                width: 140px;
+                height: 200px;
+            }
+            
+            .chica-button .nombre-chica {
+                font-size: 14px;
+                padding: 8px;
+            }
+            
+            .chat-header h2 {
+                font-size: 20px;
+            }
+            
+            .chica-info {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+                padding: 15px;
+            }
+            
+            .chica-info img {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .chica-info-text h3 {
+                font-size: 20px;
+            }
+            
+            .chica-info-text p {
+                font-size: 14px;
+            }
+            
+            .chat-messages {
+                height: 400px;
+                padding: 15px;
+            }
+            
+            .message {
+                padding: 12px 15px;
+                font-size: 15px;
+                max-width: 90%;
+            }
+            
+            .chat-input-container {
+                flex-direction: row;
+                gap: 8px;
+            }
+            
+            .chat-input {
+                padding: 12px 15px;
+                font-size: 16px;
+            }
+            
+            .send-button {
+                padding: 12px 20px;
+                font-size: 15px;
+            }
+            
+            .start-chat-btn {
+                padding: 15px 30px;
+                font-size: 18px;
+            }
+            
+            .historias-paralelas-btn {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 20px;
+                font-size: 16px;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+            
+            .modal-header h2 {
+                font-size: 22px;
+            }
+        }
+        
+        /* Pantallas menores a 480px (celulares pequeños) */
+        @media (max-width: 480px) {
+            .selector-container,
+            .chat-container {
+                margin: 5px auto;
+                padding: 10px;
+                max-width: 98%;
+            }
+            
+            .selector-header h2 {
+                font-size: 18px;
+            }
+            
+            .selector-header p {
+                font-size: 14px;
+            }
+            
+            .chicas-selector {
+                gap: 10px;
+            }
+            
+            .chica-button {
+                width: 110px;
+                height: 160px;
+                border-width: 3px;
+            }
+            
+            .chica-button .nombre-chica {
+                font-size: 12px;
+                padding: 6px;
+            }
+            
+            .chat-header {
+                padding: 15px;
+            }
+            
+            .chat-header h2 {
+                font-size: 18px;
+            }
+            
+            .chica-info img {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .chica-info-text h3 {
+                font-size: 18px;
+            }
+            
+            .chica-info-text p {
+                font-size: 13px;
+            }
+            
+            .chat-messages {
+                height: 350px;
+                padding: 10px;
+            }
+            
+            .message {
+                padding: 10px 12px;
+                font-size: 14px;
+                max-width: 95%;
+            }
+            
+            .chat-input-container {
+                gap: 6px;
+            }
+            
+            .chat-input {
+                padding: 10px 12px;
+                font-size: 14px;
+                border-width: 2px;
+            }
+            
+            .send-button {
+                padding: 10px 15px;
+                font-size: 14px;
+                min-width: 70px;
+            }
+            
+            .start-chat-btn {
+                padding: 12px 25px;
+                font-size: 16px;
+            }
+            
+            .typing-indicator {
+                font-size: 14px;
+            }
+            
+            .historias-paralelas-btn {
+                bottom: 15px;
+                right: 15px;
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            
+            .modal-header h2 {
+                font-size: 20px;
+            }
+            
+            .historia-card h3 {
+                font-size: 18px;
+            }
+            
+            .historia-card p {
+                font-size: 13px;
+            }
+            
+            .historia-card .imagen-historia {
+                height: 150px;
+            }
         }
 
         /* Botón de Historias Paralelas */
