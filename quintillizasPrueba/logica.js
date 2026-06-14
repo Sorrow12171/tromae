@@ -709,6 +709,9 @@ function parsearJSON(raw) {
         return null;
     }
     
+    // Guardar el texto original completo antes de cualquier limpieza
+    const textoOriginalCompleto = raw;
+    
     // Limpiar bloques de código markdown y caracteres invisibles al inicio
     let rawLimpio = raw.replace(/```json/g, "").replace(/```/g, "").trim();
     
@@ -717,6 +720,8 @@ function parsearJSON(raw) {
     
     try {
         const resultado = JSON.parse(rawLimpio);
+        // Adjuntar el texto original completo al resultado para no perder contexto
+        resultado.texto_original = textoOriginalCompleto;
         return resultado;
     } catch (error) {
         logQuinti('DEBUG', `parsearJSON: primer intento falló - ${error.message}`, { 
@@ -730,6 +735,8 @@ function parsearJSON(raw) {
         try {
             const resultado = JSON.parse(match[0]);
             logQuinti('DEBUG', 'parsearJSON: extracción exitosa del JSON del texto');
+            // Adjuntar el texto original completo al resultado para no perder contexto
+            resultado.texto_original = textoOriginalCompleto;
             return resultado;
         } catch (error) {
             logQuinti('DEBUG', `parsearJSON: segundo intento falló - ${error.message}`, {
@@ -748,6 +755,8 @@ function parsearJSON(raw) {
             try {
                 const resultado = JSON.parse(posibleJSON);
                 logQuinti('DEBUG', 'parsearJSON: extracción exitosa tras limpiar texto inicial');
+                // Adjuntar el texto original completo al resultado para no perder contexto
+                resultado.texto_original = textoOriginalCompleto;
                 return resultado;
             } catch (error) {
                 logQuinti('DEBUG', `parsearJSON: tercer intento falló - ${error.message}`, {
@@ -764,6 +773,8 @@ function parsearJSON(raw) {
         try {
             const resultado = JSON.parse(textoSinAcciones);
             logQuinti('DEBUG', 'parsearJSON: extracción exitosa tras eliminar acciones narrativas');
+            // Adjuntar el texto original completo al resultado para no perder contexto
+            resultado.texto_original = textoOriginalCompleto;
             return resultado;
         } catch (error) {
             logQuinti('DEBUG', `parsearJSON: intento con texto sin acciones falló - ${error.message}`);
@@ -775,6 +786,8 @@ function parsearJSON(raw) {
             try {
                 const resultado = JSON.parse(matchLimpio[0]);
                 logQuinti('DEBUG', 'parsearJSON: extracción exitosa de JSON tras limpiar acciones narrativas');
+                // Adjuntar el texto original completo al resultado para no perder contexto
+                resultado.texto_original = textoOriginalCompleto;
                 return resultado;
             } catch (error) {
                 logQuinti('DEBUG', `parsearJSON: extracción de JSON limpia falló - ${error.message}`);
@@ -791,6 +804,8 @@ function parsearJSON(raw) {
         try {
             const resultado = JSON.parse(textoDesdeLLave);
             logQuinti('DEBUG', 'parsearJSON: extracción exitosa desde primera llave');
+            // Adjuntar el texto original completo al resultado para no perder contexto
+            resultado.texto_original = textoOriginalCompleto;
             return resultado;
         } catch (error) {
             logQuinti('DEBUG', `parsearJSON: intento desde primera llave falló - ${error.message}`);
@@ -805,6 +820,8 @@ function parsearJSON(raw) {
         try {
             const resultado = JSON.parse(jsonReparado);
             logQuinti('DEBUG', 'parsearJSON: extracción exitosa tras reparar comillas');
+            // Adjuntar el texto original completo al resultado para no perder contexto
+            resultado.texto_original = textoOriginalCompleto;
             return resultado;
         } catch (error) {
             logQuinti('DEBUG', `parsearJSON: reparación de comillas falló - ${error.message}`);
@@ -819,6 +836,8 @@ function parsearJSON(raw) {
         try {
             const resultado = JSON.parse(matchMinimo[0]);
             logQuinti('DEBUG', 'parsearJSON: extracción exitosa de JSON mínimo');
+            // Adjuntar el texto original completo al resultado para no perder contexto
+            resultado.texto_original = textoOriginalCompleto;
             return resultado;
         } catch (error) {
             logQuinti('DEBUG', `parsearJSON: JSON mínimo falló - ${error.message}`);
@@ -830,6 +849,29 @@ function parsearJSON(raw) {
     });
     return null;
 }
+
+/**
+ * Formatea el texto para mostrar la narración entre asteriscos con estilo diferente
+ * Convierte *texto* en <em class="narracion">texto</em> para styling CSS
+ * @param {string} texto - Texto a formatear
+ * @returns {string} - Texto formateado con HTML
+ */
+function formatearTextoConAsteriscos(texto) {
+    if (!texto) return '';
+    
+    // Escapar caracteres HTML especiales primero para evitar XSS
+    let textoEscapado = texto
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    
+    // Reemplazar texto entre asteriscos con etiquetas <em> para styling
+    // El patrón busca *texto* y lo convierte en <em class="narracion">texto</em>
+    textoEscapado = textoEscapado.replace(/\*([^*]+)\*/g, '<em class="narracion">$1</em>');
+    
+    return textoEscapado;
+}
+
 
 /**
  * Valida que la respuesta tenga la estructura esperada
@@ -1835,7 +1877,9 @@ export {
     detectarRepeticionEntreChicas,
     agregarDialogoAlHistorial,
     generarPromptAntiRepeticion,
-    getEstadisticasRepeticion
+    getEstadisticasRepeticion,
+    // Función de formateo de texto
+    formatearTextoConAsteriscos
 };
 
 // Exportar para window (compatibilidad con browser)
@@ -1858,6 +1902,8 @@ if (typeof window !== 'undefined') {
     window.generarResumenNarrativo = generarResumenNarrativo;
     window.obtenerEstadoMemoriaParaPrompt = obtenerEstadoMemoriaParaPrompt;
     window.procesarMensajeParaMemoria = procesarMensajeParaMemoria;
+    // Función de formateo de texto
+    window.formatearTextoConAsteriscos = formatearTextoConAsteriscos;
 }
 
 // Exportar funciones para uso en otros módulos (CommonJS - compatibilidad)

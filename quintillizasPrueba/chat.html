@@ -798,7 +798,7 @@
     <script type="module" src="antiRepeticion.js"></script>
     <script type="module">
         // Importar funciones necesarias de logica.js e imagenes.js
-        import { getChicasDisponibles, seleccionarChica, conversar, logQuinti, logErrorAPI, formatearErrorUsuario, getChicasEnChat, actualizarAccionEnCurso, getAccionEnCurso, getChicaSeleccionada, getImagenSelector } from './logica.js';
+        import { getChicasDisponibles, seleccionarChica, conversar, logQuinti, logErrorAPI, formatearErrorUsuario, getChicasEnChat, actualizarAccionEnCurso, getAccionEnCurso, getChicaSeleccionada, getImagenSelector, formatearTextoConAsteriscos } from './logica.js';
         import { detectarRepeticion, detectarRepeticionEntreChicas, agregarDialogoAlHistorial, generarPromptAntiRepeticion, getEstadisticasRepeticion } from './antiRepeticion.js';
         import { QuintiImagenesPrueba } from './imagenes.js';
         
@@ -1150,7 +1150,9 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                         }
 
                         // Construir contenido: PRIMERO TEXTO con nombre, luego imagen al final
-                        let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;"><strong>${chicaNombre}:</strong> ${chicaRespuesta}</div>`;
+                        // Formatear el texto para que la narración entre asteriscos tenga estilo diferente
+                        const chicaRespuestaFormateada = formatearTextoConAsteriscos(chicaRespuesta);
+                        let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;"><strong>${chicaNombre}:</strong> ${chicaRespuestaFormateada}</div>`;
                         if (imagenURL) {
                             contenidoHTML += `<img src="${imagenURL}" alt="${chicaNombre}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
                         }
@@ -1238,7 +1240,9 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                         }
 
                         // Construir contenido: PRIMERO TEXTO con nombre, luego imagen al final
-                        let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;"><strong>${chicaNombre}:</strong> ${chicaRespuesta}</div>`;
+                        // Formatear el texto para que la narración entre asteriscos tenga estilo diferente
+                        const chicaRespuestaFormateada = formatearTextoConAsteriscos(chicaRespuesta);
+                        let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;"><strong>${chicaNombre}:</strong> ${chicaRespuestaFormateada}</div>`;
                         if (imagenURL) {
                             contenidoHTML += `<img src="${imagenURL}" alt="${chicaNombre}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
                         }
