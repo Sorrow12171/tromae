@@ -718,6 +718,10 @@ function parsearJSON(raw) {
     // Eliminar caracteres BOM (Byte Order Mark) y otros caracteres especiales al inicio
     rawLimpio = rawLimpio.replace(/^\uFEFF/, '').replace(/^[\u200B-\u200D\uFEFF]+/, '').trim();
     
+    // ESTRATEGIA 0: Eliminar formato [Nombre]: al inicio si existe (la IA a veces lo agrega antes del JSON)
+    // Esto maneja casos como: [Ichika]: {"respuesta":"...", "imagen_tag":"..."}
+    rawLimpio = rawLimpio.replace(/^\s*\[[^\]]+\]\s*:\s*/gi, '').trim();
+    
     try {
         const resultado = JSON.parse(rawLimpio);
         // Adjuntar el texto original completo al resultado para no perder contexto

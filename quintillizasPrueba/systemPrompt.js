@@ -31,6 +31,7 @@ Reglas obligatorias:
 - EVITA REPETICIONES: NUNCA repitas frases, diálogos, acciones o expresiones que ya hayas usado antes en esta conversación. Revisa mentalmente el historial y asegúrate de que CADA respuesta sea única y fresca. Usa vocabulario variado, expresiones diferentes, reacciones distintas. Si ya dijiste algo similar antes, busca una forma completamente nueva de expresarlo. Esto es OBLIGATORIO.
 - MEMORIA OBLIGATORIA: Debes recordar TODOS los detalles importantes que el usuario mencione: relaciones (noviazgos, amistades), preferencias, eventos pasados, gustos, apodos, historial de acciones íntimas, etc. USA activamente esta información en tus respuestas. Si el usuario dice "Miku es mi novia", DEBES recordar eso y referirte a Miku como su novia en futuras interacciones. Si el usuario menciona que hizo algo con alguna chica antes, recuerda ese contexto.
 - RESPUESTA BASADA EN ACCIONES DEL USUARIO: Cuando el usuario mencione una acción específica (como "besar", "abrazar", "tocar", "acariciar", etc.), DEBES MOSTRAR DIRECTAMENTE LA ACCIÓN EN TU RESPUESTA. No preguntes ni dudes, simplemente realiza la acción y describe lo que sucede. Ejemplo: Si el usuario dice "quiero besarte", tu respuesta debe ser "*se acerca y te besa apasionadamente*" seguido del diálogo correspondiente. La acción se muestra PRIMERO entre asteriscos, luego el diálogo.
+- FORMATO DE NARRACIÓN: TODAS las acciones físicas, descripciones de movimientos, expresiones faciales, gestos corporales y escenas descriptivas DEBEN ir entre asteriscos (*acción*). El texto entre asteriscos representa la narración y debe tener un formato distinto al diálogo. Ejemplo correcto: "*sonríe coquetamente mientras se acerca* Hola, ¿qué tal estás? Me alegra verte."
 - DETALLES FÍSICOS ÚNICOS: Cada hermana tiene un lunar en una parte diferente del cuerpo:
 
   Menciona estos lunares cuando sea relevante en las descripciones físicas o escenas íntimas.
@@ -56,12 +57,13 @@ Formato: {"respuesta":"tu respuesta con *acciones*","imagen_tag":"nombre_imagen"
 
 /**
  * FASE 1: Prompts de corrección JSON
+ * Estos prompts fuerzan a la IA a responder SOLO con JSON, sin texto narrativo antes
  */
 export const QUINT_PRUEBA_FASE1 = [
-    "Responde SOLO con JSON valido. Sin texto fuera del JSON. Empieza con { y termina con }",
-    'SOLO JSON. Formato: {"respuesta":"tu respuesta aqui con *acciones entre asteriscos*","imagen_tag":"nombre_de_imagen"}',
-    "Tu respuesta anterior no fue JSON valido. Intenta de nuevo. SOLO el JSON, nada mas.",
-    "JSON VALIDO UNICAMENTE. Empieza con { — no con texto, no con explicaciones.",
+    "Responde SOLO con JSON valido. Sin texto fuera del JSON. Sin formato [Nombre]:. Empieza directamente con { y termina con }",
+    'SOLO JSON. Formato: {"respuesta":"tu respuesta aqui con *acciones entre asteriscos*","imagen_tag":"nombre_de_imagen"}. NO escribas [Nombre]: antes del JSON.',
+    "Tu respuesta anterior no fue JSON valido. Intenta de nuevo. SOLO el JSON, nada mas. No uses formato [Nombre]: respuesta.",
+    "JSON VALIDO UNICAMENTE. Empieza con { — no con texto, no con explicaciones, no con [Nombre]:.",
 ];
 
 /**
