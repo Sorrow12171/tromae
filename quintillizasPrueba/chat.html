@@ -784,6 +784,10 @@
             <div class="message bot-message">
                 ¡Hola! Soy <span id="chicaNombreSaludo"></span> 🌸 ¿En qué puedo ayudarte hoy?
             </div>
+            <!-- Mensaje de ejemplo con narración para demostrar el estilo -->
+            <div class="message bot-message" style="margin-top: 10px; border-left: 3px solid #FBBF24;">
+                <strong>Ejemplo:</strong> <em class="narracion">*sonríe cálidamente*</em> Este texto dorado es la narración entre asteriscos. ¡Así se verá en el chat! ✨
+            </div>
         </div>
         
         <div class="typing-indicator" id="typingIndicator" style="display: none;">
@@ -801,9 +805,11 @@
     <script type="module" src="logica.js"></script>
     <script type="module" src="historiasParalelas.js"></script>
     <script type="module" src="antiRepeticion.js"></script>
+    <!-- Cargar tests unitarios en desarrollo (descomentar para ejecutar tests) -->
+    <!-- <script type="module" src="logica.test.js"></script> -->
     <script type="module">
         // Importar funciones necesarias de logica.js e imagenes.js
-        import { getChicasDisponibles, seleccionarChica, conversar, logQuinti, logErrorAPI, formatearErrorUsuario, getChicasEnChat, actualizarAccionEnCurso, getAccionEnCurso, getChicaSeleccionada, getImagenSelector, formatearTextoConAsteriscos } from './logica.js';
+        import { getChicasDisponibles, seleccionarChica, conversar, logQuinti, logErrorAPI, formatearErrorUsuario, getChicasEnChat, actualizarAccionEnCurso, getAccionEnCurso, getChicaSeleccionada, getImagenSelector, formatearTextoConAsteriscos, parsearJSON } from './logica.js';
         import { detectarRepeticion, detectarRepeticionEntreChicas, agregarDialogoAlHistorial, generarPromptAntiRepeticion, getEstadisticasRepeticion } from './antiRepeticion.js';
         import { QuintiImagenesPrueba } from './imagenes.js';
         
