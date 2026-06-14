@@ -1883,7 +1883,9 @@ export {
     generarPromptAntiRepeticion,
     getEstadisticasRepeticion,
     // Función de formateo de texto
-    formatearTextoConAsteriscos
+    formatearTextoConAsteriscos,
+    // Función de parseo de JSON (para tests)
+    parsearJSON
 };
 
 // Exportar para window (compatibilidad con browser)
@@ -1908,6 +1910,8 @@ if (typeof window !== 'undefined') {
     window.procesarMensajeParaMemoria = procesarMensajeParaMemoria;
     // Función de formateo de texto
     window.formatearTextoConAsteriscos = formatearTextoConAsteriscos;
+    // Función de parseo de JSON (para tests)
+    window.parsearJSON = parsearJSON;
 }
 
 // Exportar funciones para uso en otros módulos (CommonJS - compatibilidad)
