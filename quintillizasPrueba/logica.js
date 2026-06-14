@@ -52,8 +52,79 @@ let chicaSeleccionada = null;
 let historialConversacion = [];
 const MAX_HISTORIAL = 20;
 let chicasEnChat = new Set(); // Conjunto de chicas que están participando en el chat actual
-let memoriaChat = []; // Sistema de memoria para recordar cosas puntuales durante la conversación
-const MAX_MEMORIA = 10; // Máximo número de recuerdos a mantener
+
+// ============================================================
+//  SISTEMA DE MEMORIA AVANZADO - IMPLEMENTACIÓN COMPLETA
+// ============================================================
+
+/**
+ * SISTEMA DE MEMORIA MULTICAPA
+ * 
+ * 1. Memoria de Trabajo (Working Memory): Contexto inmediato de las últimas interacciones
+ * 2. Memoria de Hechos (Fact Memory): Datos concretos y relevantes mencionados
+ * 3. Memoria Narrativa (Narrative Memory): Resumen del hilo principal de conversación
+ * 4. Memoria de Eventos Íntimos (Intimate Events): Contadores y eventos sexuales
+ * 5. Memoria Emocional (Emotional Memory): Estado emocional y tono de la conversación
+ */
+
+// Memoria de Trabajo - Últimas interacciones y contexto inmediato
+let memoriaTrabajo = {
+    ultimosMensajes: [],        // Últimos 5 mensajes usuario-asistente
+    contextoInmediato: '',       // Tema actual de conversación
+    tiempoUltimaInteraccion: 0,  // Timestamp de la última interacción
+    turnosEnTemaActual: 0,       // Cuántos turnos lleva el tema actual
+    temaActual: null             // Tema principal actual
+};
+const MAX_MEMORIA_TRABAJO = 5;  // Mantener últimos 5 intercambios
+
+// Memoria de Hechos - Datos concretos mencionados por el usuario
+let memoriaHechos = {
+    nombres: [],                 // Nombres mencionados (usuario, otras personas)
+    preferencias: [],            // Gustos y preferencias del usuario
+    lugares: [],                 // Lugares mencionados o donde ocurren acciones
+    objetos: [],                 // Objetos importantes mencionados
+    eventosPasados: [],          // Eventos importantes que ocurrieron
+    relaciones: [],              // Relaciones entre personajes
+    datosPersonales: [],         // Información personal del usuario
+    accionesRecientes: []        // Acciones físicas recientes realizadas
+};
+const MAX_HECHOS_POR_CATEGORIA = 20;
+
+// Memoria Narrativa - Resumen del hilo de conversación
+let memoriaNarrativa = {
+    resumenGeneral: '',          // Resumen de toda la conversación
+    puntosClave: [],             // Puntos clave de la historia
+    arcosNarrativos: [],         // Arcos o temas principales
+    ultimoResumenTurno: 0,       // Turno en que se generó el último resumen
+    turnosDesdeUltimoResumen: 0  // Turnos desde el último resumen
+};
+const TURNOS_PARA_RESUMEN = 6;   // Generar resumen cada 6 turnos (más frecuente)
+
+// Memoria Emocional - Estado emocional de la conversación
+let memoriaEmocional = {
+    tonoActual: 'neutral',       // Tono emocional predominante
+    intensidadEmocional: 0,      // Intensidad del momento (0-10)
+    emocionesRecientes: [],      // Últimas emociones detectadas
+    nivelConfianza: 0,           // Nivel de confianza/intimidad (0-10)
+    momentosDestacados: []       // Momentos emocionalmente significativos
+};
+
+// Memoria de Eventos Íntimos - Contadores y eventos sexuales
+let memoriaEventosIntimos = {
+    totalBesos: 0,
+    totalMamadas: 0,
+    totalFolladas: 0,
+    totalAnal: 0,
+    totalHandjobs: 0,
+    posicionesUsadas: [],        // Posiciones utilizadas
+    lugaresIntimos: [],          // Lugares donde ocurrieron eventos
+    fantasiasMencionadas: [],    // Fantasías o deseos expresados
+    eventosImportantes: []       // Array de eventos importantes con timestamp y descripción
+};
+
+// Configuración general de memoria
+const MAX_MEMORIA = 50; // Máximo total de elementos en memoria
+const MAX_EVENTOS_IMPORTANTES = 30;
 
 // Variables para mantener el estado de la acción en curso (persistencia natural de contexto)
 let accionEnCurso = null; // Acción actual (ej: 'besando', 'chupando')
@@ -75,16 +146,6 @@ let estadoAccionesExplicitas = {
     desnuda: false,
     mostrandoCulo: false,
     lamiendoAno: false
-};
-
-// MEMORIA DE EVENTOS ÍNTIMOS - Contador de acciones realizadas
-let memoriaEventosIntimos = {
-    totalBesos: 0,
-    totalMamadas: 0,
-    totalFolladas: 0,
-    totalAnal: 0,
-    totalHandjobs: 0,
-    eventosImportantes: [] // Array de eventos importantes con timestamp y descripción
 };
 
 /**
@@ -246,12 +307,201 @@ function registrarEventoImportante(descripcion) {
     
     memoriaEventosIntimos.eventosImportantes.push(evento);
     
-    // Mantener solo los últimos 20 eventos importantes
-    if (memoriaEventosIntimos.eventosImportantes.length > 20) {
+    // Mantener solo los últimos 30 eventos importantes
+    if (memoriaEventosIntimos.eventosImportantes.length > MAX_EVENTOS_IMPORTANTES) {
         memoriaEventosIntimos.eventosImportantes.shift();
     }
     
-    logQuinti('INFO', `Evento importante registrado: ${descripcion}`);
+    logQuinti('INFO', `📝 EVENTO IMPORTANTE REGISTRADO: ${descripcion}`);
+}
+
+/**
+ * AGREGA UN HECHO A LA MEMORIA DE HECHOS
+ * @param {string} categoria - Categoría del hecho (nombres, preferencias, lugares, objetos, eventosPasados, relaciones, datosPersonales, accionesRecientes)
+ * @param {string} valor - El valor a recordar
+ */
+function agregarHechoMemoria(categoria, valor) {
+    if (!memoriaHechos[categoria]) {
+        memoriaHechos[categoria] = [];
+    }
+    
+    // Verificar si ya existe para evitar duplicados
+    const yaExiste = memoriaHechos[categoria].some(hecho => 
+        hecho.toLowerCase().includes(valor.toLowerCase()) || 
+        valor.toLowerCase().includes(hecho.toLowerCase())
+    );
+    
+    if (!yaExiste && valor.trim() !== '') {
+        memoriaHechos[categoria].push(valor);
+        
+        // Limitar cantidad por categoría
+        if (memoriaHechos[categoria].length > MAX_HECHOS_POR_CATEGORIA) {
+            memoriaHechos[categoria].shift();
+        }
+        
+        logQuinti('INFO', `💾 HECHO GUARDADO [${categoria}]: ${valor}`);
+    }
+}
+
+/**
+ * ACTUALIZA LA MEMORIA DE TRABAJO CON CADA INTERACCIÓN
+ * @param {string} mensajeUsuario - Mensaje del usuario
+ * @param {string} respuestaAsistente - Respuesta de la chica
+ */
+function actualizarMemoriaTrabajo(mensajeUsuario, respuestaAsistente) {
+    const intercambio = {
+        usuario: mensajeUsuario,
+        asistente: respuestaAsistente,
+        timestamp: new Date().toISOString()
+    };
+    
+    memoriaTrabajo.ultimosMensajes.push(intercambio);
+    
+    // Mantener solo los últimos MAX_MEMORIA_TRABAJO intercambios
+    if (memoriaTrabajo.ultimosMensajes.length > MAX_MEMORIA_TRABAJO) {
+        memoriaTrabajo.ultimosMensajes.shift();
+    }
+    
+    memoriaTrabajo.tiempoUltimaInteraccion = Date.now();
+    memoriaTrabajo.turnosEnTemaActual++;
+    
+    logQuinti('DEBUG', `🔄 MEMORIA DE TRABAJO ACTUALIZADA - Turnos en tema actual: ${memoriaTrabajo.turnosEnTemaActual}`);
+}
+
+/**
+ * GENERA RESUMEN NARRATIVO PERIÓDICO
+ * Se llama cada TURNOS_PARA_RESUMEN turnos para condensar la conversación
+ */
+function generarResumenNarrativo() {
+    // Extraer puntos clave de los últimos mensajes
+    const ultimosMensajes = memoriaTrabajo.ultimosMensajes.slice(-3);
+    const puntosNuevos = ultimosMensajes.map(m => {
+        const resumenCorto = m.usuario.substring(0, 50) + '...';
+        return `- Usuario: ${resumenCorto}`;
+    });
+    
+    // Actualizar el resumen general
+    if (memoriaNarrativa.resumenGeneral === '') {
+        memoriaNarrativa.resumenGeneral = 'Inicio de conversación. ' + puntosNuevos.join(' ');
+    } else {
+        memoriaNarrativa.resumenGeneral += ' Luego: ' + puntosNuevos.join(' ');
+    }
+    
+    // Limitar longitud del resumen
+    if (memoriaNarrativa.resumenGeneral.length > 1000) {
+        memoriaNarrativa.resumenGeneral = memoriaNarrativa.resumenGeneral.substring(memoriaNarrativa.resumenGeneral.length - 1000);
+    }
+    
+    memoriaNarrativa.ultimoResumenTurno = historialConversacion.length / 2;
+    memoriaNarrativa.turnosDesdeUltimoResumen = 0;
+    
+    logQuinti('INFO', `📖 RESUMEN NARRATIVO GENERADO: ${memoriaNarrativa.resumenGeneral.substring(0, 150)}...`);
+}
+
+/**
+ * OBTIENE EL ESTADO COMPLETO DE LA MEMORIA PARA INCLUIR EN EL PROMPT
+ * @returns {string} - Texto formateado con toda la memoria relevante
+ */
+function obtenerEstadoMemoriaParaPrompt() {
+    let estadoMemoria = '\\n\\n=== 🧠 SISTEMA DE MEMORIA ACTIVO ===\\n';
+    
+    // 1. Memoria Narrativa (Resumen general)
+    if (memoriaNarrativa.resumenGeneral) {
+        estadoMemoria += `📖 RESUMEN CONVERSACIÓN: ${memoriaNarrativa.resumenGeneral}\\n`;
+    }
+    
+    // 2. Memoria de Hechos (Datos importantes)
+    const hechosRelevantes = [];
+    if (memoriaHechos.nombres.length > 0) {
+        hechosRelevantes.push(`Nombres: ${memoriaHechos.nombres.slice(-5).join(', ')}`);
+    }
+    if (memoriaHechos.preferencias.length > 0) {
+        hechosRelevantes.push(`Gustos: ${memoriaHechos.preferencias.slice(-5).join(', ')}`);
+    }
+    if (memoriaHechos.lugares.length > 0) {
+        hechosRelevantes.push(`Lugares: ${memoriaHechos.lugares.slice(-5).join(', ')}`);
+    }
+    if (memoriaHechos.datosPersonales.length > 0) {
+        hechosRelevantes.push(`Datos personales: ${memoriaHechos.datosPersonales.slice(-5).join(', ')}`);
+    }
+    if (memoriaHechos.accionesRecientes.length > 0) {
+        hechosRelevantes.push(`Acciones recientes: ${memoriaHechos.accionesRecientes.slice(-5).join(', ')}`);
+    }
+    
+    if (hechosRelevantes.length > 0) {
+        estadoMemoria += `💾 DATOS RECORDADOS: ${hechosRelevantes.join(' | ')}\\n`;
+    }
+    
+    // 3. Memoria de Eventos Íntimos
+    if (memoriaEventosIntimos.totalBesos > 0 || memoriaEventosIntimos.totalMamadas > 0 || 
+        memoriaEventosIntimos.totalFolladas > 0 || memoriaEventosIntimos.totalAnal > 0 ||
+        memoriaEventosIntimos.totalHandjobs > 0) {
+        estadoMemoria += `🔥 HISTORIAL ÍNTIMO: Besos(${memoriaEventosIntimos.totalBesos}) | Mamadas(${memoriaEventosIntimos.totalMamadas}) | Folladas(${memoriaEventosIntimos.totalFolladas}) | Anal(${memoriaEventosIntimos.totalAnal}) | Handjobs(${memoriaEventosIntimos.totalHandjobs})\\n`;
+    }
+    
+    // 4. Acción en curso
+    if (accionEnCurso) {
+        estadoMemoria += `⚡ ACCIÓN EN CURSO: ${accionEnCurso} (desde hace ${contadorTurnosAccion} turnos)\\n`;
+    }
+    
+    // 5. Últimos eventos importantes
+    if (memoriaEventosIntimos.eventosImportantes.length > 0) {
+        const ultimosEventos = memoriaEventosIntimos.eventosImportantes.slice(-5);
+        estadoMemoria += `📌 EVENTOS RECIENTES:\\n`;
+        ultimosEventos.forEach(evento => {
+            estadoMemoria += `   - ${evento.descripcion}\\n`;
+        });
+    }
+    
+    estadoMemoria += `=================================\\n`;
+    
+    return estadoMemoria;
+}
+
+/**
+ * PROCESA EL MENSAJE DEL USUARIO PARA EXTRAER INFORMACIÓN Y GUARDARLA EN MEMORIA
+ * @param {string} mensaje - Mensaje del usuario
+ */
+function procesarMensajeParaMemoria(mensaje) {
+    const mensajeLower = mensaje.toLowerCase();
+    
+    // Detectar nombres propios (palabras capitalizadas después de ciertos patrones)
+    const patronesNombre = [/me llamo (\w+)/i, /mi nombre es (\w+)/i, /soy (\w+)/i];
+    for (const patron of patronesNombre) {
+        const match = mensaje.match(patron);
+        if (match && match[1]) {
+            agregarHechoMemoria('nombres', match[1]);
+        }
+    }
+    
+    // Detectar preferencias (me gusta, prefiero, odio, etc.)
+    const patronesPreferencia = [/me gusta(n)? ([^.]+)/i, /prefiero ([^.]+)/i, /odio ([^.]+)/i, /no me gusta ([^.]+)/i];
+    for (const patron of patronesPreferencia) {
+        const match = mensaje.match(patron);
+        if (match && match[2]) {
+            agregarHechoMemoria('preferencias', match[2].trim().substring(0, 50));
+        }
+    }
+    
+    // Detectar lugares (estoy en, vamos a, en el/la)
+    const patronesLugar = [/estoy en ([^.]+)/i, /vamos a ([^.]+)/i, /en el ([^.]+)/i, /en la ([^.]+)/i];
+    for (const patron of patronesLugar) {
+        const match = mensaje.match(patron);
+        if (match && match[1]) {
+            agregarHechoMemoria('lugares', match[1].trim().substring(0, 50));
+        }
+    }
+    
+    // Detectar acción en curso y guardarla
+    const accionesPosibles = ['besando', 'mamando', 'chupando', 'follando', 'tocando', 'lamiendo', 'penetrando'];
+    for (const accion of accionesPosibles) {
+        if (mensajeLower.includes(accion)) {
+            agregarHechoMemoria('accionesRecientes', accion);
+            break;
+        }
+    }
+    
+    logQuinti('DEBUG', `🔍 MENSAJE PROCESADO PARA MEMORIA: "${mensaje.substring(0, 50)}..."`);
 }
 
 /**
@@ -960,8 +1210,9 @@ DEBES HACER TRES COSAS OBLIGATORIAMENTE:
     // Instrucción anti-repetición mejorada
     const instruccionAntiRepeticion = `\n\nREGLA CRÍTICA ANTI-REPETICIÓN: NUNCA repitas frases, diálogos, acciones o expresiones que ya hayas usado antes en esta conversación. Revisa mentalmente el historial y asegúrate de que CADA respuesta sea única y fresca. Usa vocabulario variado, expresiones diferentes, reacciones distintas. Si ya dijiste algo similar antes, busca una forma completamente nueva de expresarlo. Esto es OBLIGATORIO.`;
     
-    // Instrucción de memoria
-    const instruccionMemoria = `\n\nMEMORIA DE CONVERSACIÓN: Debes recordar detalles importantes que el usuario mencione (nombres, preferencias, eventos pasados, gustos, etc.). Usa esta información para dar respuestas más personales y coherentes. Si el usuario menciona algo relevante, guárdalo en tu memoria y refiérete a ello cuando sea apropiado.`;
+    // SISTEMA DE MEMORIA MEJORADO: Obtener estado completo de la memoria
+    const estadoMemoriaCompleto = obtenerEstadoMemoriaParaPrompt();
+    const instruccionMemoria = `\n\n🧠 SISTEMA DE MEMORIA ACTIVO - INFORMACIÓN QUE DEBES RECORDAR:\n${estadoMemoriaCompleto}\nUSA ESTA INFORMACIÓN PARA DAR RESPUESTAS COHERENTES Y PERSONALIZADAS. REFERENCIA ESTOS DATOS CUANDO SEA RELEVANTE.`;
     
     // SOLUCIÓN PROBLEMA #1: Instrucción reforzada para acciones en tiempo presente (caso una sola chica)
     const instruccionAccionUsuario = `
@@ -1572,6 +1823,12 @@ export {
     getEstadoAccion,
     getMemoriaEventosIntimos,
     registrarEventoImportante,
+    // Funciones de memoria mejoradas
+    agregarHechoMemoria,
+    actualizarMemoriaTrabajo,
+    generarResumenNarrativo,
+    obtenerEstadoMemoriaParaPrompt,
+    procesarMensajeParaMemoria,
     // Funciones anti-repeticion
     detectarRepeticion,
     detectarRepeticionEntreChicas,
@@ -1594,6 +1851,12 @@ if (typeof window !== 'undefined') {
     window.getMemoriaEventosIntimos = getMemoriaEventosIntimos;
     window.registrarEventoImportante = registrarEventoImportante;
     window.limpiarHistorialConversacion = limpiarHistorial; // Para usar desde chat.html
+    // Funciones de memoria mejoradas
+    window.agregarHechoMemoria = agregarHechoMemoria;
+    window.actualizarMemoriaTrabajo = actualizarMemoriaTrabajo;
+    window.generarResumenNarrativo = generarResumenNarrativo;
+    window.obtenerEstadoMemoriaParaPrompt = obtenerEstadoMemoriaParaPrompt;
+    window.procesarMensajeParaMemoria = procesarMensajeParaMemoria;
 }
 
 // Exportar funciones para uso en otros módulos (CommonJS - compatibilidad)
