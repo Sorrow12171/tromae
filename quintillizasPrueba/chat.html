@@ -1292,7 +1292,10 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                                 logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, mensajeUsuario: message.substring(0, 50) });
                             }
 
-                            let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;"><strong>${chicaNombre}:</strong> ${chicaRespuesta}</div>`;
+                            // Formatear el texto para que la narración entre asteriscos tenga estilo diferente
+                            const chicaRespuestaFormateada = formatearTextoConAsteriscos(chicaRespuesta);
+                            
+                            let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;"><strong>${chicaNombre}:</strong> ${chicaRespuestaFormateada}</div>`;
                             if (imagenURL) {
                                 contenidoHTML += `<img src="${imagenURL}" alt="${chicaNombre}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
                             }
@@ -1311,8 +1314,11 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                     const botMsgDiv = document.createElement('div');
                     botMsgDiv.className = 'message bot-message';
 
+                    // Formatear el texto para que la narración entre asteriscos tenga estilo diferente
+                    const respuestaFormateada = formatearTextoConAsteriscos(response.respuesta);
+                    
                     // Construir contenido: PRIMERO TEXTO, luego imagen al final
-                    let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;">${response.respuesta}</div>`;
+                    let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;">${respuestaFormateada}</div>`;
                     if (response.imagen_url) {
                         contenidoHTML += `<img src="${response.imagen_url}" alt="${response.imagen_tag}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
                     }
