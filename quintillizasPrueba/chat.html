@@ -1337,11 +1337,14 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                         } else {
                             // MÉTODO TRADICIONAL: Una sola imagen al final
                             let imagenURL = null;
+                            let audioURL = null;
                             if (infoChica) {
                                 // Seleccionar imagen basada en el mensaje del usuario (PRIORIDAD) y la respuesta
                                 const tagImagen = seleccionarTagImagen(chicaRespuesta, chicaNombre, message);
-                                imagenURL = obtenerURLImagen(chicaNombre, tagImagen);
-                                logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, mensajeUsuario: message.substring(0, 50) });
+                                const resultadoImagen = obtenerURLImagen(chicaNombre, tagImagen);
+                                imagenURL = resultadoImagen.urlImagen;
+                                audioURL = resultadoImagen.urlAudio;
+                                logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, audio: audioURL, mensajeUsuario: message.substring(0, 50) });
                             }
 
                             // Construir contenido: PRIMERO TEXTO con nombre, luego imagen al final
@@ -1350,6 +1353,10 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                             let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;"><strong>${chicaNombre}:</strong> ${chicaRespuestaFormateada}</div>`;
                             if (imagenURL) {
                                 contenidoHTML += `<img src="${imagenURL}" alt="${chicaNombre}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
+                            }
+                            // Agregar audio si existe
+                            if (audioURL) {
+                                contenidoHTML += `<audio controls autoplay loop style="display: block; margin: 10px auto; width: 100%; max-width: 400px;"><source src="${audioURL}" type="audio/mpeg">Tu navegador no soporta el elemento de audio.</audio>`;
                             }
 
                             botMsgDiv.innerHTML = contenidoHTML;
@@ -1429,11 +1436,14 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                         // IMPORTANTE: Pasar el mensaje del usuario para que la imagen sea acorde a la acción
                         const infoChica = QuintiImagenesPrueba[chicaNombre];
                         let imagenURL = null;
+                        let audioURL = null;
                         if (infoChica) {
                             // Seleccionar imagen basada en el mensaje del usuario (PRIORIDAD) y la respuesta
                             const tagImagen = seleccionarTagImagen(chicaRespuesta, chicaNombre, message);
-                            imagenURL = obtenerURLImagen(chicaNombre, tagImagen);
-                            logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, mensajeUsuario: message.substring(0, 50) });
+                            const resultadoImagen = obtenerURLImagen(chicaNombre, tagImagen);
+                            imagenURL = resultadoImagen.urlImagen;
+                            audioURL = resultadoImagen.urlAudio;
+                            logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, audio: audioURL, mensajeUsuario: message.substring(0, 50) });
                         }
 
                         // Construir contenido: PRIMERO TEXTO con nombre, luego imagen al final
@@ -1442,6 +1452,10 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                         let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;"><strong>${chicaNombre}:</strong> ${chicaRespuestaFormateada}</div>`;
                         if (imagenURL) {
                             contenidoHTML += `<img src="${imagenURL}" alt="${chicaNombre}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
+                        }
+                        // Agregar audio si existe
+                        if (audioURL) {
+                            contenidoHTML += `<audio controls autoplay loop style="display: block; margin: 10px auto; width: 100%; max-width: 400px;"><source src="${audioURL}" type="audio/mpeg">Tu navegador no soporta el elemento de audio.</audio>`;
                         }
 
                         botMsgDiv.innerHTML = contenidoHTML;
@@ -1472,10 +1486,13 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                             // IMPORTANTE: Pasar el mensaje del usuario para que la imagen sea acorde a la acción
                             const infoChica = QuintiImagenesPrueba[chicaNombre];
                             let imagenURL = null;
+                            let audioURL = null;
                             if (infoChica) {
                                 const tagImagen = seleccionarTagImagen(chicaRespuesta, chicaNombre, message);
-                                imagenURL = obtenerURLImagen(chicaNombre, tagImagen);
-                                logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, mensajeUsuario: message.substring(0, 50) });
+                                const resultadoImagen = obtenerURLImagen(chicaNombre, tagImagen);
+                                imagenURL = resultadoImagen.urlImagen;
+                                audioURL = resultadoImagen.urlAudio;
+                                logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, audio: audioURL, mensajeUsuario: message.substring(0, 50) });
                             }
 
                             // Formatear el texto para que la narración entre asteriscos tenga estilo diferente
@@ -1484,6 +1501,10 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                             let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;"><strong>${chicaNombre}:</strong> ${chicaRespuestaFormateada}</div>`;
                             if (imagenURL) {
                                 contenidoHTML += `<img src="${imagenURL}" alt="${chicaNombre}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
+                            }
+                            // Agregar audio si existe
+                            if (audioURL) {
+                                contenidoHTML += `<audio controls autoplay loop style="display: block; margin: 10px auto; width: 100%; max-width: 400px;"><source src="${audioURL}" type="audio/mpeg">Tu navegador no soporta el elemento de audio.</audio>`;
                             }
 
                             botMsgDiv.innerHTML = contenidoHTML;
@@ -1507,6 +1528,10 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                     let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;">${respuestaFormateada}</div>`;
                     if (response.imagen_url) {
                         contenidoHTML += `<img src="${response.imagen_url}" alt="${response.imagen_tag}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
+                    }
+                    // Agregar audio si existe
+                    if (response.audio_url) {
+                        contenidoHTML += `<audio controls autoplay loop style="display: block; margin: 10px auto; width: 100%; max-width: 400px;"><source src="${response.audio_url}" type="audio/mpeg">Tu navegador no soporta el elemento de audio.</audio>`;
                     }
 
                     botMsgDiv.innerHTML = contenidoHTML;
