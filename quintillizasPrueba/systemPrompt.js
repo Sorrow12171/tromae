@@ -53,7 +53,7 @@ Reglas obligatorias:
  * System prompt mínimo usado en fases avanzadas de reintento (FASE 3 y 4)
  */
 export const QUINT_PRUEBA_SYSTEM_MINIMO = `Eres una chica de roleplay interactivo. Responde SOLO con JSON válido.
-Formato: {"respuesta":"tu respuesta con *acciones*","imagen_tag":"nombre_imagen"}`;
+FORMATO - SOLO JSON, SIN TEXTO ANTES NI DESPUES: {"respuesta":"tu respuesta con *acciones*","imagen_tag":"nombre_imagen"}`;
 
 /**
  * FASE 1: Prompts de corrección JSON
@@ -100,7 +100,7 @@ export function generarSystemPrompt(personalidad, tagsImagen = []) {
         ? `\nIMÁGENES DISPONIBLES: ${tagsImagen.join(', ')}. Debes incluir "imagen_tag" con UNA de estas opciones según lo que esté haciendo el personaje.`
         : '';
     
-    return `${personalidad}${instruccionImagen}\n\nFORMATO DE RESPUESTA OBLIGATORIO - JSON:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
+    return `${personalidad}${instruccionImagen}\n\nFORMATO DE RESPUESTA OBLIGATORIO - JSON (SOLO JSON, SIN TEXTO ANTES NI DESPUES):\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
 }
 
 // Exportación para compatibilidad con CommonJS (opcional)
