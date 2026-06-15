@@ -977,6 +977,7 @@
     <!-- Cargar scripts en orden: imagenes, logica (con reintentos y logs), luego UI -->
     <script type="module" src="imagenes.js"></script>
     <script type="module" src="logica.js"></script>
+    <script type="module" src="parserAcciones.js"></script>
     <script type="module" src="historiasParalelas.js"></script>
     <script type="module" src="antiRepeticion.js"></script>
     <!-- Cargar tests unitarios en desarrollo (descomentar para ejecutar tests) -->
@@ -986,6 +987,7 @@
         import { getChicasDisponibles, seleccionarChica, conversar, logQuinti, logErrorAPI, formatearErrorUsuario, getChicasEnChat, actualizarAccionEnCurso, getAccionEnCurso, getChicaSeleccionada, getImagenSelector, formatearTextoConAsteriscos, parsearJSON } from './logica.js';
         import { detectarRepeticion, detectarRepeticionEntreChicas, agregarDialogoAlHistorial, generarPromptAntiRepeticion, getEstadisticasRepeticion } from './antiRepeticion.js';
         import { QuintiImagenesPrueba } from './imagenes.js';
+        import { procesarMensajeParaUI, tieneMultiplesAcciones, interpretarRespuestaCorta } from './parserAcciones.js';
         
         let chicaSeleccionadaActual = null;
         let historialMensajesUI = []; // Historial local para la UI
@@ -1323,26 +1325,56 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                         const botMsgDiv = document.createElement('div');
                         botMsgDiv.className = 'message bot-message';
 
-                        // Obtener imagen de esta chica específica usando SU PROPIO tag
-                        // IMPORTANTE: Pasar el mensaje del usuario para que la imagen sea acorde a la acción
+                        // Obtener info de la chica
                         const infoChica = QuintiImagenesPrueba[chicaNombre];
-                        let imagenURL = null;
-                        if (infoChica) {
-                            // Seleccionar imagen basada en el mensaje del usuario (PRIORIDAD) y la respuesta
-                            const tagImagen = seleccionarTagImagen(chicaRespuesta, chicaNombre, message);
-                            imagenURL = obtenerURLImagen(chicaNombre, tagImagen);
-                            logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, mensajeUsuario: message.substring(0, 50) });
-                        }
+                        
+                        // NUEVO: Verificar si el mensaje tiene múltiples acciones para usar el parser
+                        const tieneMultiples = tieneMultiplesAcciones(chicaRespuesta);
+                        
+                        if (tieneMultiples && infoChica) {
+                            // USAR PARSER DE ACCIONES: Dividir mensaje en segmentos texto-imagen-texto
+                            logQuinti('DEBUG', `Parser activado para ${chicaNombre}: múltiples acciones detectadas`);
+                            
+                            const segmentosUI = procesarMensajeParaUI(chicaRespuesta, chicaNombre, QuintiImagenesPrueba);
+                            
+                            // Construir contenido con segmentos interleaved
+                            let contenidoHTML = `<div style="margin-bottom: 15px;"><strong>${chicaNombre}:</strong></div>`;
+                            
+                            for (const segmento of segmentosUI) {
+                                if (segmento.imagenURL) {
+                                    // Segmento con imagen: mostrar acción entre asteriscos + imagen
+                                    const accionFormateada = formatearTextoConAsteriscos(segmento.texto || '');
+                                    contenidoHTML += `<div style="line-height: 1.6; margin-bottom: 10px;">${accionFormateada}</div>`;
+                                    contenidoHTML += `<img src="${segmento.imagenURL}" alt="${segmento.imagenTag}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
+                                } else {
+                                    // Segmento solo texto
+                                    const textoFormateado = formatearTextoConAsteriscos(segmento.texto);
+                                    contenidoHTML += `<div style="line-height: 1.6; margin-bottom: 10px;">${textoFormateado}</div>`;
+                                }
+                            }
+                            
+                            botMsgDiv.innerHTML = contenidoHTML;
+                        } else {
+                            // MÉTODO TRADICIONAL: Una sola imagen al final
+                            let imagenURL = null;
+                            if (infoChica) {
+                                // Seleccionar imagen basada en el mensaje del usuario (PRIORIDAD) y la respuesta
+                                const tagImagen = seleccionarTagImagen(chicaRespuesta, chicaNombre, message);
+                                imagenURL = obtenerURLImagen(chicaNombre, tagImagen);
+                                logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, mensajeUsuario: message.substring(0, 50) });
+                            }
 
-                        // Construir contenido: PRIMERO TEXTO con nombre, luego imagen al final
-                        // Formatear el texto para que la narración entre asteriscos tenga estilo diferente
-                        const chicaRespuestaFormateada = formatearTextoConAsteriscos(chicaRespuesta);
-                        let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;"><strong>${chicaNombre}:</strong> ${chicaRespuestaFormateada}</div>`;
-                        if (imagenURL) {
-                            contenidoHTML += `<img src="${imagenURL}" alt="${chicaNombre}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
-                        }
+                            // Construir contenido: PRIMERO TEXTO con nombre, luego imagen al final
+                            // Formatear el texto para que la narración entre asteriscos tenga estilo diferente
+                            const chicaRespuestaFormateada = formatearTextoConAsteriscos(chicaRespuesta);
+                            let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;"><strong>${chicaNombre}:</strong> ${chicaRespuestaFormateada}</div>`;
+                            if (imagenURL) {
+                                contenidoHTML += `<img src="${imagenURL}" alt="${chicaNombre}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
+                            }
 
-                        botMsgDiv.innerHTML = contenidoHTML;
+                            botMsgDiv.innerHTML = contenidoHTML;
+                        }
+                        
                         messagesDiv.appendChild(botMsgDiv);
                         
                         // Scroll después de cada mensaje
