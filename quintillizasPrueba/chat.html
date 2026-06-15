@@ -987,13 +987,65 @@
         import { getChicasDisponibles, seleccionarChica, conversar, logQuinti, logErrorAPI, formatearErrorUsuario, getChicasEnChat, actualizarAccionEnCurso, getAccionEnCurso, getChicaSeleccionada, getImagenSelector, formatearTextoConAsteriscos, parsearJSON, obtenerURLImagen } from './logica.js';
         import { detectarRepeticion, detectarRepeticionEntreChicas, agregarDialogoAlHistorial, generarPromptAntiRepeticion, getEstadisticasRepeticion } from './antiRepeticion.js';
         import { QuintiImagenesPrueba } from './imagenes.js';
-        import { procesarMensajeParaUI, tieneMultiplesAcciones, interpretarRespuestaCorta } from './parserAcciones.js';
         
         let chicaSeleccionadaActual = null;
         let historialMensajesUI = []; // Historial local para la UI
         let accionEnCurso = null; // Mantiene el estado de la acción actual (ej: 'besando', 'chupando')
         let contadorTurnosAccion = 0; // Cuenta cuántos turnos lleva la acción actual
         const MAX_TURNOS_ACCION = 3; // Después de 3 turnos, la acción puede terminar naturalmente
+        
+        // SISTEMA DE AUDIO - Control global de reproducción
+        let audiosActivos = new Map(); // Mapa de elementos de audio activos por ID único
+        
+        /**
+         * Pausa todos los audios activos actualmente
+         */
+        function pausarTodosLosAudios() {
+            audiosActivos.forEach((audio, id) => {
+                if (!audio.paused) {
+                    audio.pause();
+                }
+            });
+        }
+        
+        /**
+         * Crea un elemento de audio y lo registra en el sistema de control
+         * @param {string} url - URL del archivo de audio
+         * @param {string} idChica - Identificador de la chica (para tracking)
+         * @returns {HTMLAudioElement} - Elemento de audio configurado
+         */
+        function crearAudioControlado(url, idChica) {
+            // Pausar todos los audios anteriores antes de reproducir uno nuevo
+            pausarTodosLosAudios();
+            
+            const audio = new Audio(url);
+            audio.controls = true;
+            audio.autoplay = true;
+            audio.loop = true;
+            audio.style.cssText = "display: block; margin: 10px auto; width: 100%; max-width: 400px;";
+            
+            // Generar ID único para este audio
+            const audioId = `${idChica}_${Date.now()}`;
+            audiosActivos.set(audioId, audio);
+            
+            // Limpiar del mapa cuando termine (por si acaso)
+            audio.addEventListener('ended', () => {
+                audiosActivos.delete(audioId);
+            });
+            
+            return audio;
+        }
+        
+        /**
+         * Convierte un elemento de audio a string HTML
+         * @param {HTMLAudioElement} audio - Elemento de audio
+         * @param {string} url - URL del audio (fallback)
+         * @returns {string} - HTML del audio
+         */
+        function audioToHTML(audio, url) {
+            const source = audio.querySelector('source')?.src || url;
+            return `<audio controls autoplay loop style="display: block; margin: 10px auto; width: 100%; max-width: 400px;"><source src="${source}" type="audio/mpeg">Tu navegador no soporta el elemento de audio.</audio>`;
+        }
         
         // Inicializar el selector cuando carga la página
         function inicializarSelector() {
@@ -1308,59 +1360,32 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                         // Obtener info de la chica
                         const infoChica = QuintiImagenesPrueba[chicaNombre];
                         
-                        // NUEVO: Verificar si el mensaje tiene múltiples acciones para usar el parser
-                        const tieneMultiples = tieneMultiplesAcciones(chicaRespuesta);
-                        
-                        if (tieneMultiples && infoChica) {
-                            // USAR PARSER DE ACCIONES: Dividir mensaje en segmentos texto-imagen-texto
-                            logQuinti('DEBUG', `Parser activado para ${chicaNombre}: múltiples acciones detectadas`);
-                            
-                            const segmentosUI = procesarMensajeParaUI(chicaRespuesta, chicaNombre, QuintiImagenesPrueba);
-                            
-                            // Construir contenido con segmentos interleaved
-                            let contenidoHTML = `<div style="margin-bottom: 15px;"><strong>${chicaNombre}:</strong></div>`;
-                            
-                            for (const segmento of segmentosUI) {
-                                if (segmento.imagenURL) {
-                                    // Segmento con imagen: mostrar acción entre asteriscos + imagen
-                                    const accionFormateada = formatearTextoConAsteriscos(segmento.texto || '');
-                                    contenidoHTML += `<div style="line-height: 1.6; margin-bottom: 10px;">${accionFormateada}</div>`;
-                                    contenidoHTML += `<img src="${segmento.imagenURL}" alt="${segmento.imagenTag}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
-                                } else {
-                                    // Segmento solo texto
-                                    const textoFormateado = formatearTextoConAsteriscos(segmento.texto);
-                                    contenidoHTML += `<div style="line-height: 1.6; margin-bottom: 10px;">${textoFormateado}</div>`;
-                                }
-                            }
-                            
-                            botMsgDiv.innerHTML = contenidoHTML;
-                        } else {
-                            // MÉTODO TRADICIONAL: Una sola imagen al final
-                            let imagenURL = null;
-                            let audioURL = null;
-                            if (infoChica) {
-                                // Seleccionar imagen basada en el mensaje del usuario (PRIORIDAD) y la respuesta
-                                const tagImagen = seleccionarTagImagen(chicaRespuesta, chicaNombre, message);
-                                const resultadoImagen = obtenerURLImagen(chicaNombre, tagImagen);
-                                imagenURL = resultadoImagen.urlImagen;
-                                audioURL = resultadoImagen.urlAudio;
-                                logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, audio: audioURL, mensajeUsuario: message.substring(0, 50) });
-                            }
-
-                            // Construir contenido: PRIMERO TEXTO con nombre, luego imagen al final
-                            // Formatear el texto para que la narración entre asteriscos tenga estilo diferente
-                            const chicaRespuestaFormateada = formatearTextoConAsteriscos(chicaRespuesta);
-                            let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;"><strong>${chicaNombre}:</strong> ${chicaRespuestaFormateada}</div>`;
-                            if (imagenURL) {
-                                contenidoHTML += `<img src="${imagenURL}" alt="${chicaNombre}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
-                            }
-                            // Agregar audio si existe
-                            if (audioURL) {
-                                contenidoHTML += `<audio controls autoplay loop style="display: block; margin: 10px auto; width: 100%; max-width: 400px;"><source src="${audioURL}" type="audio/mpeg">Tu navegador no soporta el elemento de audio.</audio>`;
-                            }
-
-                            botMsgDiv.innerHTML = contenidoHTML;
+                        // MÉTODO TRADICIONAL: Una sola imagen al final
+                        let imagenURL = null;
+                        let audioURL = null;
+                        if (infoChica) {
+                            // Seleccionar imagen basada en el mensaje del usuario (PRIORIDAD) y la respuesta
+                            const tagImagen = seleccionarTagImagen(chicaRespuesta, chicaNombre, message);
+                            const resultadoImagen = obtenerURLImagen(chicaNombre, tagImagen);
+                            imagenURL = resultadoImagen.urlImagen;
+                            audioURL = resultadoImagen.urlAudio;
+                            logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, audio: audioURL, mensajeUsuario: message.substring(0, 50) });
                         }
+
+                        // Construir contenido: PRIMERO TEXTO con nombre, luego imagen al final
+                        // Formatear el texto para que la narración entre asteriscos tenga estilo diferente
+                        const chicaRespuestaFormateada = formatearTextoConAsteriscos(chicaRespuesta);
+                        let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;"><strong>${chicaNombre}:</strong> ${chicaRespuestaFormateada}</div>`;
+                        if (imagenURL) {
+                            contenidoHTML += `<img src="${imagenURL}" alt="${chicaNombre}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
+                        }
+                        // Agregar audio si existe - USANDO SISTEMA DE CONTROL DE AUDIO
+                        if (audioURL) {
+                            const audioElement = crearAudioControlado(audioURL, chicaNombre);
+                            botMsgDiv.appendChild(audioElement);
+                        }
+
+                        botMsgDiv.innerHTML = contenidoHTML;
                         
                         messagesDiv.appendChild(botMsgDiv);
                         
@@ -1453,9 +1478,10 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                         if (imagenURL) {
                             contenidoHTML += `<img src="${imagenURL}" alt="${chicaNombre}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
                         }
-                        // Agregar audio si existe
+                        // Agregar audio si existe - USANDO SISTEMA DE CONTROL DE AUDIO
                         if (audioURL) {
-                            contenidoHTML += `<audio controls autoplay loop style="display: block; margin: 10px auto; width: 100%; max-width: 400px;"><source src="${audioURL}" type="audio/mpeg">Tu navegador no soporta el elemento de audio.</audio>`;
+                            const audioElement = crearAudioControlado(audioURL, chicaNombre);
+                            botMsgDiv.appendChild(audioElement);
                         }
 
                         botMsgDiv.innerHTML = contenidoHTML;
@@ -1502,9 +1528,11 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                             if (imagenURL) {
                                 contenidoHTML += `<img src="${imagenURL}" alt="${chicaNombre}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
                             }
-                            // Agregar audio si existe
+                            // Agregar audio si existe - USANDO SISTEMA DE CONTROL DE AUDIO
                             if (audioURL) {
-                                contenidoHTML += `<audio controls autoplay loop style="display: block; margin: 10px auto; width: 100%; max-width: 400px;"><source src="${audioURL}" type="audio/mpeg">Tu navegador no soporta el elemento de audio.</audio>`;
+                                const audioElement = crearAudioControlado(audioURL, chicaNombre);
+                                botMsgDiv.appendChild(audioElement);
+                            }
                             }
 
                             botMsgDiv.innerHTML = contenidoHTML;
@@ -1529,9 +1557,10 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                     if (response.imagen_url) {
                         contenidoHTML += `<img src="${response.imagen_url}" alt="${response.imagen_tag}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
                     }
-                    // Agregar audio si existe
+                    // Agregar audio si existe - USANDO SISTEMA DE CONTROL DE AUDIO
                     if (response.audio_url) {
-                        contenidoHTML += `<audio controls autoplay loop style="display: block; margin: 10px auto; width: 100%; max-width: 400px;"><source src="${response.audio_url}" type="audio/mpeg">Tu navegador no soporta el elemento de audio.</audio>`;
+                        const audioElement = crearAudioControlado(response.audio_url, response.chicaPrincipal || chicaSeleccionadaActual || 'chica');
+                        botMsgDiv.appendChild(audioElement);
                     }
 
                     botMsgDiv.innerHTML = contenidoHTML;
