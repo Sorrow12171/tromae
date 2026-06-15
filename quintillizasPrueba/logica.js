@@ -2044,6 +2044,9 @@ if (typeof window !== 'undefined') {
     window.procesarMensajeParaMemoria = procesarMensajeParaMemoria;
     // Función de formateo de texto
     window.formatearTextoConAsteriscos = formatearTextoConAsteriscos;
+    // Funciones del parser de acciones (se importan desde parserAcciones.js)
+    window.procesarMensajeParaUI = null;
+    window.tieneMultiplesAcciones = null;
     // Función de parseo de JSON (para tests)
     window.parsearJSON = parsearJSON;
 }
