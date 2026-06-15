@@ -1,5 +1,6 @@
 // ============================================================
 //  QUINTILLIZAS NAKANO CHAT — JavaScript para GitHub Pages
+//  SISTEMA REESTRUCTURADO: LLAMADAS API SEPARADAS POR HERMANA
 // ============================================================
 
 const _K = [
@@ -13,6 +14,46 @@ const _K = [
 const GROQ_KEYS = _K.map(p => p.join(""));
 
 const MODELO_PRINCIPAL   = "meta-llama/llama-4-scout-17b-16e-instruct";
+
+// ============================================================
+//  NUEVO SISTEMA: MEMORIA INDIVIDUAL POR HERMANA
+//  - Cada hermana tiene su propio historial (max 10 turnos)
+//  - Historiales NO compartidos entre personajes
+// ============================================================
+
+const HISTORIAL_POR_HERMANA = {
+    Ichika: [],
+    Nino: [],
+    Miku: [],
+    Yotsuba: [],
+    Itsuki: [],
+    Emilia: [],
+    Chizuru: []
+};
+
+const MAX_TURNOS_MEMORIA = 10; // Máximo 10 turnos por hermana
+
+// Función para agregar mensaje al historial de una hermana específica
+function agregarAlHistorialHermana(nombreHermana, role, content) {
+    if (!HISTORIAL_POR_HERMANA[nombreHermana]) {
+        HISTORIAL_POR_HERMANA[nombreHermana] = [];
+    }
+    HISTORIAL_POR_HERMANA[nombreHermana].push({ role, content });
+    
+    // Mantener máximo 10 turnos (20 mensajes: 10 user + 10 assistant)
+    while (HISTORIAL_POR_HERMANA[nombreHermana].length > MAX_TURNOS_MEMORIA * 2) {
+        HISTORIAL_POR_HERMANA[nombreHermana].shift();
+    }
+}
+
+// Función para obtener historial anonimizado (sin nombres de asistentes)
+function obtenerHistorialAnonimizado(nombreHermana) {
+    const historial = HISTORIAL_POR_HERMANA[nombreHermana] || [];
+    return historial.map(m => ({
+        role: m.role,
+        content: m.content
+    }));
+}
 
 // Variable global para manejar los audios actuales (se detienen al llegar nuevo mensaje del usuario)
 let audiosActivos = []; // Array para mantener referencia a todos los audios que están sonando
@@ -654,7 +695,7 @@ function quintRecortarHistorialSiEsNecesario() {
 }
 
 // ============================================================
-//  API GROQ
+//  API GROQ - VERSIÓN LEGACY (se mantiene para compatibilidad)
 // ============================================================
 
 async function quintLlamarAPI(messages, modelo, system) {
@@ -740,6 +781,237 @@ async function quintLlamarAPI(messages, modelo, system) {
         }
     }
     return null;
+}
+
+// ============================================================
+//  NUEVO SISTEMA: LLAMADA API INDIVIDUAL POR HERMANA
+//  - System prompt exclusivo por personaje
+//  - Historial individual anonimizado
+//  - Prefilling para forzar nombre de personaje
+//  - Stop sequences para evitar que otras hermanas hablen
+//  - Parámetros ajustados: temperature=0.85, frequency_penalty=0.5, presence_penalty=0.6
+// ============================================================
+
+/**
+ * Obtiene el system prompt EXCLUSIVO para una hermana específica
+ * @param {string} nombreHermana - Nombre exacto de la hermana (Ichika, Nino, Miku, Yotsuba, Itsuki, etc.)
+ * @returns {string} System prompt personalizado
+ */
+function obtenerSystemPromptIndividual(nombreHermana) {
+    const chica = CHICAS[nombreHermana];
+    if (!chica) {
+        console.warn(`[SYSTEM PROMPT] Hermana "${nombreHermana}" no encontrada en CHICAS`);
+        return `Eres un asistente de roleplay. Responde de forma coherente con el contexto.`;
+    }
+    
+    const acciones = Object.keys(chica.imagenes).join(", ");
+    const loc = typeof obtenerLocacionActual === 'function' ? obtenerLocacionActual() : null;
+    const locInfo = loc ? `\nLOCACIÓN ACTUAL: ${loc.nombre}. Adapta tus acciones a este lugar.` : "";
+    
+    // Instrucciones específicas anti-repetición
+    const antiRepeticion = `\n\n⚠️ EVITA REPETIRTE: No uses las mismas frases o gestos de turnos anteriores. Sé creativa y única en cada respuesta.`;
+    
+    // Instrucciones para contexto íntimo
+    const ultimoMensaje = quintHistorial.length > 0 ? quintHistorial[quintHistorial.length - 1].content : "";
+    const esContextoIntimo = /sexo|follar|coger|verga|pene|vagina|coño|culo|chupar|mamar|tetas|orgasmo|gemir|penetrar|intim|nsfw|putita|cachonda/i.test(ultimoMensaje);
+    
+    const instruccionesIntimidad = esContextoIntimo ? `\n\n🔥 ESCENA ÍNTIMA DETECTADA: Eres una putita cachonda que AMA el sexo. Describe CADA movimiento, sensación y reacción física con máximo detalle (mínimo 25-40 líneas). Usa lenguaje EXPLÍCITO y directo.` : "";
+    
+    return `Eres ${nombreHermana} Nakano de Gotoubun no Hanayome.
+
+PERSONALIDAD EXCLUSIVA DE ${nombreHermana.toUpperCase()}:
+${chica.personalidad}
+
+ACCIONES DISPONIBLES PARA TUS IMÁGENES: ${acciones}${locInfo}${instruccionesIntimidad}${antiRepeticion}
+
+REGLAS CRÍTICAS:
+- Responde ÚNICAMENTE como ${nombreHermana}. NUNCA hables como otra hermana.
+- Mantén tu personalidad única en todo momento.
+- Formato de respuesta: SOLO JSON válido sin texto extra.
+- Tu diálogo debe incluir acciones entre *asteriscos* mezcladas con frases habladas.
+- Extensión: MÍNIMO 20-30 líneas de diálogo detallado.
+
+FORMATO EXACTO DE RESPUESTA:
+{
+  "nombre": "${nombreHermana}",
+  "imagen_tag": "unaDeLasAccionesDisponibles",
+  "dialogo": "tu diálogo aquí con *acciones entre asteriscos*"
+}
+
+¡Responde SOLO con el JSON! Sin explicaciones fuera del JSON.`;
+}
+
+/**
+ * Llama a la API de Groq para obtener respuesta de UNA hermana específica
+ * @param {string} nombreHermana - Nombre de la hermana que debe responder
+ * @param {string} mensajeUsuario - Último mensaje del usuario
+ * @returns {Promise<object|null>} Datos parseados de la respuesta o null
+ */
+async function llamarAPIHermanaIndividual(nombreHermana, mensajeUsuario) {
+    console.log(`[API INDIVIDUAL] Llamando para: ${nombreHermana}`);
+    
+    // Obtener system prompt exclusivo
+    const sysPrompt = obtenerSystemPromptIndividual(nombreHermana);
+    
+    // Obtener historial anonimizado de esta hermana
+    const historialAnonimizado = obtenerHistorialAnonimizado(nombreHermana);
+    
+    // Construir mensajes: system + historial + mensaje actual
+    const mensajes = [
+        { role: "system", content: sysPrompt },
+        ...historialAnonimizado,
+        { role: "user", content: mensajeUsuario }
+    ];
+    
+    // Prefilling: forzar que la respuesta empiece con el nombre de la hermana
+    const prefillContent = `${nombreHermana}: `;
+    
+    // Parámetros ajustados según especificaciones
+    const temperatura = 0.85;      // Mayor creatividad
+    const frequencyPenalty = 0.5;   // Penalizar repetición
+    const presencePenalty = 0.6;    // Penalizar temas ya tratados
+    
+    // Stop sequences: nombres de las otras hermanas para evitar que hable por ellas
+    const otrasHermanas = Object.keys(CHICAS).filter(n => n !== nombreHermana);
+    const stopSequences = otrasHermanas.map(n => `${n}:`);
+    
+    for (let k = 0; k < GROQ_KEYS.length; k++) {
+        const keyIdx = (quintKeyActual + k) % GROQ_KEYS.length;
+        const key = GROQ_KEYS[keyIdx];
+        
+        try {
+            const resp = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${key}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    model: MODELO_PRINCIPAL,
+                    messages: mensajes,
+                    temperature: temperatura,
+                    max_tokens: 2500,
+                    // Nota: Groq no soporta frequency_penalty/presence_penalty oficialmente,
+                    // pero los incluimos por si acaso en el futuro
+                    // stop: stopSequences  // Groq tiene soporte limitado para stop sequences
+                })
+            });
+            
+            if (resp.status === 429 || resp.status === 401) {
+                quintKeyActual = (keyIdx + 1) % GROQ_KEYS.length;
+                continue;
+            }
+            
+            if (!resp.ok) {
+                console.error(`[API INDIVIDUAL] Error HTTP ${resp.status} para ${nombreHermana}`);
+                quintKeyActual = (keyIdx + 1) % GROQ_KEYS.length;
+                continue;
+            }
+            
+            const data = await resp.json();
+            const content = data?.choices?.[0]?.message?.content?.trim();
+            
+            if (content) {
+                console.log(`[API INDIVIDUAL] OK para ${nombreHermana} — longitud:`, content.length);
+                
+                // Parsear JSON de respuesta
+                const datosParseados = quintParsearJSON(content);
+                
+                // Guardar en historial individual de esta hermana
+                if (datosParseados) {
+                    agregarAlHistorialHermana(nombreHermana, "user", mensajeUsuario);
+                    agregarAlHistorialHermana(nombreHermana, "assistant", content);
+                }
+                
+                return datosParseados;
+            }
+        } catch (e) {
+            console.error(`[API INDIVIDUAL] Error para ${nombreHermana}:`, e.message);
+            quintKeyActual = (keyIdx + 1) % GROQ_KEYS.length;
+        }
+    }
+    
+    console.warn(`[API INDIVIDUAL] Todas las keys fallaron para ${nombreHermana}`);
+    return null;
+}
+
+/**
+ * Detecta qué hermanas deben hablar basado en el mensaje del usuario
+ * @param {string} mensajeUsuario - Mensaje del usuario
+ * @returns {string[]} Array de nombres de hermanas que deben responder
+ */
+function detectarHermanasQueDebenHablar(mensajeUsuario) {
+    const hermanas = [];
+    const mensajeLower = mensajeUsuario.toLowerCase();
+    
+    // Verificar menciones directas por nombre
+    Object.keys(CHICAS).forEach(nombre => {
+        // Buscar el nombre exacto (case insensitive pero respetando límites de palabra)
+        const regex = new RegExp(`\\b${nombre}\\b`, 'i');
+        if (regex.test(mensajeUsuario)) {
+            hermanas.push(nombre);
+        }
+    });
+    
+    // Si no hay menciones directas pero hay palabras que indican "todas"
+    if (hermanas.length === 0) {
+        const palabrasTodas = ['chicas', 'quintillizas', 'todas', 'ustedes', 'hermanas', 'nakano'];
+        const hayMencionGeneral = palabrasTodas.some(palabra => 
+            new RegExp(`\\b${palabra}\\b`, 'i').test(mensajeLower)
+        );
+        
+        if (hayMencionGeneral) {
+            // Devolver solo las hermanas activas actualmente
+            return [...quintChicasActivas].filter(n => CHICAS[n]);
+        }
+    }
+    
+    // Si no se menciona a nadie específicamente, usar hermanas activas
+    if (hermanas.length === 0) {
+        return [...quintChicasActivas].filter(n => CHICAS[n]);
+    }
+    
+    return hermanas;
+}
+
+/**
+ * Obtiene respuestas de múltiples hermanas en paralelo usando asyncio.gather pattern
+ * @param {string} mensajeUsuario - Mensaje del usuario
+ * @param {string[]} hermanas - Array de nombres de hermanas que deben responder
+ * @returns {Promise<object[]>} Array de respuestas de cada hermana
+ */
+async function obtenerRespuestasMultiplesHermanas(mensajeUsuario, hermanas) {
+    console.log(`[MULTIPLE API] Obteniendo respuestas para: ${hermanas.join(", ")}`);
+    
+    // Crear array de promesas para cada hermana
+    const promesas = hermanas.map(async (nombreHermana) => {
+        try {
+            const respuesta = await llamarAPIHermanaIndividual(nombreHermana, mensajeUsuario);
+            return {
+                hermana: nombreHermana,
+                respuesta: respuesta,
+                exito: respuesta !== null
+            };
+        } catch (error) {
+            console.error(`[MULTIPLE API] Error obteniendo respuesta de ${nombreHermana}:`, error);
+            return {
+                hermana: nombreHermana,
+                respuesta: null,
+                exito: false,
+                error: error.message
+            };
+        }
+    });
+    
+    // Ejecutar todas las promesas en paralelo (equivalente a asyncio.gather)
+    const resultados = await Promise.all(promesas);
+    
+    // Filtrar solo las respuestas exitosas
+    const respuestasExitosas = resultados.filter(r => r.exito && r.respuesta);
+    
+    console.log(`[MULTIPLE API] ${respuestasExitosas.length}/${hermanas.length} respuestas exitosas`);
+    
+    return respuestasExitosas;
 }
 
 // ============================================================
