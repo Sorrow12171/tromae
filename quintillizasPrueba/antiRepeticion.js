@@ -9,6 +9,7 @@
 //  - Compara dialogos entre diferentes chicas en tiempo real
 //  - Genera variaciones unicas cuando detecta repeticion
 //  - API call independiente por chica para diversificar respuestas
+//  - Umbral de similitud reducido para mayor sensibilidad
 // ============================================================
 
 import { logQuinti } from './logica.js';
@@ -22,10 +23,11 @@ const historialDialogosPorChica = {
     Itsuki: []
 };
 
-const MAX_HISTORIAL_DIALOGOS = 15; // Mantener ultimos 15 dialogos por chica
+const MAX_HISTORIAL_DIALOGOS = 20; // Mantener ultimos 20 dialogos por chica (aumentado)
 
 // Umbral de similitud (0-1) - si supera este valor, se considera repeticion
-const UMBRAL_SIMILITUD = 0.65;
+// REDUCIDO para ser más sensible y detectar más repeticiones
+const UMBRAL_SIMILITUD = 0.55;
 
 /**
  * Normaliza texto para comparacion (quita tildes, minusculas, etc)
