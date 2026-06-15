@@ -984,7 +984,7 @@
     <!-- <script type="module" src="logica.test.js"></script> -->
     <script type="module">
         // Importar funciones necesarias de logica.js e imagenes.js
-        import { getChicasDisponibles, seleccionarChica, conversar, logQuinti, logErrorAPI, formatearErrorUsuario, getChicasEnChat, actualizarAccionEnCurso, getAccionEnCurso, getChicaSeleccionada, getImagenSelector, formatearTextoConAsteriscos, parsearJSON } from './logica.js';
+        import { getChicasDisponibles, seleccionarChica, conversar, logQuinti, logErrorAPI, formatearErrorUsuario, getChicasEnChat, actualizarAccionEnCurso, getAccionEnCurso, getChicaSeleccionada, getImagenSelector, formatearTextoConAsteriscos, parsearJSON, obtenerURLImagen } from './logica.js';
         import { detectarRepeticion, detectarRepeticionEntreChicas, agregarDialogoAlHistorial, generarPromptAntiRepeticion, getEstadisticasRepeticion } from './antiRepeticion.js';
         import { QuintiImagenesPrueba } from './imagenes.js';
         import { procesarMensajeParaUI, tieneMultiplesAcciones, interpretarRespuestaCorta } from './parserAcciones.js';
@@ -1235,28 +1235,8 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
     return tagsDisponibles.includes('hablando') ? 'hablando' : tagsDisponibles[0] || 'normal';
 }
         
-        /**
-         * Obtiene la URL de una imagen para una chica y tag específicos
-         */
-        function obtenerURLImagen(nombreChica, tag) {
-            // Si hay una historia paralela activa con su propia imagen selector, usarla
-            if (window.imagenSelectorHistoria && window.historiaParalelaActiva) {
-                logQuinti('DEBUG', 'Usando imagen selector de historia paralela', { historia: window.historiaParalelaActiva });
-                return window.imagenSelectorHistoria;
-            }
-            
-            if (!QuintiImagenesPrueba || !QuintiImagenesPrueba[nombreChica]) {
-                return null;
-            }
-            
-            const chicaData = QuintiImagenesPrueba[nombreChica];
-            
-            if (tag === 'normal' || tag === 'hablando') {
-                return chicaData.imagenSelector || chicaData.imagenes?.['hablando'] || null;
-            }
-            
-            return chicaData.imagenes?.[tag] || chicaData.imagenes?.['hablando'] || chicaData.imagenSelector || null;
-        }
+        // La función obtenerURLImagen ahora se importa desde logica.js
+        // Esta definición local queda como fallback por si acaso
 
         let lastUserMessage = null; // Para permitir reintentar después de un error
         

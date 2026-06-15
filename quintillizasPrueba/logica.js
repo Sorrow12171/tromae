@@ -2019,7 +2019,9 @@ export {
     // Función de formateo de texto
     formatearTextoConAsteriscos,
     // Función de parseo de JSON (para tests)
-    parsearJSON
+    parsearJSON,
+    // Función para obtener URLs de imágenes
+    obtenerURLImagen
 };
 
 // Exportar para window (compatibilidad con browser)
@@ -2049,6 +2051,8 @@ if (typeof window !== 'undefined') {
     window.tieneMultiplesAcciones = null;
     // Función de parseo de JSON (para tests)
     window.parsearJSON = parsearJSON;
+    // Función para obtener URLs de imágenes
+    window.obtenerURLImagen = obtenerURLImagen;
 }
 
 // Exportar funciones para uso en otros módulos (CommonJS - compatibilidad)
@@ -2076,6 +2080,7 @@ if (typeof module !== 'undefined' && module.exports) {
         getAccionEnCurso,
         getEstadoAccion,
         getMemoriaEventosIntimos,
-        registrarEventoImportante
+        registrarEventoImportante,
+        obtenerURLImagen
     };
 }
