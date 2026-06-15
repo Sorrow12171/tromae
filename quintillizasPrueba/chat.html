@@ -711,6 +711,145 @@
             margin-bottom: 15px;
             border: 2px solid #8B5CF6;
         }
+
+        /* Estilos para el panel de guardado de chats */
+        .slots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .slot-card {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid #8B5CF6;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slot-card.has-data {
+            border-color: #4CAF50;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .slot-card.empty {
+            border-color: #8B5CF6;
+            opacity: 0.8;
+        }
+
+        .slot-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5);
+        }
+
+        .slot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .slot-number {
+            color: #C4B5FD;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .slot-status {
+            font-size: 20px;
+        }
+
+        .slot-status.empty {
+            opacity: 0.5;
+        }
+
+        .slot-info {
+            margin-bottom: 15px;
+        }
+
+        .slot-date {
+            color: #a0a0b0;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .slot-chicas {
+            color: #A78BFA;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .slot-messages {
+            color: #8B5CF6;
+            font-size: 13px;
+        }
+
+        .slot-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-load,
+        .btn-delete,
+        .btn-save-here {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-load {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-load:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.5);
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #f44336, #da1e1e);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(244, 67, 54, 0.5);
+        }
+
+        .btn-save-here {
+            background: linear-gradient(135deg, #8B5CF6, #6D28D9);
+            color: white;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-save-here:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.5);
+        }
+
+        .slot-empty-info {
+            text-align: center;
+            color: #a0a0b0;
+            padding: 20px 0;
+        }
+
+        .slot-empty-info p {
+            margin: 0 0 15px 0;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -762,6 +901,41 @@
             </div>
             <div class="historias-lista" id="historiasLista">
                 <!-- Las historias se generan dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón de Guardado/Carga de Chats -->
+    <button class="historias-paralelas-btn" id="chatSaveBtn" onclick="toggleChatSavePanel()" style="right: 70px;" title="Guardar/Cargar Chats">
+        💾 Guardar Chat
+    </button>
+
+    <!-- Panel de Guardado/Carga de Chats -->
+    <div class="modal-historias" id="chatSavePanel" style="display: none;">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header">
+                <h2>💾 Guardado de Chats</h2>
+                <button class="close-btn" onclick="toggleChatSavePanel()">×</button>
+            </div>
+            <div class="modal-body" style="padding: 25px;">
+                <div class="save-panel-info" style="margin-bottom: 20px; padding: 15px; background: rgba(139, 92, 246, 0.1); border-radius: 10px; border-left: 4px solid #8B5CF6;">
+                    <p style="margin: 0 0 10px 0; color: #C4B5FD; font-size: 15px;">
+                        💡 <strong>Instrucciones:</strong> Guarda tu conversación actual en un slot para recuperarla después. 
+                        Los chats se almacenan en la memoria de tu navegador y persisten aunque cierres la página.
+                    </p>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
+                        <button class="send-button" onclick="ChatSaveSystem.exportAllChats()" style="font-size: 14px; padding: 10px 20px;">
+                            📤 Exportar Todos
+                        </button>
+                        <label class="send-button" style="font-size: 14px; padding: 10px 20px; cursor: pointer; display: inline-block;">
+                            📥 Importar
+                            <input type="file" accept=".json" onchange="ChatSaveSystem.importChats(this.files[0])" style="display: none;">
+                        </label>
+                    </div>
+                </div>
+                <div id="chatSlotsPanel">
+                    <!-- Los slots se generan dinámicamente -->
+                </div>
             </div>
         </div>
     </div>
@@ -1574,9 +1748,120 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
             window.cerrarHistoriasParalelas = cerrarHistoriasParalelas;
             window.iniciarHistoriaParalela = iniciarHistoriaParalela;
             
+            // Funciones para el sistema de guardado de chats
+            function toggleChatSavePanel() {
+                const panel = document.getElementById('chatSavePanel');
+                if (panel.style.display === 'none') {
+                    panel.style.display = 'flex';
+                    if (window.ChatSaveSystem) {
+                        ChatSaveSystem.renderSlotsPanel();
+                    }
+                } else {
+                    panel.style.display = 'none';
+                }
+            }
+            
+            // Obtener datos actuales del chat para guardar
+            window.getCurrentChatData = function() {
+                const infoChica = QuintiImagenesPrueba[chicaSeleccionadaActual];
+                
+                // Extraer mensajes del historial UI
+                const mensajes = [];
+                const messagesDiv = document.getElementById('chatMessages');
+                if (messagesDiv) {
+                    const messageElements = messagesDiv.querySelectorAll('.message');
+                    messageElements.forEach(msgEl => {
+                        const isUser = msgEl.classList.contains('user-message');
+                        const textContent = msgEl.textContent.trim();
+                        
+                        // Extraer imagen si existe
+                        const imgEl = msgEl.querySelector('img');
+                        const imagenURL = imgEl ? imgEl.src : null;
+                        
+                        mensajes.push({
+                            role: isUser ? 'user' : 'assistant',
+                            content: textContent,
+                            imagen: imagenURL,
+                            timestamp: Date.now()
+                        });
+                    });
+                }
+                
+                return {
+                    chicaPrincipal: chicaSeleccionadaActual,
+                    chicasEnChat: getChicasEnChat ? Array.from(getChicasEnChat()) : [chicaSeleccionadaActual],
+                    mensajes: mensajes,
+                    nombreUsuario: nombreUsuario || 'Anónimo'
+                };
+            };
+            
+            // Restaurar chat desde datos guardados
+            window.restoreChatFromData = function(chatData) {
+                if (!chatData || !chatData.chicaPrincipal) {
+                    alert('❌ Datos de chat inválidos');
+                    return;
+                }
+                
+                // Seleccionar la chica principal
+                chicaSeleccionadaActual = chatData.chicaPrincipal;
+                seleccionarChica(chicaSeleccionadaActual);
+                
+                // Ocultar selector, mostrar chat
+                document.getElementById('selectorContainer').style.display = 'none';
+                document.getElementById('chatContainer').classList.add('active');
+                
+                // Actualizar información de la chica en el chat
+                const infoChica = QuintiImagenesPrueba[chicaSeleccionadaActual];
+                if (infoChica) {
+                    document.getElementById('chicaNombreHeader').textContent = infoChica.nombre;
+                    document.getElementById('chicaNombreInfo').textContent = infoChica.nombre;
+                    document.getElementById('chicaDescripcion').textContent = infoChica.descripcion;
+                    document.getElementById('chicaImagenPerfil').src = infoChica.imagenSelector;
+                    document.getElementById('chicaNombreSaludo').textContent = infoChica.nombre.split(' ')[0];
+                    document.getElementById('chicaNombreEscribiendo').textContent = infoChica.nombre.split(' ')[0];
+                }
+                
+                // Restaurar mensajes
+                const messagesDiv = document.getElementById('chatMessages');
+                if (messagesDiv && chatData.mensajes) {
+                    messagesDiv.innerHTML = '';
+                    
+                    chatData.mensajes.forEach(msg => {
+                        const msgDiv = document.createElement('div');
+                        msgDiv.className = `message ${msg.role === 'user' ? 'user-message' : 'bot-message'}`;
+                        
+                        let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;">${msg.content}</div>`;
+                        
+                        if (msg.imagen) {
+                            const chicaNombre = msg.role === 'assistant' ? (chatData.chicaPrincipal || 'Chica') : '';
+                            contenidoHTML += `<img src="${msg.imagen}" alt="${chicaNombre}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
+                        }
+                        
+                        msgDiv.innerHTML = contenidoHTML;
+                        messagesDiv.appendChild(msgDiv);
+                    });
+                    
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                }
+                
+                // Cerrar panel de guardado
+                document.getElementById('chatSavePanel').style.display = 'none';
+                
+                alert(`✅ Chat restaurado exitosamente.\nMensajes cargados: ${chatData.mensajes?.length || 0}`);
+            };
+            
+            // Exponer toggleChatSavePanel globalmente
+            window.toggleChatSavePanel = toggleChatSavePanel;
+            
             // Inicializar cuando carga la página
             cargarNombreGuardado();
         });
+        
+        // Cargar el script del sistema de guardado
+        const saveSystemScript = document.createElement('script');
+        saveSystemScript.type = 'module';
+        saveSystemScript.src = './chatSaveSystem.js';
+        document.body.appendChild(saveSystemScript);
     </script>
 </body>
 </html>
