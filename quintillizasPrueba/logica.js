@@ -1218,7 +1218,9 @@ DEBES HACER TRES COSAS OBLIGATORIAMENTE:
         const chicaPrincipal = respuestasPorChica[0]?.chica || chicaSeleccionada;
         const tagImagenPrincipal = respuestasPorChica[0]?.imagen_tag || 'hablando';
         const historiaId = window.historiaParalelaActiva || null;
-        const urlImagenPrincipal = obtenerURLImagen(chicaPrincipal, tagImagenPrincipal, historiaId);
+        const resultadoImagen = obtenerURLImagen(chicaPrincipal, tagImagenPrincipal, historiaId);
+        const urlImagenPrincipal = resultadoImagen.urlImagen;
+        const audioPrincipal = resultadoImagen.urlAudio;
         
         logRespuestaExitosa(MODELO_PRINCIPAL, respuestaCombinada.length, Date.now() - tiempoInicio);
         
@@ -1226,6 +1228,7 @@ DEBES HACER TRES COSAS OBLIGATORIAMENTE:
             respuesta: respuestaCombinada,
             imagen_tag: tagImagenPrincipal,
             imagen_url: urlImagenPrincipal,
+            audio_url: audioPrincipal,
             modelo: MODELO_PRINCIPAL,
             chicaPrincipal: chicaPrincipal,
             chicasRespondiendo: chicasArray,
@@ -1611,7 +1614,7 @@ async function procesarRespuesta(datos, mensajeOriginal) {
         historialConversacion = historialConversacion.slice(-MAX_HISTORIAL * 2);
     }
     
-    let tagImagen, urlImagen;
+    let tagImagen, urlImagen, urlAudio;
     
     // Obtener el ID de la historia paralela activa si existe
     const historiaId = window.historiaParalelaActiva || null;
@@ -1620,11 +1623,15 @@ async function procesarRespuesta(datos, mensajeOriginal) {
         // Usar la imagen de la primera chica como principal (para compatibilidad)
         const primeraChica = datos.respuestasIndividuales[0];
         tagImagen = primeraChica.imagen_tag || 'hablando';
-        urlImagen = obtenerURLImagen(primeraChica.chica, tagImagen, historiaId);
+        const resultadoImagen = obtenerURLImagen(primeraChica.chica, tagImagen, historiaId);
+        urlImagen = resultadoImagen.urlImagen;
+        urlAudio = resultadoImagen.urlAudio;
     } else {
         // Seleccionar imagen automaticamente para la chica principal (caso de una sola chica)
         tagImagen = datos.imagen_tag || 'normal';
-        urlImagen = obtenerURLImagen(chicaSeleccionada, tagImagen, historiaId);
+        const resultadoImagen = obtenerURLImagen(chicaSeleccionada, tagImagen, historiaId);
+        urlImagen = resultadoImagen.urlImagen;
+        urlAudio = resultadoImagen.urlAudio;
     }
     
     // Detectar que chicas estan respondiendo en el mensaje
@@ -1668,6 +1675,7 @@ async function procesarRespuesta(datos, mensajeOriginal) {
         respuesta: datos.respuesta,
         imagen_tag: tagImagen,
         imagen_url: urlImagen,
+        audio_url: urlAudio,
         modelo: MODELO_PRINCIPAL,
         chicaPrincipal: datos.chicaPrincipal || chicaSeleccionada,
         chicasRespondiendo: chicasRespondiendo,
@@ -1789,25 +1797,25 @@ async function regenerarDialogoAntiRepeticionEntreChicas(nombreChica, mensajeOri
 }
 
 /**
- * Obtiene la URL de una imagen específica
+ * Obtiene la URL de una imagen específica y su audio asociado
  * @param {string} nombreChica - Nombre de la chica
  * @param {string} tag - Tag de la imagen
  * @param {string} historiaId - ID de la historia paralela (opcional)
- * @returns {string|null} - URL de la imagen o null
+ * @returns {object} - Objeto con {urlImagen, urlAudio} o null
  */
 function obtenerURLImagen(nombreChica, tag, historiaId = null) {
     // Si hay una historia paralela activa, intentar usar su mapeo de imagenTagsMapping
     if (historiaId) {
         const mappingHistoria = getImagenTagsMappingHistoria(historiaId);
         if (mappingHistoria && mappingHistoria[tag]) {
-            return mappingHistoria[tag];
+            return { urlImagen: mappingHistoria[tag], urlAudio: null };
         }
         // Si el tag no existe en el mapping pero existe el mapping, intentar con variantes
         if (mappingHistoria) {
             // Buscar tags que contengan el nombre del tag original
             for (const [mapTag, url] of Object.entries(mappingHistoria)) {
                 if (mapTag.includes(tag) || tag.includes(mapTag.replace('nino_', ''))) {
-                    return url;
+                    return { urlImagen: url, urlAudio: null };
                 }
             }
         }
@@ -1815,40 +1823,49 @@ function obtenerURLImagen(nombreChica, tag, historiaId = null) {
     
     // Aldo no tiene imágenes (personaje masculino)
     if (esAldo(nombreChica)) {
-        return null;
+        return { urlImagen: null, urlAudio: null };
     }
     
     // Verificar si el personaje tiene imágenes disponibles
     if (!tieneImagenes(nombreChica)) {
-        return null;
+        return { urlImagen: null, urlAudio: null };
     }
     
     if (!QuintiImagenesPrueba || !QuintiImagenesPrueba[nombreChica]) {
-        return null;
+        return { urlImagen: null, urlAudio: null };
     }
     
     const chicaData = QuintiImagenesPrueba[nombreChica];
     
     if (tag === 'normal' || tag === 'hablando') {
-        return chicaData.imagenSelector || chicaData.imagenes?.['hablando'] || null;
+        const imgObj = chicaData.imagenes?.['hablando'] || {};
+        return { 
+            urlImagen: chicaData.imagenSelector || imgObj.url || imgObj || null,
+            urlAudio: imgObj.audio || null
+        };
     }
     
     // Intentar obtener la imagen por tag
-    let urlImagen = chicaData.imagenes?.[tag]?.url || chicaData.imagenes?.[tag];
+    const imgObj = chicaData.imagenes?.[tag];
+    let urlImagen = imgObj?.url || imgObj;
+    let urlAudio = imgObj?.audio || null;
     
     // FALLBACK: Si no encuentra el tag específico, usar la PRIMERA imagen disponible
     if (!urlImagen && chicaData.imagenes && Object.keys(chicaData.imagenes).length > 0) {
         const primerTag = Object.keys(chicaData.imagenes)[0];
-        urlImagen = chicaData.imagenes[primerTag]?.url || chicaData.imagenes[primerTag];
+        const primerImgObj = chicaData.imagenes[primerTag];
+        urlImagen = primerImgObj?.url || primerImgObj;
+        urlAudio = primerImgObj?.audio || null;
         logQuinti('WARN', `Tag "${tag}" no encontrado para ${nombreChica}, usando primera imagen disponible: "${primerTag}"`);
     }
     
     // Último fallback: imagenSelector
     if (!urlImagen) {
         urlImagen = chicaData.imagenSelector || null;
+        urlAudio = null;
     }
     
-    return urlImagen;
+    return { urlImagen, urlAudio };
 }
 
 // ============================================================
