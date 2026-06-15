@@ -29,7 +29,7 @@ import { ALDO_PERSONALIDAD, ALDO_INSTRUCCIONES_SISTEMA, getAldoPersonalidad, esA
 import { obtenerMensajeError, generarPayloadFase, getOrdenFases, getInfoFase, obtenerFallbackLocal, obtenerFallbackAntiRepeticion } from './fallbacks.js';
 import { QuintiImagenesPrueba } from './imagenes.js';
 import { getImagenTagsMapping as getImagenTagsMappingHistoria } from './historiasParalelas.js';
-import { detectarRepeticion, detectarRepeticionEntreChicas, agregarDialogoAlHistorial, generarPromptAntiRepeticion, getEstadisticasRepeticion } from './antiRepeticion.js';
+import { detectarRepeticion, detectarRepeticionEntreChicas, agregarDialogoAlHistorial, generarPromptAntiRepeticion, getEstadisticasRepeticion, calcularSimilitud } from './antiRepeticion.js';
 
 // ============================================================
 //  CONFIGURACIÓN DE API KEYS
@@ -1533,13 +1533,13 @@ async function intentarLlamadaAPI(mensajes, modelo) {
  * @param {string} mensajeOriginal - Mensaje original del usuario
  * @returns {object} - Respuesta procesada con URL de imagen y lista de chicas respondiendo
  */
-function procesarRespuesta(datos, mensajeOriginal) {
+async function procesarRespuesta(datos, mensajeOriginal) {
     // Verificar si tenemos respuestas individuales de múltiples chicas
     const tieneRespuestasIndividuales = datos.respuestasIndividuales && datos.respuestasIndividuales.length > 0;
     
-    // SISTEMA ANTI-REPETICION: Verificar y almacenar dialogos
+    // SISTEMA ANTI-REPETICION: Verificar y regenerar dialogos repetidos
     if (tieneRespuestasIndividuales) {
-        // Verificar repeticion para cada chica individualmente
+        // Verificar repeticion para cada chica individualmente y regenerar si es necesario
         for (const respuestaIndividual of datos.respuestasIndividuales) {
             const nombreChica = respuestaIndividual.chica;
             const dialogo = respuestaIndividual.respuesta;
@@ -1547,10 +1547,15 @@ function procesarRespuesta(datos, mensajeOriginal) {
             // Detectar repeticion en el historial de esta chica
             const deteccionRepeticion = detectarRepeticion(dialogo, nombreChica);
             if (deteccionRepeticion.esRepetido) {
-                logQuinti('WARN', `Repeticion detectada en ${nombreChica}`, { 
+                logQuinti('WARN', `Repeticion detectada en ${nombreChica}, regenerando dialogo...`, { 
                     similitud: deteccionRepeticion.similitudMaxima,
                     dialogoSimilar: deteccionRepeticion.dialogoSimilar.substring(0, 100)
                 });
+                
+                // Regenerar dialogo para esta chica
+                const nuevoDialogo = await regenerarDialogoAntiRepeticion(nombreChica, mensajeOriginal, dialogo, deteccionRepeticion.dialogoSimilar);
+                respuestaIndividual.respuesta = nuevoDialogo;
+                logQuinti('INFO', `Dialogo regenerado exitosamente para ${nombreChica}`);
             }
             
             // Detectar repeticion con otras chicas
@@ -1558,24 +1563,39 @@ function procesarRespuesta(datos, mensajeOriginal) {
                 .filter(r => r.chica !== nombreChica)
                 .map(r => r.chica);
             
-            const deteccionEntreChicas = detectarRepeticionEntreChicas(dialogo, nombreChica, otrasChicas);
+            const deteccionEntreChicas = detectarRepeticionEntreChicas(respuestaIndividual.respuesta, nombreChica, otrasChicas);
             if (deteccionEntreChicas.tieneConflicto) {
-                logQuinti('WARN', `Repeticion entre chicas detectada: ${nombreChica} similar a ${deteccionEntreChicas.chicaSimilar}`, {
+                logQuinti('WARN', `Repeticion entre chicas detectada: ${nombreChica} similar a ${deteccionEntreChicas.chicaSimilar}, regenerando...`, {
                     similitud: deteccionEntreChicas.similitud
                 });
+                
+                // Regenerar dialogo para evitar repeticion entre chicas
+                const nuevoDialogo = await regenerarDialogoAntiRepeticionEntreChicas(nombreChica, mensajeOriginal, respuestaIndividual.respuesta, deteccionEntreChicas.chicaSimilar);
+                respuestaIndividual.respuesta = nuevoDialogo;
+                logQuinti('INFO', `Dialogo regenerado exitosamente para ${nombreChica} (evitar repeticion con ${deteccionEntreChicas.chicaSimilar})`);
             }
             
-            // Agregar al historial (siempre, incluso si hay repeticion para mantener registro)
-            agregarDialogoAlHistorial(dialogo, nombreChica);
+            // Agregar al historial (ahora con el dialogo ya verificado/regenerado)
+            agregarDialogoAlHistorial(respuestaIndividual.respuesta, nombreChica);
         }
+        
+        // Actualizar la respuesta combinada con los dialogos regenerados
+        datos.respuesta = datos.respuestasIndividuales
+            .map(r => `[${r.chica}]: ${r.respuesta}`)
+            .join('\\n\\n');
     } else if (chicaSeleccionada) {
         // Caso de una sola chica
         const deteccionRepeticion = detectarRepeticion(datos.respuesta, chicaSeleccionada);
         if (deteccionRepeticion.esRepetido) {
-            logQuinti('WARN', `Repeticion detectada en ${chicaSeleccionada}`, { 
+            logQuinti('WARN', `Repeticion detectada en ${chicaSeleccionada}, regenerando dialogo...`, { 
                 similitud: deteccionRepeticion.similitudMaxima,
                 dialogoSimilar: deteccionRepeticion.dialogoSimilar.substring(0, 100)
             });
+            
+            // Regenerar dialogo
+            const nuevoDialogo = await regenerarDialogoAntiRepeticion(chicaSeleccionada, mensajeOriginal, datos.respuesta, deteccionRepeticion.dialogoSimilar);
+            datos.respuesta = nuevoDialogo;
+            logQuinti('INFO', 'Dialogo regenerado exitosamente');
         }
         agregarDialogoAlHistorial(datos.respuesta, chicaSeleccionada);
     }
@@ -1654,6 +1674,118 @@ function procesarRespuesta(datos, mensajeOriginal) {
         chicasEnChat: Array.from(chicasEnChat),
         respuestasIndividuales: datos.respuestasIndividuales || []
     };
+}
+
+/**
+ * Regenera un dialogo cuando se detecta repeticion en el historial de una chica
+ * @param {string} nombreChica - Nombre de la chica
+ * @param {string} mensajeOriginal - Mensaje original del usuario
+ * @param {string} dialogoOriginal - Dialogo original que se repitio
+ * @param {string} dialogoSimilar - Dialogo similar detectado en el historial
+ * @returns {Promise<string>} - Nuevo dialogo regenerado
+ */
+async function regenerarDialogoAntiRepeticion(nombreChica, mensajeOriginal, dialogoOriginal, dialogoSimilar) {
+    try {
+        const personalidadPrincipal = PERSONALIDADES[nombreChica] || "Eres una amiga virtual divertida y útil.";
+        
+        // Crear prompt especial anti-repeticion
+        const promptAntiRepeticion = `⚠️ DETECCIÓN DE REPETICIÓN:\n\n` +
+            `Tu respuesta anterior fue muy similar a esta que ya dijiste antes:\n"${dialogoSimilar.substring(0, 150)}..."\n\n` +
+            `REESCRIBE tu respuesta de forma COMPLETAMENTE DIFERENTE:\n` +
+            `- Usa otras palabras y expresiones\n` +
+            `- Cambia la estructura de la oración\n` +
+            `- Usa sinónimos\n` +
+            `- Agrega o quita detalles\n` +
+            `- Cambia el tono emocional\n\n` +
+            `Responde al mensaje del usuario: "${mensajeOriginal}"\n` +
+            `Evita usar las mismas frases o estructuras. Sé creativa y única.\n` +
+            `Personalidad: ${personalidadPrincipal}\n\n` +
+            `Tu nueva respuesta (solo el diálogo, sin formato JSON):`;
+        
+        const mensajesPayload = [
+            { role: "system", content: QUINT_PRUEBA_SYSTEM_MINIMO },
+            { role: "user", content: promptAntiRepeticion }
+        ];
+        
+        let datosRegenerados;
+        try {
+            datosRegenerados = await intentarLlamadaAPI(mensajesPayload, MODELO_PRINCIPAL);
+        } catch (error) {
+            logQuinti('ERROR', `Error al regenerar dialogo anti-repeticion para ${nombreChica}: ${error.message}`);
+            // Retornar dialogo original si falla la regeneracion
+            return dialogoOriginal;
+        }
+        
+        if (datosRegenerados && datosRegenerados.respuesta) {
+            // Verificar que el nuevo dialogo no sea igual al anterior
+            const nuevaSimilitud = calcularSimilitud(datosRegenerados.respuesta, dialogoOriginal);
+            if (nuevaSimilitud < 0.8) {
+                logQuinti('INFO', `Dialogo regenerado con exito (similitud reducida de 1.0 a ${nuevaSimilitud.toFixed(2)})`);
+                return datosRegenerados.respuesta;
+            } else {
+                logQuinti('WARN', `Dialogo regenerado pero sigue siendo muy similar (${nuevaSimilitud.toFixed(2)})`);
+                return datosRegenerados.respuesta;
+            }
+        }
+        
+        return dialogoOriginal;
+    } catch (error) {
+        logQuinti('ERROR', `Error inesperado en regenerarDialogoAntiRepeticion: ${error.message}`);
+        return dialogoOriginal;
+    }
+}
+
+/**
+ * Regenera un dialogo cuando se detecta repeticion entre chicas
+ * @param {string} nombreChica - Nombre de la chica
+ * @param {string} mensajeOriginal - Mensaje original del usuario
+ * @param {string} dialogoOriginal - Dialogo original que se repitio
+ * @param {string} chicaSimilar - Nombre de la chica con la que se repitio
+ * @returns {Promise<string>} - Nuevo dialogo regenerado
+ */
+async function regenerarDialogoAntiRepeticionEntreChicas(nombreChica, mensajeOriginal, dialogoOriginal, chicaSimilar) {
+    try {
+        const personalidadPrincipal = PERSONALIDADES[nombreChica] || "Eres una amiga virtual divertida y útil.";
+        
+        // Crear prompt especial anti-repeticion entre chicas
+        const promptAntiRepeticion = `⚠️ DETECCIÓN DE REPETICIÓN ENTRE CHICAS:\n\n` +
+            `Tu respuesta es muy similar a lo que dijo ${chicaSimilar}.\n\n` +
+            `REESCRIBE tu respuesta de forma COMPLETAMENTE DIFERENTE:\n` +
+            `- Usa otras palabras y expresiones\n` +
+            `- Cambia la estructura de la oración\n` +
+            `- Usa sinónimos\n` +
+            `- Agrega o quita detalles\n` +
+            `- Cambia el tono emocional\n` +
+            `- Asegurate de tener tu propia voz y estilo unico\n\n` +
+            `Responde al mensaje del usuario: "${mensajeOriginal}"\n` +
+            `Evita sonar como ${chicaSimilar}. Sé creativa y única.\n` +
+            `Personalidad: ${personalidadPrincipal}\n\n` +
+            `Tu nueva respuesta (solo el diálogo, sin formato JSON):`;
+        
+        const mensajesPayload = [
+            { role: "system", content: QUINT_PRUEBA_SYSTEM_MINIMO },
+            { role: "user", content: promptAntiRepeticion }
+        ];
+        
+        let datosRegenerados;
+        try {
+            datosRegenerados = await intentarLlamadaAPI(mensajesPayload, MODELO_PRINCIPAL);
+        } catch (error) {
+            logQuinti('ERROR', `Error al regenerar dialogo anti-repeticion entre chicas para ${nombreChica}: ${error.message}`);
+            // Retornar dialogo original si falla la regeneracion
+            return dialogoOriginal;
+        }
+        
+        if (datosRegenerados && datosRegenerados.respuesta) {
+            logQuinti('INFO', `Dialogo regenerado exitosamente para evitar repeticion con ${chicaSimilar}`);
+            return datosRegenerados.respuesta;
+        }
+        
+        return dialogoOriginal;
+    } catch (error) {
+        logQuinti('ERROR', `Error inesperado en regenerarDialogoAntiRepeticionEntreChicas: ${error.message}`);
+        return dialogoOriginal;
+    }
 }
 
 /**
@@ -1882,6 +2014,8 @@ export {
     agregarDialogoAlHistorial,
     generarPromptAntiRepeticion,
     getEstadisticasRepeticion,
+    regenerarDialogoAntiRepeticion,
+    regenerarDialogoAntiRepeticionEntreChicas,
     // Función de formateo de texto
     formatearTextoConAsteriscos,
     // Función de parseo de JSON (para tests)
