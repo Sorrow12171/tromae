@@ -1,1 +1,1 @@
-Nothing needs to be added to the .gitignore file based on the provided changes. The modification of 'quintillizasPrueba/logica.js' is a source code file and does not require ignoring.
+Nothing should be ignored in this case, as the changes only include source files (.js and .html) without any build artifacts, dependencies, or temporary files.
