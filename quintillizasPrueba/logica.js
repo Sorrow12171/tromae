@@ -1834,12 +1834,12 @@ function obtenerURLImagen(nombreChica, tag, historiaId = null) {
     }
     
     // Intentar obtener la imagen por tag
-    let urlImagen = chicaData.imagenes?.[tag];
+    let urlImagen = chicaData.imagenes?.[tag]?.url || chicaData.imagenes?.[tag];
     
     // FALLBACK: Si no encuentra el tag específico, usar la PRIMERA imagen disponible
     if (!urlImagen && chicaData.imagenes && Object.keys(chicaData.imagenes).length > 0) {
         const primerTag = Object.keys(chicaData.imagenes)[0];
-        urlImagen = chicaData.imagenes[primerTag];
+        urlImagen = chicaData.imagenes[primerTag]?.url || chicaData.imagenes[primerTag];
         logQuinti('WARN', `Tag "${tag}" no encontrado para ${nombreChica}, usando primera imagen disponible: "${primerTag}"`);
     }
     
