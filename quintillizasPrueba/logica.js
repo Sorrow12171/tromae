@@ -1015,20 +1015,15 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
             
             // SOLUCIÓN PROBLEMA #1: Instrucción reforzada para acciones en tiempo presente
             const instruccionAccionUsuario = `
-🚨 PRIORIDAD ABSOLUTA - ACCIÓN DEL USUARIO:
-El mensaje del usuario TIENE PRIORIDAD ABSOLUTA sobre cualquier otra cosa. Lo que el usuario diga está sucediendo AHORA MISMO.
-
-Cuando el usuario use verbos en PRESENTE (ej: "beso", "chupo", "toco", "se desviste") o mencione una acción en curso:
+🚨 ACCIÓN DEL USUARIO DETECTADA - TIEMPO PRESENTE:
+Cuando el usuario use verbos en PRESENTE (ej: "beso", "chupo", "toco") o mencione una acción en curso, significa que la acción YA ESTÁ SUCEDIENDO.
 
 DEBES HACER TRES COSAS OBLIGATORIAMENTE:
-1. TU TEXTO: Describe ESA acción EXPLÍCITAMENTE en tu respuesta usando *acciones entre asteriscos* en TIEMPO PRESENTE. Ejemplo: si el usuario dice "se desviste", tú debes escribir "*mientras se desviste, te mira con deseo*" o "*te ayuda a desvestirse ahora mismo*". La acción YA está ocurriendo.
-2. TU IMAGEN_TAG: DEBE coincidir EXACTAMENTE con la acción específica mencionada por el usuario. Si dice "se desviste" → usa "desvistiendo". Si dice "beso" → usa "besando". NO uses tags genéricas como "desnuda" cuando el usuario describió una acción específica.
+1. TU TEXTO: Describe ESA acción EXPLÍCITAMENTE en tu respuesta usando *acciones entre asteriscos* en TIEMPO PRESENTE. Ejemplo: si el usuario dice "beso", tú debes escribir "*te besa apasionadamente ahora mismo*" o "*mientras te besa, dice...*". La acción YA está ocurriendo.
+2. TU IMAGEN_TAG: DEBE coincidir EXACTAMENTE con la acción mencionada por el usuario. Si dice "beso" → usa "besando". Si dice "chupar" → usa la tag de chupar correspondiente.
 3. MANTÉN EL CONTEXTO: Si ya había una acción en curso (ver "ESTADO ACTUAL" arriba), DEBES CONTINUAR ESA ACCIÓN a menos que el usuario indique explícitamente cambiarla.
 
-⚠️ CRÍTICO: 
-- El texto y la imagen DEBEN estar 100% alineados con la acción ESPECÍFICA que el usuario mencionó.
-- NO uses tags genéricas ("desnuda", "hablando") cuando el usuario dijo algo específico ("se desviste", "beso").
-- Si el usuario dice "X", la tag debe ser la versión en acción de X, no algo relacionado pero diferente.`;
+⚠️ CRÍTICO: NO puedes decir que estás haciendo una cosa en el texto y mostrar otra en la imagen. TEXTO E IMAGEN DEBEN ESTAR 100% ALINEADOS CON LA ACCIÓN DEL USUARIO Y EL ESTADO ACTUAL.`;
             
             // Instrucción de contexto sobre otras chicas (solo para chicas después de la primera)
             let instruccionContextoOtrasChicas = '';
@@ -1201,8 +1196,8 @@ DEBES HACER TRES COSAS OBLIGATORIAMENTE:
             // Guardar respuesta de esta chica
             respuestasPorChica.push({
                 chica: nombreChica,
-                respuesta: datos && datos.respuesta ? datos.respuesta : '...',
-                imagen_tag: datos && datos.imagen_tag ? datos.imagen_tag : 'hablando'
+                respuesta: datos.respuesta,
+                imagen_tag: datos.imagen_tag || 'hablando'
             });
             
             // Ya no se usa contextoAcumulado porque ahora todo el historial va en contextoUnificado
@@ -1221,7 +1216,7 @@ DEBES HACER TRES COSAS OBLIGATORIAMENTE:
         
         // Usar la imagen de la chica principal (primera en responder)
         const chicaPrincipal = respuestasPorChica[0]?.chica || chicaSeleccionada;
-        const tagImagenPrincipal = respuestasPorChica[0] && respuestasPorChica[0].imagen_tag ? respuestasPorChica[0].imagen_tag : 'hablando';
+        const tagImagenPrincipal = respuestasPorChica[0]?.imagen_tag || 'hablando';
         const historiaId = window.historiaParalelaActiva || null;
         const resultadoImagen = obtenerURLImagen(chicaPrincipal, tagImagenPrincipal, historiaId);
         const urlImagenPrincipal = resultadoImagen.urlImagen;
@@ -1271,20 +1266,15 @@ DEBES HACER TRES COSAS OBLIGATORIAMENTE:
     
     // SOLUCIÓN PROBLEMA #1: Instrucción reforzada para acciones en tiempo presente (caso una sola chica)
     const instruccionAccionUsuario = `
-🚨 PRIORIDAD ABSOLUTA - ACCIÓN DEL USUARIO:
-El mensaje del usuario TIENE PRIORIDAD ABSOLUTA sobre cualquier otra cosa. Lo que el usuario diga está sucediendo AHORA MISMO.
-
-Cuando el usuario use verbos en PRESENTE (ej: "beso", "chupo", "toco", "se desviste") o mencione una acción en curso:
+🚨 ACCIÓN DEL USUARIO DETECTADA - TIEMPO PRESENTE:
+Cuando el usuario use verbos en PRESENTE (ej: "beso", "chupo", "toco") o mencione una acción en curso, significa que la acción YA ESTÁ SUCEDIENDO.
 
 DEBES HACER TRES COSAS OBLIGATORIAMENTE:
-1. TU TEXTO: Describe ESA acción EXPLÍCITAMENTE en tu respuesta usando *acciones entre asteriscos* en TIEMPO PRESENTE. Ejemplo: si el usuario dice "se desviste", tú debes escribir "*mientras se desviste, te mira con deseo*" o "*te ayuda a desvestirse ahora mismo*". La acción YA está ocurriendo.
-2. TU IMAGEN_TAG: DEBE coincidir EXACTAMENTE con la acción específica mencionada por el usuario. Si dice "se desviste" → usa "desvistiendo". Si dice "beso" → usa "besando". NO uses tags genéricas como "desnuda" cuando el usuario describió una acción específica.
+1. TU TEXTO: Describe ESA acción EXPLÍCITAMENTE en tu respuesta usando *acciones entre asteriscos* en TIEMPO PRESENTE. Ejemplo: si el usuario dice "beso", tú debes escribir "*te besa apasionadamente ahora mismo*" o "*mientras te besa, dice...*". La acción YA está ocurriendo.
+2. TU IMAGEN_TAG: DEBE coincidir EXACTAMENTE con la acción mencionada por el usuario. Si dice "beso" → usa "besando". Si dice "chupar" → usa la tag de chupar correspondiente.
 3. MANTÉN EL CONTEXTO: Si ya había una acción en curso, DEBES CONTINUAR ESA ACCIÓN a menos que el usuario indique explícitamente cambiarla. NO olvides la posición actual (ej: si estaban de pie, siguen de pie hasta que se indique lo contrario).
 
-⚠️ CRÍTICO: 
-- El texto y la imagen DEBEN estar 100% alineados con la acción ESPECÍFICA que el usuario mencionó.
-- NO uses tags genéricas ("desnuda", "hablando") cuando el usuario dijo algo específico ("se desviste", "beso").
-- Si el usuario dice "X", la tag debe ser la versión en acción de X, no algo relacionado pero diferente.`;
+⚠️ CRÍTICO: NO puedes decir que estás haciendo una cosa en el texto y mostrar otra en la imagen. TEXTO E IMAGEN DEBEN ESTAR 100% ALINEADOS CON LA ACCIÓN DEL USUARIO Y EL ESTADO ACTUAL.`;
     
     // SOLUCIÓN PROBLEMA #3: Agregar estado actual de acciones al prompt
     let contextoEstadoActual = '';
@@ -1326,7 +1316,7 @@ DEBES HACER TRES COSAS OBLIGATORIAMENTE:
     }
     
     if (datos && esRespuestaValida(datos)) {
-        logRespuestaExitosa(MODELO_PRINCIPAL, datos.respuesta ? datos.respuesta.length : 0, Date.now() - tiempoInicio);
+        logRespuestaExitosa(MODELO_PRINCIPAL, datos.respuesta.length, Date.now() - tiempoInicio);
         return procesarRespuesta(datos, mensaje);
     }
     
@@ -1629,16 +1619,16 @@ async function procesarRespuesta(datos, mensajeOriginal) {
     // Obtener el ID de la historia paralela activa si existe
     const historiaId = window.historiaParalelaActiva || null;
     
-    if (tieneRespuestasIndividuales && datos.respuestasIndividuales.length > 0) {
+    if (tieneRespuestasIndividuales) {
         // Usar la imagen de la primera chica como principal (para compatibilidad)
         const primeraChica = datos.respuestasIndividuales[0];
-        tagImagen = primeraChica && primeraChica.imagen_tag ? primeraChica.imagen_tag : 'hablando';
+        tagImagen = primeraChica.imagen_tag || 'hablando';
         const resultadoImagen = obtenerURLImagen(primeraChica.chica, tagImagen, historiaId);
         urlImagen = resultadoImagen.urlImagen;
         urlAudio = resultadoImagen.urlAudio;
     } else {
         // Seleccionar imagen automaticamente para la chica principal (caso de una sola chica)
-        tagImagen = datos && datos.imagen_tag ? datos.imagen_tag : 'normal';
+        tagImagen = datos.imagen_tag || 'normal';
         const resultadoImagen = obtenerURLImagen(chicaSeleccionada, tagImagen, historiaId);
         urlImagen = resultadoImagen.urlImagen;
         urlAudio = resultadoImagen.urlAudio;
