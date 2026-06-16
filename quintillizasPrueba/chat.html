@@ -1375,9 +1375,10 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                         // MÉTODO TRADICIONAL: Una sola imagen al final
                         let imagenURL = null;
                         let audioURL = null;
+                        let tagImagen = null; // Declarar siempre para evitar errores
                         if (infoChica) {
                             // Seleccionar imagen basada en el mensaje del usuario (PRIORIDAD) y la respuesta
-                            const tagImagen = seleccionarTagImagen(chicaRespuesta, chicaNombre, message);
+                            tagImagen = seleccionarTagImagen(chicaRespuesta, chicaNombre, message);
                             const resultadoImagen = obtenerURLImagen(chicaNombre, tagImagen);
                             imagenURL = resultadoImagen.urlImagen;
                             audioURL = resultadoImagen.urlAudio;
@@ -1475,9 +1476,10 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                         const infoChica = QuintiImagenesPrueba[chicaNombre];
                         let imagenURL = null;
                         let audioURL = null;
+                        let tagImagen = null; // Declarar siempre para evitar errores
                         if (infoChica) {
                             // Seleccionar imagen basada en el mensaje del usuario (PRIORIDAD) y la respuesta
-                            const tagImagen = seleccionarTagImagen(chicaRespuesta, chicaNombre, message);
+                            tagImagen = seleccionarTagImagen(chicaRespuesta, chicaNombre, message);
                             const resultadoImagen = obtenerURLImagen(chicaNombre, tagImagen);
                             imagenURL = resultadoImagen.urlImagen;
                             audioURL = resultadoImagen.urlAudio;
@@ -1525,8 +1527,9 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                             const infoChica = QuintiImagenesPrueba[chicaNombre];
                             let imagenURL = null;
                             let audioURL = null;
+                            let tagImagen = null; // Declarar siempre para evitar errores
                             if (infoChica) {
-                                const tagImagen = seleccionarTagImagen(chicaRespuesta, chicaNombre, message);
+                                tagImagen = seleccionarTagImagen(chicaRespuesta, chicaNombre, message);
                                 const resultadoImagen = obtenerURLImagen(chicaNombre, tagImagen);
                                 imagenURL = resultadoImagen.urlImagen;
                                 audioURL = resultadoImagen.urlAudio;
