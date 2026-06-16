@@ -1397,6 +1397,8 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                         }
 
                         botMsgDiv.innerHTML = contenidoHTML;
+                        // Guardar el tag de imagen para poder guardarlo y rotarlo después
+                        botMsgDiv.dataset.imagenTag = tagImagen;
                         
                         messagesDiv.appendChild(botMsgDiv);
                         
@@ -1851,10 +1853,19 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                         const imgEl = msgEl.querySelector('img');
                         const imagenURL = imgEl ? imgEl.src : null;
                         
+                        // Extraer audio si existe
+                        const audioEl = msgEl.querySelector('audio');
+                        const audioURL = audioEl ? audioEl.querySelector('source')?.src || audioEl.src : null;
+                        
+                        // Extraer tag de imagen para poder rotar después
+                        const imagenTag = msgEl.dataset.imagenTag || null;
+                        
                         mensajes.push({
                             role: isUser ? 'user' : 'assistant',
                             content: textContent,
                             imagen: imagenURL,
+                            imagenTag: imagenTag,
+                            audio: audioURL,
                             timestamp: Date.now()
                         });
                     });
@@ -1864,7 +1875,8 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                     chicaPrincipal: chicaSeleccionadaActual,
                     chicasEnChat: getChicasEnChat ? Array.from(getChicasEnChat()) : [chicaSeleccionadaActual],
                     mensajes: mensajes,
-                    nombreUsuario: nombreUsuario || 'Anónimo'
+                    nombreUsuario: nombreUsuario || 'Anónimo',
+                    version: '2.0' // Versión que incluye audio e imagenTag
                 };
             };
             
@@ -1905,12 +1917,22 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                         
                         let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;">${msg.content}</div>`;
                         
+                        // Restaurar imagen si existe
                         if (msg.imagen) {
                             const chicaNombre = msg.role === 'assistant' ? (chatData.chicaPrincipal || 'Chica') : '';
                             contenidoHTML += `<img src="${msg.imagen}" alt="${chicaNombre}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
                         }
                         
+                        // Restaurar audio si existe
+                        if (msg.audio) {
+                            contenidoHTML += `<audio controls autoplay loop style="display: block; margin: 10px auto; width: 100%; max-width: 400px;"><source src="${msg.audio}" type="audio/mpeg">Tu navegador no soporta el elemento de audio.</audio>`;
+                        }
+                        
                         msgDiv.innerHTML = contenidoHTML;
+                        // Guardar el tag de imagen para referencia futura
+                        if (msg.imagenTag) {
+                            msgDiv.dataset.imagenTag = msg.imagenTag;
+                        }
                         messagesDiv.appendChild(msgDiv);
                     });
                     
@@ -1930,9 +1952,8 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
             cargarNombreGuardado();
         });
         
-        // Cargar el script del sistema de guardado
+        // Cargar el script del sistema de guardado (sin type module para acceso global)
         const saveSystemScript = document.createElement('script');
-        saveSystemScript.type = 'module';
         saveSystemScript.src = './chatSaveSystem.js';
         document.body.appendChild(saveSystemScript);
     </script>
