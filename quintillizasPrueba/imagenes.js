@@ -40,7 +40,8 @@ reverse_cowgirl: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDD
             manos_alrededor_del_cuello: { url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1776630296732_1.png", audio: "" },    
             lamiendo_pene:  { url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD36/main/imagenes/img_1778618109261.jpg", audio: "" },
              le_chupo_la_concha:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854942211.jpg", audio: "https://files.catbox.moe/lmxvqt.mp3" },
-            mostrando_tetas:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD7/main/imagenes/img_1773339445605.jpg", audio: "" },
+            mostrando_tetas:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD8/main/imagenes/img_1773413863989.jpg", audio: "" },
+            mostrando_bra:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD8/main/imagenes/img_1773413854183.jpg", audio: "" },
         }
     },
     Nino: {
