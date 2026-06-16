@@ -1293,8 +1293,34 @@ function quintAgregarChica(nombre, imagen_tag, dialogo, imagenUrlDirecta) {
 
     // Solo mostrar imagen si el personaje está en CHICAS
     if (info) {
-        // Si se pasa una URL directa (ej: imagen personalizada de locación), usarla
-        let imgData = info.imagenes[imagen_tag] || Object.values(info.imagenes)[0];
+        let imgData;
+        
+        // Primero intentar obtener el tag exacto
+        if (info.imagenes[imagen_tag]) {
+            imgData = info.imagenes[imagen_tag];
+            console.log(`[QUINT IMG] ${nombre}: tag exacto "${imagen_tag}" encontrado`);
+        } else {
+            // Tag no encontrado - usar sistema de matching inteligente
+            console.log(`[QUINT WARN] Tag "${imagen_tag}" no encontrado para ${nombre}, buscando tag más similar...`);
+            
+            // Buscar el tag más similar usando el nuevo sistema de matching
+            const tagsDisponibles = Object.keys(info.imagenes);
+            if (tagsDisponibles.length > 0) {
+                // Extraer contexto del diálogo para mejorar el matching
+                const tagSimilar = quintEncontrarTagMasSimilar(nombre, imagen_tag, dialogo);
+                
+                if (tagSimilar && tagSimilar !== imagen_tag) {
+                    console.log(`[QUINT MATCH] ${nombre}: usando tag similar "${tagSimilar}" en lugar de "${imagen_tag}"`);
+                    imgData = info.imagenes[tagSimilar];
+                } else {
+                    // Fallback: primera imagen disponible
+                    imgData = Object.values(info.imagenes)[0];
+                    console.log(`[QUINT FALLBACK] ${nombre}: usando primera imagen disponible: "${tagsDisponibles[0]}"`);
+                }
+            } else {
+                imgData = Object.values(info.imagenes)[0];
+            }
+        }
         
         // Soporte para formato antiguo (string directo) y nuevo (objeto {url, audio})
         let imgUrl, imgAudio;
@@ -1619,6 +1645,139 @@ async function quintEnviar() {
         const info = CHICAS[nombreChica];
         if (!info || !info.imagenes) return ["normal"];
         return Object.keys(info.imagenes);
+    }
+    
+    // Función para calcular similitud entre dos strings (Levenshtein distance normalizada)
+    function quintCalcularSimilitud(str1, str2) {
+        if (!str1 || !str2) return 0;
+        
+        const s1 = str1.toLowerCase().replace(/[_\-\s]/g, '');
+        const s2 = str2.toLowerCase().replace(/[_\-\s]/g, '');
+        
+        if (s1 === s2) return 1.0;
+        if (s1.includes(s2) || s2.includes(s1)) return 0.8;
+        
+        // Normalizar variantes comunes
+        const normalizar = (s) => s.replace(/quitar|quitando|sacar|sacando/g, 'quitar')
+                                   .replace(/ropa|vestimenta|vestido/g, 'ropa')
+                                   .replace(/2|dos/g, '2');
+        
+        const n1 = normalizar(s1);
+        const n2 = normalizar(s2);
+        
+        if (n1 === n2) return 0.9;
+        
+        // Calcular distancia de Levenshtein
+        const matrix = Array(s2.length + 1).fill(null).map(() => Array(s1.length + 1).fill(null));
+        for (let i = 0; i <= s1.length; i++) matrix[0][i] = i;
+        for (let j = 0; j <= s2.length; j++) matrix[j][0] = j;
+        
+        for (let j = 1; j <= s2.length; j++) {
+            for (let i = 1; i <= s1.length; i++) {
+                const indicator = s1[i - 1] === s2[j - 1] ? 0 : 1;
+                matrix[j][i] = Math.min(
+                    matrix[j][i - 1] + 1,
+                    matrix[j - 1][i] + 1,
+                    matrix[j - 1][i - 1] + indicator
+                );
+            }
+        }
+        
+        const distance = matrix[s2.length][s1.length];
+        const maxLength = Math.max(s1.length, s2.length);
+        return maxLength > 0 ? 1 - (distance / maxLength) : 0;
+    }
+    
+    // Función para encontrar el tag más similar considerando contexto
+    function quintEncontrarTagMasSimilar(nombreChica, tagBuscado, contextoDialogo = "") {
+        const tagsDisponibles = quintObtenerTagsDisponibles(nombreChica);
+        if (tagsDisponibles.length === 0) return null;
+        
+        console.log(`[QUINT MATCH] Buscando tag similar a "${tagBuscado}" para ${nombreChica}. Tags disponibles: ${tagsDisponibles.join(", ")}`);
+        
+        // Extraer palabras clave del contexto
+        const palabrasContexto = contextoDialogo.toLowerCase()
+            .match(/[a-zA-Záéíóúñü0-9]+/g) || [];
+        
+        // Palabras clave de acciones comunes
+        const accionesComunes = {
+            'desnudar': ['desnuda', 'desnudando', 'desvistiendo', 'quitando', 'ropa', 'vestido'],
+            'besar': ['beso', 'besando', 'labios', 'beso'],
+            'tocar': ['tocando', 'manos', 'caricia', 'acariciando'],
+            'sonreir': ['sonrisa', 'sonriendo', 'feliz', 'contenta'],
+            'mirar': ['mirando', 'viendo', 'observando', 'ojos'],
+            'dormir': ['durmiendo', 'cama', 'sueño', 'descansando'],
+            'comer': ['comiendo', 'alimento', 'bebida', 'tragando']
+        };
+        
+        let mejorTag = null;
+        let mejorPuntaje = -1;
+        let detallesMatching = [];
+        
+        for (const tag of tagsDisponibles) {
+            let puntaje = 0;
+            let razones = [];
+            
+            // 1. Similitud directa de strings (peso: 40%)
+            const similitudDirecta = quintCalcularSimilitud(tagBuscado, tag);
+            puntaje += similitudDirecta * 0.4;
+            if (similitudDirecta > 0.7) razones.push(`similaridad directa (${(similitudDirecta * 100).toFixed(0)}%)`);
+            
+            // 2. Coincidencia de palabras clave (peso: 30%)
+            const tagPalabras = tag.toLowerCase().split(/[_\-\s]/);
+            const coincidenciasPalabras = tagPalabras.filter(p => 
+                palabrasContexto.some(cp => cp.includes(p) || p.includes(cp))
+            );
+            const puntajePalabras = coincidenciasPalabras.length / Math.max(tagPalabras.length, 1);
+            puntaje += puntajePalabras * 0.3;
+            if (coincidenciasPalabras.length > 0) razones.push(`palabras clave: ${coincidenciasPalabras.join(", ")}`);
+            
+            // 3. Coincidencia semántica por acciones (peso: 20%)
+            for (const [accion, keywords] of Object.entries(accionesComunes)) {
+                const tagTieneAccion = keywords.some(k => tag.toLowerCase().includes(k));
+                const contextoTieneAccion = keywords.some(k => 
+                    contextoDialogo.toLowerCase().includes(k) || 
+                    tagBuscado.toLowerCase().includes(k)
+                );
+                
+                if (tagTieneAccion && contextoTieneAccion) {
+                    puntaje += 0.2;
+                    razones.push(`acción semántica: ${accion}`);
+                    break;
+                }
+            }
+            
+            // 4. Bonus por posición de palabras importantes (peso: 10%)
+            const tagNormalizado = tag.toLowerCase().replace(/[_\-\s]/g, ' ');
+            const tagBuscadoNormalizado = tagBuscado.toLowerCase().replace(/[_\-\s]/g, ' ');
+            
+            // Si las primeras palabras coinciden, dar bonus
+            const primerasPalabrasTag = tagNormalizado.split(' ').slice(0, 2).join(' ');
+            const primerasPalabrasBuscado = tagBuscadoNormalizado.split(' ').slice(0, 2).join(' ');
+            
+            if (primerasPalabrasTag === primerasPalabrasBuscado) {
+                puntaje += 0.1;
+                razones.push('inicio coincide');
+            }
+            
+            // Actualizar mejor tag si este tiene mayor puntaje
+            if (puntaje > mejorPuntaje) {
+                mejorPuntaje = puntaje;
+                mejorTag = tag;
+                detallesMatching = razones;
+            }
+        }
+        
+        console.log(`[QUINT MATCH] Mejor tag encontrado: "${mejorTag}" con puntaje ${(mejorPuntaje * 100).toFixed(1)}%. Razones: ${detallesMatching.join(", ")}`);
+        
+        // Solo retornar el tag si el puntaje es razonable (> 30%)
+        if (mejorPuntaje >= 0.3) {
+            return mejorTag;
+        }
+        
+        // Fallback: primer tag disponible
+        console.log(`[QUINT MATCH] No se encontró tag suficientemente similar. Usando fallback: "${tagsDisponibles[0]}"`);
+        return tagsDisponibles[0];
     }
     
     // Función para llamar a la API y corregir imagen_tag Y diálogo
