@@ -1001,7 +1001,16 @@
          * Pausa todos los audios activos actualmente
          */
         function pausarTodosLosAudios() {
+            // Pausar audios del mapa de control
             audiosActivos.forEach((audio, id) => {
+                if (!audio.paused) {
+                    audio.pause();
+                }
+            });
+            
+            // Pausar TODOS los elementos de audio en el DOM (incluyendo los insertados como HTML)
+            const allAudios = document.querySelectorAll('audio');
+            allAudios.forEach(audio => {
                 if (!audio.paused) {
                     audio.pause();
                 }
@@ -1293,6 +1302,9 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
         let lastUserMessage = null; // Para permitir reintentar después de un error
         
         async function sendMessage() {
+            // DETENER TODOS LOS AUDIOS ANTERIORES antes de enviar nuevo mensaje
+            pausarTodosLosAudios();
+            
             const input = document.getElementById('userInput');
             const sendBtn = document.getElementById('sendButton');
             const messagesDiv = document.getElementById('chatMessages');
