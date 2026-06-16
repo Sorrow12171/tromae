@@ -27,7 +27,7 @@ hablando: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDD
   standfuck_follando_de_pie: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773691930795.jpg", audio: "" }, 
   follando_en_la_ventana: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773691932895.jpg", audio: "" }, 
    handjob_paja: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773692613338.jpg", audio: "" },            
-reverse_cowgirl: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773692627261.jpg", audio: "https://files.catbox.moe/mjyomo.mp3" },           
+reverse_cowgirl: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773692627261.jpg", audio: "https://files.catbox.moe/t4r8hw.mp3" },           
     reverse_cowgirl_le_estiro_el_ano: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773692629321.jpg", audio: "https://files.catbox.moe/mjyomo.mp3" },        
     sidefuck: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773692689236.jpg", audio: "" },
     anal: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773757229891.jpg", audio: "" },  
