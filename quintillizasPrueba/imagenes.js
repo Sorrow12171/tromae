@@ -12,6 +12,7 @@ const QuintiImagenesPrueba = {
         imagenSelector: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD8/main/imagenes/img_1773413829887.jpg",
         imagenes: {
             besando:  { url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772901835049.jpg", audio: "" },
+            besando2:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD23/main/imagenes/img_1774807962734.png", audio: "" },
           
     chupando_solo_la_punta_del_pene:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD4/main/imagenes/img_1773181766015.jpg", audio: "https://files.catbox.moe/5q22c7.mp3" },
         chupando_solo_la_punta_del_pene2:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD23/main/imagenes/img_1774805921156.png", audio: "https://files.catbox.moe/5q22c7.mp3" },
