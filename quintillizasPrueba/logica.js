@@ -1109,6 +1109,61 @@ function parsearJSON(raw) {
         }
     }
     
+    // ESTRATEGIA 7: CRÍTICA - Contenido puramente narrativo (sin JSON)
+    // Cuando la IA devuelve solo texto narrativo/dialogo sin formato JSON
+    // Convertimos ese texto en un objeto JSON válido para no perder la respuesta
+    const textoNarrativo = rawLimpio.trim();
+    if (textoNarrativo.length > 0 && !textoNarrativo.includes('{')) {
+        logQuinti('WARN', 'parsearJSON: detectado contenido puramente narrativo, convirtiendo a JSON');
+        logQuinti('DEBUG', `Contenido narrativo detectado: ${textoNarrativo.substring(0, 100)}...`);
+        
+        // Crear un objeto JSON con el texto narrativo como respuesta
+        return {
+            respuesta: textoNarrativo,
+            imagen_tag: 'normal',
+            texto_original: textoOriginalCompleto,
+            esNarrativoPuro: true
+        };
+    }
+    
+    // ESTRATEGIA 8: CRÍTICA - JSON truncado/incompleto con narrativa inicial
+    // Cuando la respuesta comienza con narrativa (*accion*) y luego intenta JSON pero se trunca
+    // Ejemplo: "*sonríe* Ah, fabrizio... {\"respuesta\":\"..."
+    // Extraemos TODO el texto disponible y lo usamos como respuesta
+    const tieneNarrativaInicial = /^\s*\*/.test(rawLimpio);
+    const tieneInicioJSON = rawLimpio.includes('{');
+    
+    if (tieneNarrativaInicial && tieneInicioJSON) {
+        logQuinti('WARN', 'parsearJSON: detectada narrativa con JSON incompleto/truncado, usando texto completo como respuesta');
+        
+        // Extraer todo el texto disponible antes del JSON truncado
+        const indiceJSON = rawLimpio.indexOf('{');
+        const textoAntesJSON = rawLimpio.substring(0, indiceJSON).trim();
+        
+        // Usar el texto completo (narrativa + lo que haya del JSON) como respuesta
+        // porque la IA probablemente se truncó pero el contenido es válido
+        let respuestaFinal = textoAntesJSON;
+        
+        // Si hay contenido después del { que parece ser inicio de JSON válido, intentar extraerlo
+        const restoDespuesLLave = rawLimpio.substring(indiceJSON);
+        const patronJSONTruncado = /\{\s*"respuesta"\s*:\s*"([^"]*)/i;
+        const matchTruncado = restoDespuesLLave.match(patronJSONTruncado);
+        
+        if (matchTruncado && matchTruncado[1]) {
+            // Hay inicio de respuesta JSON, agregarlo
+            respuestaFinal += ' ' + matchTruncado[1];
+        }
+        
+        logQuinti('DEBUG', `Respuesta recuperada de JSON truncado: ${respuestaFinal.substring(0, 150)}...`);
+        
+        return {
+            respuesta: respuestaFinal,
+            imagen_tag: 'normal',
+            texto_original: textoOriginalCompleto,
+            esJSONTruncado: true
+        };
+    }
+    
     logQuinti('ERROR', 'parsearJSON: no se pudo extraer JSON válido', {
         contenidoCompleto: raw.substring(0, 300)
     });
@@ -1154,6 +1209,16 @@ function esRespuestaValida(datos) {
     // El diálogo no debe estar vacío o ser muy corto
     if (datos.respuesta.trim().length < 5) {
         return false;
+    }
+    
+    // Aceptar respuestas marcadas como narrativas puras, JSON truncado o recuperación agresiva
+    // Estas son respuestas válidas aunque no tengan el formato JSON perfecto
+    if (datos.esNarrativoPuro || datos.esJSONTruncado || datos.esRecuperacionAgresiva) {
+        logQuinti('DEBUG', 'esRespuestaValida: aceptando respuesta recuperada (narrativa/JSON truncado/recuperación agresiva)', {
+            longitud: datos.respuesta.length,
+            tipo: datos.esNarrativoPuro ? 'narrativo' : datos.esJSONTruncado ? 'truncado' : 'agresiva'
+        });
+        return true;
     }
     
     return true;
@@ -1816,12 +1881,27 @@ async function intentarLlamadaAPI(mensajes, modelo) {
                 indiceKeyActual = (keyIdx + 1) % GROQ_KEYS.length;
                 const resultadoJSON = parsearJSON(contenido);
                 
-                // Si el parseo falla y devuelve null, registrar error detallado
+                // Si el parseo falla y devuelve null, intentar recuperación agresiva
                 if (resultadoJSON === null) {
                     logQuinti('ERROR', 'API devolvió contenido pero no es JSON válido', {
                         contenido: contenido.substring(0, 200),
                         keyUsada: keyNumero
                     });
+                    
+                    // RECUPERACIÓN AGRESIVA: Si hay contenido narrativo, usarlo aunque no sea JSON perfecto
+                    // Esto captura las respuestas valiosas que antes se perdían
+                    const contenidoLimpio = contenido.replace(/```json/g, "").replace(/```/g, "").trim();
+                    if (contenidoLimpio.length > 10) {
+                        logQuinti('WARN', 'RECUPERACIÓN AGRESIVA: Convirtiendo contenido narrativo a respuesta válida');
+                        
+                        // Extraer cualquier texto entre asteriscos (narración) y diálogo
+                        return {
+                            respuesta: contenidoLimpio,
+                            imagen_tag: 'normal',
+                            texto_original: contenido,
+                            esRecuperacionAgresiva: true
+                        };
+                    }
                 }
                 
                 return resultadoJSON;
