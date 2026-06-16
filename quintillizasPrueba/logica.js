@@ -1325,8 +1325,8 @@ DEBES HACER TRES COSAS OBLIGATORIAMENTE:
 
 ⚠️ CRÍTICO: 
 - El texto y la imagen DEBEN estar 100% alineados con la acción ESPECÍFICA que el usuario mencionó.
+- NO uses tags genéricas ("desnuda", "hablando") cuando el usuario dijo algo específico ("se desviste", "beso").
 `;
-            - NO uses tags genéricas ("desnuda", "hablando") cuando el usuario dijo algo específico ("se desviste", "beso").
             // Instrucción de contexto sobre otras chicas (solo para chicas después de la primera)
             let instruccionContextoOtrasChicas = '';
             if (!esPrimeraChica && respuestasPorChica.length > 0) {
