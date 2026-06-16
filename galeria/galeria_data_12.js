@@ -2728,6 +2728,15 @@ const galeriaData_12 = {
 ]
     },
 
+    '12_Hijas_de_puta': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
+
     
 };
 
