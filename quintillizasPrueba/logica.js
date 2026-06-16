@@ -623,6 +623,267 @@ function obtenerTagsImagen(nombreChica) {
 }
 
 /**
+ * Calcula el score de similitud entre dos strings usando múltiples criterios
+ * @param {string} tag1 - Primer tag
+ * @param {string} tag2 - Segundo tag
+ * @returns {number} - Score de 0 a 100
+ */
+function calcularSimilitudTags(tag1, tag2) {
+    if (!tag1 || !tag2) return 0;
+    
+    // Normalizar ambos tags
+    const t1 = tag1.toLowerCase().replace(/_/g, ' ').trim();
+    const t2 = tag2.toLowerCase().replace(/_/g, ' ').trim();
+    
+    // Coincidencia exacta
+    if (t1 === t2) return 100;
+    
+    // Verificar si uno contiene al otro
+    if (t1.includes(t2) || t2.includes(t1)) {
+        const shorter = t1.length < t2.length ? t1 : t2;
+        const longer = t1.length < t2.length ? t2 : t1;
+        const ratio = shorter.length / longer.length;
+        return 70 + (ratio * 30); // 70-100 basado en cuánto del string más largo está contenido
+    }
+    
+    // Dividir en palabras y comparar
+    const palabras1 = t1.split(' ').filter(p => p.length > 2);
+    const palabras2 = t2.split(' ').filter(p => p.length > 2);
+    
+    if (palabras1.length === 0 || palabras2.length === 0) return 0;
+    
+    // Contar palabras coincidentes
+    let coincidencias = 0;
+    for (const p1 of palabras1) {
+        for (const p2 of palabras2) {
+            // Coincidencia exacta de palabra
+            if (p1 === p2) {
+                coincidencias++;
+                break;
+            }
+            // Coincidencia parcial (una contiene a la otra)
+            if (p1.includes(p2) || p2.includes(p1)) {
+                coincidencias += 0.5;
+                break;
+            }
+        }
+    }
+    
+    const maxPalabras = Math.max(palabras1.length, palabras2.length);
+    const porcentajePalabras = (coincidencias / maxPalabras) * 100;
+    
+    // Bonus por tener raíces similares
+    let bonusRaiz = 0;
+    const raicesComunes = [];
+    for (const p1 of palabras1) {
+        for (const p2 of palabras2) {
+            // Si comparten los primeros 4 caracteres
+            if (p1.length >= 4 && p2.length >= 4 && p1.substring(0, 4) === p2.substring(0, 4)) {
+                raicesComunes.push(p1);
+            }
+        }
+    }
+    if (raicesComunes.length > 0) {
+        bonusRaiz = Math.min(20, raicesComunes.length * 5);
+    }
+    
+    return Math.min(100, porcentajePalabras + bonusRaiz);
+}
+
+/**
+ * Encuentra el tag de imagen más pertinente basado en el contexto y acción descrita
+ * Usa múltiples parámetros y condiciones para mejorar la precisión
+ * @param {string} tagSolicitado - Tag que la IA intentó usar
+ * @param {string[]} tagsDisponibles - Array de tags disponibles para esta chica
+ * @param {string} dialogoContexto - El diálogo completo para extraer contexto adicional
+ * @returns {string} - El tag más apropiado o null si no se encuentra coincidencia
+ */
+function encontrarTagMasPertinente(tagSolicitado, tagsDisponibles, dialogoContexto = '') {
+    if (!tagSolicitado || !tagsDisponibles || tagsDisponibles.length === 0) {
+        return null;
+    }
+    
+    logQuinti('DEBUG', `Buscando tag pertinente: "${tagSolicitado}" entre ${tagsDisponibles.length} opciones`);
+    
+    const tagNormalizado = tagSolicitado.toLowerCase().replace(/_/g, ' ').trim();
+    
+    // ============================================
+    // CRITERIO 1: Búsqueda exacta directa
+    // ============================================
+    if (tagsDisponibles.includes(tagSolicitado)) {
+        logQuinti('DEBUG', `Coincidencia EXACTA encontrada: ${tagSolicitado}`);
+        return tagSolicitado;
+    }
+    
+    // ============================================
+    // CRITERIO 2: Búsqueda normalizada (sin guiones bajos)
+    // ============================================
+    for (const tag of tagsDisponibles) {
+        const tagNorm = tag.toLowerCase().replace(/_/g, ' ');
+        if (tagNorm === tagNormalizado) {
+            logQuinti('DEBUG', `Coincidencia NORMALIZADA: "${tagSolicitado}" -> "${tag}"`);
+            return tag;
+        }
+    }
+    
+    // ============================================
+    // CRITERIO 3: Inclusión de strings (uno contiene al otro)
+    // ============================================
+    for (const tag of tagsDisponibles) {
+        const tagNorm = tag.toLowerCase().replace(/_/g, ' ');
+        if (tagNorm.includes(tagNormalizado) || tagNormalizado.includes(tagNorm)) {
+            logQuinti('DEBUG', `Coincidencia por INCLUSIÓN: "${tagSolicitado}" -> "${tag}"`);
+            return tag;
+        }
+    }
+    
+    // ============================================
+    // CRITERIO 4: Similitud de palabras clave principales
+    // Extraer sustantivos/verbos clave del tag solicitado
+    // ============================================
+    const palabrasClave = tagNormalizado.split(' ').filter(p => p.length > 3);
+    
+    if (palabrasClave.length > 0) {
+        for (const tag of tagsDisponibles) {
+            const tagNorm = tag.toLowerCase().replace(/_/g, ' ');
+            let coincidenciasCount = 0;
+            
+            for (const palabra of palabrasClave) {
+                if (tagNorm.includes(palabra) || palabra.includes(tagNorm.replace(/_/g, ' '))) {
+                    coincidenciasCount++;
+                }
+            }
+            
+            // Si coincide más del 50% de las palabras clave
+            if (coincidenciasCount >= Math.ceil(palabrasClave.length * 0.5)) {
+                logQuinti('DEBUG', `Coincidencia por PALABRAS CLAVE (${coincidenciasCount}/${palabrasClave.length}): "${tagSolicitado}" -> "${tag}"`);
+                return tag;
+            }
+        }
+    }
+    
+    // ============================================
+    // CRITERIO 5: Cálculo de similitud scoring
+    // ============================================
+    let mejorTag = null;
+    let mejorScore = 0;
+    
+    for (const tag of tagsDisponibles) {
+        const score = calcularSimilitudTags(tagSolicitado, tag);
+        
+        // Ajustar score basado en contexto del diálogo
+        let scoreAjustado = score;
+        if (dialogoContexto) {
+            const dialogoLower = dialogoContexto.toLowerCase();
+            const tagNorm = tag.toLowerCase().replace(/_/g, ' ');
+            
+            // Bonus si el tag aparece en el diálogo
+            if (dialogoLower.includes(tagNorm)) {
+                scoreAjustado += 15;
+            }
+            
+            // Bonus si palabras del tag aparecen en el diálogo
+            const palabrasTag = tagNorm.split(' ').filter(p => p.length > 3);
+            for (const palabra of palabrasTag) {
+                if (dialogoLower.includes(palabra)) {
+                    scoreAjustado += 5;
+                }
+            }
+        }
+        
+        if (scoreAjustado > mejorScore) {
+            mejorScore = scoreAjustado;
+            mejorTag = tag;
+        }
+    }
+    
+    // Solo retornar si el score es suficientemente alto (mínimo 60%)
+    if (mejorScore >= 60) {
+        logQuinti('DEBUG', `Coincidencia por SIMILITUD (score: ${mejorScore.toFixed(1)}): "${tagSolicitado}" -> "${mejorTag}"`);
+        return mejorTag;
+    }
+    
+    // ============================================
+    // CRITERIO 6: Búsqueda por categoría semántica
+    // Mapeo de conceptos relacionados
+    // ============================================
+    const mapeoSemanitico = {
+        'desvestir': ['quitandose_la_ropa', 'desnuda', 'mostrando_bra'],
+        'ropa': ['quitandose_la_ropa', 'ropa_elegante', 'ropa_sexy', 'desnuda'],
+        'besar': ['besando', 'abriendo_la_boca_para_besar'],
+        'chupar': ['chupando_solo_la_punta_del_pene', 'chupando_todo_el_pene', 'chupando_bolas', 'lamiendo_pene'],
+        'follar': ['doggystyle', 'misionero', 'reverse_cowgirl', 'standfuck_follando_de_pie'],
+        'ano': ['anal', 'enseñando_ano', 'rozo_mi_verga_en_su_ano'],
+        'culo': ['moviendo_el_culo', 'mostrando_culo_tanga_negra', 'le_agarro_el_culo'],
+        'pecho': ['mostrando_tetas', 'mostrando_bra'],
+        'mano': ['handjob_paja', 'manos_alrededor_del_cuello']
+    };
+    
+    for (const [concepto, tagsRelacionados] of Object.entries(mapeoSemanitico)) {
+        if (tagNormalizado.includes(concepto)) {
+            for (const tagRelacionado of tagsRelacionados) {
+                if (tagsDisponibles.includes(tagRelacionado)) {
+                    logQuinti('DEBUG', `Coincidencia SEMÁNTICA: "${tagSolicitado}" (concepto: ${concepto}) -> "${tagRelacionado}"`);
+                    return tagRelacionado;
+                }
+            }
+        }
+    }
+    
+    // ============================================
+    // CRITERIO 7: Búsqueda por raíz de palabra (MEJORA NUEVA)
+    // Comparar raíces de palabras ignorando variaciones menores
+    // ============================================
+    const palabrasSolicitado = tagNormalizado.split(' ').filter(p => p.length > 2);
+    for (const tag of tagsDisponibles) {
+        const tagNorm = tag.toLowerCase().replace(/_/g, ' ');
+        const palabrasTag = tagNorm.split(' ').filter(p => p.length > 2);
+        
+        // Contar cuántas palabras comparten la misma raíz (primeros 4-5 caracteres)
+        let coincidenciasRaiz = 0;
+        for (const palabraS of palabrasSolicitado) {
+            for (const palabraT of palabrasTag) {
+                const minLen = Math.min(palabraS.length, palabraT.length);
+                if (minLen >= 4 && palabraS.substring(0, Math.min(5, minLen)) === palabraT.substring(0, Math.min(5, minLen))) {
+                    coincidenciasRaiz++;
+                    break;
+                }
+                // También verificar si una palabra contiene a la otra
+                if (palabraS.includes(palabraT) || palabraT.includes(palabraS)) {
+                    coincidenciasRaiz++;
+                    break;
+                }
+            }
+        }
+        
+        // Si al menos la mitad de las palabras coinciden por raíz
+        if (coincidenciasRaiz >= Math.ceil(Math.max(palabrasSolicitado.length, palabrasTag.length) * 0.5)) {
+            logQuinti('DEBUG', `Coincidencia por RAÍZ DE PALABRA (${coincidenciasRaiz} coincidencias): "${tagSolicitado}" -> "${tag}"`);
+            return tag;
+        }
+    }
+    
+    // ============================================
+    // CRITERIO 8: Búsqueda por patrón de acción similar (MEJORA NUEVA)
+    // Para acciones como "quitando_la_ropa2" vs "quitandose_la_ropa_2"
+    // ============================================
+    const patronAccion = /(?:quitando|quitandose|desvistiendo|sacando)\s*(?:la\s*)?(?:ropa)?/i;
+    if (patronAccion.test(tagNormalizado)) {
+        for (const tag of tagsDisponibles) {
+            const tagNorm = tag.toLowerCase().replace(/_/g, ' ');
+            if (patronAccion.test(tagNorm)) {
+                logQuinti('DEBUG', `Coincidencia por PATRÓN DE ACCIÓN: "${tagSolicitado}" -> "${tag}"`);
+                return tag;
+            }
+        }
+    }
+    
+    // No se encontró coincidencia suficiente
+    logQuinti('DEBUG', `No se encontró coincidencia pertinente para "${tagSolicitado}" (mejor score: ${mejorScore.toFixed(1)})`);
+    return null;
+}
+
+/**
  * Selecciona automáticamente la mejor imagen basada en el contenido del diálogo
  * La IA decide qué imagen usar incluyendo las tags disponibles en el prompt
  * @param {string} dialogo - El diálogo generado por la IA
@@ -959,7 +1220,44 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
     if (chicasEnChat.size > 1) {
         logQuinti('INFO', `Múltiples chicas detectadas (${chicasEnChat.size}). Iniciando llamadas secuenciales individuales.`);
         
-        const chicasArray = Array.from(chicasEnChat);
+        // MEJORA #2: ORDEN DE RESPUESTA SEGÚN A QUIÉN SE DIRIGE EL USUARIO
+        // Detectar si el usuario se dirige específicamente a alguna chica
+        let chicaObjetivo = null;
+        
+        // Patrones para detectar a quién se dirige el usuario
+        const patronesDireccion = [
+            /(?:^|\s)(?:oye\s+)?([a-z]+)(?:\s*(?:,|\?|!|\.))?\s*(?:tú|tu|te|ti|eres|tienes|estas|estás)/i,
+            /(?:^|\s)(?:oye\s+)?([a-z]+)\s+(?:seguro|crees|puedes|quieres|sabes)/i,
+            /(?:^|\s)([a-z]+)\s+(?:qué|cuál|cómo|cuándo|dónde|por qué)/i,
+            /(?:^|\s)([a-z]+)\s*,/i,
+            /(?:habla|di|cuenta|responde)\s+(?:tú\s+)?([a-z]+)/i
+        ];
+        
+        for (const patron of patronesDireccion) {
+            const match = mensaje.match(patron);
+            if (match) {
+                const nombreDetectado = match[1].toLowerCase();
+                // Buscar coincidencia con nombres de chicas disponibles
+                for (const nombreChica of getChicasDisponibles()) {
+                    if (nombreChica.toLowerCase() === nombreDetectado) {
+                        chicaObjetivo = nombreChica;
+                        logQuinti('INFO', `Usuario se dirige específicamente a: ${chicaObjetivo}`);
+                        break;
+                    }
+                }
+                if (chicaObjetivo) break;
+            }
+        }
+        
+        // Ordenar array de chicas: la chica objetivo va PRIMERO
+        let chicasArray = Array.from(chicasEnChat);
+        if (chicaObjetivo && chicasArray.includes(chicaObjetivo)) {
+            // Mover la chica objetivo al principio del array
+            chicasArray = chicasArray.filter(c => c !== chicaObjetivo);
+            chicasArray.unshift(chicaObjetivo);
+            logQuinti('INFO', `Orden de respuesta ajustado: ${chicaObjetivo} responde primero`);
+        }
+        
         const respuestasPorChica = [];
         let errorGlobal = null;
         
@@ -1027,16 +1325,25 @@ DEBES HACER TRES COSAS OBLIGATORIAMENTE:
 
 ⚠️ CRÍTICO: 
 - El texto y la imagen DEBEN estar 100% alineados con la acción ESPECÍFICA que el usuario mencionó.
-- NO uses tags genéricas ("desnuda", "hablando") cuando el usuario dijo algo específico ("se desviste", "beso").
-- Si el usuario dice "X", la tag debe ser la versión en acción de X, no algo relacionado pero diferente.`;
-            
+`;
+            - NO uses tags genéricas ("desnuda", "hablando") cuando el usuario dijo algo específico ("se desviste", "beso").
             // Instrucción de contexto sobre otras chicas (solo para chicas después de la primera)
             let instruccionContextoOtrasChicas = '';
             if (!esPrimeraChica && respuestasPorChica.length > 0) {
                 const respuestasPrevias = respuestasPorChica.map(r => 
                     `• ${r.chica}: ${r.respuesta.substring(0, 200)}...`
-                ).join('\n');
-                instruccionContextoOtrasChicas = `\n\n📋 CONTEXTO - OTRAS CHICAS YA RESPONDIERON:\n${respuestasPrevias}\n\n⚡ TU RESPUESTA DEBE SER DIFERENTE: No repitas sus palabras exactas, pero TODAS deben estar realizando la MISMA ACCIÓN que el usuario mencionó. Cada una con su estilo único pero la misma acción base.\n\n🖼️ IMAGEN COORDINADA OBLIGATORIA: Si el usuario dijo "beso", TODAS las chicas deben estar besando en su texto Y en su imagen_tag. La acción es la misma, la expresión de cada personalidad es diferente.\n\n🚫 PROHIBIDO HABLAR COMO OTRA CHICA: Tú eres ${nombreChica}. NO uses el estilo, vocabulario o frases de las otras chicas. Mantén TU propia personalidad y forma de hablar.`;
+                ).join('\\n');
+                
+                // MEJORA: La chica objetivo (a quien se dirige el usuario) responde PRIMERO
+                // Las demás chicas deben basar su respuesta en lo que dijo la primera
+                const esChicaObjetivo = nombreChica === chicaObjetivo;
+                if (!esChicaObjetivo && chicaObjetivo) {
+                    // Esta NO es la chica objetivo, debe responder BASÁNDOSE en la respuesta de la chica objetivo
+                    instruccionContextoOtrasChicas = `\\n\\n📋 CONTEXTO - OTRAS CHICAS YA RESPONDIERON:\\n${respuestasPrevias}\\n\\n⚡ TU RESPUESTA DEBE SER DIFERENTE: No repitas sus palabras exactas, pero TODAS deben estar realizando la MISMA ACCIÓN que el usuario mencionó. Cada una con su estilo único pero la misma acción base.\\n\\n🖼️ IMAGEN COORDINADA OBLIGATORIA: Si el usuario dijo "beso", TODAS las chicas deben estar besando en su texto Y en su imagen_tag. La acción es la misma, la expresión de cada personalidad es diferente.\\n\\n🚫 PROHIBIDO HABLAR COMO OTRA CHICA: Tú eres ${nombreChica}. NO uses el estilo, vocabulario o frases de las otras chicas. Mantén TU propia personalidad y forma de hablar.\\n\\n💬 REACCIÓN A LA RESPUESTA PREVIA: Como ${chicaObjetivo} ya respondió primero (porque el usuario le habló directamente a ella), tu respuesta debe ser una REACCIÓN o COMENTARIO sobre lo que ${chicaObjetivo} dijo. Puedes estar de acuerdo, disentir, complementar o reaccionar con tu personalidad única, pero SIEMPRE manteniendo coherencia con la situación.`;
+                } else {
+                    // Esta ES la chica objetivo o no hay chica objetivo definida
+                    instruccionContextoOtrasChicas = `\\n\\n📋 CONTEXTO - OTRAS CHICAS YA RESPONDIERON:\\n${respuestasPrevias}\\n\\n⚡ TU RESPUESTA DEBE SER DIFERENTE: No repitas sus palabras exactas, pero TODAS deben estar realizando la MISMA ACCIÓN que el usuario mencionó. Cada una con su estilo único pero la misma acción base.\\n\\n🖼️ IMAGEN COORDINADA OBLIGATORIA: Si el usuario dijo "beso", TODAS las chicas deben estar besando en su texto Y en su imagen_tag. La acción es la misma, la expresión de cada personalidad es diferente.\\n\\n🚫 PROHIBIDO HABLAR COMO OTRA CHICA: Tú eres ${nombreChica}. NO uses el estilo, vocabulario o frases de las otras chicas. Mantén TU propia personalidad y forma de hablar.`;
+                }
             }
             
             // SOLUCIÓN PROBLEMA #2: Incluir contexto unificado en el system prompt
@@ -1860,13 +2167,26 @@ function obtenerURLImagen(nombreChica, tag, historiaId = null) {
     let urlImagen = imgObj?.url || imgObj;
     let urlAudio = imgObj?.audio || null;
     
-    // FALLBACK: Si no encuentra el tag específico, usar la PRIMERA imagen disponible
+    // MEJORA #1: Si no encuentra el tag exacto, usar el sistema inteligente de búsqueda de tags pertinentes
     if (!urlImagen && chicaData.imagenes && Object.keys(chicaData.imagenes).length > 0) {
-        const primerTag = Object.keys(chicaData.imagenes)[0];
-        const primerImgObj = chicaData.imagenes[primerTag];
-        urlImagen = primerImgObj?.url || primerImgObj;
-        urlAudio = primerImgObj?.audio || null;
-        logQuinti('WARN', `Tag "${tag}" no encontrado para ${nombreChica}, usando primera imagen disponible: "${primerTag}"`);
+        const tagsDisponibles = Object.keys(chicaData.imagenes);
+        
+        // Intentar encontrar el tag más pertinente usando múltiples criterios
+        const tagPertinente = encontrarTagMasPertinente(tag, tagsDisponibles, '');
+        
+        if (tagPertinente) {
+            const imgObjPertinente = chicaData.imagenes[tagPertinente];
+            urlImagen = imgObjPertinente?.url || imgObjPertinente;
+            urlAudio = imgObjPertinente?.audio || null;
+            logQuinti('INFO', `Tag "${tag}" no encontrado, se encontró tag pertinente: "${tagPertinente}" para ${nombreChica}`);
+        } else {
+            // FALLBACK: Si no encuentra tag pertinente, usar la PRIMERA imagen disponible
+            const primerTag = tagsDisponibles[0];
+            const primerImgObj = chicaData.imagenes[primerTag];
+            urlImagen = primerImgObj?.url || primerImgObj;
+            urlAudio = primerImgObj?.audio || null;
+            logQuinti('WARN', `Tag "${tag}" no encontrado para ${nombreChica}, usando primera imagen disponible: "${primerTag}"`);
+        }
     }
     
     // Último fallback: imagenSelector
