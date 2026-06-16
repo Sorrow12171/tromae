@@ -1372,17 +1372,16 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                             logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, audio: audioURL, mensajeUsuario: message.substring(0, 50) });
                         }
 
-                        // Construir contenido: PRIMERO TEXTO con nombre, luego imagen al final
+                        // Construir contenido: PRIMERO TEXTO con nombre, luego imagen y audio al final
                         // Formatear el texto para que la narración entre asteriscos tenga estilo diferente
                         const chicaRespuestaFormateada = formatearTextoConAsteriscos(chicaRespuesta);
                         let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;"><strong>${chicaNombre}:</strong> ${chicaRespuestaFormateada}</div>`;
                         if (imagenURL) {
                             contenidoHTML += `<img src="${imagenURL}" alt="${chicaNombre}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
                         }
-                        // Agregar audio si existe - USANDO SISTEMA DE CONTROL DE AUDIO
+                        // Agregar audio si existe - DIRECTAMENTE EN EL HTML PARA QUE AUTOPLAY FUNCIONE
                         if (audioURL) {
-                            const audioElement = crearAudioControlado(audioURL, chicaNombre);
-                            botMsgDiv.appendChild(audioElement);
+                            contenidoHTML += `<audio controls autoplay loop style="display: block; margin: 10px auto; width: 100%; max-width: 400px;"><source src="${audioURL}" type="audio/mpeg">Tu navegador no soporta el elemento de audio.</audio>`;
                         }
 
                         botMsgDiv.innerHTML = contenidoHTML;
@@ -1471,17 +1470,16 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                             logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, audio: audioURL, mensajeUsuario: message.substring(0, 50) });
                         }
 
-                        // Construir contenido: PRIMERO TEXTO con nombre, luego imagen al final
+                        // Construir contenido: PRIMERO TEXTO con nombre, luego imagen y audio al final
                         // Formatear el texto para que la narración entre asteriscos tenga estilo diferente
                         const chicaRespuestaFormateada = formatearTextoConAsteriscos(chicaRespuesta);
                         let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;"><strong>${chicaNombre}:</strong> ${chicaRespuestaFormateada}</div>`;
                         if (imagenURL) {
                             contenidoHTML += `<img src="${imagenURL}" alt="${chicaNombre}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
                         }
-                        // Agregar audio si existe - USANDO SISTEMA DE CONTROL DE AUDIO
+                        // Agregar audio si existe - DIRECTAMENTE EN EL HTML PARA QUE AUTOPLAY FUNCIONE
                         if (audioURL) {
-                            const audioElement = crearAudioControlado(audioURL, chicaNombre);
-                            botMsgDiv.appendChild(audioElement);
+                            contenidoHTML += `<audio controls autoplay loop style="display: block; margin: 10px auto; width: 100%; max-width: 400px;"><source src="${audioURL}" type="audio/mpeg">Tu navegador no soporta el elemento de audio.</audio>`;
                         }
 
                         botMsgDiv.innerHTML = contenidoHTML;
@@ -1528,10 +1526,9 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                             if (imagenURL) {
                                 contenidoHTML += `<img src="${imagenURL}" alt="${chicaNombre}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
                             }
-                            // Agregar audio si existe - USANDO SISTEMA DE CONTROL DE AUDIO
+                            // Agregar audio si existe - DIRECTAMENTE EN EL HTML PARA QUE AUTOPLAY FUNCIONE
                             if (audioURL) {
-                                const audioElement = crearAudioControlado(audioURL, chicaNombre);
-                                botMsgDiv.appendChild(audioElement);
+                                contenidoHTML += `<audio controls autoplay loop style="display: block; margin: 10px auto; width: 100%; max-width: 400px;"><source src="${audioURL}" type="audio/mpeg">Tu navegador no soporta el elemento de audio.</audio>`;
                             }
 
                             botMsgDiv.innerHTML = contenidoHTML;
@@ -1551,15 +1548,14 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                     // Formatear el texto para que la narración entre asteriscos tenga estilo diferente
                     const respuestaFormateada = formatearTextoConAsteriscos(response.respuesta);
                     
-                    // Construir contenido: PRIMERO TEXTO, luego imagen al final
+                    // Construir contenido: PRIMERO TEXTO, luego imagen y audio al final
                     let contenidoHTML = `<div style="margin-bottom: 15px; line-height: 1.6;">${respuestaFormateada}</div>`;
                     if (response.imagen_url) {
                         contenidoHTML += `<img src="${response.imagen_url}" alt="${response.imagen_tag}" style="max-width: 400px; max-height: 500px; width: auto; height: auto; border-radius: 12px; display: block; margin: 15px auto 10px auto; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); border: 3px solid rgba(255, 255, 255, 0.5);">`;
                     }
-                    // Agregar audio si existe - USANDO SISTEMA DE CONTROL DE AUDIO
+                    // Agregar audio si existe - DIRECTAMENTE EN EL HTML PARA QUE AUTOPLAY FUNCIONE
                     if (response.audio_url) {
-                        const audioElement = crearAudioControlado(response.audio_url, response.chicaPrincipal || chicaSeleccionadaActual || 'chica');
-                        botMsgDiv.appendChild(audioElement);
+                        contenidoHTML += `<audio controls autoplay loop style="display: block; margin: 10px auto; width: 100%; max-width: 400px;"><source src="${response.audio_url}" type="audio/mpeg">Tu navegador no soporta el elemento de audio.</audio>`;
                     }
 
                     botMsgDiv.innerHTML = contenidoHTML;
