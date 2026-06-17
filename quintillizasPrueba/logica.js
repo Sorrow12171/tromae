@@ -28,15 +28,6 @@ import { PERSONALIDADES, getChicasDisponibles, existeChica, tieneImagenes } from
 import { ALDO_PERSONALIDAD, ALDO_INSTRUCCIONES_SISTEMA, getAldoPersonalidad, esAldo, aldoDebeResponder } from './aldo.js';
 import { obtenerMensajeError, generarPayloadFase, getOrdenFases, getInfoFase, obtenerFallbackLocal, obtenerFallbackAntiRepeticion } from './fallbacks.js';
 import { QuintiImagenesPrueba } from './imagenes.js';
-import { 
-    validarTagImagen, 
-    obtenerTodosLosTags, 
-    buscarTagSimilar, 
-    seleccionarTagImagenCorrecto, 
-    procesarRespuestaConImagen,
-    generarInstruccionesImagenParaPrompt,
-    obtenerInformacionImagen 
-} from './respuestasBot.js';
 import { getImagenTagsMapping as getImagenTagsMappingHistoria } from './historiasParalelas.js';
 import { detectarRepeticion, detectarRepeticionEntreChicas, agregarDialogoAlHistorial, generarPromptAntiRepeticion, getEstadisticasRepeticion, calcularSimilitud } from './antiRepeticion.js';
 
@@ -959,7 +950,6 @@ function seleccionarImagenAutomatica(dialogo, nombreChica) {
     return fallback;
 }
 
-
 // ============================================================
 //  FUNCIONES DE UTILIDAD PARA JSON
 // ============================================================
@@ -1119,61 +1109,6 @@ function parsearJSON(raw) {
         }
     }
     
-    // ESTRATEGIA 7: CRÍTICA - Contenido puramente narrativo (sin JSON)
-    // Cuando la IA devuelve solo texto narrativo/dialogo sin formato JSON
-    // Convertimos ese texto en un objeto JSON válido para no perder la respuesta
-    const textoNarrativo = rawLimpio.trim();
-    if (textoNarrativo.length > 0 && !textoNarrativo.includes('{')) {
-        logQuinti('WARN', 'parsearJSON: detectado contenido puramente narrativo, convirtiendo a JSON');
-        logQuinti('DEBUG', `Contenido narrativo detectado: ${textoNarrativo.substring(0, 100)}...`);
-        
-        // Crear un objeto JSON con el texto narrativo como respuesta
-        return {
-            respuesta: textoNarrativo,
-            imagen_tag: 'normal',
-            texto_original: textoOriginalCompleto,
-            esNarrativoPuro: true
-        };
-    }
-    
-    // ESTRATEGIA 8: CRÍTICA - JSON truncado/incompleto con narrativa inicial
-    // Cuando la respuesta comienza con narrativa (*accion*) y luego intenta JSON pero se trunca
-    // Ejemplo: "*sonríe* Ah, fabrizio... {\"respuesta\":\"..."
-    // Extraemos TODO el texto disponible y lo usamos como respuesta
-    const tieneNarrativaInicial = /^\s*\*/.test(rawLimpio);
-    const tieneInicioJSON = rawLimpio.includes('{');
-    
-    if (tieneNarrativaInicial && tieneInicioJSON) {
-        logQuinti('WARN', 'parsearJSON: detectada narrativa con JSON incompleto/truncado, usando texto completo como respuesta');
-        
-        // Extraer todo el texto disponible antes del JSON truncado
-        const indiceJSON = rawLimpio.indexOf('{');
-        const textoAntesJSON = rawLimpio.substring(0, indiceJSON).trim();
-        
-        // Usar el texto completo (narrativa + lo que haya del JSON) como respuesta
-        // porque la IA probablemente se truncó pero el contenido es válido
-        let respuestaFinal = textoAntesJSON;
-        
-        // Si hay contenido después del { que parece ser inicio de JSON válido, intentar extraerlo
-        const restoDespuesLLave = rawLimpio.substring(indiceJSON);
-        const patronJSONTruncado = /\{\s*"respuesta"\s*:\s*"([^"]*)/i;
-        const matchTruncado = restoDespuesLLave.match(patronJSONTruncado);
-        
-        if (matchTruncado && matchTruncado[1]) {
-            // Hay inicio de respuesta JSON, agregarlo
-            respuestaFinal += ' ' + matchTruncado[1];
-        }
-        
-        logQuinti('DEBUG', `Respuesta recuperada de JSON truncado: ${respuestaFinal.substring(0, 150)}...`);
-        
-        return {
-            respuesta: respuestaFinal,
-            imagen_tag: 'normal',
-            texto_original: textoOriginalCompleto,
-            esJSONTruncado: true
-        };
-    }
-    
     logQuinti('ERROR', 'parsearJSON: no se pudo extraer JSON válido', {
         contenidoCompleto: raw.substring(0, 300)
     });
@@ -1219,16 +1154,6 @@ function esRespuestaValida(datos) {
     // El diálogo no debe estar vacío o ser muy corto
     if (datos.respuesta.trim().length < 5) {
         return false;
-    }
-    
-    // Aceptar respuestas marcadas como narrativas puras, JSON truncado o recuperación agresiva
-    // Estas son respuestas válidas aunque no tengan el formato JSON perfecto
-    if (datos.esNarrativoPuro || datos.esJSONTruncado || datos.esRecuperacionAgresiva) {
-        logQuinti('DEBUG', 'esRespuestaValida: aceptando respuesta recuperada (narrativa/JSON truncado/recuperación agresiva)', {
-            longitud: datos.respuesta.length,
-            tipo: datos.esNarrativoPuro ? 'narrativo' : datos.esJSONTruncado ? 'truncado' : 'agresiva'
-        });
-        return true;
     }
     
     return true;
@@ -1381,13 +1306,27 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
             
             // Construir instrucciones de imágenes SOLO para esta chica
             const tagsDisponibles = obtenerTagsImagen(nombreChica);
-            const instruccionesImagen = `\n\nTU IMAGEN_TAG: Usa EXACTAMENTE el tag que describe la acción que el usuario menciona. NO inventes, NO infieras, NO corrijas. Si el usuario dijo "beso", usa "besando". Si dijo "quitandose_la_ropa2", usa "quitandose_la_ropa2". CONCORDANCIA ABSOLUTA.`;
+            const instruccionesImagen = `\n\nTU IMAGEN_TAG: Debes incluir "imagen_tag" con UNA de estas opciones: [${tagsDisponibles.join(', ')}]. Elige según lo que esté haciendo el personaje.`;
             
             // Instrucción anti-repetición reforzada para múltiples chicas
             const instruccionAntiRepeticion = `\n\n⚠️ ANTI-REPETICIÓN OBLIGATORIA: Tu respuesta debe ser COMPLETAMENTE DIFERENTE a las de las otras chicas. Prohibido usar las mismas frases, gestos, acciones o vocabulario.`;
             
-            // SIN INSTRUCCIONES DE ACCION - La IA debe usar exactamente lo que el chat dice
-            const instruccionAccionUsuario = `\n\n🚨 CONCORDANCIA ABSOLUTA: El tag de imagen que uses debe ser EXACTAMENTE el mismo que aparece en el contexto o en respuestas previas. Si el usuario mencionó una acción específica como "quitandose_la_ropa2", usa ESE tag exacto. NO infieras, NO corrijas, NO cambies nada.`;
+            // SOLUCIÓN PROBLEMA #1: Instrucción reforzada para acciones en tiempo presente
+            const instruccionAccionUsuario = `
+🚨 PRIORIDAD ABSOLUTA - ACCIÓN DEL USUARIO:
+El mensaje del usuario TIENE PRIORIDAD ABSOLUTA sobre cualquier otra cosa. Lo que el usuario diga está sucediendo AHORA MISMO.
+
+Cuando el usuario use verbos en PRESENTE (ej: "beso", "chupo", "toco", "se desviste") o mencione una acción en curso:
+
+DEBES HACER TRES COSAS OBLIGATORIAMENTE:
+1. TU TEXTO: Describe ESA acción EXPLÍCITAMENTE en tu respuesta usando *acciones entre asteriscos* en TIEMPO PRESENTE. Ejemplo: si el usuario dice "se desviste", tú debes escribir "*mientras se desviste, te mira con deseo*" o "*te ayuda a desvestirse ahora mismo*". La acción YA está ocurriendo.
+2. TU IMAGEN_TAG: DEBE coincidir EXACTAMENTE con la acción específica mencionada por el usuario. Si dice "se desviste" → usa "desvistiendo". Si dice "beso" → usa "besando". NO uses tags genéricas como "desnuda" cuando el usuario describió una acción específica.
+3. MANTÉN EL CONTEXTO: Si ya había una acción en curso (ver "ESTADO ACTUAL" arriba), DEBES CONTINUAR ESA ACCIÓN a menos que el usuario indique explícitamente cambiarla.
+
+⚠️ CRÍTICO: 
+- El texto y la imagen DEBEN estar 100% alineados con la acción ESPECÍFICA que el usuario mencionó.
+- NO uses tags genéricas ("desnuda", "hablando") cuando el usuario dijo algo específico ("se desviste", "beso").
+`;
             // Instrucción de contexto sobre otras chicas (solo para chicas después de la primera)
             let instruccionContextoOtrasChicas = '';
             if (!esPrimeraChica && respuestasPorChica.length > 0) {
@@ -1400,10 +1339,10 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
                 const esChicaObjetivo = nombreChica === chicaObjetivo;
                 if (!esChicaObjetivo && chicaObjetivo) {
                     // Esta NO es la chica objetivo, debe responder BASÁNDOSE en la respuesta de la chica objetivo
-                    instruccionContextoOtrasChicas = `\\n\\n📋 CONTEXTO - OTRAS CHICAS YA RESPONDIERON:\\n${respuestasPrevias}\\n\\n⚡ TU RESPUESTA DEBE SER DIFERENTE: No repitas sus palabras exactas, gestos ni acciones.\\n\\n🚫 PROHIBIDO HABLAR COMO OTRA CHICA: Tú eres ${nombreChica}. NO uses el estilo, vocabulario o frases de las otras chicas. Mantén TU propia personalidad y forma de hablar.\\n\\n💬 REACCIÓN A LA RESPUESTA PREVIA: Como ${chicaObjetivo} ya respondió primero (porque el usuario le habló directamente a ella), tu respuesta debe ser una REACCIÓN o COMENTARIO sobre lo que ${chicaObjetivo} dijo. Puedes estar de acuerdo, disentir, complementar o reaccionar con tu personalidad única, pero SIEMPRE manteniendo coherencia con la situación.`;
+                    instruccionContextoOtrasChicas = `\\n\\n📋 CONTEXTO - OTRAS CHICAS YA RESPONDIERON:\\n${respuestasPrevias}\\n\\n⚡ TU RESPUESTA DEBE SER DIFERENTE: No repitas sus palabras exactas, pero TODAS deben estar realizando la MISMA ACCIÓN que el usuario mencionó. Cada una con su estilo único pero la misma acción base.\\n\\n🖼️ IMAGEN COORDINADA OBLIGATORIA: Si el usuario dijo "beso", TODAS las chicas deben estar besando en su texto Y en su imagen_tag. La acción es la misma, la expresión de cada personalidad es diferente.\\n\\n🚫 PROHIBIDO HABLAR COMO OTRA CHICA: Tú eres ${nombreChica}. NO uses el estilo, vocabulario o frases de las otras chicas. Mantén TU propia personalidad y forma de hablar.\\n\\n💬 REACCIÓN A LA RESPUESTA PREVIA: Como ${chicaObjetivo} ya respondió primero (porque el usuario le habló directamente a ella), tu respuesta debe ser una REACCIÓN o COMENTARIO sobre lo que ${chicaObjetivo} dijo. Puedes estar de acuerdo, disentir, complementar o reaccionar con tu personalidad única, pero SIEMPRE manteniendo coherencia con la situación.`;
                 } else {
                     // Esta ES la chica objetivo o no hay chica objetivo definida
-                    instruccionContextoOtrasChicas = `\\n\\n📋 CONTEXTO - OTRAS CHICAS YA RESPONDIERON:\\n${respuestasPrevias}\\n\\n⚡ TU RESPUESTA DEBE SER DIFERENTE: No repitas sus palabras exactas, gestos ni acciones.\\n\\n🚫 PROHIBIDO HABLAR COMO OTRA CHICA: Tú eres ${nombreChica}. NO uses el estilo, vocabulario o frases de las otras chicas. Mantén TU propia personalidad y forma de hablar.`;
+                    instruccionContextoOtrasChicas = `\\n\\n📋 CONTEXTO - OTRAS CHICAS YA RESPONDIERON:\\n${respuestasPrevias}\\n\\n⚡ TU RESPUESTA DEBE SER DIFERENTE: No repitas sus palabras exactas, pero TODAS deben estar realizando la MISMA ACCIÓN que el usuario mencionó. Cada una con su estilo único pero la misma acción base.\\n\\n🖼️ IMAGEN COORDINADA OBLIGATORIA: Si el usuario dijo "beso", TODAS las chicas deben estar besando en su texto Y en su imagen_tag. La acción es la misma, la expresión de cada personalidad es diferente.\\n\\n🚫 PROHIBIDO HABLAR COMO OTRA CHICA: Tú eres ${nombreChica}. NO uses el estilo, vocabulario o frases de las otras chicas. Mantén TU propia personalidad y forma de hablar.`;
                 }
             }
             
@@ -1557,7 +1496,7 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
                 // Se usa ANTES del fallback local normal para evitar que las chicas copien diálogos
                 // ========================================
                 if (!datos || !esRespuestaValida(datos)) {
-                    logQuinti('ERROR', `${nombreChica} - Todas las fases de reintento fallaron, usando fallback anti-repetición`);
+                    logQuinti('ERROR', `${nombreChica} - Todas las fases de reintento fallaron, usando fallback anti-repetición primero`);
                     const fallbackTag = tagsDisponibles.includes('hablando') ? 'hablando' : tagsDisponibles[0] || 'normal';
                     datos = {
                         respuesta: obtenerFallbackAntiRepeticion(),
@@ -1628,7 +1567,7 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
     const tagsImagen = chicaSeleccionada && !esAldo(chicaSeleccionada) ? obtenerTagsImagen(chicaSeleccionada) : ['normal'];
     const instruccionesImagenes = esAldo(chicaSeleccionada) 
         ? `\n\nNOTA: Eres Aldo, un personaje masculino. No tienes imágenes asociadas, solo respondes con texto.`
-        : `\n\nTU IMAGEN_TAG: Usa EXACTAMENTE el tag que describe la acción que el usuario menciona. NO inventes, NO infieras, NO corrijas. Si el usuario dijo "beso", usa "besando". Si dijo "quitandose_la_ropa2", usa "quitandose_la_ropa2". CONCORDANCIA ABSOLUTA.`;
+        : `\n\nIMÁGENES DISPONIBLES: ${tagsImagen.join(', ')}. Debes incluir "imagen_tag" con UNA de estas opciones según lo que esté haciendo el personaje.`;
     
     // Instrucción anti-repetición mejorada
     const instruccionAntiRepeticion = `\n\nREGLA CRÍTICA ANTI-REPETICIÓN: NUNCA repitas frases, diálogos, acciones o expresiones que ya hayas usado antes en esta conversación. Revisa mentalmente el historial y asegúrate de que CADA respuesta sea única y fresca. Usa vocabulario variado, expresiones diferentes, reacciones distintas. Si ya dijiste algo similar antes, busca una forma completamente nueva de expresarlo. Esto es OBLIGATORIO.`;
@@ -1636,8 +1575,23 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
     // SISTEMA DE MEMORIA MEJORADO: Obtener estado completo de la memoria
     const estadoMemoriaCompleto = obtenerEstadoMemoriaParaPrompt();
     const instruccionMemoria = `\n\n🧠 SISTEMA DE MEMORIA ACTIVO - INFORMACIÓN QUE DEBES RECORDAR:\n${estadoMemoriaCompleto}\nUSA ESTA INFORMACIÓN PARA DAR RESPUESTAS COHERENTES Y PERSONALIZADAS. REFERENCIA ESTOS DATOS CUANDO SEA RELEVANTE.`;
-    // SIN INSTRUCCIONES DE ACCION - La IA debe usar exactamente lo que el chat dice
-    const instruccionAccionUsuario = `\n\n🚨 CONCORDANCIA ABSOLUTA: El tag de imagen que uses debe ser EXACTAMENTE el mismo que aparece en el contexto o en respuestas previas. Si el usuario mencionó una acción específica como "quitandose_la_ropa2", usa ESE tag exacto. NO infieras, NO corrijas, NO cambies nada.`;
+    
+    // SOLUCIÓN PROBLEMA #1: Instrucción reforzada para acciones en tiempo presente (caso una sola chica)
+    const instruccionAccionUsuario = `
+🚨 PRIORIDAD ABSOLUTA - ACCIÓN DEL USUARIO:
+El mensaje del usuario TIENE PRIORIDAD ABSOLUTA sobre cualquier otra cosa. Lo que el usuario diga está sucediendo AHORA MISMO.
+
+Cuando el usuario use verbos en PRESENTE (ej: "beso", "chupo", "toco", "se desviste") o mencione una acción en curso:
+
+DEBES HACER TRES COSAS OBLIGATORIAMENTE:
+1. TU TEXTO: Describe ESA acción EXPLÍCITAMENTE en tu respuesta usando *acciones entre asteriscos* en TIEMPO PRESENTE. Ejemplo: si el usuario dice "se desviste", tú debes escribir "*mientras se desviste, te mira con deseo*" o "*te ayuda a desvestirse ahora mismo*". La acción YA está ocurriendo.
+2. TU IMAGEN_TAG: DEBE coincidir EXACTAMENTE con la acción específica mencionada por el usuario. Si dice "se desviste" → usa "desvistiendo". Si dice "beso" → usa "besando". NO uses tags genéricas como "desnuda" cuando el usuario describió una acción específica.
+3. MANTÉN EL CONTEXTO: Si ya había una acción en curso, DEBES CONTINUAR ESA ACCIÓN a menos que el usuario indique explícitamente cambiarla. NO olvides la posición actual (ej: si estaban de pie, siguen de pie hasta que se indique lo contrario).
+
+⚠️ CRÍTICO: 
+- El texto y la imagen DEBEN estar 100% alineados con la acción ESPECÍFICA que el usuario mencionó.
+- NO uses tags genéricas ("desnuda", "hablando") cuando el usuario dijo algo específico ("se desviste", "beso").
+- Si el usuario dice "X", la tag debe ser la versión en acción de X, no algo relacionado pero diferente.`;
     
     // SOLUCIÓN PROBLEMA #3: Agregar estado actual de acciones al prompt
     let contextoEstadoActual = '';
@@ -1862,27 +1816,12 @@ async function intentarLlamadaAPI(mensajes, modelo) {
                 indiceKeyActual = (keyIdx + 1) % GROQ_KEYS.length;
                 const resultadoJSON = parsearJSON(contenido);
                 
-                // Si el parseo falla y devuelve null, intentar recuperación agresiva
+                // Si el parseo falla y devuelve null, registrar error detallado
                 if (resultadoJSON === null) {
                     logQuinti('ERROR', 'API devolvió contenido pero no es JSON válido', {
                         contenido: contenido.substring(0, 200),
                         keyUsada: keyNumero
                     });
-                    
-                    // RECUPERACIÓN AGRESIVA: Si hay contenido narrativo, usarlo aunque no sea JSON perfecto
-                    // Esto captura las respuestas valiosas que antes se perdían
-                    const contenidoLimpio = contenido.replace(/```json/g, "").replace(/```/g, "").trim();
-                    if (contenidoLimpio.length > 10) {
-                        logQuinti('WARN', 'RECUPERACIÓN AGRESIVA: Convirtiendo contenido narrativo a respuesta válida');
-                        
-                        // Extraer cualquier texto entre asteriscos (narración) y diálogo
-                        return {
-                            respuesta: contenidoLimpio,
-                            imagen_tag: 'normal',
-                            texto_original: contenido,
-                            esRecuperacionAgresiva: true
-                        };
-                    }
                 }
                 
                 return resultadoJSON;
@@ -2000,14 +1939,12 @@ async function procesarRespuesta(datos, mensajeOriginal) {
     if (tieneRespuestasIndividuales && datos.respuestasIndividuales.length > 0) {
         // Usar la imagen de la primera chica como principal (para compatibilidad)
         const primeraChica = datos.respuestasIndividuales[0];
-        // CONCORDANCIA ABSOLUTA: Usar exactamente el tag que la IA devolvió, sin modificaciones
         tagImagen = primeraChica && primeraChica.imagen_tag ? primeraChica.imagen_tag : 'hablando';
         const resultadoImagen = obtenerURLImagen(primeraChica.chica, tagImagen, historiaId);
         urlImagen = resultadoImagen.urlImagen;
         urlAudio = resultadoImagen.urlAudio;
     } else {
-        // CONCORDANCIA ABSOLUTA: Usar exactamente el tag que la IA devolvió en el JSON
-        // NO modificar, NO inferir, NO corregir el tag bajo ninguna circunstancia
+        // Seleccionar imagen automaticamente para la chica principal (caso de una sola chica)
         tagImagen = datos && datos.imagen_tag ? datos.imagen_tag : 'normal';
         const resultadoImagen = obtenerURLImagen(chicaSeleccionada, tagImagen, historiaId);
         urlImagen = resultadoImagen.urlImagen;
@@ -2178,7 +2115,6 @@ async function regenerarDialogoAntiRepeticionEntreChicas(nombreChica, mensajeOri
 
 /**
  * Obtiene la URL de una imagen específica y su audio asociado
- * AHORA USA RespuestasBot para validar y seleccionar el tag correcto
  * @param {string} nombreChica - Nombre de la chica
  * @param {string} tag - Tag de la imagen
  * @param {string} historiaId - ID de la historia paralela (opcional)
@@ -2216,19 +2152,50 @@ function obtenerURLImagen(nombreChica, tag, historiaId = null) {
         return { urlImagen: null, urlAudio: null };
     }
     
-    // USAR LA NUEVA LÓGICA DE RespuestasBot PARA VALIDAR Y SELECCIONAR EL TAG
-    const resultadoSeleccion = seleccionarTagImagenCorrecto(nombreChica, tag);
+    const chicaData = QuintiImagenesPrueba[nombreChica];
     
-    if (resultadoSeleccion.urlImagen) {
-        logQuinti('DEBUG', `RespuestasBot seleccionó tag: "${resultadoSeleccion.tagSeleccionado}" (original: "${tag}") para ${nombreChica}`);
-        return {
-            urlImagen: resultadoSeleccion.urlImagen,
-            urlAudio: resultadoSeleccion.urlAudio
+    if (tag === 'normal' || tag === 'hablando') {
+        const imgObj = chicaData.imagenes?.['hablando'] || {};
+        return { 
+            urlImagen: chicaData.imagenSelector || imgObj.url || imgObj || null,
+            urlAudio: imgObj.audio || null
         };
     }
     
-    // Sin imágenes disponibles
-    return { urlImagen: null, urlAudio: null };
+    // Intentar obtener la imagen por tag
+    const imgObj = chicaData.imagenes?.[tag];
+    let urlImagen = imgObj?.url || imgObj;
+    let urlAudio = imgObj?.audio || null;
+    
+    // MEJORA #1: Si no encuentra el tag exacto, usar el sistema inteligente de búsqueda de tags pertinentes
+    if (!urlImagen && chicaData.imagenes && Object.keys(chicaData.imagenes).length > 0) {
+        const tagsDisponibles = Object.keys(chicaData.imagenes);
+        
+        // Intentar encontrar el tag más pertinente usando múltiples criterios
+        const tagPertinente = encontrarTagMasPertinente(tag, tagsDisponibles, '');
+        
+        if (tagPertinente) {
+            const imgObjPertinente = chicaData.imagenes[tagPertinente];
+            urlImagen = imgObjPertinente?.url || imgObjPertinente;
+            urlAudio = imgObjPertinente?.audio || null;
+            logQuinti('INFO', `Tag "${tag}" no encontrado, se encontró tag pertinente: "${tagPertinente}" para ${nombreChica}`);
+        } else {
+            // FALLBACK: Si no encuentra tag pertinente, usar la PRIMERA imagen disponible
+            const primerTag = tagsDisponibles[0];
+            const primerImgObj = chicaData.imagenes[primerTag];
+            urlImagen = primerImgObj?.url || primerImgObj;
+            urlAudio = primerImgObj?.audio || null;
+            logQuinti('WARN', `Tag "${tag}" no encontrado para ${nombreChica}, usando primera imagen disponible: "${primerTag}"`);
+        }
+    }
+    
+    // Último fallback: imagenSelector
+    if (!urlImagen) {
+        urlImagen = chicaData.imagenSelector || null;
+        urlAudio = null;
+    }
+    
+    return { urlImagen, urlAudio };
 }
 
 // ============================================================
@@ -2401,15 +2368,7 @@ export {
     // Función de parseo de JSON (para tests)
     parsearJSON,
     // Función para obtener URLs de imágenes
-    obtenerURLImagen,
-    // Funciones de validación de imágenes (importadas desde respuestasBot.js)
-    validarTagImagen,
-    obtenerTodosLosTags,
-    buscarTagSimilar,
-    seleccionarTagImagenCorrecto,
-    procesarRespuestaConImagen,
-    generarInstruccionesImagenParaPrompt,
-    obtenerInformacionImagen
+    obtenerURLImagen
 };
 
 // Exportar para window (compatibilidad con browser)
