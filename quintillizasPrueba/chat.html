@@ -782,6 +782,24 @@
             font-size: 13px;
         }
 
+        .slot-memoria-name {
+            color: #FBBF24;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed rgba(251, 191, 36, 0.3);
+        }
+
+        .slot-memoria-img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 2px solid rgba(251, 191, 36, 0.5);
+        }
+
         .slot-actions {
             display: flex;
             gap: 10px;
@@ -1890,15 +1908,22 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
                 document.getElementById('selectorContainer').style.display = 'none';
                 document.getElementById('chatContainer').classList.add('active');
                 
-                // Actualizar información de la chica en el chat
+                // Actualizar información de la chica en el chat (con verificación de null)
                 const infoChica = QuintiImagenesPrueba[chicaSeleccionadaActual];
                 if (infoChica) {
-                    document.getElementById('chicaNombreHeader').textContent = infoChica.nombre;
-                    document.getElementById('chicaNombreInfo').textContent = infoChica.nombre;
-                    document.getElementById('chicaDescripcion').textContent = infoChica.descripcion;
-                    document.getElementById('chicaImagenPerfil').src = infoChica.imagenSelector;
-                    document.getElementById('chicaNombreSaludo').textContent = infoChica.nombre.split(' ')[0];
-                    document.getElementById('chicaNombreEscribiendo').textContent = infoChica.nombre.split(' ')[0];
+                    const chicaNombreHeaderEl = document.getElementById('chicaNombreHeader');
+                    const chicaNombreInfoEl = document.getElementById('chicaNombreInfo');
+                    const chicaDescripcionEl = document.getElementById('chicaDescripcion');
+                    const chicaImagenPerfilEl = document.getElementById('chicaImagenPerfil');
+                    const chicaNombreSaludoEl = document.getElementById('chicaNombreSaludo');
+                    const chicaNombreEscribiendoEl = document.getElementById('chicaNombreEscribiendo');
+                    
+                    if (chicaNombreHeaderEl) chicaNombreHeaderEl.textContent = infoChica.nombre;
+                    if (chicaNombreInfoEl) chicaNombreInfoEl.textContent = infoChica.nombre;
+                    if (chicaDescripcionEl) chicaDescripcionEl.textContent = infoChica.descripcion;
+                    if (chicaImagenPerfilEl) chicaImagenPerfilEl.src = infoChica.imagenSelector;
+                    if (chicaNombreSaludoEl) chicaNombreSaludoEl.textContent = infoChica.nombre.split(' ')[0];
+                    if (chicaNombreEscribiendoEl) chicaNombreEscribiendoEl.textContent = infoChica.nombre.split(' ')[0];
                 }
                 
                 // Restaurar mensajes
