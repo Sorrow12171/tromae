@@ -1,9 +1,11 @@
+// respuestasBot.js
 // ============================================================
 //  RESPUESTAS BOT - Lógica de selección de imágenes y validación
 //  Este archivo centraliza la lógica para seleccionar y validar
-//  las imágenes de las chicas basándose en los tags disponibles.
+//  las imágenes de las chicas basándose EXCLUSIVAMENTE en los 
+//  tags disponibles en el array QuintiImagenesPrueba.
 //  Se encarga de asegurar que el imagen_tag corresponda exactamente
-//  a una imagen existente en el array de QuintiImagenesPrueba.
+//  a una imagen existente, eliminando cualquier disociación.
 // ============================================================
 
 /**
@@ -12,13 +14,13 @@
  * @param {string} tag - El tag a validar
  * @returns {boolean} - True si el tag existe, false si no
  */
-function validarTagImagen(nombreChica, tag) {
-    if (!QuintiImagenesPrueba || !QuintiImagenesPrueba[nombreChica]) {
+export function validarTagImagen(nombreChica, tag) {
+    if (!window.QuintiImagenesPrueba || !window.QuintiImagenesPrueba[nombreChica]) {
         console.warn(`[RespuestasBot] Chica "${nombreChica}" no encontrada en QuintiImagenesPrueba`);
         return false;
     }
     
-    const chicaData = QuintiImagenesPrueba[nombreChica];
+    const chicaData = window.QuintiImagenesPrueba[nombreChica];
     
     if (!chicaData.imagenes || typeof chicaData.imagenes !== 'object') {
         console.warn(`[RespuestasBot] La chica "${nombreChica}" no tiene imágenes definidas`);
@@ -39,12 +41,12 @@ function validarTagImagen(nombreChica, tag) {
  * @param {string} nombreChica - Nombre de la chica
  * @returns {string[]} - Array con todos los tags disponibles
  */
-function obtenerTodosLosTags(nombreChica) {
-    if (!QuintiImagenesPrueba || !QuintiImagenesPrueba[nombreChica]) {
+export function obtenerTodosLosTags(nombreChica) {
+    if (!window.QuintiImagenesPrueba || !window.QuintiImagenesPrueba[nombreChica]) {
         return [];
     }
     
-    const chicaData = QuintiImagenesPrueba[nombreChica];
+    const chicaData = window.QuintiImagenesPrueba[nombreChica];
     
     if (!chicaData.imagenes || typeof chicaData.imagenes !== 'object') {
         return [];
@@ -60,7 +62,7 @@ function obtenerTodosLosTags(nombreChica) {
  * @param {string} tagIntentado - El tag que intentó usar la IA
  * @returns {string|null} - El tag encontrado o null si no hay coincidencias
  */
-function buscarTagSimilar(nombreChica, tagIntentado) {
+export function buscarTagSimilar(nombreChica, tagIntentado) {
     if (!tagIntentado) return null;
     
     const tagsDisponibles = obtenerTodosLosTags(nombreChica);
@@ -122,14 +124,16 @@ function buscarTagSimilar(nombreChica, tagIntentado) {
 }
 
 /**
- * Selecciona el tag de imagen correcto basándose en el tag proporcionado por la IA
- * Valida que el tag exista y si no, busca alternativas o usa fallback
+ * SELECCIONA EL TAG DE IMAGEN CORRECTO BASÁNDOSE ESTRICTAMENTE EN EL imagen_tag PROPORCIONADO
+ * Esta es la función CLAVE que elimina la disociación: usa el imagen_tag de la respuesta
+ * y solo lo valida/corrige si es necesario contra la lista real de imágenes disponibles.
+ * 
  * @param {string} nombreChica - Nombre de la chica
- * @param {string} tagProporcionado - El tag que proporcionó la IA
+ * @param {string} tagProporcionado - El tag QUE VIENE EN LA RESPUESTA DE LA IA (imagen_tag)
  * @param {string} dialogo - El diálogo de la respuesta (para contexto adicional)
  * @returns {object} - { tagSeleccionado, urlImagen, urlAudio, fueValidado, tagOriginal }
  */
-function seleccionarTagImagenCorrecto(nombreChica, tagProporcionado, dialogo = '') {
+export function seleccionarTagImagenCorrecto(nombreChica, tagProporcionado, dialogo = '') {
     const resultado = {
         tagSeleccionado: null,
         urlImagen: null,
@@ -140,15 +144,16 @@ function seleccionarTagImagenCorrecto(nombreChica, tagProporcionado, dialogo = '
     };
     
     // Verificar datos básicos
-    if (!QuintiImagenesPrueba || !QuintiImagenesPrueba[nombreChica]) {
+    if (!window.QuintiImagenesPrueba || !window.QuintiImagenesPrueba[nombreChica]) {
         console.error(`[RespuestasBot] ERROR: Datos de imágenes no encontrados para ${nombreChica}`);
         resultado.metodoSeleccion = 'error_sin_datos';
         return resultado;
     }
     
-    const chicaData = QuintiImagenesPrueba[nombreChica];
+    const chicaData = window.QuintiImagenesPrueba[nombreChica];
     
-    // 1. INTENTO PRINCIPAL: Usar el tag exacto proporcionado por la IA
+    // 1. INTENTO PRINCIPAL: Usar el tag exacto proporcionado por la IA (imagen_tag)
+    // ESTO ES LO MÁS IMPORTANTE: el imagen_tag de la respuesta ES el que debe usarse
     if (tagProporcionado && validarTagImagen(nombreChica, tagProporcionado)) {
         const imgObj = chicaData.imagenes[tagProporcionado];
         resultado.tagSeleccionado = tagProporcionado;
@@ -161,6 +166,7 @@ function seleccionarTagImagenCorrecto(nombreChica, tagProporcionado, dialogo = '
     }
     
     // 2. INTENTO SECUNDARIO: Buscar tag similar si el original no existe
+    // Solo si el tag proporcionado no es válido, buscamos alternativas
     if (tagProporcionado) {
         const tagSimilar = buscarTagSimilar(nombreChica, tagProporcionado);
         if (tagSimilar) {
@@ -221,20 +227,23 @@ function seleccionarTagImagenCorrecto(nombreChica, tagProporcionado, dialogo = '
 /**
  * Procesa la respuesta de la IA y asegura que el imagen_tag sea válido
  * Esta función debe llamarse después de recibir la respuesta de la API
- * @param {object} datosRespuesta - La respuesta completa de la IA
+ * @param {object} datosRespuesta - La respuesta completa de la IA (debe tener imagen_tag)
  * @param {string} nombreChica - Nombre de la chica
  * @returns {object} - La respuesta procesada con imagen_tag validado y URLs resueltas
  */
-function procesarRespuestaConImagen(datosRespuesta, nombreChica) {
+export function procesarRespuestaConImagen(datosRespuesta, nombreChica) {
     if (!datosRespuesta) {
         console.error('[RespuestasBot] ERROR: datosRespuesta es nulo o undefined');
         return null;
     }
     
+    // EXTRAER EL imagen_tag DE LA RESPUESTA - ESTO ES CLAVE
+    // El imagen_tag ya viene definido por la IA en su respuesta
     const tagOriginal = datosRespuesta.imagen_tag || 'hablando';
     const dialogo = datosRespuesta.respuesta || '';
     
     // Seleccionar el tag correcto usando toda la lógica de validación
+    // pero BASÁNDOSE en el imagen_tag original de la respuesta
     const resultadoSeleccion = seleccionarTagImagenCorrecto(nombreChica, tagOriginal, dialogo);
     
     // Construir la respuesta procesada
@@ -264,28 +273,28 @@ function procesarRespuestaConImagen(datosRespuesta, nombreChica) {
  * @param {string} nombreChica - Nombre de la chica
  * @returns {string} - Las instrucciones formateadas para incluir en el system prompt
  */
-function generarInstruccionesImagenParaPrompt(nombreChica) {
+export function generarInstruccionesImagenParaPrompt(nombreChica) {
     const tagsDisponibles = obtenerTodosLosTags(nombreChica);
     
     if (tagsDisponibles.length === 0) {
-        return '\\n\\nNOTA: No tienes imágenes asociadas.';
+        return '\n\nNOTA: No tienes imágenes asociadas.';
     }
     
     // Mostrar algunos ejemplos de tags válidos (máximo 10 para no saturar el prompt)
     const ejemplosTags = tagsDisponibles.slice(0, 10).join(', ');
     const tagsRestantes = tagsDisponibles.length - 10;
     
-    let instrucciones = `\\n\\n📸 IMÁGENES DISPONIBLES:`;
-    instrucciones += `\\n- Debes usar EXACTAMENTE uno de estos tags para imagen_tag`;
-    instrucciones += `\\n- Ejemplos de tags válidos: ${ejemplosTags}`;
+    let instrucciones = `\n\n📸 IMÁGENES DISPONIBLES:`;
+    instrucciones += `\n- Debes usar EXACTAMENTE uno de estos tags para imagen_tag`;
+    instrucciones += `\n- Ejemplos de tags válidos: ${ejemplosTags}`;
     
     if (tagsRestantes > 0) {
         instrucciones += ` (y ${tagsRestantes} más...)`;
     }
     
-    instrucciones += `\\n- NUNCA inventes un tag que no esté en la lista`;
-    instrucciones += `\\n- Si ninguna acción coincide exactamente, usa "hablando"`;
-    instrucciones += `\\n- CONCORDANCIA ABSOLUTA: El tag debe existir tal cual en la lista`;
+    instrucciones += `\n- NUNCA inventes un tag que no esté en la lista`;
+    instrucciones += `\n- Si ninguna acción coincide exactamente, usa "hablando"`;
+    instrucciones += `\n- CONCORDANCIA ABSOLUTA: El tag debe existir tal cual en la lista`;
     
     return instrucciones;
 }
@@ -296,12 +305,12 @@ function generarInstruccionesImagenParaPrompt(nombreChica) {
  * @param {string} tag - El tag de la imagen
  * @returns {object|null} - Información completa de la imagen o null si no existe
  */
-function obtenerInformacionImagen(nombreChica, tag) {
-    if (!QuintiImagenesPrueba || !QuintiImagenesPrueba[nombreChica]) {
+export function obtenerInformacionImagen(nombreChica, tag) {
+    if (!window.QuintiImagenesPrueba || !window.QuintiImagenesPrueba[nombreChica]) {
         return null;
     }
     
-    const chicaData = QuintiImagenesPrueba[nombreChica];
+    const chicaData = window.QuintiImagenesPrueba[nombreChica];
     
     if (!chicaData.imagenes || !(tag in chicaData.imagenes)) {
         return null;
@@ -316,17 +325,6 @@ function obtenerInformacionImagen(nombreChica, tag) {
         existe: true
     };
 }
-
-// Exportar funciones para uso en otros módulos (ES6 modules)
-export {
-    validarTagImagen,
-    obtenerTodosLosTags,
-    buscarTagSimilar,
-    seleccionarTagImagenCorrecto,
-    procesarRespuestaConImagen,
-    generarInstruccionesImagenParaPrompt,
-    obtenerInformacionImagen
-};
 
 // Hacer funciones disponibles globalmente en navegador
 if (typeof window !== 'undefined') {
