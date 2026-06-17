@@ -1058,11 +1058,11 @@ function inferirTagDesdeMensaje(mensajeUsuario, nombreChica, tagsDisponibles) {
     }
     
     // Si no se encontró coincidencia directa, intentar con el sistema de búsqueda pertinente
-    // Extraer sustantivos/verbos relevantes del mensaje
+    // Extraer sustantivos/verbos relevantes del mensaje (excluyendo nombres propios y stopwords)
     const palabrasRelevantes = mensajeLower
         .replace(/[^a-záéíóúüñ\s]/g, ' ')
         .split(/\s+/)
-        .filter(p => p.length > 3 && !['que', 'como', 'para', 'con', 'las', 'los', 'una', 'uno', 'esta', 'esto', 'bien', 'muy', 'mas', 'sin', 'solo', 'tambien'].includes(p));
+        .filter(p => p.length > 3 && !['que', 'como', 'para', 'con', 'las', 'los', 'una', 'uno', 'esta', 'esto', 'bien', 'muy', 'mas', 'sin', 'solo', 'tambien', 'ichika', 'nino', 'miku', 'nakano', 'hermana', 'hermanas', 'chica', 'chicas', 'nombre'].includes(p));
     
     for (const palabra of palabrasRelevantes) {
         for (const tag of tagsDisponibles) {
