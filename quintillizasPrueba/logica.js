@@ -1311,6 +1311,32 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
             // Instrucción anti-repetición reforzada para múltiples chicas
             const instruccionAntiRepeticion = `\n\n⚠️ ANTI-REPETICIÓN OBLIGATORIA: Tu respuesta debe ser COMPLETAMENTE DIFERENTE a las de las otras chicas. Prohibido usar las mismas frases, gestos, acciones o vocabulario.`;
             
+            // 🎯 INSTRUCCIÓN REFORZADA - ARMONÍA ABSOLUTA ENTRE TEXTO, CONTEXTO E IMAGEN
+            const instruccionArmoniaImagen = `
+🎯 REGLA DE ORO - ARMONÍA ABSOLUTA ENTRE TU TEXTO, EL MENSAJE DEL USUARIO Y TU IMAGEN_TAG:
+
+Esta es la regla MÁS IMPORTANTE. Tu imagen_tag DEBE reflejar EXACTAMENTE:
+1. La acción que el usuario menciona en SU mensaje
+2. La acción que tú describes entre asteriscos en TU respuesta
+
+PASOS OBLIGATORIOS:
+1. Lee el mensaje del usuario: ¿Qué acción dice que está pasando? (ej: "beso", "chupo", "penetro")
+2. Escribe tu respuesta describiendo ESA MISMA acción entre asteriscos
+3. SELECCIONA el imagen_tag que COINCIDA PERFECTAMENTE con esa acción
+
+EJEMPLOS CORRECTOS:
+- Usuario: "Te beso" → Tu texto: "*te besa apasionadamente*" → imagen_tag: "besando" ✅
+- Usuario: "Chupo tu pene" → Tu texto: "*chupa todo el pene*" → imagen_tag: "chupando_todo_el_pene" ✅
+- Usuario: "Te follo en doggy" → Tu texto: "*te penetra por detrás*" → imagen_tag: "doggystyle" ✅
+
+ERRORES PROHIBIDOS:
+- Usuario dice "beso" pero usas imagen_tag: "hablando" ❌
+- Tu texto dice "*chupa el pene*" pero usas imagen_tag: "normal" ❌
+- Usar tags genéricas cuando hay una acción específica ❌
+
+⚠️ CRÍTICO: El imagen_tag es TAN IMPORTANTE como el texto. Si fallas en esto, la experiencia se rompe.
+`;
+            
             // SOLUCIÓN PROBLEMA #1: Instrucción reforzada para acciones en tiempo presente
             const instruccionAccionUsuario = `
 🚨 PRIORIDAD ABSOLUTA - ACCIÓN DEL USUARIO:
@@ -1347,7 +1373,7 @@ DEBES HACER TRES COSAS OBLIGATORIAMENTE:
             }
             
             // SOLUCIÓN PROBLEMA #2: Incluir contexto unificado en el system prompt
-            const systemPromptIndividual = `${personalidadChica}${instruccionesImagen}${instruccionAntiRepeticion}${instruccionAccionUsuario}${instruccionContextoOtrasChicas}\n\n${contextoUnificado ? contextoUnificado + '\n\n' : ''}FORMATO JSON OBLIGATORIO - RESPONDE SOLO CON JSON, SIN TEXTO ANTES NI DESPUES:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"una_imagen_disponible"}`;
+            const systemPromptIndividual = `${personalidadChica}${instruccionesImagen}${instruccionArmoniaImagen}${instruccionAntiRepeticion}${instruccionAccionUsuario}${instruccionContextoOtrasChicas}\n\n${contextoUnificado ? contextoUnificado + '\n\n' : ''}FORMATO JSON OBLIGATORIO - RESPONDE SOLO CON JSON, SIN TEXTO ANTES NI DESPUES:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"una_imagen_disponible"}`;
             
             // Preparar mensajes para esta chica (SOLO el mensaje actual del usuario)
             const mensajesPayload = [
@@ -1572,6 +1598,32 @@ DEBES HACER TRES COSAS OBLIGATORIAMENTE:
     // Instrucción anti-repetición mejorada
     const instruccionAntiRepeticion = `\n\nREGLA CRÍTICA ANTI-REPETICIÓN: NUNCA repitas frases, diálogos, acciones o expresiones que ya hayas usado antes en esta conversación. Revisa mentalmente el historial y asegúrate de que CADA respuesta sea única y fresca. Usa vocabulario variado, expresiones diferentes, reacciones distintas. Si ya dijiste algo similar antes, busca una forma completamente nueva de expresarlo. Esto es OBLIGATORIO.`;
     
+    // 🎯 INSTRUCCIÓN REFORZADA - ARMONÍA ABSOLUTA ENTRE TEXTO, CONTEXTO E IMAGEN (caso una sola chica)
+    const instruccionArmoniaImagen = `
+🎯 REGLA DE ORO - ARMONÍA ABSOLUTA ENTRE TU TEXTO, EL MENSAJE DEL USUARIO Y TU IMAGEN_TAG:
+
+Esta es la regla MÁS IMPORTANTE. Tu imagen_tag DEBE reflejar EXACTAMENTE:
+1. La acción que el usuario menciona en SU mensaje
+2. La acción que tú describes entre asteriscos en TU respuesta
+
+PASOS OBLIGATORIOS:
+1. Lee el mensaje del usuario: ¿Qué acción dice que está pasando? (ej: "beso", "chupo", "penetro")
+2. Escribe tu respuesta describiendo ESA MISMA acción entre asteriscos
+3. SELECCIONA el imagen_tag que COINCIDA PERFECTAMENTE con esa acción
+
+EJEMPLOS CORRECTOS:
+- Usuario: "Te beso" → Tu texto: "*te besa apasionadamente*" → imagen_tag: "besando" ✅
+- Usuario: "Chupo tu pene" → Tu texto: "*chupa todo el pene*" → imagen_tag: "chupando_todo_el_pene" ✅
+- Usuario: "Te follo en doggy" → Tu texto: "*te penetra por detrás*" → imagen_tag: "doggystyle" ✅
+
+ERRORES PROHIBIDOS:
+- Usuario dice "beso" pero usas imagen_tag: "hablando" ❌
+- Tu texto dice "*chupa el pene*" pero usas imagen_tag: "normal" ❌
+- Usar tags genéricas cuando hay una acción específica ❌
+
+⚠️ CRÍTICO: El imagen_tag es TAN IMPORTANTE como el texto. Si fallas en esto, la experiencia se rompe.
+`;
+    
     // SISTEMA DE MEMORIA MEJORADO: Obtener estado completo de la memoria
     const estadoMemoriaCompleto = obtenerEstadoMemoriaParaPrompt();
     const instruccionMemoria = `\n\n🧠 SISTEMA DE MEMORIA ACTIVO - INFORMACIÓN QUE DEBES RECORDAR:\n${estadoMemoriaCompleto}\nUSA ESTA INFORMACIÓN PARA DAR RESPUESTAS COHERENTES Y PERSONALIZADAS. REFERENCIA ESTOS DATOS CUANDO SEA RELEVANTE.`;
@@ -1608,7 +1660,7 @@ DEBES HACER TRES COSAS OBLIGATORIAMENTE:
         contextoEstadoActual += `⚠️ CRÍTICO: DEBES MANTENER ESTA POSICIÓN/ACCIÓN A MENOS QUE EL USUARIO INDIQUE EXPLÍCITAMENTE CAMBIARLA. NO LA OLVIDES.`;
     }
     
-    const systemPrompt = `${personalidadPrincipal}${instruccionesImagenes}${instruccionAntiRepeticion}${instruccionMemoria}${instruccionAccionUsuario}${contextoEstadoActual}\n\nFORMATO DE RESPUESTA OBLIGATORIO - JSON (SOLO JSON, SIN TEXTO ANTES NI DESPUES):\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
+    const systemPrompt = `${personalidadPrincipal}${instruccionesImagenes}${instruccionArmoniaImagen}${instruccionAntiRepeticion}${instruccionMemoria}${instruccionAccionUsuario}${contextoEstadoActual}\n\nFORMATO DE RESPUESTA OBLIGATORIO - JSON (SOLO JSON, SIN TEXTO ANTES NI DESPUES):\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
     
     // Preparar mensajes
     const mensajesPayload = [
