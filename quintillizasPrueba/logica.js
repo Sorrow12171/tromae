@@ -950,133 +950,6 @@ function seleccionarImagenAutomatica(dialogo, nombreChica) {
     return fallback;
 }
 
-/**
- * INFIERE el tag de imagen más apropiado basándose en el mensaje del usuario
- * Esta función prioriza el contexto de la respuesta del usuario sobre la respuesta de la IA
- * @param {string} mensajeUsuario - Mensaje original del usuario
- * @param {string} nombreChica - Nombre de la chica
- * @param {string[]} tagsDisponibles - Tags disponibles para esta chica
- * @returns {string|null} - Tag inferido o null si no se puede inferir
- */
-function inferirTagDesdeMensaje(mensajeUsuario, nombreChica, tagsDisponibles) {
-    if (!mensajeUsuario || !tagsDisponibles || tagsDisponibles.length === 0) {
-        return null;
-    }
-    
-    const mensajeLower = mensajeUsuario.toLowerCase();
-    
-    // Mapeo de palabras clave a tags específicos
-    const mapeoPalabrasTag = {
-        // Acciones sexuales/explícitas
-        'bes': 'besando',
-        'chup': 'chupando',
-        'mam': 'chupando',
-        'succ': 'chupando',
-        'penetr': 'penetrando',
-        'foll': 'follando',
-        'culo': 'doggystyle',
-        'cuatro patas': 'doggystyle',
-        'perrito': 'doggystyle',
-        'misionero': 'misionero',
-        'encima': 'misionero',
-        'arriba': 'misionero',
-        'desnud': 'desvistiendo',
-        'ropa': 'desvistiendo',
-        'quit': 'desvistiendo',
-        'saca': 'desvistiendo',
-        'toca': 'tocando',
-        'acarici': 'acariciando',
-        'masturb': 'masturbando',
-        'vagina': 'abriendo_piernas',
-        'pierna': 'abriendo_piernas',
-        'corona': 'sentada_corona',
-        'cabalg': 'sentada_corona',
-        'mont': 'sentada_corona',
-        'eyacul': 'eyaculacion',
-        'correr': 'eyaculacion',
-        'leche': 'eyaculacion',
-        'orgasmo': 'orgasmo',
-        'venirse': 'orgasmo',
-        'corrida': 'orgasmo',
-        // Estados emocionales/acciones generales
-        'enoj': 'enojada',
-        'feliz': 'feliz',
-        'trist': 'triste',
-        'sorprend': 'sorprendida',
-        'avergonz': 'avergonzada',
-        'sonroj': 'avergonzada',
-        'llor': 'llorando',
-        'reir': 'riendo',
-        'burl': 'burlandose',
-        'coquet': 'coqueta',
-        'seduct': 'seductora',
-        'provoc': 'provocativa',
-        'habl': 'hablando',
-        'decir': 'hablando',
-        'contest': 'hablando',
-        'respond': 'hablando',
-        'mir': 'mirando',
-        'observ': 'mirando',
-        'camin': 'caminando',
-        'parad': 'de_pie',
-        'sentad': 'sentada',
-        'acostad': 'acostada',
-        'recostad': 'acostada',
-        'durmiend': 'durmiendo',
-        'despiert': 'despertandose',
-        'comiend': 'comiendo',
-        'beb': 'bebiendo',
-        'leyend': 'leyendo',
-        'estudi': 'leyendo',
-        'trabaj': 'trabajando',
-        'limpi': 'limpiando',
-        'cocin': 'cocinando',
-        'bañ': 'bañandose',
-        'duch': 'duchandose',
-        'pein': 'peinandose',
-        'vist': 'vistiendose',
-        'abraza': 'abrazando',
-        'hug': 'abrazando',
-    };
-    
-    // Buscar coincidencias con palabras clave
-    for (const [palabraClave, tagSugerido] of Object.entries(mapeoPalabrasTag)) {
-        if (mensajeLower.includes(palabraClave)) {
-            // Verificar si el tag sugerido está disponible
-            if (tagsDisponibles.includes(tagSugerido)) {
-                logQuinti('INFO', `Tag inferido desde mensaje: "${palabraClave}" -> "${tagSugerido}"`);
-                return tagSugerido;
-            }
-            // Si no está disponible exacto, buscar uno similar
-            for (const tag of tagsDisponibles) {
-                if (tag.includes(tagSugerido.substring(0, 4))) {
-                    logQuinti('INFO', `Tag inferido desde mensaje (similar): "${palabraClave}" -> "${tag}"`);
-                    return tag;
-                }
-            }
-        }
-    }
-    
-    // Si no se encontró coincidencia directa, intentar con el sistema de búsqueda pertinente
-    // Extraer sustantivos/verbos relevantes del mensaje (excluyendo nombres propios y stopwords)
-    const palabrasRelevantes = mensajeLower
-        .replace(/[^a-záéíóúüñ\s]/g, ' ')
-        .split(/\s+/)
-        .filter(p => p.length > 3 && !['que', 'como', 'para', 'con', 'las', 'los', 'una', 'uno', 'esta', 'esto', 'bien', 'muy', 'mas', 'sin', 'solo', 'tambien', 'ichika', 'nino', 'miku', 'nakano', 'hermana', 'hermanas', 'chica', 'chicas', 'nombre'].includes(p));
-    
-    for (const palabra of palabrasRelevantes) {
-        for (const tag of tagsDisponibles) {
-            const tagNorm = tag.toLowerCase().replace(/_/g, ' ');
-            if (tagNorm.includes(palabra) || palabra.includes(tagNorm.replace(/_/g, ' ').substring(0, 4))) {
-                logQuinti('INFO', `Tag inferido desde palabra relevante: "${palabra}" -> "${tag}"`);
-                return tag;
-            }
-        }
-    }
-    
-    // No se pudo inferir un tag específico
-    return null;
-}
 
 // ============================================================
 //  FUNCIONES DE UTILIDAD PARA JSON
@@ -1689,10 +1562,8 @@ DEBES HACER TRES COSAS OBLIGATORIAMENTE:
                 // Se usa ANTES del fallback local normal para evitar que las chicas copien diálogos
                 // ========================================
                 if (!datos || !esRespuestaValida(datos)) {
-                    logQuinti('ERROR', `${nombreChica} - Todas las fases de reintento fallaron, usando fallback anti-repetición primero`);
-                    // MEJORA: En lugar de defaultear a 'hablando', intentar inferir el tag desde el mensaje del usuario
-                    const tagInferido = inferirTagDesdeMensaje(mensaje, nombreChica, tagsDisponibles);
-                    const fallbackTag = tagInferido || (tagsDisponibles.includes('hablando') ? 'hablando' : tagsDisponibles[0] || 'normal');
+                    logQuinti('ERROR', `${nombreChica} - Todas las fases de reintento fallaron, usando fallback anti-repetición`);
+                    const fallbackTag = tagsDisponibles.includes('hablando') ? 'hablando' : tagsDisponibles[0] || 'normal';
                     datos = {
                         respuesta: obtenerFallbackAntiRepeticion(),
                         imagen_tag: fallbackTag
@@ -2150,30 +2021,12 @@ async function procesarRespuesta(datos, mensajeOriginal) {
         // Usar la imagen de la primera chica como principal (para compatibilidad)
         const primeraChica = datos.respuestasIndividuales[0];
         tagImagen = primeraChica && primeraChica.imagen_tag ? primeraChica.imagen_tag : 'hablando';
-        // MEJORA: Si el tag es genérico ('hablando' o 'normal'), intentar inferirlo desde el mensaje del usuario
-        if (tagImagen === 'hablando' || tagImagen === 'normal') {
-            const tagsDisponiblesPrimera = obtenerTagsImagen(primeraChica.chica);
-            const tagInferido = inferirTagDesdeMensaje(mensajeOriginal, primeraChica.chica, tagsDisponiblesPrimera);
-            if (tagInferido) {
-                tagImagen = tagInferido;
-                logQuinti('INFO', `Tag corregido en procesarRespuesta para ${primeraChica.chica}: "${tagInferido}"`);
-            }
-        }
         const resultadoImagen = obtenerURLImagen(primeraChica.chica, tagImagen, historiaId);
         urlImagen = resultadoImagen.urlImagen;
         urlAudio = resultadoImagen.urlAudio;
     } else {
         // Seleccionar imagen automaticamente para la chica principal (caso de una sola chica)
         tagImagen = datos && datos.imagen_tag ? datos.imagen_tag : 'normal';
-        // MEJORA: Si el tag es genérico ('hablando' o 'normal'), intentar inferirlo desde el mensaje del usuario
-        if ((tagImagen === 'hablando' || tagImagen === 'normal') && chicaSeleccionada) {
-            const tagsDisponibles = obtenerTagsImagen(chicaSeleccionada);
-            const tagInferido = inferirTagDesdeMensaje(mensajeOriginal, chicaSeleccionada, tagsDisponibles);
-            if (tagInferido) {
-                tagImagen = tagInferido;
-                logQuinti('INFO', `Tag corregido en procesarRespuesta para ${chicaSeleccionada}: "${tagInferido}"`);
-            }
-        }
         const resultadoImagen = obtenerURLImagen(chicaSeleccionada, tagImagen, historiaId);
         urlImagen = resultadoImagen.urlImagen;
         urlAudio = resultadoImagen.urlAudio;
@@ -2382,48 +2235,46 @@ function obtenerURLImagen(nombreChica, tag, historiaId = null) {
     
     const chicaData = QuintiImagenesPrueba[nombreChica];
     
-    if (tag === 'normal' || tag === 'hablando') {
-        const imgObj = chicaData.imagenes?.['hablando'] || {};
-        return { 
-            urlImagen: chicaData.imagenSelector || imgObj.url || imgObj || null,
-            urlAudio: imgObj.audio || null
-        };
+    // Usar el tag EXACTO proporcionado por la IA - SIN INFERENCIA
+    // Si el tag existe, usarlo directamente
+    if (tag && chicaData.imagenes && chicaData.imagenes[tag]) {
+        const imgObj = chicaData.imagenes[tag];
+        const urlImagen = imgObj?.url || imgObj;
+        const urlAudio = imgObj?.audio || null;
+        logQuinti('DEBUG', `Usando tag exacto proporcionado por IA: "${tag}" para ${nombreChica}`);
+        return { urlImagen, urlAudio };
     }
     
-    // Intentar obtener la imagen por tag
-    const imgObj = chicaData.imagenes?.[tag];
-    let urlImagen = imgObj?.url || imgObj;
-    let urlAudio = imgObj?.audio || null;
-    
-    // MEJORA #1: Si no encuentra el tag exacto, usar el sistema inteligente de búsqueda de tags pertinentes
-    if (!urlImagen && chicaData.imagenes && Object.keys(chicaData.imagenes).length > 0) {
+    // FALLBACK: Si el tag no existe, usar 'hablando' o la primera imagen disponible
+    // SIN intentar inferir nada del diálogo o palabras clave
+    if (chicaData.imagenes && Object.keys(chicaData.imagenes).length > 0) {
         const tagsDisponibles = Object.keys(chicaData.imagenes);
         
-        // Intentar encontrar el tag más pertinente usando múltiples criterios
-        const tagPertinente = encontrarTagMasPertinente(tag, tagsDisponibles, '');
-        
-        if (tagPertinente) {
-            const imgObjPertinente = chicaData.imagenes[tagPertinente];
-            urlImagen = imgObjPertinente?.url || imgObjPertinente;
-            urlAudio = imgObjPertinente?.audio || null;
-            logQuinti('INFO', `Tag "${tag}" no encontrado, se encontró tag pertinente: "${tagPertinente}" para ${nombreChica}`);
-        } else {
-            // FALLBACK: Si no encuentra tag pertinente, usar la PRIMERA imagen disponible
-            const primerTag = tagsDisponibles[0];
-            const primerImgObj = chicaData.imagenes[primerTag];
-            urlImagen = primerImgObj?.url || primerImgObj;
-            urlAudio = primerImgObj?.audio || null;
-            logQuinti('WARN', `Tag "${tag}" no encontrado para ${nombreChica}, usando primera imagen disponible: "${primerTag}"`);
+        // Prioridad 1: 'hablando' si existe
+        if (tagsDisponibles.includes('hablando')) {
+            const imgObj = chicaData.imagenes['hablando'];
+            const urlImagen = imgObj?.url || imgObj;
+            const urlAudio = imgObj?.audio || null;
+            logQuinti('WARN', `Tag "${tag}" no encontrado para ${nombreChica}, usando fallback: "hablando"`);
+            return { urlImagen, urlAudio };
         }
+        
+        // Prioridad 2: Primera imagen disponible
+        const primerTag = tagsDisponibles[0];
+        const primerImgObj = chicaData.imagenes[primerTag];
+        const urlImagen = primerImgObj?.url || primerImgObj;
+        const urlAudio = primerImgObj?.audio || null;
+        logQuinti('WARN', `Tag "${tag}" no encontrado para ${nombreChica}, usando fallback: "${primerTag}"`);
+        return { urlImagen, urlAudio };
     }
     
     // Último fallback: imagenSelector
-    if (!urlImagen) {
-        urlImagen = chicaData.imagenSelector || null;
-        urlAudio = null;
+    if (chicaData.imagenSelector) {
+        return { urlImagen: chicaData.imagenSelector, urlAudio: null };
     }
     
-    return { urlImagen, urlAudio };
+    // Sin imágenes disponibles
+    return { urlImagen: null, urlAudio: null };
 }
 
 // ============================================================
