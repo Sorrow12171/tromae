@@ -974,8 +974,9 @@
         </div>
     </div>
 
-    <!-- Cargar scripts en orden: imagenes, logica (con reintentos y logs), luego UI -->
+    <!-- Cargar scripts en orden: imagenes, respuestasBot (validación de tags), logica (con reintentos y logs), luego UI -->
     <script type="module" src="imagenes.js"></script>
+    <script type="module" src="respuestasBot.js"></script>
     <script type="module" src="logica.js"></script>
     <script type="module" src="parserAcciones.js"></script>
     <script type="module" src="historiasParalelas.js"></script>
@@ -985,6 +986,7 @@
     <script type="module">
         // Importar funciones necesarias de logica.js e imagenes.js
         import { getChicasDisponibles, seleccionarChica, conversar, logQuinti, logErrorAPI, formatearErrorUsuario, getChicasEnChat, actualizarAccionEnCurso, getAccionEnCurso, getChicaSeleccionada, getImagenSelector, formatearTextoConAsteriscos, parsearJSON, obtenerURLImagen } from './logica.js';
+        import { RespuestasBot } from './respuestasBot.js';
         import { detectarRepeticion, detectarRepeticionEntreChicas, agregarDialogoAlHistorial, generarPromptAntiRepeticion, getEstadisticasRepeticion } from './antiRepeticion.js';
         import { QuintiImagenesPrueba } from './imagenes.js';
         

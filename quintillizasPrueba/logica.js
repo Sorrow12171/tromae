@@ -28,6 +28,15 @@ import { PERSONALIDADES, getChicasDisponibles, existeChica, tieneImagenes } from
 import { ALDO_PERSONALIDAD, ALDO_INSTRUCCIONES_SISTEMA, getAldoPersonalidad, esAldo, aldoDebeResponder } from './aldo.js';
 import { obtenerMensajeError, generarPayloadFase, getOrdenFases, getInfoFase, obtenerFallbackLocal, obtenerFallbackAntiRepeticion } from './fallbacks.js';
 import { QuintiImagenesPrueba } from './imagenes.js';
+import { 
+    validarTagImagen, 
+    obtenerTodosLosTags, 
+    buscarTagSimilar, 
+    seleccionarTagImagenCorrecto, 
+    procesarRespuestaConImagen,
+    generarInstruccionesImagenParaPrompt,
+    obtenerInformacionImagen 
+} from './respuestasBot.js';
 import { getImagenTagsMapping as getImagenTagsMappingHistoria } from './historiasParalelas.js';
 import { detectarRepeticion, detectarRepeticionEntreChicas, agregarDialogoAlHistorial, generarPromptAntiRepeticion, getEstadisticasRepeticion, calcularSimilitud } from './antiRepeticion.js';
 
@@ -2169,6 +2178,7 @@ async function regenerarDialogoAntiRepeticionEntreChicas(nombreChica, mensajeOri
 
 /**
  * Obtiene la URL de una imagen específica y su audio asociado
+ * AHORA USA RespuestasBot para validar y seleccionar el tag correcto
  * @param {string} nombreChica - Nombre de la chica
  * @param {string} tag - Tag de la imagen
  * @param {string} historiaId - ID de la historia paralela (opcional)
@@ -2206,44 +2216,15 @@ function obtenerURLImagen(nombreChica, tag, historiaId = null) {
         return { urlImagen: null, urlAudio: null };
     }
     
-    const chicaData = QuintiImagenesPrueba[nombreChica];
+    // USAR LA NUEVA LÓGICA DE RespuestasBot PARA VALIDAR Y SELECCIONAR EL TAG
+    const resultadoSeleccion = seleccionarTagImagenCorrecto(nombreChica, tag);
     
-    // Usar el tag EXACTO proporcionado por la IA - SIN INFERENCIA
-    // Si el tag existe, usarlo directamente
-    if (tag && chicaData.imagenes && chicaData.imagenes[tag]) {
-        const imgObj = chicaData.imagenes[tag];
-        const urlImagen = imgObj?.url || imgObj;
-        const urlAudio = imgObj?.audio || null;
-        logQuinti('DEBUG', `Usando tag exacto proporcionado por IA: "${tag}" para ${nombreChica}`);
-        return { urlImagen, urlAudio };
-    }
-    
-    // FALLBACK: Si el tag no existe, usar 'hablando' o la primera imagen disponible
-    // SIN intentar inferir nada del diálogo o palabras clave
-    if (chicaData.imagenes && Object.keys(chicaData.imagenes).length > 0) {
-        const tagsDisponibles = Object.keys(chicaData.imagenes);
-        
-        // Prioridad 1: 'hablando' si existe
-        if (tagsDisponibles.includes('hablando')) {
-            const imgObj = chicaData.imagenes['hablando'];
-            const urlImagen = imgObj?.url || imgObj;
-            const urlAudio = imgObj?.audio || null;
-            logQuinti('WARN', `Tag "${tag}" no encontrado para ${nombreChica}, usando fallback: "hablando"`);
-            return { urlImagen, urlAudio };
-        }
-        
-        // Prioridad 2: Primera imagen disponible
-        const primerTag = tagsDisponibles[0];
-        const primerImgObj = chicaData.imagenes[primerTag];
-        const urlImagen = primerImgObj?.url || primerImgObj;
-        const urlAudio = primerImgObj?.audio || null;
-        logQuinti('WARN', `Tag "${tag}" no encontrado para ${nombreChica}, usando fallback: "${primerTag}"`);
-        return { urlImagen, urlAudio };
-    }
-    
-    // Último fallback: imagenSelector
-    if (chicaData.imagenSelector) {
-        return { urlImagen: chicaData.imagenSelector, urlAudio: null };
+    if (resultadoSeleccion.urlImagen) {
+        logQuinti('DEBUG', `RespuestasBot seleccionó tag: "${resultadoSeleccion.tagSeleccionado}" (original: "${tag}") para ${nombreChica}`);
+        return {
+            urlImagen: resultadoSeleccion.urlImagen,
+            urlAudio: resultadoSeleccion.urlAudio
+        };
     }
     
     // Sin imágenes disponibles
@@ -2420,7 +2401,15 @@ export {
     // Función de parseo de JSON (para tests)
     parsearJSON,
     // Función para obtener URLs de imágenes
-    obtenerURLImagen
+    obtenerURLImagen,
+    // Funciones de validación de imágenes (importadas desde respuestasBot.js)
+    validarTagImagen,
+    obtenerTodosLosTags,
+    buscarTagSimilar,
+    seleccionarTagImagenCorrecto,
+    procesarRespuestaConImagen,
+    generarInstruccionesImagenParaPrompt,
+    obtenerInformacionImagen
 };
 
 // Exportar para window (compatibilidad con browser)
