@@ -974,64 +974,17 @@
         </div>
     </div>
 
-    <!-- Cargar scripts en orden: imagenes, respuestasBot (validación de tags), logica (con reintentos y logs), luego UI -->
+    <!-- Cargar scripts en orden: imagenes, logica (con reintentos y logs), luego UI -->
     <script type="module" src="imagenes.js"></script>
-    <script type="module" src="respuestasBot.js"></script>
     <script type="module" src="logica.js"></script>
     <script type="module" src="parserAcciones.js"></script>
     <script type="module" src="historiasParalelas.js"></script>
     <script type="module" src="antiRepeticion.js"></script>
     <!-- Cargar tests unitarios en desarrollo (descomentar para ejecutar tests) -->
     <!-- <script type="module" src="logica.test.js"></script> -->
-    
-    <!-- Definir funciones globales ANTES de cargar módulos -->
-    <script>
-        // Función guardarNombre debe estar disponible globalmente antes de DOMContentLoaded
-        window.guardarNombre = function() {
-            const input = document.getElementById('nombreUsuarioInput');
-            if (!input) return;
-            const nombre = input.value.trim();
-            
-            if (!nombre) {
-                alert('Por favor, escribe tu nombre para comenzar 💕');
-                return;
-            }
-            
-            window.nombreUsuarioGlobal = nombre;
-            localStorage.setItem('quintiNombreUsuario', nombre);
-            
-            // Mostrar el nombre en el selector de chicas
-            const display = document.getElementById('nombreUsuarioDisplay');
-            if (display) display.textContent = nombre;
-            
-            // Ocultar pantalla de nombre, mostrar selector de chicas
-            const nombreContainer = document.getElementById('nombreContainer');
-            const selectorContainer = document.getElementById('selectorContainer');
-            if (nombreContainer) nombreContainer.style.display = 'none';
-            if (selectorContainer) selectorContainer.style.display = 'block';
-            
-            // Llamar a inicializarSelector si está disponible
-            if (window.inicializarSelector) {
-                window.inicializarSelector();
-            }
-        };
-        
-        // Función para cargar nombre guardado
-        window.cargarNombreGuardado = function() {
-            localStorage.removeItem('quintiNombreUsuario');
-            const nombreContainer = document.getElementById('nombreContainer');
-            const selectorContainer = document.getElementById('selectorContainer');
-            const chatContainer = document.getElementById('chatContainer');
-            if (nombreContainer) nombreContainer.style.display = 'block';
-            if (selectorContainer) selectorContainer.style.display = 'none';
-            if (chatContainer) chatContainer.classList.remove('active');
-        };
-    </script>
-    
     <script type="module">
         // Importar funciones necesarias de logica.js e imagenes.js
         import { getChicasDisponibles, seleccionarChica, conversar, logQuinti, logErrorAPI, formatearErrorUsuario, getChicasEnChat, actualizarAccionEnCurso, getAccionEnCurso, getChicaSeleccionada, getImagenSelector, formatearTextoConAsteriscos, parsearJSON, obtenerURLImagen } from './logica.js';
-        import * as RespuestasBot from './respuestasBot.js';
         import { detectarRepeticion, detectarRepeticionEntreChicas, agregarDialogoAlHistorial, generarPromptAntiRepeticion, getEstadisticasRepeticion } from './antiRepeticion.js';
         import { QuintiImagenesPrueba } from './imagenes.js';
         
@@ -1684,11 +1637,42 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
             await sendMessage();
         }
         
-        // Variable global para almacenar el nombre del usuario (ya definida globalmente antes)
-        // let nombreUsuario = window.nombreUsuarioGlobal || '';
+        // Variable global para almacenar el nombre del usuario
+        let nombreUsuario = '';
         
-        // NOTA: Las funciones guardarNombre y cargarNombreGuardado ya están definidas globalmente
-        // antes de este módulo para evitar errores de ReferenceError
+        // Función para guardar el nombre del usuario y mostrar el selector
+        function guardarNombre() {
+            const input = document.getElementById('nombreUsuarioInput');
+            const nombre = input.value.trim();
+            
+            if (!nombre) {
+                alert('Por favor, escribe tu nombre para comenzar 💕');
+                return;
+            }
+            
+            nombreUsuario = nombre;
+            localStorage.setItem('quintiNombreUsuario', nombre);
+            
+            // Mostrar el nombre en el selector de chicas
+            document.getElementById('nombreUsuarioDisplay').textContent = nombre;
+            
+            // Ocultar pantalla de nombre, mostrar selector de chicas
+            document.getElementById('nombreContainer').style.display = 'none';
+            document.getElementById('selectorContainer').style.display = 'block';
+            
+            // Inicializar el selector de chicas
+            inicializarSelector();
+        }
+        
+        // Cargar nombre guardado si existe - PERO SIEMPRE MOSTRAR PANTALLA DE NOMBRE
+        function cargarNombreGuardado() {
+            // Limpiar nombre guardado para que siempre pida el nombre al entrar
+            localStorage.removeItem('quintiNombreUsuario');
+            // Mostrar siempre la pantalla de ingreso de nombre
+            document.getElementById('nombreContainer').style.display = 'block';
+            document.getElementById('selectorContainer').style.display = 'none';
+            document.getElementById('chatContainer').classList.remove('active');
+        }
         
         // Las funciones se exponen en DOMContentLoaded más abajo
         
@@ -1828,10 +1812,8 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
         
         // Asegurar que las funciones estén disponibles antes de que se llamen
         document.addEventListener('DOMContentLoaded', function() {
-            // Las funciones guardarNombre y cargarNombreGuardado ya están definidas globalmente
-            // window.guardarNombre = guardarNombre;  // Ya no es necesario, está definida antes
-            // window.cargarNombreGuardado = cargarNombreGuardado;  // Ya no es necesario
-            
+            window.guardarNombre = guardarNombre;
+            window.cargarNombreGuardado = cargarNombreGuardado;
             window.inicializarSelector = inicializarSelector;
             window.seleccionarChicaVisual = seleccionarChicaVisual;
             window.iniciarChat = iniciarChat;
@@ -1839,7 +1821,7 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
             window.handleKeyPress = handleKeyPress;
             window.sendMessage = sendMessage;
             window.retryLastMessage = retryLastMessage;
-            window.getNombreUsuario = function() { return window.nombreUsuarioGlobal || ''; };
+            window.getNombreUsuario = function() { return nombreUsuario; };
             window.abrirHistoriasParalelas = abrirHistoriasParalelas;
             window.cerrarHistoriasParalelas = cerrarHistoriasParalelas;
             window.iniciarHistoriaParalela = iniciarHistoriaParalela;
