@@ -1372,27 +1372,13 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
             
             // Construir instrucciones de imágenes SOLO para esta chica
             const tagsDisponibles = obtenerTagsImagen(nombreChica);
-            const instruccionesImagen = `\n\nTU IMAGEN_TAG: Debes incluir "imagen_tag" con UNA de estas opciones: [${tagsDisponibles.join(', ')}]. Elige según lo que esté haciendo el personaje.`;
+            const instruccionesImagen = `\n\nTU IMAGEN_TAG: Usa EXACTAMENTE el tag que describe la acción que el usuario menciona. NO inventes, NO infieras, NO corrijas. Si el usuario dijo "beso", usa "besando". Si dijo "quitandose_la_ropa2", usa "quitandose_la_ropa2". CONCORDANCIA ABSOLUTA.`;
             
             // Instrucción anti-repetición reforzada para múltiples chicas
             const instruccionAntiRepeticion = `\n\n⚠️ ANTI-REPETICIÓN OBLIGATORIA: Tu respuesta debe ser COMPLETAMENTE DIFERENTE a las de las otras chicas. Prohibido usar las mismas frases, gestos, acciones o vocabulario.`;
             
-            // SOLUCIÓN PROBLEMA #1: Instrucción reforzada para acciones en tiempo presente
-            const instruccionAccionUsuario = `
-🚨 PRIORIDAD ABSOLUTA - ACCIÓN DEL USUARIO:
-El mensaje del usuario TIENE PRIORIDAD ABSOLUTA sobre cualquier otra cosa. Lo que el usuario diga está sucediendo AHORA MISMO.
-
-Cuando el usuario use verbos en PRESENTE (ej: "beso", "chupo", "toco", "se desviste") o mencione una acción en curso:
-
-DEBES HACER TRES COSAS OBLIGATORIAMENTE:
-1. TU TEXTO: Describe ESA acción EXPLÍCITAMENTE en tu respuesta usando *acciones entre asteriscos* en TIEMPO PRESENTE. Ejemplo: si el usuario dice "se desviste", tú debes escribir "*mientras se desviste, te mira con deseo*" o "*te ayuda a desvestirse ahora mismo*". La acción YA está ocurriendo.
-2. TU IMAGEN_TAG: DEBE coincidir EXACTAMENTE con la acción específica mencionada por el usuario. Si dice "se desviste" → usa "desvistiendo". Si dice "beso" → usa "besando". NO uses tags genéricas como "desnuda" cuando el usuario describió una acción específica.
-3. MANTÉN EL CONTEXTO: Si ya había una acción en curso (ver "ESTADO ACTUAL" arriba), DEBES CONTINUAR ESA ACCIÓN a menos que el usuario indique explícitamente cambiarla.
-
-⚠️ CRÍTICO: 
-- El texto y la imagen DEBEN estar 100% alineados con la acción ESPECÍFICA que el usuario mencionó.
-- NO uses tags genéricas ("desnuda", "hablando") cuando el usuario dijo algo específico ("se desviste", "beso").
-`;
+            // SIN INSTRUCCIONES DE ACCION - La IA debe usar exactamente lo que el chat dice
+            const instruccionAccionUsuario = `\n\n🚨 CONCORDANCIA ABSOLUTA: El tag de imagen que uses debe ser EXACTAMENTE el mismo que aparece en el contexto o en respuestas previas. Si el usuario mencionó una acción específica como "quitandose_la_ropa2", usa ESE tag exacto. NO infieras, NO corrijas, NO cambies nada.`;
             // Instrucción de contexto sobre otras chicas (solo para chicas después de la primera)
             let instruccionContextoOtrasChicas = '';
             if (!esPrimeraChica && respuestasPorChica.length > 0) {
@@ -1405,10 +1391,10 @@ DEBES HACER TRES COSAS OBLIGATORIAMENTE:
                 const esChicaObjetivo = nombreChica === chicaObjetivo;
                 if (!esChicaObjetivo && chicaObjetivo) {
                     // Esta NO es la chica objetivo, debe responder BASÁNDOSE en la respuesta de la chica objetivo
-                    instruccionContextoOtrasChicas = `\\n\\n📋 CONTEXTO - OTRAS CHICAS YA RESPONDIERON:\\n${respuestasPrevias}\\n\\n⚡ TU RESPUESTA DEBE SER DIFERENTE: No repitas sus palabras exactas, pero TODAS deben estar realizando la MISMA ACCIÓN que el usuario mencionó. Cada una con su estilo único pero la misma acción base.\\n\\n🖼️ IMAGEN COORDINADA OBLIGATORIA: Si el usuario dijo "beso", TODAS las chicas deben estar besando en su texto Y en su imagen_tag. La acción es la misma, la expresión de cada personalidad es diferente.\\n\\n🚫 PROHIBIDO HABLAR COMO OTRA CHICA: Tú eres ${nombreChica}. NO uses el estilo, vocabulario o frases de las otras chicas. Mantén TU propia personalidad y forma de hablar.\\n\\n💬 REACCIÓN A LA RESPUESTA PREVIA: Como ${chicaObjetivo} ya respondió primero (porque el usuario le habló directamente a ella), tu respuesta debe ser una REACCIÓN o COMENTARIO sobre lo que ${chicaObjetivo} dijo. Puedes estar de acuerdo, disentir, complementar o reaccionar con tu personalidad única, pero SIEMPRE manteniendo coherencia con la situación.`;
+                    instruccionContextoOtrasChicas = `\\n\\n📋 CONTEXTO - OTRAS CHICAS YA RESPONDIERON:\\n${respuestasPrevias}\\n\\n⚡ TU RESPUESTA DEBE SER DIFERENTE: No repitas sus palabras exactas, gestos ni acciones.\\n\\n🚫 PROHIBIDO HABLAR COMO OTRA CHICA: Tú eres ${nombreChica}. NO uses el estilo, vocabulario o frases de las otras chicas. Mantén TU propia personalidad y forma de hablar.\\n\\n💬 REACCIÓN A LA RESPUESTA PREVIA: Como ${chicaObjetivo} ya respondió primero (porque el usuario le habló directamente a ella), tu respuesta debe ser una REACCIÓN o COMENTARIO sobre lo que ${chicaObjetivo} dijo. Puedes estar de acuerdo, disentir, complementar o reaccionar con tu personalidad única, pero SIEMPRE manteniendo coherencia con la situación.`;
                 } else {
                     // Esta ES la chica objetivo o no hay chica objetivo definida
-                    instruccionContextoOtrasChicas = `\\n\\n📋 CONTEXTO - OTRAS CHICAS YA RESPONDIERON:\\n${respuestasPrevias}\\n\\n⚡ TU RESPUESTA DEBE SER DIFERENTE: No repitas sus palabras exactas, pero TODAS deben estar realizando la MISMA ACCIÓN que el usuario mencionó. Cada una con su estilo único pero la misma acción base.\\n\\n🖼️ IMAGEN COORDINADA OBLIGATORIA: Si el usuario dijo "beso", TODAS las chicas deben estar besando en su texto Y en su imagen_tag. La acción es la misma, la expresión de cada personalidad es diferente.\\n\\n🚫 PROHIBIDO HABLAR COMO OTRA CHICA: Tú eres ${nombreChica}. NO uses el estilo, vocabulario o frases de las otras chicas. Mantén TU propia personalidad y forma de hablar.`;
+                    instruccionContextoOtrasChicas = `\\n\\n📋 CONTEXTO - OTRAS CHICAS YA RESPONDIERON:\\n${respuestasPrevias}\\n\\n⚡ TU RESPUESTA DEBE SER DIFERENTE: No repitas sus palabras exactas, gestos ni acciones.\\n\\n🚫 PROHIBIDO HABLAR COMO OTRA CHICA: Tú eres ${nombreChica}. NO uses el estilo, vocabulario o frases de las otras chicas. Mantén TU propia personalidad y forma de hablar.`;
                 }
             }
             
@@ -1633,7 +1619,7 @@ DEBES HACER TRES COSAS OBLIGATORIAMENTE:
     const tagsImagen = chicaSeleccionada && !esAldo(chicaSeleccionada) ? obtenerTagsImagen(chicaSeleccionada) : ['normal'];
     const instruccionesImagenes = esAldo(chicaSeleccionada) 
         ? `\n\nNOTA: Eres Aldo, un personaje masculino. No tienes imágenes asociadas, solo respondes con texto.`
-        : `\n\nIMÁGENES DISPONIBLES: ${tagsImagen.join(', ')}. Debes incluir "imagen_tag" con UNA de estas opciones según lo que esté haciendo el personaje.`;
+        : `\n\nTU IMAGEN_TAG: Usa EXACTAMENTE el tag que describe la acción que el usuario menciona. NO inventes, NO infieras, NO corrijas. Si el usuario dijo "beso", usa "besando". Si dijo "quitandose_la_ropa2", usa "quitandose_la_ropa2". CONCORDANCIA ABSOLUTA.`;
     
     // Instrucción anti-repetición mejorada
     const instruccionAntiRepeticion = `\n\nREGLA CRÍTICA ANTI-REPETICIÓN: NUNCA repitas frases, diálogos, acciones o expresiones que ya hayas usado antes en esta conversación. Revisa mentalmente el historial y asegúrate de que CADA respuesta sea única y fresca. Usa vocabulario variado, expresiones diferentes, reacciones distintas. Si ya dijiste algo similar antes, busca una forma completamente nueva de expresarlo. Esto es OBLIGATORIO.`;
@@ -1641,23 +1627,8 @@ DEBES HACER TRES COSAS OBLIGATORIAMENTE:
     // SISTEMA DE MEMORIA MEJORADO: Obtener estado completo de la memoria
     const estadoMemoriaCompleto = obtenerEstadoMemoriaParaPrompt();
     const instruccionMemoria = `\n\n🧠 SISTEMA DE MEMORIA ACTIVO - INFORMACIÓN QUE DEBES RECORDAR:\n${estadoMemoriaCompleto}\nUSA ESTA INFORMACIÓN PARA DAR RESPUESTAS COHERENTES Y PERSONALIZADAS. REFERENCIA ESTOS DATOS CUANDO SEA RELEVANTE.`;
-    
-    // SOLUCIÓN PROBLEMA #1: Instrucción reforzada para acciones en tiempo presente (caso una sola chica)
-    const instruccionAccionUsuario = `
-🚨 PRIORIDAD ABSOLUTA - ACCIÓN DEL USUARIO:
-El mensaje del usuario TIENE PRIORIDAD ABSOLUTA sobre cualquier otra cosa. Lo que el usuario diga está sucediendo AHORA MISMO.
-
-Cuando el usuario use verbos en PRESENTE (ej: "beso", "chupo", "toco", "se desviste") o mencione una acción en curso:
-
-DEBES HACER TRES COSAS OBLIGATORIAMENTE:
-1. TU TEXTO: Describe ESA acción EXPLÍCITAMENTE en tu respuesta usando *acciones entre asteriscos* en TIEMPO PRESENTE. Ejemplo: si el usuario dice "se desviste", tú debes escribir "*mientras se desviste, te mira con deseo*" o "*te ayuda a desvestirse ahora mismo*". La acción YA está ocurriendo.
-2. TU IMAGEN_TAG: DEBE coincidir EXACTAMENTE con la acción específica mencionada por el usuario. Si dice "se desviste" → usa "desvistiendo". Si dice "beso" → usa "besando". NO uses tags genéricas como "desnuda" cuando el usuario describió una acción específica.
-3. MANTÉN EL CONTEXTO: Si ya había una acción en curso, DEBES CONTINUAR ESA ACCIÓN a menos que el usuario indique explícitamente cambiarla. NO olvides la posición actual (ej: si estaban de pie, siguen de pie hasta que se indique lo contrario).
-
-⚠️ CRÍTICO: 
-- El texto y la imagen DEBEN estar 100% alineados con la acción ESPECÍFICA que el usuario mencionó.
-- NO uses tags genéricas ("desnuda", "hablando") cuando el usuario dijo algo específico ("se desviste", "beso").
-- Si el usuario dice "X", la tag debe ser la versión en acción de X, no algo relacionado pero diferente.`;
+    // SIN INSTRUCCIONES DE ACCION - La IA debe usar exactamente lo que el chat dice
+    const instruccionAccionUsuario = `\n\n🚨 CONCORDANCIA ABSOLUTA: El tag de imagen que uses debe ser EXACTAMENTE el mismo que aparece en el contexto o en respuestas previas. Si el usuario mencionó una acción específica como "quitandose_la_ropa2", usa ESE tag exacto. NO infieras, NO corrijas, NO cambies nada.`;
     
     // SOLUCIÓN PROBLEMA #3: Agregar estado actual de acciones al prompt
     let contextoEstadoActual = '';
@@ -2020,12 +1991,14 @@ async function procesarRespuesta(datos, mensajeOriginal) {
     if (tieneRespuestasIndividuales && datos.respuestasIndividuales.length > 0) {
         // Usar la imagen de la primera chica como principal (para compatibilidad)
         const primeraChica = datos.respuestasIndividuales[0];
+        // CONCORDANCIA ABSOLUTA: Usar exactamente el tag que la IA devolvió, sin modificaciones
         tagImagen = primeraChica && primeraChica.imagen_tag ? primeraChica.imagen_tag : 'hablando';
         const resultadoImagen = obtenerURLImagen(primeraChica.chica, tagImagen, historiaId);
         urlImagen = resultadoImagen.urlImagen;
         urlAudio = resultadoImagen.urlAudio;
     } else {
-        // Seleccionar imagen automaticamente para la chica principal (caso de una sola chica)
+        // CONCORDANCIA ABSOLUTA: Usar exactamente el tag que la IA devolvió en el JSON
+        // NO modificar, NO inferir, NO corregir el tag bajo ninguna circunstancia
         tagImagen = datos && datos.imagen_tag ? datos.imagen_tag : 'normal';
         const resultadoImagen = obtenerURLImagen(chicaSeleccionada, tagImagen, historiaId);
         urlImagen = resultadoImagen.urlImagen;
