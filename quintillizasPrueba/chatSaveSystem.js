@@ -45,9 +45,11 @@ const ChatSaveSystem = {
      * Guarda el chat actual en un slot
      * @param {number} slotNumber - Número del slot donde guardar (1-10)
      * @param {Object} chatData - Datos del chat a guardar
+     * @param {string} nombreMemoria - Nombre personalizado para la memoria (opcional)
+     * @param {string} imagenMemoria - URL de imagen personalizada para la memoria (opcional)
      * @returns {boolean} True si se guardó exitosamente
      */
-    saveChat(slotNumber, chatData) {
+    saveChat(slotNumber, chatData, nombreMemoria = null, imagenMemoria = null) {
         if (slotNumber < 1 || slotNumber > this.MAX_SLOTS) {
             console.error('Número de slot inválido. Debe ser entre 1 y 10.');
             return false;
@@ -65,7 +67,9 @@ const ChatSaveSystem = {
                 chicasEnChat: chatData.chicasEnChat || [],
                 mensajes: chatData.mensajes || [],
                 nombreUsuario: chatData.nombreUsuario || 'Anónimo',
-                version: '1.0'
+                nombreMemoria: nombreMemoria || `Memoria ${slotNumber}`,
+                imagenMemoria: imagenMemoria || null,
+                version: '2.0'
             };
 
             // Serializar y guardar
@@ -182,7 +186,9 @@ const ChatSaveSystem = {
                     chicaPrincipal: chatData.chicaPrincipal,
                     chicasEnChat: chatData.chicasEnChat,
                     mensajeCount: chatData.mensajes?.length || 0,
-                    nombreUsuario: chatData.nombreUsuario
+                    nombreUsuario: chatData.nombreUsuario,
+                    nombreMemoria: chatData.nombreMemoria || `Memoria ${slotNumber}`,
+                    imagenMemoria: chatData.imagenMemoria || null
                 });
             }
         }
@@ -216,6 +222,8 @@ const ChatSaveSystem = {
                             <div class="slot-date">${chatInfo.fechaGuardado}</div>
                             <div class="slot-chicas">${this.formatChicasList(chatInfo.chicasEnChat)}</div>
                             <div class="slot-messages">${chatInfo.mensajeCount} mensajes</div>
+                            ${chatInfo.nombreMemoria ? `<div class="slot-memoria-name">📝 ${chatInfo.nombreMemoria}</div>` : ''}
+                            ${chatInfo.imagenMemoria ? `<img src="${chatInfo.imagenMemoria}" alt="Memoria" class="slot-memoria-img">` : ''}
                         </div>
                         <div class="slot-actions">
                             <button class="btn-load" onclick="ChatSaveSystem.loadAndRestoreChat(${i})">📂 Cargar</button>
@@ -248,7 +256,7 @@ const ChatSaveSystem = {
     },
 
     /**
-     * Muestra el diálogo para guardar chat en un slot específico
+     * Muestra el diálogo para guardar chat en un slot específico con nombre e imagen personalizados
      * @param {number} slotNumber - Número del slot
      */
     showSaveDialog(slotNumber) {
@@ -256,9 +264,21 @@ const ChatSaveSystem = {
         if (typeof window.getCurrentChatData === 'function') {
             const chatData = window.getCurrentChatData();
             if (chatData && chatData.mensajes && chatData.mensajes.length > 0) {
-                const confirmed = confirm(`¿Guardar el chat actual en el Slot ${slotNumber}?\n\nSe sobrescribirá cualquier dato existente.`);
+                // Pedir nombre personalizado para la memoria
+                const nombreMemoria = prompt('¿Qué nombre quieres darle a esta memoria? (opcional)', `Memoria ${slotNumber}`);
+                
+                // Si el usuario cancela, salir
+                if (nombreMemoria === null) return;
+                
+                // Pedir URL de imagen personalizada
+                const imagenMemoria = prompt('Ingresa una URL de imagen para la memoria (opcional, deja vacío si no quieres):', '');
+                
+                // Si el usuario cancela, salir
+                if (imagenMemoria === null) return;
+                
+                const confirmed = confirm(`¿Guardar el chat actual en el Slot ${slotNumber}?\n\nNombre: ${nombreMemoria || `Memoria ${slotNumber}`}\nImagen: ${imagenMemoria ? 'Sí' : 'No'}\n\nSe sobrescribirá cualquier dato existente.`);
                 if (confirmed) {
-                    const success = this.saveChat(slotNumber, chatData);
+                    const success = this.saveChat(slotNumber, chatData, nombreMemoria || null, imagenMemoria || null);
                     if (success) {
                         alert(`✅ Chat guardado exitosamente en el Slot ${slotNumber}`);
                         this.renderSlotsPanel();
