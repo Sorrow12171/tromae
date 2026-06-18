@@ -57,10 +57,10 @@ reverse_cowgirl: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDD
              la_nalgueo:  { url: "https://files.catbox.moe/kufrln.png", audio: "" },
               agarrando_sus_tetas:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854699654.jpg", audio: "" },
               chupando_sus_tetas:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854701665.jpg", audio: "" },
-             metiendo_dedos_en_su_concha:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854715528.jpg", audio: "" },
+             metiendo_dedos_en_su_concha:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854715528.jpg", audio: "https://files.catbox.moe/5ix4d3.mp3" },
              squirting_after_dedos_en_su_concha:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854719495.jpg", audio: "" },
             after_squirting:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854721522.jpg", audio: "" },
-            metiendo_dedos_en_su_concha_cumming:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854717456.jpg", audio: "" },
+            metiendo_dedos_en_su_concha_cumming:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854717456.jpg", audio: "https://files.catbox.moe/5ix4d3.mp3" },
             
             
             
