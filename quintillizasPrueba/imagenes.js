@@ -54,7 +54,7 @@ reverse_cowgirl: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDD
                le_agarro_el_culo:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD12/main/imagenes/img_1773506776196.jpg", audio: "" },
               ichika_ve_mi_verga_erecta:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD23/main/imagenes/img_1774807964911.png", audio: "" },
              post_sexo_semen_derramando_de_ella:  { url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD43/main/imagenes/img_1779630008503.jpg", audio: "" },
-             la_nalgueo:  { url: "https://files.catbox.moe/kufrln.png", audio: "" },
+             la_nalgueo:  { url: "https://files.catbox.moe/kufrln.png", audio: "https://files.catbox.moe/x5ti47.mp3" },
               agarrando_sus_tetas:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854699654.jpg", audio: "" },
               chupando_sus_tetas:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854701665.jpg", audio: "" },
              metiendo_dedos_en_su_concha:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854715528.jpg", audio: "https://files.catbox.moe/5ix4d3.mp3" },
