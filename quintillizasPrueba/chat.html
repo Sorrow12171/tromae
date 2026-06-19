@@ -455,11 +455,14 @@
                 font-size: 18px;
             }
             
-            .historias-paralelas-btn {
-                bottom: 20px;
-                right: 20px;
+            .fixed-bottom-buttons {
+                bottom: 15px;
+                gap: 10px;
+            }
+            
+            .bottom-btn {
                 padding: 12px 20px;
-                font-size: 16px;
+                font-size: 14px;
             }
             
             .modal-content {
@@ -561,11 +564,14 @@
                 font-size: 14px;
             }
             
-            .historias-paralelas-btn {
-                bottom: 15px;
-                right: 15px;
+            .fixed-bottom-buttons {
+                bottom: 10px;
+                gap: 8px;
+            }
+            
+            .bottom-btn {
                 padding: 10px 15px;
-                font-size: 14px;
+                font-size: 13px;
             }
             
             .modal-header h2 {
@@ -585,22 +591,49 @@
             }
         }
 
-        /* Botón de Historias Paralelas */
-        .historias-paralelas-btn {
+        /* Botones fijos en la parte inferior */
+        .fixed-bottom-buttons {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .bottom-btn {
             padding: 15px 25px;
             background: linear-gradient(135deg, #8B5CF6, #6D28D9);
             color: white;
             border: none;
             border-radius: 30px;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             box-shadow: 0 4px 20px rgba(139, 92, 246, 0.6);
             transition: all 0.3s ease;
-            z-index: 100;
+            white-space: nowrap;
+        }
+
+        .bottom-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.8);
+        }
+
+        /* Botón de Historias Paralelas - ya no se usa posicion fija individual */
+        .historias-paralelas-btn {
+            padding: 15px 25px;
+            background: linear-gradient(135deg, #8B5CF6, #6D28D9);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.6);
+            transition: all 0.3s ease;
+            white-space: nowrap;
         }
 
         .historias-paralelas-btn:hover {
@@ -892,10 +925,15 @@
         </button>
     </div>
 
-    <!-- Botón de Historias Paralelas -->
-    <button class="historias-paralelas-btn" id="historiasParalelasBtn" onclick="abrirHistoriasParalelas()">
-        📖 Historias Paralelas
-    </button>
+    <!-- Botones fijos en la parte inferior -->
+    <div class="fixed-bottom-buttons">
+        <button class="bottom-btn" id="historiasParalelasBtn" onclick="abrirHistoriasParalelas()">
+            📖 Historias Paralelas
+        </button>
+        <button class="bottom-btn" id="chatSaveBtn" onclick="toggleChatSavePanel()" title="Guardar/Cargar Chats">
+            💾 Guardar Chat
+        </button>
+    </div>
 
     <!-- Modal de Historias Paralelas -->
     <div class="modal-historias" id="modalHistorias" style="display: none;">
@@ -909,11 +947,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Botón de Guardado/Carga de Chats -->
-    <button class="historias-paralelas-btn" id="chatSaveBtn" onclick="toggleChatSavePanel()" style="right: 160px;" title="Guardar/Cargar Chats">
-        💾 Guardar Chat
-    </button>
 
     <!-- Panel de Guardado/Carga de Chats -->
     <div class="modal-historias" id="chatSavePanel" style="display: none;">
