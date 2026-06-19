@@ -851,162 +851,7 @@
             font-style: italic;
         }
 
-        /* Estilos para el panel de memorias */
-        .memories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            padding: 10px;
-        }
-
-        .memory-card {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            border-radius: 15px;
-            padding: 15px;
-            border: 2px solid #8B5CF6;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .memory-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5);
-            border-color: #A78BFA;
-        }
-
-        .memory-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid rgba(139, 92, 246, 0.3);
-        }
-
-        .memory-title {
-            color: #C4B5FD;
-            font-size: 16px;
-            font-weight: bold;
-            margin: 0;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 80%;
-        }
-
-        .memory-delete-btn {
-            background: none;
-            border: none;
-            color: #f44336;
-            font-size: 20px;
-            cursor: pointer;
-            padding: 0 5px;
-            line-height: 1;
-        }
-
-        .memory-delete-btn:hover {
-            color: #da1e1e;
-        }
-
-        .memory-content {
-            margin-bottom: 15px;
-        }
-
-        .memory-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 10px;
-            border: 2px solid rgba(139, 92, 246, 0.5);
-            margin-bottom: 10px;
-        }
-
-        .memory-no-image {
-            width: 100%;
-            height: 200px;
-            background: rgba(139, 92, 246, 0.2);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #A78BFA;
-            font-size: 16px;
-            margin-bottom: 10px;
-            border: 2px dashed rgba(139, 92, 246, 0.5);
-        }
-
-        .memory-description {
-            color: #a0a0b0;
-            font-size: 14px;
-            line-height: 1.5;
-            margin: 0;
-            max-height: 80px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .memory-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 10px;
-            border-top: 1px solid rgba(139, 92, 246, 0.3);
-        }
-
-        .memory-date {
-            color: #6B7280;
-            font-size: 12px;
-        }
-
-        .memory-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .memory-edit-btn,
-        .memory-view-btn,
-        .memory-load-btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 12px;
-            transition: all 0.2s ease;
-        }
-
-        .memory-edit-btn {
-            background: linear-gradient(135deg, #8B5CF6, #6D28D9);
-            color: white;
-        }
-
-        .memory-edit-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.5);
-        }
-
-        .memory-view-btn {
-            background: linear-gradient(135deg, #4CAF50, #45a049);
-            color: white;
-        }
-
-        .memory-view-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.5);
-        }
-
-        .memory-load-btn {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-        }
-
-        .memory-load-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.5);
-        }
-
-        .no-memories {
+        .no-chats {
             text-align: center;
             padding: 40px 20px;
         }
@@ -1066,13 +911,8 @@
     </div>
 
     <!-- Botón de Guardado/Carga de Chats -->
-    <button class="historias-paralelas-btn" id="chatSaveBtn" onclick="toggleChatSavePanel()" style="right: 70px;" title="Guardar/Cargar Chats">
+    <button class="historias-paralelas-btn" id="chatSaveBtn" onclick="toggleChatSavePanel()" style="right: 160px;" title="Guardar/Cargar Chats">
         💾 Guardar Chat
-    </button>
-
-    <!-- Botón de Memorias -->
-    <button class="historias-paralelas-btn" id="memoriesBtn" onclick="toggleMemoriesPanel()" style="right: 210px;" title="Ver Memorias">
-        📸 Memorias
     </button>
 
     <!-- Panel de Guardado/Carga de Chats -->
@@ -1100,108 +940,6 @@
                 </div>
                 <div id="chatSlotsPanel">
                     <!-- Los slots se generan dinámicamente -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Panel de Memorias -->
-    <div class="modal-historias" id="memoriesPanelContainer" style="display: none;">
-        <div class="modal-content" style="max-width: 1000px;">
-            <div class="modal-header">
-                <h2>📸 Chats Guardados</h2>
-                <button class="close-btn" onclick="toggleMemoriesPanel()">×</button>
-            </div>
-            <div class="modal-body" style="padding: 25px;">
-                <div class="save-panel-info" style="margin-bottom: 20px; padding: 15px; background: rgba(139, 92, 246, 0.1); border-radius: 10px; border-left: 4px solid #8B5CF6;">
-                    <p style="margin: 0 0 10px 0; color: #C4B5FD; font-size: 15px;">
-                        💡 <strong>Guarda chats completos:</strong> Captura conversaciones enteras con imágenes, audios y textos. 
-                        Puedes poner una imagen de portada usando URL directa, pegar desde el portapapeles o subir desde tu PC.
-                    </p>
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
-                        <button class="send-button" onclick="MemorySystem.showEditDialog()" style="font-size: 14px; padding: 10px 20px;">
-                            ➕ Guardar Chat Actual
-                        </button>
-                        <button class="send-button" onclick="MemorySystem.exportAllMemories()" style="font-size: 14px; padding: 10px 20px;">
-                            📤 Exportar Todos
-                        </button>
-                        <label class="send-button" style="font-size: 14px; padding: 10px 20px; cursor: pointer; display: inline-block;">
-                            📥 Importar
-                            <input type="file" accept=".json" onchange="MemorySystem.importMemories(this.files[0])" style="display: none;">
-                        </label>
-                    </div>
-                </div>
-                <div id="memoriesPanel">
-                    <!-- Las memorias se generan dinámicamente -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal para Editar/Crear Memoria -->
-    <div class="modal-historias" id="memoryEditModal" style="display: none;">
-        <div class="modal-content" style="max-width: 600px;">
-            <div class="modal-header">
-                <h2 id="memoryModalTitle">➕ Guardar Chat Actual</h2>
-                <button class="close-btn" onclick="MemorySystem.closeEditModal()">×</button>
-            </div>
-            <div class="modal-body" style="padding: 25px;">
-                <div style="display: flex; flex-direction: column; gap: 15px;">
-                    <div>
-                        <label style="color: #C4B5FD; font-weight: bold; display: block; margin-bottom: 5px;">Nombre del Chat:</label>
-                        <input type="text" id="memoryNombreInput" class="chat-input" placeholder="Ej: Conversación con Ichika - Día 1" style="width: 100%; box-sizing: border-box;">
-                    </div>
-                    
-                    <div>
-                        <label style="color: #C4B5FD; font-weight: bold; display: block; margin-bottom: 5px;">Descripción (opcional):</label>
-                        <textarea id="memoryDescripcionInput" class="chat-input" placeholder="Describe este chat..." rows="3" style="width: 100%; box-sizing: border-box; resize: vertical;"></textarea>
-                    </div>
-                    
-                    <div>
-                        <label style="color: #C4B5FD; font-weight: bold; display: block; margin-bottom: 5px;">Imagen de Portada:</label>
-                        <div style="display: flex; flex-direction: column; gap: 10px;">
-                            <input type="text" id="memoryUrlInput" class="chat-input" placeholder="Pega una URL de imagen aquí..." style="width: 100%; box-sizing: border-box;" onpaste="MemorySystem.handlePaste(event)">
-                            
-                            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                                <label class="send-button" style="font-size: 13px; padding: 8px 16px; cursor: pointer; display: inline-block; margin: 0;">
-                                    📁 Subir desde PC
-                                    <input type="file" accept="image/*" onchange="MemorySystem.handleFileUpload(event)" style="display: none;">
-                                </label>
-                                <span style="color: #a0a0b0; font-size: 13px;">o pega una imagen con Ctrl+V</span>
-                            </div>
-                            
-                            <img id="memoryPreviewImg" src="" alt="Vista previa" style="max-width: 100%; max-height: 300px; border-radius: 10px; display: none; margin-top: 10px; align-self: center;">
-                        </div>
-                    </div>
-                    
-                    <div style="display: flex; gap: 10px; margin-top: 10px;">
-                        <button class="send-button" onclick="MemorySystem.saveMemoryFromModal()" style="flex: 1;">
-                            💾 Guardar Chat
-                        </button>
-                        <button class="send-button" onclick="MemorySystem.closeEditModal()" style="background: linear-gradient(135deg, #666, #444);">
-                            Cancelar
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal para Ver Memoria -->
-    <div class="modal-historias" id="memoryViewModal" style="display: none;">
-        <div class="modal-content" style="max-width: 700px;">
-            <div class="modal-header">
-                <h2 id="memoryViewTitle">Chat Guardado</h2>
-                <button class="close-btn" onclick="MemorySystem.closeViewModal()">×</button>
-            </div>
-            <div class="modal-body" style="padding: 25px; text-align: center;">
-                <img id="memoryViewImg" src="" alt="Portada del chat" style="max-width: 100%; max-height: 500px; border-radius: 15px; border: 3px solid #8B5CF6; margin-bottom: 20px;">
-                <p id="memoryViewDesc" style="color: #C4B5FD; font-size: 16px; line-height: 1.6; margin-bottom: 15px;"></p>
-                <p id="memoryViewDate" style="color: #a0a0b0; font-size: 14px;"></p>
-                <div style="margin-top: 20px;">
-                    <button class="send-button" onclick="const memoryId = MemorySystem.currentViewingId; if(memoryId) MemorySystem.loadChatMemory(memoryId);" style="font-size: 16px; padding: 12px 30px;">
-                        📂 Cargar Este Chat
-                    </button>
                 </div>
             </div>
         </div>
@@ -2218,22 +1956,6 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
             // Exponer toggleChatSavePanel globalmente
             window.toggleChatSavePanel = toggleChatSavePanel;
             
-            // Funciones para el sistema de memorias
-            function toggleMemoriesPanel() {
-                const panel = document.getElementById('memoriesPanelContainer');
-                if (panel.style.display === 'none') {
-                    panel.style.display = 'flex';
-                    if (window.MemorySystem) {
-                        MemorySystem.renderMemoriesPanel();
-                    }
-                } else {
-                    panel.style.display = 'none';
-                }
-            }
-            
-            // Exponer funciones de memorias globalmente
-            window.toggleMemoriesPanel = toggleMemoriesPanel;
-            
             // Inicializar cuando carga la página
             cargarNombreGuardado();
         });
@@ -2242,11 +1964,6 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
         const saveSystemScript = document.createElement('script');
         saveSystemScript.src = './chatSaveSystem.js';
         document.body.appendChild(saveSystemScript);
-        
-        // Cargar el script del sistema de memorias
-        const memorySystemScript = document.createElement('script');
-        memorySystemScript.src = './memorySystem.js';
-        document.body.appendChild(memorySystemScript);
     </script>
 </body>
 </html>
