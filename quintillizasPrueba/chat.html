@@ -458,11 +458,14 @@
             .fixed-bottom-buttons {
                 bottom: 15px;
                 gap: 10px;
+                flex-wrap: wrap;
+                justify-content: center;
             }
             
             .bottom-btn {
                 padding: 12px 20px;
                 font-size: 14px;
+                min-width: auto;
             }
             
             .modal-content {
@@ -567,11 +570,14 @@
             .fixed-bottom-buttons {
                 bottom: 10px;
                 gap: 8px;
+                flex-wrap: wrap;
+                justify-content: center;
             }
             
             .bottom-btn {
                 padding: 10px 15px;
                 font-size: 13px;
+                min-width: auto;
             }
             
             .modal-header h2 {
@@ -591,15 +597,18 @@
             }
         }
 
-        /* Botones fijos en la parte inferior */
+        /* Botones fijos en la parte inferior - centrados y sin superposición */
         .fixed-bottom-buttons {
             position: fixed;
             bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            left: 0;
+            right: 0;
             display: flex;
+            justify-content: center;
+            align-items: center;
             gap: 15px;
             z-index: 100;
+            pointer-events: none; /* Permite clicks a través del contenedor */
         }
 
         .bottom-btn {
@@ -614,6 +623,7 @@
             box-shadow: 0 4px 20px rgba(139, 92, 246, 0.6);
             transition: all 0.3s ease;
             white-space: nowrap;
+            pointer-events: auto; /* Reactiva clicks en los botones */
         }
 
         .bottom-btn:hover {
