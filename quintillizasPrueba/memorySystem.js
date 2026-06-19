@@ -1,17 +1,17 @@
-// Sistema de Memorias - Guarda momentos especiales con imágenes
-// Permite guardar memorias con nombre, imagen (URL directa, clipboard o subida desde PC)
-// y editar nombre y foto de las memorias guardadas
+// Sistema de Memorias - Guarda chats completos con nombre, imagen de portada y todo el contenido
+// Permite guardar conversaciones completas (textos, imágenes, audios) y cargarlas después
+// También permite editar nombre y foto de portada de los chats guardados
 
 const MemorySystem = {
-    STORAGE_KEY: 'quinti_memories_list',
-    MEMORY_PREFIX: 'quinti_memory_',
+    STORAGE_KEY: 'quinti_chat_memories_list',
+    MEMORY_PREFIX: 'quinti_chat_memory_',
     
     /**
      * Inicializa el sistema de memorias
      */
     init() {
         this.loadMemoriesList();
-        console.log('✅ Sistema de Memorias inicializado');
+        console.log('✅ Sistema de Memorias de Chats inicializado');
     },
     
     /**
@@ -45,12 +45,12 @@ const MemorySystem = {
      * @returns {string} ID único
      */
     generateMemoryId() {
-        return `memory_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        return `chat_memory_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     },
     
     /**
-     * Guarda una nueva memoria
-     * @param {Object} memoryData - Datos de la memoria
+     * Guarda una nueva memoria (chat completo)
+     * @param {Object} memoryData - Datos de la memoria (chat completo)
      * @returns {Object|null} Memoria guardada o null si falló
      */
     saveMemory(memoryData) {
@@ -59,12 +59,13 @@ const MemorySystem = {
             
             const memory = {
                 id: memoryId,
-                nombre: memoryData.nombre || 'Memoria sin nombre',
+                nombre: memoryData.nombre || 'Chat sin nombre',
                 imagen: memoryData.imagen || null,
                 descripcion: memoryData.descripcion || '',
+                chatData: memoryData.chatData || null, // El chat completo con todos sus mensajes
                 fechaCreacion: Date.now(),
                 fechaModificacion: Date.now(),
-                version: '1.0'
+                version: '2.0'
             };
             
             const serialized = JSON.stringify(memory);
@@ -72,7 +73,7 @@ const MemorySystem = {
             // Verificar tamaño
             if (serialized.length > 4 * 1024 * 1024) {
                 console.warn('La memoria es demasiado grande para guardar.');
-                alert('⚠️ La imagen es demasiado grande. Por favor usa una imagen más pequeña.');
+                alert('⚠️ El chat es demasiado grande. Por favor, usa una imagen más pequeña o reduce el número de mensajes.');
                 return null;
             }
             
@@ -139,6 +140,9 @@ const MemorySystem = {
             }
             if (updates.descripcion !== undefined) {
                 memory.descripcion = updates.descripcion;
+            }
+            if (updates.chatData !== undefined) {
+                memory.chatData = updates.chatData;
             }
             
             memory.fechaModificacion = Date.now();
@@ -209,8 +213,8 @@ const MemorySystem = {
             panel.innerHTML = `
                 <div class="no-memories">
                     <p style="text-align: center; color: #C4B5FD; font-size: 16px;">
-                        📭 No tienes memorias guardadas aún.<br>
-                        ¡Guarda tu primer momento especial!
+                        📭 No tienes chats guardados aún.<br>
+                        ¡Guarda tu primer chat completo con imágenes, textos y audios!
                     </p>
                 </div>
             `;
@@ -221,9 +225,11 @@ const MemorySystem = {
         
         for (const memory of memories) {
             const fecha = new Date(memory.fechaCreacion).toLocaleString('es-ES');
+            const mensajeCount = memory.chatData?.mensajes?.length || 0;
+            const chicasEnChat = memory.chatData?.chicasEnChat || [];
             const imagenHTML = memory.imagen 
                 ? `<img src="${memory.imagen}" alt="${memory.nombre}" class="memory-image">`
-                : `<div class="memory-no-image">📷 Sin imagen</div>`;
+                : `<div class="memory-no-image">📷 Sin portada</div>`;
             
             html += `
                 <div class="memory-card" data-id="${memory.id}">
@@ -234,12 +240,15 @@ const MemorySystem = {
                     <div class="memory-content">
                         ${imagenHTML}
                         ${memory.descripcion ? `<p class="memory-description">${this.escapeHtml(memory.descripcion)}</p>` : ''}
+                        <p class="memory-chat-info" style="color: #A78BFA; font-size: 13px; margin-top: 8px;">
+                            💬 ${mensajeCount} mensajes | 👥 ${chicasEnChat.join(', ') || 'Sin chicas'}
+                        </p>
                     </div>
                     <div class="memory-footer">
                         <span class="memory-date">${fecha}</span>
                         <div class="memory-actions">
                             <button class="memory-edit-btn" onclick="MemorySystem.showEditDialog('${memory.id}')">✏️ Editar</button>
-                            <button class="memory-view-btn" onclick="MemorySystem.viewMemory('${memory.id}')">👁️ Ver</button>
+                            <button class="memory-load-btn" onclick="MemorySystem.loadChatMemory('${memory.id}')" style="background: linear-gradient(135deg, #10b981, #059669);">📂 Cargar Chat</button>
                         </div>
                     </div>
                 </div>
@@ -326,15 +335,27 @@ const MemorySystem = {
     },
     
     /**
-     * Guarda la memoria desde el formulario del modal
+     * Guarda la memoria desde el formulario del modal (chat completo)
      */
     saveMemoryFromModal() {
         const modal = document.getElementById('memoryEditModal');
         const editingId = modal ? modal.dataset.editingId : null;
         
-        const nombre = document.getElementById('memoryNombreInput')?.value || 'Memoria sin nombre';
+        const nombre = document.getElementById('memoryNombreInput')?.value || 'Chat sin nombre';
         const descripcion = document.getElementById('memoryDescripcionInput')?.value || '';
         const urlImagen = document.getElementById('memoryUrlInput')?.value || '';
+        
+        // Obtener datos actuales del chat si estamos creando uno nuevo
+        let chatData = null;
+        if (!editingId && typeof window.getCurrentChatData === 'function') {
+            chatData = window.getCurrentChatData();
+        } else if (editingId) {
+            // Si estamos editando, mantener los datos existentes del chat
+            const existingMemory = this.loadMemory(editingId);
+            if (existingMemory) {
+                chatData = existingMemory.chatData;
+            }
+        }
         
         if (editingId) {
             // Actualizar memoria existente
@@ -352,15 +373,21 @@ const MemorySystem = {
                 alert('❌ Error al actualizar la memoria');
             }
         } else {
-            // Crear nueva memoria
+            // Crear nueva memoria con el chat actual
+            if (!chatData || !chatData.mensajes || chatData.mensajes.length === 0) {
+                alert('⚠️ No hay mensajes en el chat actual para guardar.');
+                return;
+            }
+            
             const memory = this.saveMemory({
                 nombre: nombre,
                 descripcion: descripcion,
-                imagen: urlImagen
+                imagen: urlImagen,
+                chatData: chatData
             });
             
             if (memory) {
-                alert('✅ Memoria guardada exitosamente');
+                alert('✅ Chat guardado exitosamente como memoria');
                 this.closeEditModal();
                 this.renderMemoriesPanel();
             }
@@ -395,6 +422,9 @@ const MemorySystem = {
             return;
         }
         
+        // Guardar el ID actual para poder cargarlo después
+        this.currentViewingId = memoryId;
+        
         const modal = document.getElementById('memoryViewModal');
         if (!modal) {
             console.error('No se encontró el modal de vista de memorias');
@@ -419,10 +449,37 @@ const MemorySystem = {
             descEl.textContent = memory.descripcion || 'Sin descripción';
         }
         if (dateEl) {
-            dateEl.textContent = new Date(memory.fechaCreacion).toLocaleString('es-ES');
+            dateEl.textContent = `Guardado: ${new Date(memory.fechaCreacion).toLocaleString('es-ES')}`;
         }
         
         modal.style.display = 'flex';
+    },
+    
+    /**
+     * Carga un chat guardado en una memoria y lo restaura en el chat actual
+     * @param {string} memoryId - ID de la memoria con el chat a cargar
+     */
+    loadChatMemory(memoryId) {
+        const memory = this.loadMemory(memoryId);
+        
+        if (!memory || !memory.chatData) {
+            alert('❌ No se encontró el chat guardado o está corrupto.');
+            return;
+        }
+        
+        const confirmed = confirm(`¿Cargar el chat "${memory.nombre}"?\n\nFecha: ${new Date(memory.fechaCreacion).toLocaleString('es-ES')}\nMensajes: ${memory.chatData.mensajes?.length || 0}\n\n⚠️ Esto reemplazará el chat actual.`);
+        
+        if (confirmed && typeof window.restoreChatFromData === 'function') {
+            window.restoreChatFromData(memory.chatData);
+            this.closeViewModal();
+            // Cerrar panel de memorias si está abierto
+            const panel = document.getElementById('memoriesPanelContainer');
+            if (panel) {
+                panel.style.display = 'none';
+            }
+        } else if (!window.restoreChatFromData) {
+            alert('❌ Error: La función para restaurar chats no está disponible.');
+        }
     },
     
     /**
@@ -525,12 +582,12 @@ const MemorySystem = {
         const memories = this.getAllMemories();
         
         if (memories.length === 0) {
-            alert('No hay memorias guardadas para exportar.');
+            alert('No hay chats guardados para exportar.');
             return;
         }
         
         const exportData = {
-            version: '1.0',
+            version: '2.0',
             exportDate: new Date().toISOString(),
             totalMemories: memories.length,
             memories: memories
@@ -540,13 +597,13 @@ const MemorySystem = {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `quinti_memories_backup_${new Date().toISOString().slice(0, 10)}.json`;
+        a.download = `quinti_chats_memories_backup_${new Date().toISOString().slice(0, 10)}.json`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
         
-        alert(`✅ ${memories.length} memorias exportadas exitosamente.`);
+        alert(`✅ ${memories.length} chats exportados exitosamente.`);
     },
     
     /**
@@ -571,7 +628,8 @@ const MemorySystem = {
                     const newMemory = this.saveMemory({
                         nombre: memoryData.nombre,
                         imagen: memoryData.imagen,
-                        descripcion: memoryData.descripcion
+                        descripcion: memoryData.descripcion,
+                        chatData: memoryData.chatData
                     });
                     
                     if (newMemory) {
@@ -580,7 +638,7 @@ const MemorySystem = {
                 }
                 
                 this.renderMemoriesPanel();
-                alert(`✅ Importación completada.\nImportadas: ${importedCount}`);
+                alert(`✅ Importación completada.\nImportados: ${importedCount}`);
             } catch (error) {
                 console.error('Error al importar:', error);
                 alert('❌ Error al importar el archivo. Asegúrate de que sea un backup válido.');

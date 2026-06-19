@@ -965,7 +965,8 @@
         }
 
         .memory-edit-btn,
-        .memory-view-btn {
+        .memory-view-btn,
+        .memory-load-btn {
             padding: 6px 12px;
             border: none;
             border-radius: 6px;
@@ -993,6 +994,16 @@
         .memory-view-btn:hover {
             transform: scale(1.05);
             box-shadow: 0 4px 12px rgba(76, 175, 80, 0.5);
+        }
+
+        .memory-load-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .memory-load-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.5);
         }
 
         .no-memories {
@@ -1098,21 +1109,21 @@
     <div class="modal-historias" id="memoriesPanelContainer" style="display: none;">
         <div class="modal-content" style="max-width: 1000px;">
             <div class="modal-header">
-                <h2>📸 Memorias Especiales</h2>
+                <h2>📸 Chats Guardados</h2>
                 <button class="close-btn" onclick="toggleMemoriesPanel()">×</button>
             </div>
             <div class="modal-body" style="padding: 25px;">
                 <div class="save-panel-info" style="margin-bottom: 20px; padding: 15px; background: rgba(139, 92, 246, 0.1); border-radius: 10px; border-left: 4px solid #8B5CF6;">
                     <p style="margin: 0 0 10px 0; color: #C4B5FD; font-size: 15px;">
-                        💡 <strong>Guarda momentos especiales:</strong> Captura tus mejores conversaciones con imágenes. 
-                        Puedes usar URL directa, pegar desde el portapapeles o subir desde tu PC.
+                        💡 <strong>Guarda chats completos:</strong> Captura conversaciones enteras con imágenes, audios y textos. 
+                        Puedes poner una imagen de portada usando URL directa, pegar desde el portapapeles o subir desde tu PC.
                     </p>
                     <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
                         <button class="send-button" onclick="MemorySystem.showEditDialog()" style="font-size: 14px; padding: 10px 20px;">
-                            ➕ Nueva Memoria
+                            ➕ Guardar Chat Actual
                         </button>
                         <button class="send-button" onclick="MemorySystem.exportAllMemories()" style="font-size: 14px; padding: 10px 20px;">
-                            📤 Exportar Todas
+                            📤 Exportar Todos
                         </button>
                         <label class="send-button" style="font-size: 14px; padding: 10px 20px; cursor: pointer; display: inline-block;">
                             📥 Importar
@@ -1131,23 +1142,23 @@
     <div class="modal-historias" id="memoryEditModal" style="display: none;">
         <div class="modal-content" style="max-width: 600px;">
             <div class="modal-header">
-                <h2 id="memoryModalTitle">➕ Nueva Memoria</h2>
+                <h2 id="memoryModalTitle">➕ Guardar Chat Actual</h2>
                 <button class="close-btn" onclick="MemorySystem.closeEditModal()">×</button>
             </div>
             <div class="modal-body" style="padding: 25px;">
                 <div style="display: flex; flex-direction: column; gap: 15px;">
                     <div>
-                        <label style="color: #C4B5FD; font-weight: bold; display: block; margin-bottom: 5px;">Nombre:</label>
-                        <input type="text" id="memoryNombreInput" class="chat-input" placeholder="Ej: Primer beso con Ichika" style="width: 100%; box-sizing: border-box;">
+                        <label style="color: #C4B5FD; font-weight: bold; display: block; margin-bottom: 5px;">Nombre del Chat:</label>
+                        <input type="text" id="memoryNombreInput" class="chat-input" placeholder="Ej: Conversación con Ichika - Día 1" style="width: 100%; box-sizing: border-box;">
                     </div>
                     
                     <div>
                         <label style="color: #C4B5FD; font-weight: bold; display: block; margin-bottom: 5px;">Descripción (opcional):</label>
-                        <textarea id="memoryDescripcionInput" class="chat-input" placeholder="Describe este momento especial..." rows="3" style="width: 100%; box-sizing: border-box; resize: vertical;"></textarea>
+                        <textarea id="memoryDescripcionInput" class="chat-input" placeholder="Describe este chat..." rows="3" style="width: 100%; box-sizing: border-box; resize: vertical;"></textarea>
                     </div>
                     
                     <div>
-                        <label style="color: #C4B5FD; font-weight: bold; display: block; margin-bottom: 5px;">Imagen:</label>
+                        <label style="color: #C4B5FD; font-weight: bold; display: block; margin-bottom: 5px;">Imagen de Portada:</label>
                         <div style="display: flex; flex-direction: column; gap: 10px;">
                             <input type="text" id="memoryUrlInput" class="chat-input" placeholder="Pega una URL de imagen aquí..." style="width: 100%; box-sizing: border-box;" onpaste="MemorySystem.handlePaste(event)">
                             
@@ -1165,7 +1176,7 @@
                     
                     <div style="display: flex; gap: 10px; margin-top: 10px;">
                         <button class="send-button" onclick="MemorySystem.saveMemoryFromModal()" style="flex: 1;">
-                            💾 Guardar
+                            💾 Guardar Chat
                         </button>
                         <button class="send-button" onclick="MemorySystem.closeEditModal()" style="background: linear-gradient(135deg, #666, #444);">
                             Cancelar
@@ -1180,13 +1191,18 @@
     <div class="modal-historias" id="memoryViewModal" style="display: none;">
         <div class="modal-content" style="max-width: 700px;">
             <div class="modal-header">
-                <h2 id="memoryViewTitle">Memoria</h2>
+                <h2 id="memoryViewTitle">Chat Guardado</h2>
                 <button class="close-btn" onclick="MemorySystem.closeViewModal()">×</button>
             </div>
             <div class="modal-body" style="padding: 25px; text-align: center;">
-                <img id="memoryViewImg" src="" alt="Memoria" style="max-width: 100%; max-height: 500px; border-radius: 15px; border: 3px solid #8B5CF6; margin-bottom: 20px;">
+                <img id="memoryViewImg" src="" alt="Portada del chat" style="max-width: 100%; max-height: 500px; border-radius: 15px; border: 3px solid #8B5CF6; margin-bottom: 20px;">
                 <p id="memoryViewDesc" style="color: #C4B5FD; font-size: 16px; line-height: 1.6; margin-bottom: 15px;"></p>
                 <p id="memoryViewDate" style="color: #a0a0b0; font-size: 14px;"></p>
+                <div style="margin-top: 20px;">
+                    <button class="send-button" onclick="const memoryId = MemorySystem.currentViewingId; if(memoryId) MemorySystem.loadChatMemory(memoryId);" style="font-size: 16px; padding: 12px 30px;">
+                        📂 Cargar Este Chat
+                    </button>
+                </div>
             </div>
         </div>
     </div>
