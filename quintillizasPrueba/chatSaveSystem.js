@@ -65,7 +65,8 @@ const ChatSaveSystem = {
                 chicasEnChat: chatData.chicasEnChat || [],
                 mensajes: chatData.mensajes || [],
                 nombreUsuario: chatData.nombreUsuario || 'Anónimo',
-                version: '1.0'
+                version: '1.0',
+                version: '2.0'
             };
 
             // Serializar y guardar
@@ -182,7 +183,9 @@ const ChatSaveSystem = {
                     chicaPrincipal: chatData.chicaPrincipal,
                     chicasEnChat: chatData.chicasEnChat,
                     mensajeCount: chatData.mensajes?.length || 0,
-                    nombreUsuario: chatData.nombreUsuario
+                    nombreUsuario: chatData.nombreUsuario,
+                    tituloPersonalizado: chatData.tituloPersonalizado,
+                    imagenPersonalizada: chatData.imagenPersonalizada
                 });
             }
         }
@@ -205,6 +208,10 @@ const ChatSaveSystem = {
             const chatInfo = savedChats.find(c => c.slot === i);
             const hasData = !!chatInfo;
             
+            // Usar título personalizado o generar uno por defecto
+            const tituloDisplay = chatInfo?.tituloPersonalizado || `Chat ${chatInfo?.chicaPrincipal || 'Vacío'}`;
+            const imagenDisplay = chatInfo?.imagenPersonalizada || null;
+            
             html += `
                 <div class="slot-card ${hasData ? 'has-data' : 'empty'}" data-slot="${i}">
                     <div class="slot-header">
@@ -213,12 +220,15 @@ const ChatSaveSystem = {
                     </div>
                     ${hasData ? `
                         <div class="slot-info">
+                            <div class="slot-title">${tituloDisplay}</div>
                             <div class="slot-date">${chatInfo.fechaGuardado}</div>
                             <div class="slot-chicas">${this.formatChicasList(chatInfo.chicasEnChat)}</div>
                             <div class="slot-messages">${chatInfo.mensajeCount} mensajes</div>
+                            ${imagenDisplay ? `<img src="${imagenDisplay}" alt="Imagen personalizada" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; margin-top: 8px; border: 2px solid #8B5CF6;">` : ''}
                         </div>
                         <div class="slot-actions">
                             <button class="btn-load" onclick="ChatSaveSystem.loadAndRestoreChat(${i})">📂 Cargar</button>
+                            <button class="btn-edit" onclick="ChatSaveSystem.editSlotMetadata(${i})">✏️ Editar</button>
                             <button class="btn-delete" onclick="ChatSaveSystem.confirmDelete(${i})">🗑️ Borrar</button>
                         </div>
                     ` : `
@@ -322,7 +332,7 @@ const ChatSaveSystem = {
         }
 
         const exportData = {
-            version: '1.0',
+            version: '2.0',
             exportDate: new Date().toISOString(),
             totalChats: savedChats.length,
             chats: []
