@@ -84,7 +84,34 @@ const galeriaData_5 = {
             { id: 39, url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774109590797_4.png" },
             { id: 40, url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774109592390_5.png" },
             { id: 41, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1776630296732_1.png" }
-        ]
+        
+            { id: 42, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983408517.png" },
+            { id: 43, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983410987.png" },
+            { id: 44, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983413383.png" },
+            { id: 45, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983415922.png" },
+            { id: 46, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983418337.png" },
+            { id: 47, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983421392.png" },
+            { id: 48, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983423830.png" },
+            { id: 49, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983426061.png" },
+            { id: 50, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983429253.png" },
+            { id: 51, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983431594.png" },
+            { id: 52, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983435478.png" },
+            { id: 53, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983437681.png" },
+            { id: 54, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983440144.png" },
+            { id: 55, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983442494.png" },
+            { id: 56, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983444931.png" },
+            { id: 57, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983447923.png" },
+            { id: 58, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983450347.png" },
+            { id: 59, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983452674.png" },
+            { id: 60, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983454879.png" },
+            { id: 61, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983457044.png" },
+            { id: 62, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983459314.png" },
+            { id: 63, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983461457.png" },
+            { id: 64, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983463765.png" },
+            { id: 65, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983466167.png" },
+            { id: 66, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983468272.png" },
+            { id: 67, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983471782.png" }
+]
     },
     '5_2': {
         titulo: "Ichika zorra calata",
