@@ -1033,168 +1033,55 @@ function seleccionarImagenAutomatica(dialogo, nombreChica) {
 // ============================================================
 
 /**
- * Parsea JSON eliminando posibles bloques de código markdown y texto extra
- * @param {string} raw - Texto crudo de la respuesta
- * @returns {object|null} - Objeto parseado o null si falla
- */
-/**
- * Parsea contenido JSON de respuesta de la IA con múltiples estrategias de fallback
+ * Parsea contenido JSON de respuesta de la IA
+ * Estrategia simple: intenta parsear JSON, si falla usa todo el texto como respuesta
  * @param {string} raw - Contenido crudo de la respuesta
- * @returns {object|null} - Objeto JSON parseado o null si falla
+ * @returns {object} - Objeto JSON parseado o fallback con texto completo
  */
 function parsearJSON(raw) {
     if (!raw) {
         logQuinti('ERROR', 'parsearJSON: contenido vacío o null');
-        return null;
+        return {
+            respuesta: '',
+            imagen_tag: '',
+            esSoloNarrativa: true,
+            texto_original: ''
+        };
     }
     
-    // Guardar el texto original completo antes de cualquier limpieza
+    // Guardar el texto original completo
     const textoOriginalCompleto = raw;
     
-    // Limpiar bloques de código markdown y caracteres invisibles al inicio
+    // Limpiar bloques de código markdown y caracteres invisibles
     let rawLimpio = raw.replace(/```json/g, "").replace(/```/g, "").trim();
-    
-    // Eliminar caracteres BOM (Byte Order Mark) y otros caracteres especiales al inicio
     rawLimpio = rawLimpio.replace(/^\uFEFF/, '').replace(/^[\u200B-\u200D\uFEFF]+/, '').trim();
-    
-    // ESTRATEGIA 0: Eliminar formato [Nombre]: al inicio si existe (la IA a veces lo agrega antes del JSON)
-    // Esto maneja casos como: [Ichika]: {"respuesta":"...", "imagen_tag":"..."}
     rawLimpio = rawLimpio.replace(/^\s*\[[^\]]+\]\s*:\s*/gi, '').trim();
     
+    // INTENTO 1: Parsear JSON directamente
     try {
         const resultado = JSON.parse(rawLimpio);
-        // Adjuntar el texto original completo al resultado para no perder contexto
         resultado.texto_original = textoOriginalCompleto;
         return resultado;
     } catch (error) {
-        logQuinti('DEBUG', `parsearJSON: primer intento falló - ${error.message}`, { 
-            contenido: raw.substring(0, 150) 
-        });
+        logQuinti('DEBUG', `parsearJSON: intento directo falló - ${error.message}`);
     }
     
-    // ESTRATEGIA 1: Buscar JSON entre llaves (buscar el primer { hasta el último })
+    // INTENTO 2: Extraer JSON entre llaves si hay texto extra
     const match = rawLimpio.match(/\{[\s\S]*\}/);
     if (match) {
         try {
             const resultado = JSON.parse(match[0]);
             logQuinti('DEBUG', 'parsearJSON: extracción exitosa del JSON del texto');
-            // Adjuntar el texto original completo al resultado para no perder contexto
             resultado.texto_original = textoOriginalCompleto;
             return resultado;
         } catch (error) {
-            logQuinti('DEBUG', `parsearJSON: segundo intento falló - ${error.message}`, {
-                jsonExtraido: match[0].substring(0, 150)
-            });
+            logQuinti('DEBUG', `parsearJSON: extracción falló - ${error.message}`);
         }
     }
     
-    // ESTRATEGIA 2: Buscar desde el primer { hasta encontrar un } válido
-    const primerLLave = rawLimpio.indexOf('{');
-    if (primerLLave !== -1) {
-        const desdeLLave = rawLimpio.substring(primerLLave);
-        const ultimaLLaveCierre = desdeLLave.lastIndexOf('}');
-        if (ultimaLLaveCierre !== -1) {
-            const posibleJSON = desdeLLave.substring(0, ultimaLLaveCierre + 1);
-            try {
-                const resultado = JSON.parse(posibleJSON);
-                logQuinti('DEBUG', 'parsearJSON: extracción exitosa tras limpiar texto inicial');
-                // Adjuntar el texto original completo al resultado para no perder contexto
-                resultado.texto_original = textoOriginalCompleto;
-                return resultado;
-            } catch (error) {
-                logQuinti('DEBUG', `parsearJSON: tercer intento falló - ${error.message}`, {
-                    posibleJSON: posibleJSON.substring(0, 150)
-                });
-            }
-        }
-    }
-    
-    // ESTRATEGIA 3: Eliminar texto narrativo (acciones entre asteriscos) antes del JSON
-    const textoSinAcciones = rawLimpio.replace(/^\s*(\*[^*]*\*\s*)+/gi, '').trim();
-    if (textoSinAcciones !== rawLimpio) {
-        logQuinti('DEBUG', 'parsearJSON: detectado texto narrativo antes del JSON, intentando con texto limpio');
-        try {
-            const resultado = JSON.parse(textoSinAcciones);
-            logQuinti('DEBUG', 'parsearJSON: extracción exitosa tras eliminar acciones narrativas');
-            // Adjuntar el texto original completo al resultado para no perder contexto
-            resultado.texto_original = textoOriginalCompleto;
-            return resultado;
-        } catch (error) {
-            logQuinti('DEBUG', `parsearJSON: intento con texto sin acciones falló - ${error.message}`);
-        }
-        
-        // Si aún falla, intentar extraer JSON del texto ya limpio de acciones
-        const matchLimpio = textoSinAcciones.match(/\{[\s\S]*\}/);
-        if (matchLimpio) {
-            try {
-                const resultado = JSON.parse(matchLimpio[0]);
-                logQuinti('DEBUG', 'parsearJSON: extracción exitosa de JSON tras limpiar acciones narrativas');
-                // Adjuntar el texto original completo al resultado para no perder contexto
-                resultado.texto_original = textoOriginalCompleto;
-                return resultado;
-            } catch (error) {
-                logQuinti('DEBUG', `parsearJSON: extracción de JSON limpia falló - ${error.message}`);
-            }
-        }
-    }
-    
-    // ESTRATEGIA 4: NUEVA - Eliminar cualquier texto antes del primer { incluyendo frases completas
-    // Maneja casos como "Mi expresión... {\"respuesta\": ...}" o "¡No te equivoques! {...}"
-    const indicePrimerLLave = rawLimpio.indexOf('{');
-    if (indicePrimerLLave > 0) {
-        const textoDesdeLLave = rawLimpio.substring(indicePrimerLLave);
-        logQuinti('DEBUG', `parsearJSON: detectado texto antes de JSON (${indicePrimerLLave} chars), intentando desde la primera llave`);
-        try {
-            const resultado = JSON.parse(textoDesdeLLave);
-            logQuinti('DEBUG', 'parsearJSON: extracción exitosa desde primera llave');
-            // Adjuntar el texto original completo al resultado para no perder contexto
-            resultado.texto_original = textoOriginalCompleto;
-            return resultado;
-        } catch (error) {
-            logQuinti('DEBUG', `parsearJSON: intento desde primera llave falló - ${error.message}`);
-        }
-    }
-    
-    // ESTRATEGIA 5: NUEVA - Intentar reparar JSON comúnmente roto (comillas simples, comas faltantes, etc.)
-    let jsonReparado = rawLimpio;
-    // Reemplazar comillas simples por dobles (solo si parece JSON)
-    if (rawLimpio.includes("'") && rawLimpio.includes('{')) {
-        jsonReparado = jsonReparado.replace(/'/g, '"');
-        try {
-            const resultado = JSON.parse(jsonReparado);
-            logQuinti('DEBUG', 'parsearJSON: extracción exitosa tras reparar comillas');
-            // Adjuntar el texto original completo al resultado para no perder contexto
-            resultado.texto_original = textoOriginalCompleto;
-            return resultado;
-        } catch (error) {
-            logQuinti('DEBUG', `parsearJSON: reparación de comillas falló - ${error.message}`);
-        }
-    }
-    
-    // ESTRATEGIA 6: NUEVA - Buscar patrón de JSON aunque esté incompleto
-    // Intentar encontrar un objeto JSON mínimo válido
-    const patronJSONMinimo = /\{\s*"respuesta"\s*:\s*"[^"]*"\s*(,\s*"imagen_tag"\s*:\s*"[^"]*")?\s*\}/i;
-    const matchMinimo = rawLimpio.match(patronJSONMinimo);
-    if (matchMinimo) {
-        try {
-            const resultado = JSON.parse(matchMinimo[0]);
-            logQuinti('DEBUG', 'parsearJSON: extracción exitosa de JSON mínimo');
-            // Adjuntar el texto original completo al resultado para no perder contexto
-            resultado.texto_original = textoOriginalCompleto;
-            return resultado;
-        } catch (error) {
-            logQuinti('DEBUG', `parsearJSON: JSON mínimo falló - ${error.message}`);
-        }
-    }
-    
-    logQuinti('ERROR', 'parsearJSON: no se pudo extraer JSON válido', {
-        contenidoCompleto: raw.substring(0, 300)
-    });
-    
-    // ESTRATEGIA FINAL: Si todo falla, devolver el texto original como respuesta narrativa
-    // Esto evita perder respuestas válidas que son solo texto (ej: "¿Quieres continuar?")
-    // La IA a veces responde solo con narrativa sin JSON, especialmente en las primeras interacciones
-    logQuinti('WARN', 'parsearJSON: fallback a texto narrativo puro - NO PERDER ESTA RESPUESTA');
+    // FALLBACK: Si no es JSON, usar todo el texto como respuesta narrativa
+    // Esto garantiza que NUNCA se pierda una respuesta de la IA
+    logQuinti('WARN', 'parsearJSON: no es JSON válido, usando texto completo como respuesta');
     return {
         respuesta: raw.trim(),
         imagen_tag: '',
