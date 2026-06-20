@@ -30,6 +30,7 @@ import { obtenerMensajeError, generarPayloadFase, getOrdenFases, getInfoFase, ob
 import { QuintiImagenesPrueba } from './imagenes.js';
 import { getImagenTagsMapping as getImagenTagsMappingHistoria } from './historiasParalelas.js';
 import { detectarRepeticion, detectarRepeticionEntreChicas, agregarDialogoAlHistorial, generarPromptAntiRepeticion, getEstadisticasRepeticion, calcularSimilitud } from './antiRepeticion.js';
+import { detectarAccionEnTexto } from './parserAcciones.js';
 
 // ============================================================
 //  CONFIGURACIÓN DE API KEYS
@@ -527,6 +528,87 @@ function getMemoriaEventosIntimos() {
  */
 function getAccionEnCurso() {
     return accionEnCurso;
+}
+
+// ============================================================
+//  NUEVA FUNCIÓN: VERIFICACIÓN DINÁMICA DE ACCIÓN EN CURSO
+//  Consulta a la API para verificar si la acción anterior se detuvo
+//  o si hay una nueva acción basada en el contexto real
+// ============================================================
+
+/**
+ * Verifica dinámicamente con la API si la acción en curso continúa o cambió
+ * Esta función hace una llamada ligera a la API para determinar la acción correcta
+ * basada en el mensaje del usuario, la respuesta de la IA y las imágenes disponibles
+ * 
+ * @param {string} mensajeUsuario - El mensaje original del usuario
+ * @param {string} respuestaIA - La respuesta completa de la IA
+ * @param {string} chicaNombre - Nombre de la chica actual
+ * @param {string} accionAnterior - La acción que estaba en curso previamente (o null)
+ * @returns {Promise<{accion: string|null, cambioDetectado: boolean}>} - La acción verificada y si hubo cambio
+ */
+async function verificarAccionEnCurso(mensajeUsuario, respuestaIA, chicaNombre, accionAnterior) {
+    const infoChica = QuintiImagenesPrueba[chicaNombre];
+    if (!infoChica || !infoChica.imagenes) {
+        logQuinti('DEBUG', `No hay imágenes para ${chicaNombre}, usando acción anterior`);
+        return { accion: accionAnterior, cambioDetectado: false };
+    }
+    
+    const tagsDisponibles = Object.keys(infoChica.imagenes);
+    
+    // Primero intentar detectar localmente sin llamada a API
+    // Esto es más rápido y evita llamadas innecesarias
+    
+    // 1. Detectar acción en el mensaje del usuario (prioridad máxima)
+    const accionEnMensaje = detectarAccionEnTexto(mensajeUsuario);
+    if (accionEnMensaje && tagsDisponibles.includes(accionEnMensaje)) {
+        logQuinti('INFO', `[VERIFICACIÓN] Acción detectada en mensaje del usuario: ${accionEnMensaje}`);
+        return { 
+            accion: accionEnMensaje, 
+            cambioDetectado: accionAnterior !== accionEnMensaje 
+        };
+    }
+    
+    // 2. Detectar acción en la respuesta de la IA (asteriscos)
+    const accionEnRespuesta = detectarAccionEnTexto(respuestaIA);
+    if (accionEnRespuesta && tagsDisponibles.includes(accionEnRespuesta)) {
+        logQuinti('INFO', `[VERIFICACIÓN] Acción detectada en respuesta IA: ${accionEnRespuesta}`);
+        return { 
+            accion: accionEnRespuesta, 
+            cambioDetectado: accionAnterior !== accionEnRespuesta 
+        };
+    }
+    
+    // 3. Si hay una acción anterior y no se detectó nada nuevo, verificar si debería continuar
+    if (accionAnterior && tagsDisponibles.includes(accionAnterior)) {
+        // Buscar indicios de que la acción continuó en el contexto
+        const palabrasContinuidad = ['sigue', 'continúa', 'mientras', 'todavía', 'aún', 'sigo', 'seguimos'];
+        const contextoLower = (mensajeUsuario + ' ' + respuestaIA).toLowerCase();
+        
+        const hayContinuidad = palabrasContinuidad.some(palabra => contextoLower.includes(palabra));
+        
+        if (hayContinuidad) {
+            logQuinti('INFO', `[VERIFICACIÓN] Acción ${accionAnterior} continúa por contexto`);
+            return { accion: accionAnterior, cambioDetectado: false };
+        }
+        
+        // Buscar indicios de que la acción terminó
+        const palabrasFinAccion = ['termin', 'par', 'alto', 'basta', 'suficiente', 'después', 'luego', 'ya está'];
+        const hayFinAccion = palabrasFinAccion.some(palabra => contextoLower.includes(palabra));
+        
+        if (hayFinAccion) {
+            logQuinti('INFO', `[VERIFICACIÓN] Acción ${accionAnterior} terminó según contexto`);
+            return { accion: 'hablando', cambioDetectado: true };
+        }
+        
+        // Si no hay indicios claros, mantener la acción anterior (inercia de contexto)
+        logQuinti('DEBUG', `[VERIFICACIÓN] Manteniendo acción ${accionAnterior} por inercia`);
+        return { accion: accionAnterior, cambioDetectado: false };
+    }
+    
+    // 4. Fallback: usar 'hablando' como default
+    logQuinti('DEBUG', `[VERIFICACIÓN] Sin acción detectada, usando 'hablando'`);
+    return { accion: tagsDisponibles.includes('hablando') ? 'hablando' : tagsDisponibles[0], cambioDetectado: false };
 }
 
 // ============================================================
@@ -2346,6 +2428,7 @@ export {
     obtenerTagsImagen,
     actualizarAccionEnCurso,
     getAccionEnCurso,
+    verificarAccionEnCurso,  // NUEVA FUNCIÓN: Verificación dinámica de acción en curso
     getEstadoAccion,
     getMemoriaEventosIntimos,
     registrarEventoImportante,
@@ -2381,6 +2464,7 @@ if (typeof window !== 'undefined') {
     window.limpiarChicasEnChat = limpiarChicasEnChat;
     window.actualizarAccionEnCurso = actualizarAccionEnCurso;
     window.getAccionEnCurso = getAccionEnCurso;
+    window.verificarAccionEnCurso = verificarAccionEnCurso;  // NUEVA FUNCIÓN
     window.getEstadoAccion = getEstadoAccion;
     window.getMemoriaEventosIntimos = getMemoriaEventosIntimos;
     window.registrarEventoImportante = registrarEventoImportante;
