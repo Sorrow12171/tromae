@@ -3324,6 +3324,15 @@ const galeriaData_12 = {
 ]
     },
 
+    '12_Ricascalatas': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
+
     
 };
 
