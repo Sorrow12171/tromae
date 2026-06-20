@@ -1190,7 +1190,17 @@ function parsearJSON(raw) {
     logQuinti('ERROR', 'parsearJSON: no se pudo extraer JSON válido', {
         contenidoCompleto: raw.substring(0, 300)
     });
-    return null;
+    
+    // ESTRATEGIA FINAL: Si todo falla, devolver el texto original como respuesta narrativa
+    // Esto evita perder respuestas válidas que son solo texto (ej: "¿Quieres continuar?")
+    // La IA a veces responde solo con narrativa sin JSON, especialmente en las primeras interacciones
+    logQuinti('WARN', 'parsearJSON: fallback a texto narrativo puro - NO PERDER ESTA RESPUESTA');
+    return {
+        respuesta: raw.trim(),
+        imagen_tag: '',
+        esSoloNarrativa: true,
+        texto_original: textoOriginalCompleto
+    };
 }
 
 /**
@@ -1223,6 +1233,11 @@ function formatearTextoConAsteriscos(texto) {
  */
 function esRespuestaValida(datos) {
     if (!datos) return false;
+    
+    // Si es narrativa pura (fallback), considerar válida si tiene respuesta
+    if (datos.esSoloNarrativa) {
+        return datos.respuesta && typeof datos.respuesta === 'string' && datos.respuesta.trim().length >= 2;
+    }
     
     // Debe tener respuesta (texto)
     if (!datos.respuesta || typeof datos.respuesta !== 'string') {
@@ -1894,13 +1909,8 @@ async function intentarLlamadaAPI(mensajes, modelo) {
                 indiceKeyActual = (keyIdx + 1) % GROQ_KEYS.length;
                 const resultadoJSON = parsearJSON(contenido);
                 
-                // Si el parseo falla y devuelve null, registrar error detallado
-                if (resultadoJSON === null) {
-                    logQuinti('ERROR', 'API devolvió contenido pero no es JSON válido', {
-                        contenido: contenido.substring(0, 200),
-                        keyUsada: keyNumero
-                    });
-                }
+                // NOTA: parsearJSON AHORA NUNCA devuelve null - tiene fallback a texto narrativo
+                // Si es narrativa pura, resultadoJSON tendra esSoloNarrativa: true
                 
                 return resultadoJSON;
             } else {
