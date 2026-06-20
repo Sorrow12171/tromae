@@ -1,1 +1,1 @@
-Nothing should be ignored based on the provided file changes. The only modified file is a JavaScript source file (`quintillizasPrueba/logica.js`), which should not be added to .gitignore.
+(quintillizasPrueba/chat.html is a source file, so no .gitignore rules needed)
