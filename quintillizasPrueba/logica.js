@@ -127,168 +127,113 @@ let memoriaEventosIntimos = {
 const MAX_MEMORIA = 50; // Máximo total de elementos en memoria
 const MAX_EVENTOS_IMPORTANTES = 30;
 
-// Variables para mantener el estado de la acción en curso (persistencia natural de contexto)
-let accionEnCurso = null; // Acción actual (ej: 'besando', 'chupando')
-let contadorTurnosAccion = 0; // Turnos que lleva la acción actual
-const MAX_TURNOS_ACCION = 3; // Después de 3 turnos, la acción puede terminar naturalmente
-
-// SISTEMA DE BOOLEANOS DE ACCIONES EXPLÍCITAS - Estado detallado de cada acción
-let estadoAccionesExplicitas = {
-    besando: false,
-    mamando: false,
-    follando: false,
-    siendoFollada: false,
-    chupandoBolas: false,
-    haciendoHandjob: false,
-    enDoggystyle: false,
-    enMisionero: false,
-    enReverseCowgirl: false,
-    haciendoAnal: false,
-    desnuda: false,
-    mostrandoCulo: false,
-    lamiendoAno: false
-};
+// ============================================================
+//  SISTEMA SIMPLIFICADO DE SELECCIÓN DE IMÁGENES POR IA
+//  La IA decide qué imagen mostrar mediante una API call dedicada
+//  con todo el array de imágenes disponibles de la chica actual
+// ============================================================
 
 /**
- * Actualiza el estado de la acción en curso desde logica.js
- * @param {string|null} nuevaAccion - La acción detectada en el mensaje del usuario
+ * Selecciona la imagen para una chica usando una llamada API dedicada
+ * La IA recibe todo el array de imágenes disponibles y elige la apropiada
+ * según el contexto del mensaje y la respuesta
+ * 
+ * @param {string} mensajeUsuario - El mensaje del usuario
+ * @param {string} respuestaIA - La respuesta de la IA
+ * @param {string} chicaNombre - Nombre de la chica
+ * @returns {Promise<{tag: string, url: string, audio: string}>} - Tag, URL y audio de la imagen seleccionada
  */
-function actualizarAccionEnCurso(nuevaAccion) {
-    if (nuevaAccion) {
-        // Nueva acción detectada: reiniciar contador
-        if (accionEnCurso !== nuevaAccion) {
-            accionEnCurso = nuevaAccion;
-            contadorTurnosAccion = 1;
-            logQuinti('DEBUG', `Nueva acción iniciada en logica.js: ${nuevaAccion}`);
-            
-            // Actualizar booleanos de acciones explícitas
-            actualizarEstadoAccionesExplicitas(nuevaAccion, true);
-            
-            // Registrar evento importante en memoria
-            registrarEventoImportante(`Inicio de acción: ${nuevaAccion}`);
+async function seleccionarImagenPorIA(mensajeUsuario, respuestaIA, chicaNombre) {
+    const infoChica = QuintiImagenesPrueba[chicaNombre];
+    
+    if (!infoChica || !infoChica.imagenes) {
+        logQuinti('WARN', `No hay imágenes configuradas para ${chicaNombre}`);
+        return { tag: 'hablando', url: infoChica?.imagenSelector || '', audio: '' };
+    }
+    
+    // Preparar array de imágenes disponibles para enviar a la IA
+    const imagenesDisponibles = Object.keys(infoChica.imagenes);
+    
+    // Contexto para la decisión
+    const contexto = `${mensajeUsuario}\\n\\n${respuestaIA}`;
+    
+    try {
+        // Llamada API ligera para selección de imagen
+        const payload = {
+            model: MODELO_PRINCIPAL,
+            messages: [
+                {
+                    role: "system",
+                    content: `Eres un asistente que selecciona la mejor imagen para una escena.
+                    
+CHICA: ${chicaNombre}
+IMÁGENES DISPONIBLES: ${imagenesDisponibles.join(', ')}
+
+Debes elegir EXACTAMENTE UNA de las imágenes disponibles que mejor represente la acción descrita en el contexto.
+
+Responde SOLO con el nombre exacto de la imagen (sin comillas, sin explicaciones).`
+                },
+                {
+                    role: "user",
+                    content: `Contexto de la escena:\\n${contexto}\\n\\n¿Qué imagen de la lista disponible muestra mejor esta escena?`
+                }
+            ],
+            max_tokens: 50,
+            temperature: 0.3
+        };
+        
+        const keyUsada = GROQ_KEYS[indiceKeyActual % GROQ_KEYS.length];
+        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${keyUsada}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+        
+        if (!response.ok) {
+            throw new Error(`API error: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        let tagSeleccionado = data.choices[0].message.content.trim().toLowerCase();
+        
+        // Limpiar el tag de posibles caracteres extraños
+        tagSeleccionado = tagSeleccionado.replace(/[^a-z0-9_]/g, '');
+        
+        // Verificar que el tag existe en las imágenes disponibles
+        if (imagenesDisponibles.includes(tagSeleccionado)) {
+            const imagenData = infoChica.imagenes[tagSeleccionado];
+            logQuinti('INFO', `IA seleccionó imagen: ${tagSeleccionado} para ${chicaNombre}`);
+            return {
+                tag: tagSeleccionado,
+                url: imagenData.url,
+                audio: imagenData.audio || ''
+            };
         } else {
-            // Misma acción continúa
-            contadorTurnosAccion++;
-            logQuinti('DEBUG', `Acción ${nuevaAccion} continúa en logica.js (turno ${contadorTurnosAccion}/${MAX_TURNOS_ACCION})`);
+            logQuinti('WARN', `Tag "${tagSeleccionado}" no existe para ${chicaNombre}, usando fallback`);
+            // Fallback: buscar tag similar o usar 'hablando'
+            const tagFallback = imagenesDisponibles.find(t => t.includes('hablando')) || imagenesDisponibles[0];
+            const imagenData = infoChica.imagenes[tagFallback];
+            return {
+                tag: tagFallback,
+                url: imagenData.url,
+                audio: imagenData.audio || ''
+            };
         }
-    } else {
-        // No hay acción explícita en el mensaje
-        if (accionEnCurso && contadorTurnosAccion >= MAX_TURNOS_ACCION) {
-            // La acción terminó naturalmente después de MAX_TURNOS_ACCION turnos
-            logQuinti('DEBUG', `Acción ${accionEnCurso} terminó naturalmente en logica.js`);
-            
-            // Actualizar contadores de memoria de eventos íntimos
-            actualizarMemoriaEventosIntimos(accionEnCurso);
-            
-            // Resetear booleanos de acciones explícitas
-            resetearEstadoAccionesExplicitas();
-            
-            accionEnCurso = null;
-            contadorTurnosAccion = 0;
-        } else if (accionEnCurso) {
-            // La acción aún está en curso pero el usuario no la mencionó explícitamente
-            logQuinti('DEBUG', `Acción ${accionEnCurso} se mantiene implícita en logica.js (turno ${contadorTurnosAccion})`);
-        }
+        
+    } catch (error) {
+        logQuinti('ERROR', `Error en selección de imagen por IA: ${error.message}`);
+        // Fallback a imagen por defecto
+        const tagDefault = imagenesDisponibles.find(t => t.includes('hablando')) || imagenesDisponibles[0];
+        const imagenData = infoChica.imagenes[tagDefault];
+        return {
+            tag: tagDefault,
+            url: imagenData.url,
+            audio: imagenData.audio || ''
+        };
     }
-}
-
-/**
- * Actualiza los booleanos de acciones explícitas según la acción detectada
- * Usa una lógica dinámica basada en los tags disponibles en imagenes.js
- * @param {string} accion - La acción a activar (tag de imagen)
- * @param {boolean} estado - True para activar, false para desactivar
- */
-function actualizarEstadoAccionesExplicitas(accion, estado) {
-    // Primero resetear todos los booleanos
-    resetearEstadoAccionesExplicitas();
-    
-    const accionLower = accion.toLowerCase();
-    
-    // Lógica dinámica: detectar qué tipo de acción es basándose en el nombre del tag
-    // Extraer palabras clave del tag (separado por guiones bajos)
-    const palabrasClave = accionLower.split('_');
-    const primeraPalabra = palabrasClave[0];
-    
-    // Detectar automáticamente el tipo de acción basado en las palabras clave del tag
-    if (primeraPalabra.includes('bes')) {
-        estadoAccionesExplicitas.besando = estado;
-    } else if (primeraPalabra.includes('chup')) {
-        // Determinar si es mamada o chupar bolas
-        if (accionLower.includes('bola')) {
-            estadoAccionesExplicitas.chupandoBolas = estado;
-        } else {
-            estadoAccionesExplicitas.mamando = estado;
-        }
-    } else if (primeraPalabra.includes('foll')) {
-        estadoAccionesExplicitas.follando = estado;
-        estadoAccionesExplicitas.siendoFollada = estado;
-    } else if (primeraPalabra.includes('handjob') || primeraPalabra.includes('paja')) {
-        estadoAccionesExplicitas.haciendoHandjob = estado;
-    } else if (primeraPalabra.includes('doggy')) {
-        estadoAccionesExplicitas.enDoggystyle = estado;
-    } else if (primeraPalabra.includes('misioner')) {
-        estadoAccionesExplicitas.enMisionero = estado;
-    } else if (primeraPalabra.includes('cowgirl')) {
-        estadoAccionesExplicitas.enReverseCowgirl = estado;
-    } else if (primeraPalabra.includes('anal')) {
-        estadoAccionesExplicitas.haciendoAnal = estado;
-    } else if (primeraPalabra.includes('desnud')) {
-        estadoAccionesExplicitas.desnuda = estado;
-    } else if (primeraPalabra.includes('mostrand') && accionLower.includes('culo')) {
-        estadoAccionesExplicitas.mostrandoCulo = estado;
-    } else if (primeraPalabra.includes('lam') && (primeraPalabra.includes('ano') || accionLower.includes('anus'))) {
-        estadoAccionesExplicitas.lamiendoAno = estado;
-    } else {
-        // Fallback: intentar detectar automáticamente con cualquier coincidencia
-        for (const key of Object.keys(estadoAccionesExplicitas)) {
-            if (accionLower.includes(key)) {
-                estadoAccionesExplicitas[key] = estado;
-                break;
-            }
-        }
-    }
-    
-    logQuinti('DEBUG', `Estado de acciones explícitas actualizado dinámicamente: ${JSON.stringify(estadoAccionesExplicitas)}`);
-}
-
-/**
- * Resetea todos los booleanos de acciones explícitas a false
- */
-function resetearEstadoAccionesExplicitas() {
-    for (const key of Object.keys(estadoAccionesExplicitas)) {
-        estadoAccionesExplicitas[key] = false;
-    }
-}
-
-/**
- * Actualiza la memoria de eventos íntimos cuando una acción termina
- * Usa lógica dinámica basada en las palabras clave del tag
- * @param {string} accion - La acción que terminó (tag de imagen)
- */
-function actualizarMemoriaEventosIntimos(accion) {
-    const accionLower = accion.toLowerCase();
-    const palabrasClave = accionLower.split('_');
-    const primeraPalabra = palabrasClave[0];
-    
-    // Detectar automáticamente el tipo de acción basado en las palabras clave del tag
-    if (primeraPalabra.includes('bes')) {
-        memoriaEventosIntimos.totalBesos++;
-    } else if (primeraPalabra.includes('chup')) {
-        // Determinar si es mamada o chupar bolas
-        if (accionLower.includes('bola')) {
-            // No hay contador específico para chupar bolas, pero podríamos agregarlo
-        } else {
-            memoriaEventosIntimos.totalMamadas++;
-        }
-    } else if (primeraPalabra.includes('foll')) {
-        memoriaEventosIntimos.totalFolladas++;
-    } else if (primeraPalabra.includes('anal')) {
-        memoriaEventosIntimos.totalAnal++;
-    } else if (primeraPalabra.includes('handjob') || primeraPalabra.includes('paja')) {
-        memoriaEventosIntimos.totalHandjobs++;
-    }
-    
-    logQuinti('INFO', `Memoria de eventos íntimos actualizada dinámicamente: ${JSON.stringify(memoriaEventosIntimos)}`);
 }
 
 /**
@@ -436,10 +381,6 @@ function obtenerEstadoMemoriaParaPrompt() {
         estadoMemoria += `🔥 HISTORIAL ÍNTIMO: Besos(${memoriaEventosIntimos.totalBesos}) | Mamadas(${memoriaEventosIntimos.totalMamadas}) | Folladas(${memoriaEventosIntimos.totalFolladas}) | Anal(${memoriaEventosIntimos.totalAnal}) | Handjobs(${memoriaEventosIntimos.totalHandjobs})\\n`;
     }
     
-    // 4. Acción en curso
-    if (accionEnCurso) {
-        estadoMemoria += `⚡ ACCIÓN EN CURSO: ${accionEnCurso} (desde hace ${contadorTurnosAccion} turnos)\\n`;
-    }
     
     // 5. Últimos eventos importantes
     if (memoriaEventosIntimos.eventosImportantes.length > 0) {
@@ -507,7 +448,7 @@ function procesarMensajeParaMemoria(mensaje) {
  * @returns {boolean} - True si la acción está activa
  */
 function getEstadoAccion(accion) {
-    return estadoAccionesExplicitas[accion] || false;
+    return false; // Sistema eliminado - ahora la IA decide la imagen directamente
 }
 
 /**
@@ -523,89 +464,14 @@ function getMemoriaEventosIntimos() {
  * @returns {string|null} - La acción en curso o null
  */
 function getAccionEnCurso() {
-    return accionEnCurso;
+    return null; // Sistema eliminado - ahora la IA decide la imagen directamente
 }
 
 // ============================================================
-//  NUEVA FUNCIÓN: VERIFICACIÓN DINÁMICA DE ACCIÓN EN CURSO
-//  Consulta a la API para verificar si la acción anterior se detuvo
-//  o si hay una nueva acción basada en el contexto real
+//  SISTEMA SIMPLIFICADO: LA IA DECIDE LA IMAGEN DIRECTAMENTE
+//  Ya no hay verificación de acción en curso ni sistemas complejos
+//  La función seleccionarImagenPorIA hace todo el trabajo
 // ============================================================
-
-/**
- * Verifica dinámicamente con la API si la acción en curso continúa o cambió
- * Esta función hace una llamada ligera a la API para determinar la acción correcta
- * basada en el mensaje del usuario, la respuesta de la IA y las imágenes disponibles
- * 
- * @param {string} mensajeUsuario - El mensaje original del usuario
- * @param {string} respuestaIA - La respuesta completa de la IA
- * @param {string} chicaNombre - Nombre de la chica actual
- * @param {string} accionAnterior - La acción que estaba en curso previamente (o null)
- * @returns {Promise<{accion: string|null, cambioDetectado: boolean}>} - La acción verificada y si hubo cambio
- */
-async function verificarAccionEnCurso(mensajeUsuario, respuestaIA, chicaNombre, accionAnterior) {
-    const infoChica = QuintiImagenesPrueba[chicaNombre];
-    if (!infoChica || !infoChica.imagenes) {
-        logQuinti('DEBUG', `No hay imágenes para ${chicaNombre}, usando acción anterior`);
-        return { accion: accionAnterior, cambioDetectado: false };
-    }
-    
-    const tagsDisponibles = Object.keys(infoChica.imagenes);
-    
-    // Primero intentar detectar localmente sin llamada a API
-    // Esto es más rápido y evita llamadas innecesarias
-    
-    // 1. Detectar acción en el mensaje del usuario (prioridad máxima)
-    const accionEnMensaje = detectarAccionEnTexto(mensajeUsuario);
-    if (accionEnMensaje && tagsDisponibles.includes(accionEnMensaje)) {
-        logQuinti('INFO', `[VERIFICACIÓN] Acción detectada en mensaje del usuario: ${accionEnMensaje}`);
-        return { 
-            accion: accionEnMensaje, 
-            cambioDetectado: accionAnterior !== accionEnMensaje 
-        };
-    }
-    
-    // 2. Detectar acción en la respuesta de la IA (asteriscos)
-    const accionEnRespuesta = detectarAccionEnTexto(respuestaIA);
-    if (accionEnRespuesta && tagsDisponibles.includes(accionEnRespuesta)) {
-        logQuinti('INFO', `[VERIFICACIÓN] Acción detectada en respuesta IA: ${accionEnRespuesta}`);
-        return { 
-            accion: accionEnRespuesta, 
-            cambioDetectado: accionAnterior !== accionEnRespuesta 
-        };
-    }
-    
-    // 3. Si hay una acción anterior y no se detectó nada nuevo, verificar si debería continuar
-    if (accionAnterior && tagsDisponibles.includes(accionAnterior)) {
-        // Buscar indicios de que la acción continuó en el contexto
-        const palabrasContinuidad = ['sigue', 'continúa', 'mientras', 'todavía', 'aún', 'sigo', 'seguimos'];
-        const contextoLower = (mensajeUsuario + ' ' + respuestaIA).toLowerCase();
-        
-        const hayContinuidad = palabrasContinuidad.some(palabra => contextoLower.includes(palabra));
-        
-        if (hayContinuidad) {
-            logQuinti('INFO', `[VERIFICACIÓN] Acción ${accionAnterior} continúa por contexto`);
-            return { accion: accionAnterior, cambioDetectado: false };
-        }
-        
-        // Buscar indicios de que la acción terminó
-        const palabrasFinAccion = ['termin', 'par', 'alto', 'basta', 'suficiente', 'después', 'luego', 'ya está'];
-        const hayFinAccion = palabrasFinAccion.some(palabra => contextoLower.includes(palabra));
-        
-        if (hayFinAccion) {
-            logQuinti('INFO', `[VERIFICACIÓN] Acción ${accionAnterior} terminó según contexto`);
-            return { accion: 'hablando', cambioDetectado: true };
-        }
-        
-        // Si no hay indicios claros, mantener la acción anterior (inercia de contexto)
-        logQuinti('DEBUG', `[VERIFICACIÓN] Manteniendo acción ${accionAnterior} por inercia`);
-        return { accion: accionAnterior, cambioDetectado: false };
-    }
-    
-    // 4. Fallback: usar 'hablando' como default
-    logQuinti('DEBUG', `[VERIFICACIÓN] Sin acción detectada, usando 'hablando'`);
-    return { accion: tagsDisponibles.includes('hablando') ? 'hablando' : tagsDisponibles[0], cambioDetectado: false };
-}
 
 // ============================================================
 //  SISTEMA DE LOGGING
