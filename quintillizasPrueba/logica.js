@@ -2220,6 +2220,19 @@ function obtenerURLImagen(nombreChica, tag, historiaId = null) {
         }
     }
     
+    // CORRECCIÓN: Reemplazar 'usuario' por el nombre real del usuario en el tag
+    let tagProcesado = tag;
+    if (typeof window !== 'undefined' && window.getNombreUsuario) {
+        const nombreUsuario = window.getNombreUsuario() || 'usuario';
+        if (nombreUsuario !== 'usuario') {
+            // Reemplazar 'usuario_' por '{nombreUsuario}_' en el tag
+            tagProcesado = tag.replace(/^usuario_/i, `${nombreUsuario}_`);
+            // También manejar casos donde 'usuario' está en medio del tag
+            tagProcesado = tagProcesado.replace(/_usuario_/gi, `_${nombreUsuario}_`);
+            tagProcesado = tagProcesado.replace(/_usuario_se/gi, `_${nombreUsuario}_se`);
+        }
+    }
+    
     // Aldo no tiene imágenes (personaje masculino)
     if (esAldo(nombreChica)) {
         return { urlImagen: null, urlAudio: null };
