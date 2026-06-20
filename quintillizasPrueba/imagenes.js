@@ -61,6 +61,11 @@ reverse_cowgirl: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDD
              squirting_after_dedos_en_su_concha:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854719495.jpg", audio: "" },
             after_squirting:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854721522.jpg", audio: "" },
             metiendo_dedos_en_su_concha_cumming:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854717456.jpg", audio: "https://files.catbox.moe/5ix4d3.mp3" },
+                Ichika_69_chupando_punta_del_pene:  { url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774109585662_1.png", audio: "" },
+              Ichika_69_chupando_punta_del_pene_usuario_se_corre:  { url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774109587477_2.png", audio: "" },
+               Ichika_69_chupando_todo_el_pene:  { url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774109590797_4.png", audio: "" },
+             Ichika_69_chupando_todo_el_pene_usuario_se_corre:  { url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774109592390_5.png", audio: "" },
+            
             
             
             
