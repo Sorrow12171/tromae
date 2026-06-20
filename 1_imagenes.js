@@ -1450,7 +1450,14 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 tipoVoz: '' 
             },
-              '5_1': { 
+            '4_4': { 
+                nombre: 'Rem linda',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_4440_1781915426214.webp', 
+                descripcion: '', 
+                tipoVoz: '' 
+            },
+            
+                          '5_1': { 
                 nombre: 'Me kacho a 3 putonas',
                 imagen: 'https://pbs.twimg.com/media/HEMFxGSXYAAEoms?format=jpg&name=small', 
                 descripcion: '', 
