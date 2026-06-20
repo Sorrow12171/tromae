@@ -68,7 +68,23 @@ const galeriaData_7 = {
             { id: 31, url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774109928667_4.png" },
             { id: 32, url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774109930306_5.png" },
             { id: 33, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1776630346039_1.png" }
-        ]
+        
+            { id: 34, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983578664.png" },
+            { id: 35, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983581314.png" },
+            { id: 36, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983583762.png" },
+            { id: 37, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983586726.png" },
+            { id: 38, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983589094.png" },
+            { id: 39, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983591601.png" },
+            { id: 40, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983597697.png" },
+            { id: 41, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983600217.png" },
+            { id: 42, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983602644.png" },
+            { id: 43, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983605036.png" },
+            { id: 44, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983607250.png" },
+            { id: 45, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983609573.png" },
+            { id: 46, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983611943.png" },
+            { id: 47, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983614243.png" },
+            { id: 48, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983616533.png" }
+]
     },
     '7_2': {
         titulo: "Itsuki putita",
