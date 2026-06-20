@@ -194,67 +194,61 @@ function actualizarAccionEnCurso(nuevaAccion) {
 
 /**
  * Actualiza los booleanos de acciones explícitas según la acción detectada
- * @param {string} accion - La acción a activar
+ * Usa una lógica dinámica basada en los tags disponibles en imagenes.js
+ * @param {string} accion - La acción a activar (tag de imagen)
  * @param {boolean} estado - True para activar, false para desactivar
  */
 function actualizarEstadoAccionesExplicitas(accion, estado) {
     // Primero resetear todos los booleanos
     resetearEstadoAccionesExplicitas();
     
-    // Luego activar solo la acción correspondiente
-    switch (accion.toLowerCase()) {
-        case 'besando':
-            estadoAccionesExplicitas.besando = estado;
-            break;
-        case 'mamando':
-        case 'chupando':
-            estadoAccionesExplicitas.mamando = estado;
-            break;
-        case 'follando':
-        case 'siendoFollada':
-            estadoAccionesExplicitas.follando = estado;
-            estadoAccionesExplicitas.siendoFollada = estado;
-            break;
-        case 'chupandoBolas':
+    const accionLower = accion.toLowerCase();
+    
+    // Lógica dinámica: detectar qué tipo de acción es basándose en el nombre del tag
+    // Extraer palabras clave del tag (separado por guiones bajos)
+    const palabrasClave = accionLower.split('_');
+    const primeraPalabra = palabrasClave[0];
+    
+    // Detectar automáticamente el tipo de acción basado en las palabras clave del tag
+    if (primeraPalabra.includes('bes')) {
+        estadoAccionesExplicitas.besando = estado;
+    } else if (primeraPalabra.includes('chup')) {
+        // Determinar si es mamada o chupar bolas
+        if (accionLower.includes('bola')) {
             estadoAccionesExplicitas.chupandoBolas = estado;
-            break;
-        case 'handjob':
-        case 'paja':
-            estadoAccionesExplicitas.haciendoHandjob = estado;
-            break;
-        case 'doggystyle':
-            estadoAccionesExplicitas.enDoggystyle = estado;
-            break;
-        case 'misionero':
-            estadoAccionesExplicitas.enMisionero = estado;
-            break;
-        case 'reverse_cowgirl':
-        case 'cowgirl':
-            estadoAccionesExplicitas.enReverseCowgirl = estado;
-            break;
-        case 'anal':
-            estadoAccionesExplicitas.haciendoAnal = estado;
-            break;
-        case 'desnuda':
-            estadoAccionesExplicitas.desnuda = estado;
-            break;
-        case 'mostrandoCulo':
-            estadoAccionesExplicitas.mostrandoCulo = estado;
-            break;
-        case 'lamiendoAno':
-            estadoAccionesExplicitas.lamiendoAno = estado;
-            break;
-        default:
-            // Acción genérica - intentar detectar automáticamente
-            for (const key of Object.keys(estadoAccionesExplicitas)) {
-                if (accion.toLowerCase().includes(key)) {
-                    estadoAccionesExplicitas[key] = estado;
-                    break;
-                }
+        } else {
+            estadoAccionesExplicitas.mamando = estado;
+        }
+    } else if (primeraPalabra.includes('foll')) {
+        estadoAccionesExplicitas.follando = estado;
+        estadoAccionesExplicitas.siendoFollada = estado;
+    } else if (primeraPalabra.includes('handjob') || primeraPalabra.includes('paja')) {
+        estadoAccionesExplicitas.haciendoHandjob = estado;
+    } else if (primeraPalabra.includes('doggy')) {
+        estadoAccionesExplicitas.enDoggystyle = estado;
+    } else if (primeraPalabra.includes('misioner')) {
+        estadoAccionesExplicitas.enMisionero = estado;
+    } else if (primeraPalabra.includes('cowgirl')) {
+        estadoAccionesExplicitas.enReverseCowgirl = estado;
+    } else if (primeraPalabra.includes('anal')) {
+        estadoAccionesExplicitas.haciendoAnal = estado;
+    } else if (primeraPalabra.includes('desnud')) {
+        estadoAccionesExplicitas.desnuda = estado;
+    } else if (primeraPalabra.includes('mostrand') && accionLower.includes('culo')) {
+        estadoAccionesExplicitas.mostrandoCulo = estado;
+    } else if (primeraPalabra.includes('lam') && (primeraPalabra.includes('ano') || accionLower.includes('anus'))) {
+        estadoAccionesExplicitas.lamiendoAno = estado;
+    } else {
+        // Fallback: intentar detectar automáticamente con cualquier coincidencia
+        for (const key of Object.keys(estadoAccionesExplicitas)) {
+            if (accionLower.includes(key)) {
+                estadoAccionesExplicitas[key] = estado;
+                break;
             }
+        }
     }
     
-    logQuinti('DEBUG', `Estado de acciones explícitas actualizado: ${JSON.stringify(estadoAccionesExplicitas)}`);
+    logQuinti('DEBUG', `Estado de acciones explícitas actualizado dinámicamente: ${JSON.stringify(estadoAccionesExplicitas)}`);
 }
 
 /**
@@ -268,31 +262,33 @@ function resetearEstadoAccionesExplicitas() {
 
 /**
  * Actualiza la memoria de eventos íntimos cuando una acción termina
- * @param {string} accion - La acción que terminó
+ * Usa lógica dinámica basada en las palabras clave del tag
+ * @param {string} accion - La acción que terminó (tag de imagen)
  */
 function actualizarMemoriaEventosIntimos(accion) {
-    switch (accion.toLowerCase()) {
-        case 'besando':
-            memoriaEventosIntimos.totalBesos++;
-            break;
-        case 'mamando':
-        case 'chupando':
+    const accionLower = accion.toLowerCase();
+    const palabrasClave = accionLower.split('_');
+    const primeraPalabra = palabrasClave[0];
+    
+    // Detectar automáticamente el tipo de acción basado en las palabras clave del tag
+    if (primeraPalabra.includes('bes')) {
+        memoriaEventosIntimos.totalBesos++;
+    } else if (primeraPalabra.includes('chup')) {
+        // Determinar si es mamada o chupar bolas
+        if (accionLower.includes('bola')) {
+            // No hay contador específico para chupar bolas, pero podríamos agregarlo
+        } else {
             memoriaEventosIntimos.totalMamadas++;
-            break;
-        case 'follando':
-        case 'siendoFollada':
-            memoriaEventosIntimos.totalFolladas++;
-            break;
-        case 'anal':
-            memoriaEventosIntimos.totalAnal++;
-            break;
-        case 'handjob':
-        case 'paja':
-            memoriaEventosIntimos.totalHandjobs++;
-            break;
+        }
+    } else if (primeraPalabra.includes('foll')) {
+        memoriaEventosIntimos.totalFolladas++;
+    } else if (primeraPalabra.includes('anal')) {
+        memoriaEventosIntimos.totalAnal++;
+    } else if (primeraPalabra.includes('handjob') || primeraPalabra.includes('paja')) {
+        memoriaEventosIntimos.totalHandjobs++;
     }
     
-    logQuinti('INFO', `Memoria de eventos íntimos actualizada: ${JSON.stringify(memoriaEventosIntimos)}`);
+    logQuinti('INFO', `Memoria de eventos íntimos actualizada dinámicamente: ${JSON.stringify(memoriaEventosIntimos)}`);
 }
 
 /**
