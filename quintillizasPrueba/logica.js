@@ -1121,20 +1121,6 @@ async function obtenerRespuestaGroq(mensaje, historialPrevio = []) {
             contextoUnificado += '\n\n⚠️ ESTE ES EL HISTORIAL COMPLETO. USA ESTE CONTEXTO PARA MANTENER COHERENCIA.';
         }
         
-        // SOLUCIÓN PROBLEMA #3: Agregar estado actual de acciones y posición
-        if (accionEnCurso || Object.values(estadoAccionesExplicitas).some(v => v)) {
-            const accionesActivas = Object.entries(estadoAccionesExplicitas)
-                .filter(([_, activo]) => activo)
-                .map(([accion, _]) => accion)
-                .join(', ');
-            
-            contextoUnificado += `\n\n🔥 ESTADO ACTUAL DE LA ACCIÓN EN CURSO:\n`;
-            contextoUnificado += `- Acción activa: ${accionEnCurso || 'Ninguna'}\n`;
-            contextoUnificado += `- Acciones explícitas activas: ${accionesActivas || 'Ninguna'}\n`;
-            contextoUnificado += `- Turnos llevando esta acción: ${contadorTurnosAccion}\n`;
-            contextoUnificado += `⚠️ CRÍTICO: DEBES MANTENER ESTA POSICIÓN/ACCIÓN A MENOS QUE EL USUARIO INDIQUE EXPLÍCITAMENTE CAMBIARLA. NO LA OLVIDES.`;
-        }
-        
         // Procesar cada chica de forma secuencial
         for (let idx = 0; idx < chicasArray.length; idx++) {
             const nombreChica = chicasArray[idx];
@@ -1439,22 +1425,7 @@ DEBES HACER TRES COSAS OBLIGATORIAMENTE:
 - NO uses tags genéricas ("desnuda", "hablando") cuando el usuario dijo algo específico ("se desviste", "beso").
 - Si el usuario dice "X", la tag debe ser la versión en acción de X, no algo relacionado pero diferente.`;
     
-    // SOLUCIÓN PROBLEMA #3: Agregar estado actual de acciones al prompt
-    let contextoEstadoActual = '';
-    if (accionEnCurso || Object.values(estadoAccionesExplicitas).some(v => v)) {
-        const accionesActivas = Object.entries(estadoAccionesExplicitas)
-            .filter(([_, activo]) => activo)
-            .map(([accion, _]) => accion)
-            .join(', ');
-        
-        contextoEstadoActual = `\n\n🔥 ESTADO ACTUAL DE LA ACCIÓN EN CURSO:\n`;
-        contextoEstadoActual += `- Acción activa: ${accionEnCurso || 'Ninguna'}\n`;
-        contextoEstadoActual += `- Acciones explícitas activas: ${accionesActivas || 'Ninguna'}\n`;
-        contextoEstadoActual += `- Turnos llevando esta acción: ${contadorTurnosAccion}\n`;
-        contextoEstadoActual += `⚠️ CRÍTICO: DEBES MANTENER ESTA POSICIÓN/ACCIÓN A MENOS QUE EL USUARIO INDIQUE EXPLÍCITAMENTE CAMBIARLA. NO LA OLVIDES.`;
-    }
-    
-    const systemPrompt = `${personalidadPrincipal}${instruccionesImagenes}${instruccionAntiRepeticion}${instruccionMemoria}${instruccionAccionUsuario}${contextoEstadoActual}\n\nFORMATO DE RESPUESTA OBLIGATORIO - JSON (SOLO JSON, SIN TEXTO ANTES NI DESPUES):\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
+    const systemPrompt = `${personalidadPrincipal}${instruccionesImagenes}${instruccionAntiRepeticion}${instruccionMemoria}${instruccionAccionUsuario}\n\nFORMATO DE RESPUESTA OBLIGATORIO - JSON (SOLO JSON, SIN TEXTO ANTES NI DESPUES):\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
     
     // Preparar mensajes
     const mensajesPayload = [
