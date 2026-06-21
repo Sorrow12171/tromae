@@ -40,6 +40,7 @@ reverse_cowgirl: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDD
     follando_en_el_aire: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD23/main/imagenes/img_1774198366172.jpg", audio: "" }, 
     me_corro_en_su_boca_de_ichika: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854981094.jpg", audio: "" },  
  ropa_idol: { url: "https://pbs.twimg.com/media/HFoblZNWIAA9Pgy?format=jpg&name=small", audio: "" },        
+             ropa_vestido: { url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD66/main/imagenes/img_1781640176371.webp", audio: "" },    
        mostrando_culo_tanga_negra: { url: "https://pbs.twimg.com/media/HGJ4KmyW8AAZfgm?format=jpg&name=small", audio: "" },     
             manos_alrededor_del_cuello: { url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1776630296732_1.png", audio: "" },    
             lamiendo_pene:  { url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD36/main/imagenes/img_1778618109261.jpg", audio: "" },
