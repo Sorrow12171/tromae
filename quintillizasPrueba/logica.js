@@ -46,7 +46,7 @@ const _K = [
 ];
 
 const GROQ_KEYS = _K.map(partes => partes.join(""));
-const MODELO_PRINCIPAL = "qwen/qwen3.6-27b";
+const MODELO_PRINCIPAL = "qwen/qwen3-32b";
 const MODELO_VISION = ""; // Modelo de Groq con soporte de visión
 
 let indiceKeyActual = 0;
