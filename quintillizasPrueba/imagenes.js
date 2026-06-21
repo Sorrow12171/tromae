@@ -80,6 +80,8 @@ reverse_cowgirl: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDD
              ichika_69_chupando_todo_el_pene_usuario_se_corre:  { url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774109592390_5.png", audio: "" },
             ichika_lenceria_en_la_mañana:  { url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1781983418337.png", audio: "" },
              selfie_lenceria:  { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD20/main/imagenes/img_1773687448917.jpg", audio: "" },
+              mattin_press_anal:  { url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD59/main/imagenes/img_1780230461992.jpg", audio: "" },
+             mattin_press_anal_rapido:  { url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD59/main/imagenes/img_1780230460073.jpg", audio: "" },
             
             
             
