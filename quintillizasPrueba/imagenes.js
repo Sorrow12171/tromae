@@ -113,7 +113,10 @@ chupando_bola_derecha: { url: "https://raw.githubusercontent.com/SORFAR123123/XD
     misionero: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854182648.jpg", audio: "" },
     hablando: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD1/main/imagenes/img_1773115420355.jpg", audio: "" },
      desnuda: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD19/main/imagenes/img_1773670997782.jpg", audio: "" },
-       standfuck_follando_de_pie: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773691914196.jpg", audio: "https://files.catbox.moe/54ad9m.mp3" },
+             desnuda_en_la_cama: { url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD67/main/imagenes/img_1781986583664.png", audio: "" },
+     
+     
+            standfuck_follando_de_pie: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773691914196.jpg", audio: "https://files.catbox.moe/54ad9m.mp3" },
      follando_en_la_ventana: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773691916421.jpg", audio: "" },
  handjob_paja: {  url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773692609296.jpg",  audio: "https://litter.catbox.moe/gybisrc3ys50tlum.mp3" },    
 reverse_cowgirl: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773692621326.jpg", audio: "https://files.catbox.moe/mjyomo.mp3" },
