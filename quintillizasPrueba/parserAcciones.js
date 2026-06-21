@@ -64,8 +64,7 @@ const PATRONES_ACCIONES = [
     { patron: /\*[^*]*(?:en el aire|levantad[ao]|suspendid[ao])[^*]*\*/gi, tag: 'follando_en_el_aire' },
     { patron: /\*[^*]*(?:lam[ei]ndo|lame|anilingus|culo|ano)[^*]*\*/gi, tag: 'ichika_licking_anus' },
     { patron: /\*[^*]*(?:cuello|garganta)[^*]*\*/gi, tag: 'manos_alrededor_del_cuello' },
-    { patron: /\*[^*]*(?:corrida|eyacul[ao]|se viene|orgasmo)[^*]*\*/gi, tag: 'me_corro_en_su_boca_de_ichika' },
-    { patron: /\*[^*]*(?:foll[ao]|penetr[ao]|embist[io])[ ^*]*\*/gi, tag: 'doggystyle' }
+    { patron: /\*[^*]*(?:corrida|eyacul[ao]|se viene|orgasmo)[^*]*\*/gi, tag: 'me_corro_en_su_boca_de_ichika' }
 ];
 
 /**
@@ -93,58 +92,6 @@ const PALABRAS_CLAVE_ACCIONES = [
 ];
 
 /**
- * Patrones de tiempo PASADO que indican que la acción YA terminó (NO mostrar imagen)
- */
-const PATRONES_TIEMPO_PASADO = [
-    /\bbesé\b/i,
-    /\bchupé\b/i,
-    /\bmamé\b/i,
-    /\bfollé\b/i,
-    /\bhice\b/i,
-    /\bhicimos\b/i,
-    /\btermin[ée]\b/i,
-    /\bterminó\b/i,
-    /\bterminamos\b/i,
-    /\bacab[ée]\b/i,
-    /\bacabó\b/i,
-    /\bacabamos\b/i,
-    /\bya\b.*\b(beso|chup|foll|mam|toc|lam)\b/i,
-    /\b(después|luego|más tarde)\b.*\b(beso|chup|foll|mam|toc|lam)\b/i,
-    /\b(beso|chup|foll|mam|toc|lam).*\b(antes|previamente|anteriormente)\b/i
-];
-
-/**
- * Patrones de tiempo FUTURO que indican que la acción AÚN NO empieza (NO mostrar imagen)
- */
-const PATRONES_TIEMPO_FUTURO = [
-    /\bvas? a\b.*\b(besar|chupar|follar|mamar|tocar|lamer)\b/i,
-    /\bhar[ée]\b/i,
-    /\bhar[ée]mos\b/i,
-    /\bvoy a\b/i,
-    /\bvamos a\b/i,
-    /\bquiero\b.*\b(besar|chupar|follar|mamar|tocar|lamer)\b/i,
-    /\bpienso\b.*\b(besar|chupar|follar|mamar|tocar|lamer)\b/i,
-    /\bplane[ao]\b.*\b(besar|chupar|follar|mamar|tocar|lamer)\b/i,
-    /\b(después|luego|más tarde|pronto)\b.*\b(voy|vamos|quiero|puedo)\b/i,
-    /\b(cuando|si)\b.*\b(pueda|quiera|tenga)\b.*\b(besar|chupar|follar|mamar|tocar|lamer)\b/i
-];
-
-/**
- * Patrones que indican acción EN CURSO (tiempo presente continuo - SÍ mostrar imagen)
- */
-const PATRONES_TIEMPO_PRESENTE = [
-    /\b(bes[ao]|chup[ao]|mam[ao]|foll[ao]|toc[ao]|lam[ae]ndo)\b/i,
-    /\best[áao]\b.*\b(bes[ao]|chup[ao]|mam[ao]|foll[ao]|toc[ao]|lam[ae]ndo)\b/i,
-    /\bmientras\b/i,
-    /\b(bes[ao]|chup[ao]|mam[ao]|foll[ao]|toc[ao]|lam[ae]ndo).*\bahora\b/i,
-    /\b(bes[ao]|chup[ao]|mam[ao]|foll[ao]|toc[ao]|lam[ae]ndo).*\b(en este momento|actualmente)\b/i,
-    /\bsigo\b.*\b(bes[ao]|chup[ao]|mam[ao]|foll[ao]|toc[ao]|lam[ae]ndo)\b/i,
-    /\bcontin[úuo]\b.*\b(bes[ao]|chup[ao]|mam[ao]|foll[ao]|toc[ao]|lam[ae]ndo)\b/i,
-    /\btodav[íi]a\b.*\b(bes[ao]|chup[ao]|mam[ao]|foll[ao]|toc[ao]|lam[ae]ndo)\b/i,
-    /\ba[úu]n\b.*\b(bes[ao]|chup[ao]|mam[ao]|foll[ao]|toc[ao]|lam[ae]ndo)\b/i
-];
-
-/**
  * Detecta si un fragmento de texto contiene una acción específica
  * @param {string} texto - Fragmento de texto a analizar
  * @returns {string|null} - Tag de la acción detectada o null si no hay acción
@@ -154,183 +101,24 @@ export function detectarAccionEnTexto(texto) {
     
     const textoLower = texto.toLowerCase();
     
-    // PRIMERO: Verificar si la acción está en tiempo PASADO o FUTURO (NO mostrar imagen)
-    for (const patron of PATRONES_TIEMPO_PASADO) {
-        if (patron.test(texto)) {
-            logQuintiParser('INFO', `Acción en TIEMPO PASADO detectada, NO mostrar imagen: ${texto.substring(0, 100)}`);
-            return null;
-        }
-    }
-    
-    for (const patron of PATRONES_TIEMPO_FUTURO) {
-        if (patron.test(texto)) {
-            logQuintiParser('INFO', `Acción en TIEMPO FUTURO detectada, NO mostrar imagen: ${texto.substring(0, 100)}`);
-            return null;
-        }
-    }
-    
-    // SEGUNDO: Verificar si hay patrones de asteriscos (acciones narrativas explícitas)
-    // Estos tienen prioridad porque indican acciones EN CURSO
+    // Primero buscar patrones entre asteriscos (acciones narrativas)
     for (const { patron, tag } of PATRONES_ACCIONES) {
         patron.lastIndex = 0; // Resetear lastIndex para regex global
         if (patron.test(texto)) {
-            // Para acciones en asteriscos, verificar solo que NO estén en pasado/futuro
-            // No requerir triple concordancia estricta porque los asteriscos ya indican acción en curso
-            const esPasadoOFuturo = PATRONES_TIEMPO_PASADO.some(p => p.test(texto)) || 
-                                    PATRONES_TIEMPO_FUTURO.some(p => p.test(texto));
-            
-            if (!esPasadoOFuturo) {
-                logQuintiParser('INFO', `Acción detectada en asteriscos (no es pasado/futuro): ${tag}`);
-                return tag;
-            } else {
-                logQuintiParser('INFO', `Acción en asteriscos pero contexto indica pasado/futuro, omitiendo: ${tag}`);
-                return null;
-            }
+            return tag;
         }
     }
     
-    // TERCERO: Buscar palabras clave en texto normal (solo si están en presente)
+    // Luego buscar palabras clave en texto normal
     for (const { palabras, tag } of PALABRAS_CLAVE_ACCIONES) {
         for (const palabra of palabras) {
             if (textoLower.includes(palabra.toLowerCase())) {
-                // Verificar que no esté en contexto de pasado/futuro
-                const contextoPalabra = obtenerContextoPalabra(texto, palabra);
-                if (!esTiempoPasadoOFuturo(contextoPalabra)) {
-                    // REVISAR HASTA 3 VECES LA CONCORDANCIA
-                    let concordanciaConfirmada = false;
-                    for (let intento = 0; intento < 3; intento++) {
-                        if (verificarConcordanciaTriple(texto, tag)) {
-                            concordanciaConfirmada = true;
-                            logQuintiParser('INFO', `Intento ${intento + 1}/3: Concordancia CONFIRMADA para ${palabra} -> ${tag}`);
-                            break;
-                        } else {
-                            logQuintiParser('WARN', `Intento ${intento + 1}/3: Sin concordancia para ${palabra} -> ${tag}`);
-                        }
-                    }
-                    
-                    if (concordanciaConfirmada) {
-                        logQuintiParser('INFO', `Palabra clave detectada con triple concordancia (3 intentos): ${palabra} -> ${tag}`);
-                        return tag;
-                    } else {
-                        logQuintiParser('WARN', `Palabra clave SIN concordancia después de 3 intentos, usando imagen por defecto: ${palabra}`);
-                        return null; // No retornar tag, dejar que se use la imagen por defecto
-                    }
-                }
+                return tag;
             }
         }
     }
     
     return null;
-}
-
-/**
- * Obtiene el contexto alrededor de una palabra (5 palabras antes y después)
- * @param {string} texto - Texto completo
- * @param {string} palabra - Palabra a buscar
- * @returns {string} - Contexto alrededor de la palabra
- */
-function obtenerContextoPalabra(texto, palabra) {
-    const index = texto.toLowerCase().indexOf(palabra.toLowerCase());
-    if (index === -1) return '';
-    
-    const palabras = texto.split(/\s+/);
-    const palabrasAntes = palabras.slice(Math.max(0, index - 5), index);
-    const palabrasDespues = palabras.slice(index + 1, Math.min(palabras.length, index + 6));
-    
-    return [...palabrasAntes, palabra, ...palabrasDespues].join(' ');
-}
-
-/**
- * Verifica si un contexto indica tiempo pasado o futuro
- * @param {string} contexto - Contexto de la palabra
- * @returns {boolean} - True si es pasado o futuro
- */
-function esTiempoPasadoOFuturo(contexto) {
-    const contextoLower = contexto.toLowerCase();
-    
-    // Patrones de pasado
-    const patronesPasado = ['ya ', 'antes', 'previamente', 'después de', 'luego de', 'termin', 'acab', 'hice', 'hicimos'];
-    for (const patron of patronesPasado) {
-        if (contextoLower.includes(patron)) return true;
-    }
-    
-    // Patrones de futuro
-    const patronesFuturo = ['voy a', 'vas a', 'vamos a', 'quiero', 'pienso', 'plane', 'haré', 'después voy', 'luego voy'];
-    for (const patron of patronesFuturo) {
-        if (contextoLower.includes(patron)) return true;
-    }
-    
-    return false;
-}
-
-/**
- * Verifica TRIPLE CONCORDANCIA entre: mensaje usuario, respuesta IA, y tag de imagen
- * Esta función asegura que la acción esté realmente ocurriendo en el contexto actual
- * @param {string} texto - Texto donde se detectó la acción
- * @param {string} tagDetectado - El tag de imagen detectado
- * @returns {boolean} - True si hay triple concordancia
- */
-function verificarConcordanciaTriple(texto, tagDetectado) {
-    // Convertir tag a palabras legibles
-    const tagPalabras = tagDetectado.toLowerCase().replace(/_/g, ' ');
-    const textoLower = texto.toLowerCase();
-    
-    let scoreConcordancia = 0;
-    
-    // CRITERIO 1: El tag debe estar explícitamente mencionado o implícito en el texto
-    if (textoLower.includes(tagPalabras)) {
-        scoreConcordancia += 1;
-    } else {
-        // Verificar si al menos las palabras clave del tag están presentes
-        const palabrasTag = tagPalabras.split(' ').filter(p => p.length > 3);
-        const coincidencias = palabrasTag.filter(palabra => textoLower.includes(palabra));
-        if (coincidencias.length >= Math.ceil(palabrasTag.length * 0.5)) {
-            scoreConcordancia += 1;
-        }
-    }
-    
-    // CRITERIO 2: Verificar que la acción esté en tiempo PRESENTE
-    for (const patron of PATRONES_TIEMPO_PRESENTE) {
-        if (patron.test(texto)) {
-            scoreConcordancia += 1;
-            break;
-        }
-    }
-    
-    // CRITERIO 3: Verificar que NO haya marcadores de pasado o futuro
-    let esPresente = true;
-    for (const patron of PATRONES_TIEMPO_PASADO) {
-        if (patron.test(texto)) {
-            esPresente = false;
-            break;
-        }
-    }
-    for (const patron of PATRONES_TIEMPO_FUTURO) {
-        if (patron.test(texto)) {
-            esPresente = false;
-            break;
-        }
-    }
-    if (esPresente) {
-        scoreConcordancia += 1;
-    }
-    
-    // Se requiere al menos 2 de 3 criterios para considerar que hay concordancia
-    const hayConcordancia = scoreConcordancia >= 2;
-    
-    if (!hayConcordancia) {
-        logQuintiParser('DEBUG', `Triple concordancia FALLIDA (score: ${scoreConcordancia}/3) para tag: ${tagDetectado}`);
-    }
-    
-    return hayConcordancia;
-}
-
-/**
- * Función de logging para el parser
- */
-function logQuintiParser(nivel, mensaje) {
-    const timestamp = new Date().toLocaleTimeString('es-ES');
-    console.log(`[PARSER ${nivel}] ${timestamp}: ${mensaje}`);
 }
 
 /**
@@ -571,8 +359,5 @@ export default {
     extraerUltimaPregunta,
     interpretarRespuestaCorta,
     TAGS_ACCIONES_EXPLICITAS,
-    PATRONES_ACCIONES,
-    PATRONES_TIEMPO_PASADO,
-    PATRONES_TIEMPO_FUTURO,
-    PATRONES_TIEMPO_PRESENTE
+    PATRONES_ACCIONES
 };
