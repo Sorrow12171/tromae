@@ -844,12 +844,79 @@ function encontrarTagMasPertinente(tagSolicitado, tagsDisponibles, dialogoContex
  * @returns {string} - Tag de la imagen seleccionada
  */
 function seleccionarImagenAutomatica(dialogo, nombreChica) {
+    if (!dialogo) return 'normal';
+    
     const tagsDisponibles = obtenerTagsImagen(nombreChica);
     
     // Normalizar diálogo para búsqueda
     const dialogoLower = dialogo.toLowerCase();
     
-    // Buscar coincidencias con las tags disponibles
+    // ============================================
+    // PASO 1: Buscar acciones entre asteriscos EN CUALQUIER PARTE del texto
+    // ============================================
+    const accionesAsteriscos = dialogo.match(/\*([^*]+)\*/g);
+    if (accionesAsteriscos) {
+        for (const accion of accionesAsteriscos) {
+            const accionLimpia = accion.replace(/\*/g, '').toLowerCase();
+            
+            // Buscar coincidencias con las tags disponibles en la acción
+            for (const tag of tagsDisponibles) {
+                const tagNormalizado = tag.toLowerCase().replace(/_/g, ' ');
+                if (accionLimpia.includes(tagNormalizado) || tagNormalizado.includes(accionLimpia)) {
+                    logSeleccionImagen(nombreChica, tag, 'Coincidencia en acción entre asteriscos');
+                    return tag;
+                }
+            }
+            
+            // Búsquedas específicas en acciones
+            if (accionLimpia.includes('desnud') || accionLimpia.includes('sin ropa') || accionLimpia.includes('desviste')) {
+                if (tagsDisponibles.includes('desnuda')) {
+                    logSeleccionImagen(nombreChica, 'desnuda', 'Acción de desnudez detectada en asteriscos');
+                    return 'desnuda';
+                }
+            }
+            
+            if (accionLimpia.includes('chup') || accionLimpia.includes('oral')) {
+                for (const tag of tagsDisponibles) {
+                    if (tag.includes('chupando')) {
+                        logSeleccionImagen(nombreChica, tag, 'Acción oral detectada en asteriscos');
+                        return tag;
+                    }
+                }
+            }
+            
+            if (accionLimpia.includes('bes') || accionLimpia.includes('kiss')) {
+                if (tagsDisponibles.includes('besando')) {
+                    logSeleccionImagen(nombreChica, 'besando', 'Acción de beso detectada en asteriscos');
+                    return 'besando';
+                }
+            }
+            
+            if (accionLimpia.includes('teta') || accionLimpia.includes('pecho') || accionLimpia.includes('bra')) {
+                if (tagsDisponibles.includes('mostrando_tetas')) {
+                    logSeleccionImagen(nombreChica, 'mostrando_tetas', 'Acción de pechos detectada en asteriscos');
+                    return 'mostrando_tetas';
+                }
+                if (tagsDisponibles.includes('mostrando_bra')) {
+                    logSeleccionImagen(nombreChica, 'mostrando_bra', 'Acción de bra detectada en asteriscos');
+                    return 'mostrando_bra';
+                }
+            }
+            
+            if (accionLimpia.includes('culo') || accionLimpia.includes('nalga')) {
+                for (const tag of tagsDisponibles) {
+                    if (tag.includes('culo') || tag.includes('nalga')) {
+                        logSeleccionImagen(nombreChica, tag, 'Acción de culo detectada en asteriscos');
+                        return tag;
+                    }
+                }
+            }
+        }
+    }
+    
+    // ============================================
+    // PASO 2: Buscar coincidencias directas en todo el diálogo
+    // ============================================
     for (const tag of tagsDisponibles) {
         const tagNormalizado = tag.toLowerCase().replace(/_/g, ' ');
         if (dialogoLower.includes(tagNormalizado)) {
@@ -858,7 +925,28 @@ function seleccionarImagenAutomatica(dialogo, nombreChica) {
         }
     }
     
-    // Búsquedas específicas para acciones comunes
+    // ============================================
+    // PASO 3: Búsquedas específicas por palabras clave en todo el texto
+    // ============================================
+    
+    // Contexto sexual/explícito
+    const palabrasExplicitas = ['desnuda', 'desnudo', 'sin ropa', 'desvestir', 'penetr', 'foll', 'verga', 'pene', 'vagina', 'coño', 'culo', 'tetas', 'pechos', 'senos'];
+    let tieneContextoExplicito = palabrasExplicitas.some(palabra => dialogoLower.includes(palabra));
+    
+    if (tieneContextoExplicito) {
+        // Buscar tags explícitos disponibles
+        for (const tag of tagsDisponibles) {
+            const tagLower = tag.toLowerCase();
+            if (tagLower.includes('desnuda') || tagLower.includes('foll') || tagLower.includes('penetr') || 
+                tagLower.includes('verga') || tagLower.includes('pene') || tagLower.includes('vagina') ||
+                tagLower.includes('teta') || tagLower.includes('pecho') || tagLower.includes('culo')) {
+                logSeleccionImagen(nombreChica, tag, 'Contexto explícito detectado');
+                return tag;
+            }
+        }
+    }
+    
+    // Besos
     if (dialogoLower.includes('bes') || dialogoLower.includes('kiss')) {
         if (tagsDisponibles.includes('besando')) {
             logSeleccionImagen(nombreChica, 'besando', 'Acción de beso detectada');
@@ -866,8 +954,8 @@ function seleccionarImagenAutomatica(dialogo, nombreChica) {
         }
     }
     
+    // Acciones orales
     if (dialogoLower.includes('chup') || dialogoLower.includes('oral')) {
-        // Buscar tags de chupar más específicas
         for (const tag of tagsDisponibles) {
             if (tag.includes('chupando')) {
                 logSeleccionImagen(nombreChica, tag, 'Acción oral detectada');
@@ -876,6 +964,7 @@ function seleccionarImagenAutomatica(dialogo, nombreChica) {
         }
     }
     
+    // Doggy style
     if (dialogoLower.includes('doggy') || dialogoLower.includes('cuatro patas')) {
         if (tagsDisponibles.includes('doggystyle')) {
             logSeleccionImagen(nombreChica, 'doggystyle', 'Posición doggy detectada');
@@ -883,6 +972,7 @@ function seleccionarImagenAutomatica(dialogo, nombreChica) {
         }
     }
     
+    // Misionero
     if (dialogoLower.includes('misionero') || dialogoLower.includes('encima')) {
         if (tagsDisponibles.includes('misionero')) {
             logSeleccionImagen(nombreChica, 'misionero', 'Posición misionero detectada');
@@ -890,10 +980,22 @@ function seleccionarImagenAutomatica(dialogo, nombreChica) {
         }
     }
     
+    // Desnudez
     if (dialogoLower.includes('desnud') || dialogoLower.includes('sin ropa')) {
         if (tagsDisponibles.includes('desnuda')) {
             logSeleccionImagen(nombreChica, 'desnuda', 'Desnudez detectada');
             return 'desnuda';
+        }
+    }
+    
+    // Intimidad/romance
+    if (dialogoLower.includes('intimid') || dialogoLower.includes('cama') || dialogoLower.includes('acarici') || 
+        dialogoLower.includes('abraz') || dialogoLower.includes('sensu')) {
+        for (const tag of tagsDisponibles) {
+            if (tag.includes('intim') || tag.includes('cama') || tag.includes('romant') || tag.includes('acarici')) {
+                logSeleccionImagen(nombreChica, tag, 'Contexto íntimo/romántico detectado');
+                return tag;
+            }
         }
     }
     
@@ -1761,12 +1863,34 @@ async function procesarRespuesta(datos, mensajeOriginal) {
         // Usar la imagen de la primera chica como principal (para compatibilidad)
         const primeraChica = datos.respuestasIndividuales[0];
         tagImagen = primeraChica && primeraChica.imagen_tag ? primeraChica.imagen_tag : 'hablando';
+        
+        // MEJORA: Si no hay imagen_tag, detectarlo automáticamente del contenido del diálogo
+        if (!tagImagen || tagImagen === '') {
+            tagImagen = seleccionarImagenAutomatica(primeraChica.respuesta, primeraChica.chica);
+        }
+        
         const resultadoImagen = obtenerURLImagen(primeraChica.chica, tagImagen, historiaId);
         urlImagen = resultadoImagen.urlImagen;
         urlAudio = resultadoImagen.urlAudio;
     } else {
         // Seleccionar imagen automaticamente para la chica principal (caso de una sola chica)
-        tagImagen = datos && datos.imagen_tag ? datos.imagen_tag : 'normal';
+        tagImagen = datos && datos.imagen_tag ? datos.imagen_tag : '';
+        
+        // MEJORA CRÍTICA: Si no hay imagen_tag o está vacío, detectarlo automáticamente del contenido
+        // Esto soluciona el problema cuando la IA no devuelve JSON válido o no incluye imagen_tag
+        if (!tagImagen || tagImagen === '' || tagImagen === 'normal') {
+            // Primero intentar encontrar un tag basado en el contenido del diálogo
+            const tagDetectado = seleccionarImagenAutomatica(datos.respuesta, chicaSeleccionada);
+            
+            // Solo usar 'normal' si realmente no se detectó nada específico
+            if (tagDetectado && tagDetectado !== 'normal' && tagDetectado !== 'hablando') {
+                tagImagen = tagDetectado;
+                logQuinti('INFO', `Tag de imagen detectado automáticamente: "${tagImagen}" basado en el contenido`);
+            } else if (!tagImagen || tagImagen === '') {
+                tagImagen = 'normal';
+            }
+        }
+        
         const resultadoImagen = obtenerURLImagen(chicaSeleccionada, tagImagen, historiaId);
         urlImagen = resultadoImagen.urlImagen;
         urlAudio = resultadoImagen.urlAudio;
