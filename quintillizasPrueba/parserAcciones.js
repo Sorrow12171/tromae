@@ -67,17 +67,20 @@ const PATRONES_ACCIONES = [
     // BESANDO - verbo + sustantivos relacionados
     { patron: /\*[^*]*(?:bes[ao]|besando|besar|beso|kiss|labios|boca)[^*]*\*/gi, tag: 'besando', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'verbo' },
     
-    // CHUPANDO PENE - verbo principal + sustantivos de objeto
-    { patron: /\*[^*]*(?:chup[ao]|mam[ao]|oral|felaci|pene|miembro|verga|polla)[^*]*\*/gi, tag: 'chupando_todo_el_pene', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'verbo' },
+    // CHUPANDO PENE - verbo principal + sustantivos de objeto (pero NO punta/mitad para evitar falsos positivos)
+    { patron: /\*[^*]*(?:chup[ao]|mam[ao]|oral|felaci)[^*]*(?:pene|miembro|verga|polla)[^*]*\*/gi, tag: 'chupando_todo_el_pene', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'verbo' },
+    { patron: /\*[^*]*(?:pene|miembro|verga|polla)[^*]*(?:chup|mam|oral|felaci)[^*]*\*/gi, tag: 'chupando_todo_el_pene', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'sustantivo+verbo' },
     
-    // PUNTA DEL PENE - sustantivos específicos + verbos
-    { patron: /\*[^*]*(?:punta|cabeza del pene|glans|corona|punta del miembro)[^*]*\*/gi, tag: 'chupando_solo_la_punta_del_pene', peso: PESOS_DETECCION.SUSTANTIVO_OBJETO, tipo: 'sustantivo' },
+    // PUNTA DEL PENE - sustantivos específicos + verbos (debe tener contexto de acción oral)
+    { patron: /\*[^*]*(?:chup[ao]|mam[ao]|lame|succiona)[^*]*(?:punta|cabeza del pene|glans|corona)[^*]*\*/gi, tag: 'chupando_solo_la_punta_del_pene', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'verbo+sustantivo' },
+    { patron: /\*[^*]*(?:punta del pene|punta de su miembro|cabeza del pene)[^*]*(?:chup|mam|lam|succion)[^*]*\*/gi, tag: 'chupando_solo_la_punta_del_pene', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'sustantivo+verbo' },
     
-    // MITAD DEL PENE - sustantivos específicos
-    { patron: /\*[^*]*(?:mitad|medio pene|centro del pene)[^*]*\*/gi, tag: 'chupando_solo_la_mitad_del_pene', peso: PESOS_DETECCION.SUSTANTIVO_OBJETO, tipo: 'sustantivo' },
+    // MITAD DEL PENE - sustantivos específicos con verbo
+    { patron: /\*[^*]*(?:chup[ao]|mam[ao]|lame|succiona)[^*]*(?:mitad|medio pene|centro del pene)[^*]*\*/gi, tag: 'chupando_solo_la_mitad_del_pene', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'verbo+sustantivo' },
     
-    // BOLAS/TESTÍCULOS - sustantivos + verbos relacionados
-    { patron: /\*[^*]*(?:bola[s]?|testículo[s]?|escroto|huevos|saco)[^*]*\*/gi, tag: 'chupando_bolas', peso: PESOS_DETECCION.SUSTANTIVO_OBJETO, tipo: 'sustantivo' },
+    // BOLAS/TESTÍCULOS - sustantivos + verbos relacionados (requiere verbo para mayor precisión)
+    { patron: /\*[^*]*(?:chup[ao]|mam[ao]|lame|succiona)[^*]*(?:bola[s]?|testículo[s]?|escroto|huevos)[^*]*\*/gi, tag: 'chupando_bolas', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'verbo+sustantivo' },
+    { patron: /\*[^*]*(?:bola[s]?|testículo[s]?|escroto|huevos)[^*]*(?:chup|mam|lam|succion)[^*]*\*/gi, tag: 'chupando_bolas', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'sustantivo+verbo' },
     
     // DOGGYSTYLE - posición (sustantivo) + verbos relacionados
     { patron: /\*[^*]*(?:doggy|cuatro patas|por detrás|culo hacia arriba|posición del perrito)[^*]*\*/gi, tag: 'doggystyle', peso: PESOS_DETECCION.SUSTANTIVO_POSICION, tipo: 'posicion' },
@@ -88,8 +91,9 @@ const PATRONES_ACCIONES = [
     // DESNUDA - verbo + estado
     { patron: /\*[^*]*(?:desnud[ao]|sin ropa|quit[ao] la ropa|desvistiendo|desnudez|cuerpo desnudo)[^*]*\*/gi, tag: 'desnuda', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'verbo' },
     
-    // ANAL - sustantivo + verbos relacionados
-    { patron: /\*[^*]*(?:anal|culo|ano|trasero|nalga[s]?|hoyo)[^*]*\*/gi, tag: 'anal', peso: PESOS_DETECCION.SUSTANTIVO_OBJETO, tipo: 'sustantivo' },
+    // ANAL - sustantivo + verbos relacionados (requiere contexto de acción)
+    { patron: /\*[^*]*(?:penetr[ao]|met[ei]ndo|empuj[ao]|foll[ao])[^*]*(?:anal|culo|ano|trasero)[^*]*\*/gi, tag: 'anal', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'verbo+sustantivo' },
+    { patron: /\*[^*]*(?:anal|culo|ano|trasero)[^*]*(?:penetr|met|empuj|foll)[^*]*\*/gi, tag: 'anal', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'sustantivo+verbo' },
     
     // PAJA/HANDJOB - verbo + sustantivo
     { patron: /\*[^*]*(?:paja|handjob|masturb[ao]|mano[s]? en el pene|moviendo la mano)[^*]*\*/gi, tag: 'handjob_paja', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'verbo' },
@@ -109,11 +113,13 @@ const PATRONES_ACCIONES = [
     // EN EL AIRE - posición específica
     { patron: /\*[^*]*(?:en el aire|levantad[ao]|suspendid[ao]|piernas al aire)[^*]*\*/gi, tag: 'follando_en_el_aire', peso: PESOS_DETECCION.CONTEXTO_FRASE, tipo: 'contexto' },
     
-    // LAMIENDO ANO/CULO - verbo + sustantivo
-    { patron: /\*[^*]*(?:lam[ei]ndo|lame|anilingus|culo|ano|limpiando con la lengua)[^*]*\*/gi, tag: 'ichika_licking_anus', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'verbo' },
-    
-    // CUELLO/GARGANTA - sustantivo + verbos
-    { patron: /\*[^*]*(?:cuello|garganta|ahorcando|manos en el cuello)[^*]*\*/gi, tag: 'manos_alrededor_del_cuello', peso: PESOS_DETECCION.SUSTANTIVO_OBJETO, tipo: 'sustantivo' },
+    // LAMIENDO ANO/CULO - verbo + sustantivo (requiere ambos para evitar falsos positivos)
+    { patron: /\*[^*]*(?:lam[ei]ndo|lame|anilingus)[^*]*(?:culo|ano|hoyo)[^*]*\*/gi, tag: 'ichika_licking_anus', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'verbo+sustantivo' },
+    { patron: /\*[^*]*(?:culo|ano|hoyo)[^*]*(?:lam|limpiando con la lengua)[^*]*\*/gi, tag: 'ichika_licking_anus', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'sustantivo+verbo' },
+
+    // CUELLO/GARGANTA - sustantivo + verbos de acción (requiere contexto de sujeción/ahorcamiento)
+    { patron: /\*[^*]*(?:ahorcando|sujeta.*cuello|agarra.*cuello|rodea.*cuello|manos.*cuello)[^*]*\*/gi, tag: 'manos_alrededor_del_cuello', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'verbo+sustantivo' },
+    { patron: /\*[^*]*(?:cuello|garganta)[^*]*(?:sujeta|agarra|rodea|aprieta)[^*]*\*/gi, tag: 'manos_alrededor_del_cuello', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'sustantivo+verbo' },
     
     // CORRIDAS/EYACULACIÓN - verbo + sustantivo
     { patron: /\*[^*]*(?:corrida|eyacul[ao]|se viene|orgasmo|leche|esperma|terminando dentro)[^*]*\*/gi, tag: 'me_corro_en_su_boca_de_ichika', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'verbo' }
@@ -186,7 +192,7 @@ const PALABRAS_CLAVE_ACCIONES = [
     
     // === CUELLO ===
     { palabras: ['cuello', 'garganta'], tag: 'manos_alrededor_del_cuello', categoria: 'sustantivo', peso: PESOS_DETECCION.SUSTANTIVO_OBJETO },
-    { palabras: ['ahorcando', 'apretando el cuello', 'manos alrededor'], tag: 'manos_alrededor_del_cuello', categoria: 'contexto', peso: PESOS_DETECCION.CONTEXTO_FRASE }
+    { palabras: ['ahorcando', 'apretando el cuello', 'manos alrededor', 'rodea el cuello', 'sujeta del cuello'], tag: 'manos_alrededor_del_cuello', categoria: 'contexto', peso: PESOS_DETECCION.CONTEXTO_FRASE }
 ];
 
 /**
