@@ -1196,45 +1196,36 @@
 
         /**
  * Detecta acciones en el mensaje del usuario para determinar qué tag de imagen usar
- * Usa los tags disponibles dinámicamente desde imagenes.js para cada chica
  * @param {string} mensajeUsuario - El mensaje original del usuario
- * @param {string} chicaNombre - Nombre de la chica para obtener sus tags disponibles
  * @returns {string|null} - Tag de imagen detectado o null si no hay acción clara
  */
-function detectarAccionEnMensaje(mensajeUsuario, chicaNombre = 'Ichika') {
+function detectarAccionEnMensaje(mensajeUsuario) {
     const mensajeLower = mensajeUsuario.toLowerCase();
     
-    // Obtener los tags disponibles dinámicamente para esta chica específica
-    const infoChica = QuintiImagenesPrueba[chicaNombre];
-    if (!infoChica || !infoChica.imagenes) {
-        return null;
-    }
+    // Acciones comunes y sus tags correspondientes
+    const accionesTags = [
+        { patron: /bes|kiss/i, tag: 'besando' },
+        { patron: /chup|oral|mamad/i, tag: 'chupando_todo_el_pene' },
+        { patron: /punta/i, tag: 'chupando_solo_la_punta_del_pene' },
+        { patron: /mitad/i, tag: 'chupando_solo_la_mitad_del_pene' },
+        { patron: /bola|testicul/i, tag: 'chupando_bolas' },
+        { patron: /doggy|cuatro patas/i, tag: 'doggystyle' },
+        { patron: /misioner/i, tag: 'misionero' },
+        { patron: /desnud|sin ropa|quita/i, tag: 'desnuda' },
+        { patron: /anal/i, tag: 'anal' },
+        { patron: /paja|handjob/i, tag: 'handjob_paja' },
+        { patron: /cowgirl|encima/i, tag: 'reverse_cowgirl' },
+        { patron: /sidefuck|de lad/i, tag: 'sidefuck' },
+        { patron: /pie|parad|stand/i, tag: 'standfuck_follando_de_pie' },
+        { patron: /ventana/i, tag: 'follando_en_la_ventana' },
+        { patron: /aire/i, tag: 'follando_en_el_aire' },
+        { patron: /culo|ano/i, tag: 'ichika_licking_anus' },
+        { patron: /lam|lamed/i, tag: 'laminedo_pene' },
+        { patron: /cuello/i, tag: 'manos_alrededor_del_cuello' }
+    ];
     
-    const tagsDisponibles = Object.keys(infoChica.imagenes);
-    
-    // Crear patrones de búsqueda dinámicos basados en los tags reales de cada chica
-    // Extraemos palabras clave de cada tag (separando por guiones bajos)
-    const accionesTags = [];
-    
-    for (const tag of tagsDisponibles) {
-        // Normalizar el tag: convertir "chupando_solo_la_punta_del_pene" a ["chupando", "solo", "punta", "pene"]
-        const palabrasClave = tag.toLowerCase().split('_').filter(p => p.length > 2); // Ignorar palabras muy cortas
-        
-        // Crear patrón que busque cualquiera de las palabras significativas del tag
-        // Priorizar las primeras palabras (son más descriptivas de la acción)
-        const palabrasPrioritarias = palabrasClave.slice(0, 3); // Tomar las primeras 3 palabras
-        
-        if (palabrasPrioritarias.length > 0) {
-            // Crear un patrón que coincida con al menos una de las palabras clave
-            const patron = new RegExp(palabrasPrioritarias.join('|'), 'i');
-            accionesTags.push({ patron, tag });
-        }
-    }
-    
-    // Buscar coincidencias en el mensaje del usuario
     for (const accion of accionesTags) {
         if (accion.patron.test(mensajeLower)) {
-            logQuinti('DEBUG', `Tag detectado dinámicamente: ${accion.tag} para ${chicaNombre}`);
             return accion.tag;
         }
     }
@@ -1289,7 +1280,7 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
     
     // PASO 1: Si hay mensaje del usuario, detectar acción primero (PRIORIDAD MÁXIMA)
     if (mensajeUsuario && mensajeUsuario.trim()) {
-        const tagDetectado = detectarAccionEnMensaje(mensajeUsuario, chicaNombre);
+        const tagDetectado = detectarAccionEnMensaje(mensajeUsuario);
         if (tagDetectado && tagsDisponibles.includes(tagDetectado)) {
             logQuinti('DEBUG', `Tag forzado por acción del usuario: ${tagDetectado} para ${chicaNombre}`);
             return tagDetectado;
@@ -1307,7 +1298,7 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
     }
     
     // PASO 2: Si no hay acción explícita del usuario, verificar si hay una acción en curso
-    if (!mensajeUsuario || !detectarAccionEnMensaje(mensajeUsuario, chicaNombre)) {
+    if (!mensajeUsuario || !detectarAccionEnMensaje(mensajeUsuario)) {
         if (accionEnCurso && tagsDisponibles.includes(accionEnCurso)) {
             logQuinti('DEBUG', `Usando acción en curso: ${accionEnCurso} para ${chicaNombre}`);
             return accionEnCurso;
@@ -1375,7 +1366,7 @@ function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
             lastUserMessage = message;
             
             // ACTUALIZAR ESTADO DE ACCIÓN: Detectar si el usuario menciona una acción
-            const accionDetectada = detectarAccionEnMensaje(message, chicaSeleccionadaActual);
+            const accionDetectada = detectarAccionEnMensaje(message);
             actualizarEstadoAccion(accionDetectada);
             
             // Agregar mensaje del usuario al historial UI
