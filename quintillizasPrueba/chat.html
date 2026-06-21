@@ -1033,12 +1033,15 @@
     <!-- <script type="module" src="logica.test.js"></script> -->
     <script type="module">
         // Importar funciones necesarias de logica.js e imagenes.js
-        import { getChicasDisponibles, seleccionarChica, conversar, logQuinti, logErrorAPI, formatearErrorUsuario, getChicasEnChat, getChicaSeleccionada, getImagenSelector, formatearTextoConAsteriscos, parsearJSON, obtenerURLImagen, seleccionarImagenPorIA } from './logica.js';
+        import { getChicasDisponibles, seleccionarChica, conversar, logQuinti, logErrorAPI, formatearErrorUsuario, getChicasEnChat, actualizarAccionEnCurso, getAccionEnCurso, getChicaSeleccionada, getImagenSelector, formatearTextoConAsteriscos, parsearJSON, obtenerURLImagen } from './logica.js';
         import { detectarRepeticion, detectarRepeticionEntreChicas, agregarDialogoAlHistorial, generarPromptAntiRepeticion, getEstadisticasRepeticion } from './antiRepeticion.js';
         import { QuintiImagenesPrueba } from './imagenes.js';
         
         let chicaSeleccionadaActual = null;
         let historialMensajesUI = []; // Historial local para la UI
+        let accionEnCurso = null; // Mantiene el estado de la acción actual (ej: 'besando', 'chupando')
+        let contadorTurnosAccion = 0; // Cuenta cuántos turnos lleva la acción actual
+        const MAX_TURNOS_ACCION = 3; // Después de 3 turnos, la acción puede terminar naturalmente
         
         // SISTEMA DE AUDIO - Control global de reproducción
         let audiosActivos = new Map(); // Mapa de elementos de audio activos por ID único
@@ -1239,8 +1242,117 @@ function detectarAccionEnMensaje(mensajeUsuario, chicaNombre = 'Ichika') {
     return null;
 }
 
-// SISTEMA SIMPLIFICADO: La IA decide la imagen directamente mediante API call
-// Ya no hay sistemas de acción en curso ni verificaciones complejas
+/**
+ * Actualiza el estado de la acción en curso de forma natural
+ * @param {string|null} nuevaAccion - La acción detectada en el mensaje actual
+ */
+function actualizarEstadoAccion(nuevaAccion) {
+    if (nuevaAccion) {
+        // Nueva acción detectada: reiniciar contador
+        if (accionEnCurso !== nuevaAccion) {
+            accionEnCurso = nuevaAccion;
+            contadorTurnosAccion = 1;
+            logQuinti('DEBUG', `Nueva acción iniciada: ${nuevaAccion}`);
+        } else {
+            // Misma acción continúa
+            contadorTurnosAccion++;
+            logQuinti('DEBUG', `Acción ${nuevaAccion} continúa (turno ${contadorTurnosAccion}/${MAX_TURNOS_ACCION})`);
+        }
+    } else {
+        // No hay acción explícita en el mensaje
+        if (accionEnCurso && contadorTurnosAccion >= MAX_TURNOS_ACCION) {
+            // La acción terminó naturalmente después de MAX_TURNOS_ACCION turnos
+            logQuinti('DEBUG', `Acción ${accionEnCurso} terminó naturalmente`);
+            accionEnCurso = null;
+            contadorTurnosAccion = 0;
+        } else if (accionEnCurso) {
+            // La acción aún está en curso pero el usuario no la mencionó explícitamente
+            // Mantenemos la acción para que las imágenes sigan siendo coherentes
+            logQuinti('DEBUG', `Acción ${accionEnCurso} se mantiene implícita (turno ${contadorTurnosAccion})`);
+        }
+    }
+}
+
+/**
+ * Obtiene el tag de imagen considerando el estado de acción en curso
+ * @param {string} respuesta - La respuesta de la IA
+ * @param {string} chicaNombre - Nombre de la chica
+ * @param {string} mensajeUsuario - El mensaje original del usuario (opcional)
+ * @returns {string} - Tag de imagen seleccionado
+ */
+function seleccionarTagImagen(respuesta, chicaNombre, mensajeUsuario = '') {
+    const respuestaLower = respuesta.toLowerCase();
+    const infoChica = QuintiImagenesPrueba[chicaNombre];
+    if (!infoChica || !infoChica.imagenes) return 'hablando';
+    
+    const tagsDisponibles = Object.keys(infoChica.imagenes);
+    
+    // PASO 1: Si hay mensaje del usuario, detectar acción primero (PRIORIDAD MÁXIMA)
+    if (mensajeUsuario && mensajeUsuario.trim()) {
+        const tagDetectado = detectarAccionEnMensaje(mensajeUsuario, chicaNombre);
+        if (tagDetectado && tagsDisponibles.includes(tagDetectado)) {
+            logQuinti('DEBUG', `Tag forzado por acción del usuario: ${tagDetectado} para ${chicaNombre}`);
+            return tagDetectado;
+        }
+        // Si el tag detectado no existe para esta chica, buscar uno similar
+        if (tagDetectado) {
+            // Buscar tags que contengan la misma palabra clave
+            for (const tag of tagsDisponibles) {
+                if (tag.includes(tagDetectado.split('_')[0])) {
+                    logQuinti('DEBUG', `Tag similar encontrado: ${tag} para ${chicaNombre}`);
+                    return tag;
+                }
+            }
+        }
+    }
+    
+    // PASO 2: Si no hay acción explícita del usuario, verificar si hay una acción en curso
+    if (!mensajeUsuario || !detectarAccionEnMensaje(mensajeUsuario, chicaNombre)) {
+        if (accionEnCurso && tagsDisponibles.includes(accionEnCurso)) {
+            logQuinti('DEBUG', `Usando acción en curso: ${accionEnCurso} para ${chicaNombre}`);
+            return accionEnCurso;
+        }
+        // Si la acción en curso no existe para esta chica, buscar una similar
+        if (accionEnCurso) {
+            for (const tag of tagsDisponibles) {
+                if (tag.includes(accionEnCurso.split('_')[0])) {
+                    logQuinti('DEBUG', `Tag similar a acción en curso: ${tag} para ${chicaNombre}`);
+                    return tag;
+                }
+            }
+        }
+    }
+    
+    // PASO 3: Si no hay acción en curso, buscar en la respuesta de la IA
+    // Buscar coincidencias directas con tags
+    for (const tag of tagsDisponibles) {
+        const tagNormalizado = tag.toLowerCase().replace(/_/g, ' ');
+        if (respuestaLower.includes(tagNormalizado)) {
+            return tag;
+        }
+    }
+    
+    // Búsquedas específicas en la respuesta
+    if (respuestaLower.includes('bes') || respuestaLower.includes('kiss')) {
+        if (tagsDisponibles.includes('besando')) return 'besando';
+    }
+    if (respuestaLower.includes('chup') || respuestaLower.includes('oral')) {
+        for (const tag of tagsDisponibles) {
+            if (tag.includes('chupando')) return tag;
+        }
+    }
+    if (respuestaLower.includes('desnud') || respuestaLower.includes('sin ropa')) {
+        if (tagsDisponibles.includes('desnuda')) return 'desnuda';
+    }
+    if (respuestaLower.includes('doggy') || respuestaLower.includes('cuatro patas')) {
+        if (tagsDisponibles.includes('doggystyle')) return 'doggystyle';
+    }
+    if (respuestaLower.includes('misionero') || respuestaLower.includes('encima')) {
+        if (tagsDisponibles.includes('misionero')) return 'misionero';
+    }
+    
+    return tagsDisponibles.includes('hablando') ? 'hablando' : tagsDisponibles[0] || 'normal';
+}
         
         // La función obtenerURLImagen ahora se importa desde logica.js
         // Esta definición local queda como fallback por si acaso
@@ -1262,6 +1374,10 @@ function detectarAccionEnMensaje(mensajeUsuario, chicaNombre = 'Ichika') {
             // Guardar el último mensaje para permitir reintentar
             lastUserMessage = message;
             
+            // ACTUALIZAR ESTADO DE ACCIÓN: Detectar si el usuario menciona una acción
+            const accionDetectada = detectarAccionEnMensaje(message, chicaSeleccionadaActual);
+            actualizarEstadoAccion(accionDetectada);
+            
             // Agregar mensaje del usuario al historial UI
             const userMsgDiv = document.createElement('div');
             userMsgDiv.className = 'message user-message';
@@ -1276,7 +1392,7 @@ function detectarAccionEnMensaje(mensajeUsuario, chicaNombre = 'Ichika') {
             
             try {
                 // Llamar a la función conversar que usa el sistema de reintentos
-                logQuinti('INFO', 'Enviando mensaje a la IA', { mensaje: message.slice(0, 50) + '...' });
+                logQuinti('INFO', 'Enviando mensaje a la IA', { mensaje: message.slice(0, 50) + '...', accionDetectada, accionEnCurso });
                 
                 const response = await conversar(message);
                 
@@ -1314,26 +1430,17 @@ function detectarAccionEnMensaje(mensajeUsuario, chicaNombre = 'Ichika') {
                         // Obtener info de la chica
                         const infoChica = QuintiImagenesPrueba[chicaNombre];
                         
-                        // SISTEMA SIMPLIFICADO: La IA selecciona la imagen mediante API call dedicada
+                        // MÉTODO TRADICIONAL: Una sola imagen al final
                         let imagenURL = null;
                         let audioURL = null;
-                        let tagImagen = 'hablando'; // Por defecto
-                        
+                        let tagImagen = null; // Declarar siempre para evitar errores
                         if (infoChica) {
-                            try {
-                                // Usar la nueva función seleccionarImagenPorIA que hace una llamada API dedicada
-                                const resultadoImagen = await seleccionarImagenPorIA(message, chicaRespuesta, chicaNombre);
-                                tagImagen = resultadoImagen.tag;
-                                imagenURL = resultadoImagen.url;
-                                audioURL = resultadoImagen.audio;
-                                logQuinti('INFO', `Imagen seleccionada por IA para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, audio: audioURL });
-                            } catch (error) {
-                                logQuinti('ERROR', `Error al seleccionar imagen por IA: ${error.message}`);
-                                // Fallback a método tradicional
-                                const resultadoFallback = obtenerURLImagen(chicaNombre, 'hablando');
-                                imagenURL = resultadoFallback.urlImagen;
-                                audioURL = resultadoFallback.urlAudio;
-                            }
+                            // Seleccionar imagen basada en el mensaje del usuario (PRIORIDAD) y la respuesta
+                            tagImagen = seleccionarTagImagen(chicaRespuesta, chicaNombre, message);
+                            const resultadoImagen = obtenerURLImagen(chicaNombre, tagImagen);
+                            imagenURL = resultadoImagen.urlImagen;
+                            audioURL = resultadoImagen.urlAudio;
+                            logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, audio: audioURL, mensajeUsuario: message.substring(0, 50) });
                         }
 
                         // Construir contenido: PRIMERO TEXTO con nombre, luego imagen y audio al final
@@ -1430,25 +1537,11 @@ function detectarAccionEnMensaje(mensajeUsuario, chicaNombre = 'Ichika') {
                         let tagImagen = null; // Declarar siempre para evitar errores
                         if (infoChica) {
                             // Seleccionar imagen basada en el mensaje del usuario (PRIORIDAD) y la respuesta
-                            // SISTEMA SIMPLIFICADO: La IA selecciona la imagen mediante API call dedicada
-                            try {
-                                const resultadoImagen = await seleccionarImagenPorIA(message, chicaRespuesta, chicaNombre);
-                                tagImagen = resultadoImagen.tag;
-                                imagenURL = resultadoImagen.url;
-                                audioURL = resultadoImagen.audio;
-                                logQuinti('INFO', `Imagen seleccionada por IA para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, audio: audioURL });
-                            } catch (error) {
-                                logQuinti('ERROR', `Error al seleccionar imagen: ${error.message}`);
-                                const resultadoFallback = obtenerURLImagen(chicaNombre, 'hablando');
-                                imagenURL = resultadoFallback.urlImagen;
-                                audioURL = resultadoFallback.urlAudio;
-                            }
-                            if (!imagenURL) {
-                                const resultadoImagen = obtenerURLImagen(chicaNombre, tagImagen);
-                                imagenURL = resultadoImagen.urlImagen;
-                                audioURL = resultadoImagen.urlAudio;
-                                logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, audio: audioURL, mensajeUsuario: message.substring(0, 50) });
-                            }
+                            tagImagen = seleccionarTagImagen(chicaRespuesta, chicaNombre, message);
+                            const resultadoImagen = obtenerURLImagen(chicaNombre, tagImagen);
+                            imagenURL = resultadoImagen.urlImagen;
+                            audioURL = resultadoImagen.urlAudio;
+                            logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, audio: audioURL, mensajeUsuario: message.substring(0, 50) });
                         }
 
                         // Construir contenido: PRIMERO TEXTO con nombre, luego imagen y audio al final
@@ -1494,25 +1587,11 @@ function detectarAccionEnMensaje(mensajeUsuario, chicaNombre = 'Ichika') {
                             let audioURL = null;
                             let tagImagen = null; // Declarar siempre para evitar errores
                             if (infoChica) {
-                                // SISTEMA SIMPLIFICADO: La IA selecciona la imagen mediante API call dedicada
-                                try {
-                                    const resultadoImagen = await seleccionarImagenPorIA(message, chicaRespuesta, chicaNombre);
-                                    tagImagen = resultadoImagen.tag;
-                                    imagenURL = resultadoImagen.url;
-                                    audioURL = resultadoImagen.audio;
-                                    logQuinti('INFO', `Imagen seleccionada por IA para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, audio: audioURL });
-                                } catch (error) {
-                                    logQuinti('ERROR', `Error al seleccionar imagen: ${error.message}`);
-                                    const resultadoFallback = obtenerURLImagen(chicaNombre, 'hablando');
-                                    imagenURL = resultadoFallback.urlImagen;
-                                    audioURL = resultadoFallback.urlAudio;
-                                }
-                                if (!imagenURL) {
-                                    const resultadoImagen = obtenerURLImagen(chicaNombre, tagImagen);
-                                    imagenURL = resultadoImagen.urlImagen;
-                                    audioURL = resultadoImagen.urlAudio;
-                                    logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, audio: audioURL, mensajeUsuario: message.substring(0, 50) });
-                                }
+                                tagImagen = seleccionarTagImagen(chicaRespuesta, chicaNombre, message);
+                                const resultadoImagen = obtenerURLImagen(chicaNombre, tagImagen);
+                                imagenURL = resultadoImagen.urlImagen;
+                                audioURL = resultadoImagen.urlAudio;
+                                logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, audio: audioURL, mensajeUsuario: message.substring(0, 50) });
                             }
 
                             // Formatear el texto para que la narración entre asteriscos tenga estilo diferente
