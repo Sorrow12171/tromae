@@ -1495,23 +1495,24 @@ function detectarAccionEnMensaje(mensajeUsuario, chicaNombre = 'Ichika') {
                             let tagImagen = null; // Declarar siempre para evitar errores
                             if (infoChica) {
                                 // SISTEMA SIMPLIFICADO: La IA selecciona la imagen mediante API call dedicada
-                            try {
-                                const resultadoImagen = await seleccionarImagenPorIA(message, chicaRespuesta, chicaNombre);
-                                tagImagen = resultadoImagen.tag;
-                                imagenURL = resultadoImagen.url;
-                                audioURL = resultadoImagen.audio;
-                                logQuinti('INFO', `Imagen seleccionada por IA para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, audio: audioURL });
-                            } catch (error) {
-                                logQuinti('ERROR', `Error al seleccionar imagen: ${error.message}`);
-                                const resultadoFallback = obtenerURLImagen(chicaNombre, 'hablando');
-                                imagenURL = resultadoFallback.urlImagen;
-                                audioURL = resultadoFallback.urlAudio;
-                            }
-                            if (!imagenURL) {
-                                const resultadoImagen = obtenerURLImagen(chicaNombre, tagImagen);
-                                imagenURL = resultadoImagen.urlImagen;
-                                audioURL = resultadoImagen.urlAudio;
-                                logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, audio: audioURL, mensajeUsuario: message.substring(0, 50) });
+                                try {
+                                    const resultadoImagen = await seleccionarImagenPorIA(message, chicaRespuesta, chicaNombre);
+                                    tagImagen = resultadoImagen.tag;
+                                    imagenURL = resultadoImagen.url;
+                                    audioURL = resultadoImagen.audio;
+                                    logQuinti('INFO', `Imagen seleccionada por IA para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, audio: audioURL });
+                                } catch (error) {
+                                    logQuinti('ERROR', `Error al seleccionar imagen: ${error.message}`);
+                                    const resultadoFallback = obtenerURLImagen(chicaNombre, 'hablando');
+                                    imagenURL = resultadoFallback.urlImagen;
+                                    audioURL = resultadoFallback.urlAudio;
+                                }
+                                if (!imagenURL) {
+                                    const resultadoImagen = obtenerURLImagen(chicaNombre, tagImagen);
+                                    imagenURL = resultadoImagen.urlImagen;
+                                    audioURL = resultadoImagen.urlAudio;
+                                    logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, audio: audioURL, mensajeUsuario: message.substring(0, 50) });
+                                }
                             }
 
                             // Formatear el texto para que la narración entre asteriscos tenga estilo diferente
