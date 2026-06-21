@@ -47,7 +47,6 @@ const _K = [
 
 const GROQ_KEYS = _K.map(partes => partes.join(""));
 const MODELO_PRINCIPAL = "openai/gpt-oss-120b";
-const MODELO_VISION = ""; // Modelo de Groq con soporte de visión
 
 let indiceKeyActual = 0;
 let chicaSeleccionada = null;
@@ -2148,25 +2147,8 @@ async function procesarRespuesta(datos, mensajeOriginal) {
         tieneRespuestasIndividuales: tieneRespuestasIndividuales
     });
     
-    // Si hay una imagen URL directa y la respuesta trata sobre lencería/ropa,
-    // hacer llamada adicional a Groq Vision para describir la ropa/lencería
-    let descripcionRopa = null;
-    if (urlImagen && (datos.respuesta.toLowerCase().includes('lencer') || 
-                      datos.respuesta.toLowerCase().includes('ropa') ||
-                      datos.respuesta.toLowerCase().includes('vestid') ||
-                      datos.respuesta.toLowerCase().includes('sujetador') ||
-                      datos.respuesta.toLowerCase().includes('tanga') ||
-                      datos.respuesta.toLowerCase().includes('desnuda'))) {
-        try {
-            descripcionRopa = await describirRopaConVision(urlImagen, datos.respuesta);
-        } catch (error) {
-            logQuinti('WARN', 'No se pudo obtener descripción de ropa/lencería con visión', { error: error.message });
-        }
-    }
-    
     return {
         respuesta: datos.respuesta,
-        descripcion_ropa_lenceria: descripcionRopa, // Nueva propiedad con descripción detallada de ropa/lencería
         imagen_tag: tagImagen,
         imagen_url: urlImagen,
         audio_url: urlAudio,
@@ -2375,84 +2357,6 @@ function obtenerURLImagen(nombreChica, tag, historiaId = null) {
     return { urlImagen, urlAudio };
 }
 
-/**
- * Usa Groq Vision API para describir ropa/lencería en una imagen
- * @param {string} imageUrl - URL directa de la imagen
- * @param {string} contextoRespuesta - Contexto de la respuesta para enfocar la descripción
- * @returns {Promise<string>} - Descripción detallada de la ropa/lencería
- */
-async function describirRopaConVision(imageUrl, contextoRespuesta) {
-    const url = "https://api.groq.com/openai/v1/chat/completions";
-    
-    // Intentar con todas las keys disponibles
-    for (let k = 0; k < GROQ_KEYS.length; k++) {
-        const keyIdx = (indiceKeyActual + k) % GROQ_KEYS.length;
-        const apiKey = GROQ_KEYS[keyIdx];
-        
-        try {
-            const response = await fetch(url, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${apiKey}`
-                },
-                body: JSON.stringify({
-                    model: MODELO_VISION,
-                    messages: [
-                        {
-                            role: "user",
-                            content: [
-                                {
-                                    type: "text",
-                                    text: "Describe DETALLADAMENTE la ropa o lencería que lleva puesta la persona en esta imagen. Incluye: color, tipo de prenda (sujetador, tanga, vestido, etc.), material aparente, detalles como encajes o adornos, estilo (sexy, elegante, casual), y cualquier otro detalle relevante de la vestimenta. Responde SOLO con la descripción de la ropa, máximo 150 palabras."
-                                },
-                                {
-                                    type: "image_url",
-                                    image_url: {
-                                        url: imageUrl
-                                    }
-                                }
-                            ]
-                        }
-                    ],
-                    temperature: 0.3,
-                    max_tokens: 500,
-                    
-                    // ← ESTO ES CLAVE: Forzar respuesta JSON
-                    response_format: { 
-                        type: "json_object" 
-                    }
-                })
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                const descripcion = data?.choices?.[0]?.message?.content;
-                
-                if (descripcion) {
-                    // Actualizar índice de key para la próxima llamada
-                    indiceKeyActual = (keyIdx + 1) % GROQ_KEYS.length;
-                    logQuinti('INFO', 'Descripción de ropa/lencería obtenida con Groq Vision', {
-                        longitud: descripcion.length,
-                        imageUrl: imageUrl.substring(0, 50) + '...'
-                    });
-                    return descripcion;
-                }
-            }
-            
-            // Si falla, continuar con la siguiente key
-            logQuinti('WARN', `Groq Vision falló con key ${keyIdx + 1}: ${response.status}`);
-            
-        } catch (error) {
-            logQuinti('ERROR', `Error en Groq Vision con key ${keyIdx + 1}`, { error: error.message });
-            // Continuar con la siguiente key
-        }
-    }
-    
-    // Si todas las keys fallaron, lanzar error
-    throw new Error('No se pudo obtener descripción de ropa/lencería con Groq Vision');
-}
-
 // ============================================================
 //  FUNCIONES PÚBLICAS DE LA API
 // ============================================================
@@ -2592,7 +2496,6 @@ export {
     limpiarHistorial,
     GROQ_KEYS,
     MODELO_PRINCIPAL,
-    MODELO_VISION,  // Exportar modelo de visión
     PERSONALIDADES,
     // Funciones de utilidad
     logQuinti,
@@ -2625,8 +2528,7 @@ export {
     // Función de parseo de JSON (para tests)
     parsearJSON,
     // Función para obtener URLs de imágenes
-    obtenerURLImagen,
-    describirRopaConVision  // Nueva función para descripción de ropa/lencería con visión
+    obtenerURLImagen
 };
 
 // Exportar para window (compatibilidad con browser)
@@ -2659,8 +2561,6 @@ if (typeof window !== 'undefined') {
     window.parsearJSON = parsearJSON;
     // Función para obtener URLs de imágenes
     window.obtenerURLImagen = obtenerURLImagen;
-    // Función para describir ropa/lencería con visión
-    window.describirRopaConVision = describirRopaConVision;
 }
 
 // Exportar funciones para uso en otros módulos (CommonJS - compatibilidad)
@@ -2678,7 +2578,6 @@ if (typeof module !== 'undefined' && module.exports) {
         limpiarHistorial,
         GROQ_KEYS,
         MODELO_PRINCIPAL,
-        MODELO_VISION,  // Exportar modelo de visión
         PERSONALIDADES,
         // Funciones de utilidad
         logQuinti,
@@ -2690,7 +2589,6 @@ if (typeof module !== 'undefined' && module.exports) {
         getEstadoAccion,
         getMemoriaEventosIntimos,
         registrarEventoImportante,
-        obtenerURLImagen,
-        describirRopaConVision  // Nueva función para descripción de ropa/lencería con visión
+        obtenerURLImagen
     };
 }
