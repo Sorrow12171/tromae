@@ -2198,10 +2198,6 @@ export {
     formatearErrorUsuario,
     seleccionarImagenAutomatica,
     obtenerTagsImagen,
-    actualizarAccionEnCurso,
-    getAccionEnCurso,
-    verificarAccionEnCurso,  // NUEVA FUNCIÓN: Verificación dinámica de acción en curso
-    getEstadoAccion,
     getMemoriaEventosIntimos,
     registrarEventoImportante,
     // Funciones de memoria mejoradas
@@ -2223,7 +2219,8 @@ export {
     // Función de parseo de JSON (para tests)
     parsearJSON,
     // Función para obtener URLs de imágenes
-    obtenerURLImagen
+    obtenerURLImagen,
+    seleccionarImagenPorIA
 };
 
 // Exportar para window (compatibilidad con browser)
@@ -2234,10 +2231,6 @@ if (typeof window !== 'undefined') {
     window.obtenerTagsImagen = obtenerTagsImagen;
     window.getChicasEnChat = getChicasEnChat;
     window.limpiarChicasEnChat = limpiarChicasEnChat;
-    window.actualizarAccionEnCurso = actualizarAccionEnCurso;
-    window.getAccionEnCurso = getAccionEnCurso;
-    window.verificarAccionEnCurso = verificarAccionEnCurso;  // NUEVA FUNCIÓN
-    window.getEstadoAccion = getEstadoAccion;
     window.getMemoriaEventosIntimos = getMemoriaEventosIntimos;
     window.registrarEventoImportante = registrarEventoImportante;
     window.limpiarHistorialConversacion = limpiarHistorial; // Para usar desde chat.html
@@ -2279,9 +2272,6 @@ if (typeof module !== 'undefined' && module.exports) {
         formatearErrorUsuario,
         seleccionarImagenAutomatica,
         obtenerTagsImagen,
-        actualizarAccionEnCurso,
-        getAccionEnCurso,
-        getEstadoAccion,
         getMemoriaEventosIntimos,
         registrarEventoImportante,
         obtenerURLImagen
