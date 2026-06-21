@@ -43,8 +43,11 @@ const _K = [
     ["gsk_hhU0","lGUUZz0akDJ3","9Bc8WGdyb3FYIbnZloErkqMK9CmvdUMZ0NkM"],
     ["gsk_WZ5J","eXbz8Cdyobah","N2YOWGdyb3FYt26L4pNRknGmbQVSmwtYpov4"],
     ["gsk_eGDZ","VjFAmOx5PtSl","DdadWGdyb3FYm6DvoDLIqKxqmpaLCn5PbyR3"],
+    ["gsk_UHXG","5P9bK5R89hid","YaRuWGdyb3FYJszztcUJt14qYDE4jekb486Q"],
+    ["gsk_4gde","xolSNg07yo0W","QdfdWGdyb3FYpEtpBMbAy468Z4poTaZq9Ebm"],
+    ["gsk_MIlZ","XtHbwn7MILGj","kEB7WGdyb3FYTqqcD3n2dBfX9f9hRGCp0QaP"],
+    ["gsk_bIeI","gAZ9guyQaloQ","e9fOWGdyb3FYI3b0ML6OkllrTtywXadkJ8cM"],
 ];
-
 const GROQ_KEYS = _K.map(partes => partes.join(""));
 const MODELO_PRINCIPAL = "openai/gpt-oss-120b";
 
