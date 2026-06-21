@@ -1917,7 +1917,7 @@ DEBES HACER TRES COSAS OBLIGATORIAMENTE:
  * @returns {Promise<object>} - Datos parseados
  * @throws {Error} - Error con detalles específicos de cada key intentada
  */
-async function intentarLlamadaAPI(mensajes, modelo) {
+async function intentarLlamadaAPI(mensajes, modelo, forzarJSON = false) {
     const url = "https://api.groq.com/openai/v1/chat/completions";
     const erroresAcumulados = [];
     
@@ -1927,24 +1927,80 @@ async function intentarLlamadaAPI(mensajes, modelo) {
         const keyNumero = keyIdx + 1;
         
         try {
+            // Construir payload base SIN response_format por defecto
+            // La mayoría de los modelos en Groq no necesitan este parámetro
+            // y puede causar errores 400
+            const payload = {
+                model: modelo,
+                messages: mensajes,
+                temperature: 0.7,
+                max_tokens: 1024
+            };
+            
+            // Solo agregar response_format si se solicita explícitamente Y el modelo lo soporta
+            // Nota: openai/gpt-oss-120b y otros modelos open-source pueden fallar con este parámetro
+            if (forzarJSON) {
+                logQuinti('DEBUG', `Intentando con response_format: json_object para ${modelo}`);
+                payload.response_format = { type: "json_object" };
+            }
+            
             const response = await fetch(url, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${apiKey}`
                 },
-                body: JSON.stringify({
-                    model: modelo,
-                    messages: mensajes,
-                    temperature: 0.7,
-                    max_tokens: 1024,
-                    
-                    // ← ESTO ES CLAVE: Forzar respuesta JSON
-                    response_format: { 
-                        type: "json_object" 
-                    }
-                })
+                body: JSON.stringify(payload)
             });
+            
+            // MANEJO DE ERROR 400 - Reintentar sin response_format
+            if (response.status === 400 && forzarJSON) {
+                logQuinti('WARN', `Error 400 con response_format, reintentando sin él - Key ${keyNumero}`);
+                
+                // Remover response_format y reintentar
+                delete payload.response_format;
+                
+                const responseRetry = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                // Usar la respuesta del retry
+                if (!responseRetry.ok) {
+                    const errorData = await responseRetry.json().catch(() => ({}));
+                    const errorMsg = `Key ${keyNumero}: Error HTTP ${responseRetry.status} (retry) - ${errorData.error?.message || 'Sin detalles'}`;
+                    logErrorAPI('Groq API (retry)', new Error(`Status ${responseRetry.status}`), { errorData, keyIdx });
+                    erroresAcumulados.push(errorMsg);
+                    indiceKeyActual = (keyIdx + 1) % GROQ_KEYS.length;
+                    continue;
+                }
+                
+                // Procesar respuesta exitosa del retry
+                const data = await responseRetry.json();
+                const contenido = data?.choices?.[0]?.message?.content;
+                
+                if (contenido) {
+                    indiceKeyActual = (keyIdx + 1) % GROQ_KEYS.length;
+                    const resultadoJSON = parsearJSON(contenido);
+                    
+                    if (resultadoJSON === null) {
+                        logQuinti('ERROR', 'API devolvió contenido pero no es JSON válido (retry)', {
+                            contenido: contenido.substring(0, 200),
+                            keyUsada: keyNumero
+                        });
+                    }
+                    
+                    return resultadoJSON;
+                } else {
+                    logQuinti('WARN', `API devolvió respuesta vacía en retry - Key ${keyNumero}`, {
+                        dataCompleta: JSON.stringify(data).substring(0, 500)
+                    });
+                }
+            }
             
             if (response.status === 429) {
                 const errorMsg = `Key ${keyNumero}: Rate limit excedido (429)`;
