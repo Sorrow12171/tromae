@@ -46,7 +46,7 @@ const _K = [
 ];
 
 const GROQ_KEYS = _K.map(partes => partes.join(""));
-const MODELO_PRINCIPAL = "llama-3.3-70b-versatile";
+const MODELO_PRINCIPAL = "llama-3.1-8b-instant";
 const MODELO_VISION = "meta-llama/llama-4-scout-17b-16e-instruct"; // Modelo de Groq con soporte de visión
 
 let indiceKeyActual = 0;
