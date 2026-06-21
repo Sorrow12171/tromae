@@ -1146,6 +1146,12 @@ function seleccionarImagenAutomatica(dialogo, nombreChica) {
  * @param {string} raw - Contenido crudo de la respuesta
  * @returns {object|null} - Objeto JSON parseado o null si falla
  */
+/**
+ * PARSEA RESPUESTA JSON DE LA IA CON MÚLTIPLES ESTRATEGIAS
+ * Maneja casos donde la IA devuelve texto narrativo en lugar de JSON puro
+ * @param {string} raw - Respuesta cruda de la API
+ * @returns {object|null} - Objeto parseado o null si falla todo
+ */
 function parsearJSON(raw) {
     if (!raw) {
         logQuinti('ERROR', 'parsearJSON: contenido vacío o null');
@@ -1154,147 +1160,114 @@ function parsearJSON(raw) {
     
     // Guardar el texto original completo antes de cualquier limpieza
     const textoOriginalCompleto = raw;
-    
-    // Limpiar bloques de código markdown y caracteres invisibles al inicio
-    let rawLimpio = raw.replace(/```json/g, "").replace(/```/g, "").trim();
-    
-    // Eliminar caracteres BOM (Byte Order Mark) y otros caracteres especiales al inicio
-    rawLimpio = rawLimpio.replace(/^\uFEFF/, '').replace(/^[\u200B-\u200D\uFEFF]+/, '').trim();
-    
-    // ESTRATEGIA 0: Eliminar formato [Nombre]: al inicio si existe (la IA a veces lo agrega antes del JSON)
-    // Esto maneja casos como: [Ichika]: {"respuesta":"...", "imagen_tag":"..."}
-    rawLimpio = rawLimpio.replace(/^\s*\[[^\]]+\]\s*:\s*/gi, '').trim();
-    
+    let texto = raw.trim();
+
+    // ==========================================
+    // LIMPIEZA INICIAL AGRESIVA
+    // ==========================================
+    texto = texto
+        .replace(/```json|```/gi, '')           // Eliminar bloques de código markdown
+        .replace(/^\s*\[[^\]]+\]\s*:\s*/i, '')  // Eliminar [Ichika]:, [Yume]:, etc.
+        .replace(/^[\u200B-\u200D\uFEFF\s]+/, '') // Eliminar caracteres Unicode invisibles
+        .replace(/\n\s*\n/g, '\n')              // Eliminar líneas vacías múltiples
+        .trim();
+
+    // ==========================================
+    // ESTRATEGIA 1: Extraer el JSON más grande posible (la más común)
+    // ==========================================
+    const jsonMatch = texto.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+        try {
+            const parsed = JSON.parse(jsonMatch[0]);
+            parsed.texto_original = textoOriginalCompleto;
+            return parsed;
+        } catch (e) {
+            logQuinti('DEBUG', `parsearJSON: Estrategia 1 falló - ${e.message}`);
+        }
+    }
+
+    // ==========================================
+    // ESTRATEGIA 2: Buscar JSON después de dos puntos (caso "aquí tienes: {...}")
+    // ==========================================
+    const despuesDeDosPuntos = texto.split(':').pop();
+    if (despuesDeDosPuntos && despuesDeDosPuntos.includes('{')) {
+        const jsonMatch2 = despuesDeDosPuntos.match(/\{[\s\S]*\}/);
+        if (jsonMatch2) {
+            try {
+                const parsed = JSON.parse(jsonMatch2[0]);
+                parsed.texto_original = textoOriginalCompleto;
+                return parsed;
+            } catch (e) {
+                logQuinti('DEBUG', `parsearJSON: Estrategia 2 falló - ${e.message}`);
+            }
+        }
+    }
+
+    // ==========================================
+    // ESTRATEGIA 3: Si todo el texto parece JSON (caso raro)
+    // ==========================================
     try {
-        const resultado = JSON.parse(rawLimpio);
-        // Adjuntar el texto original completo al resultado para no perder contexto
-        resultado.texto_original = textoOriginalCompleto;
-        return resultado;
-    } catch (error) {
-        logQuinti('DEBUG', `parsearJSON: primer intento falló - ${error.message}`, { 
-            contenido: raw.substring(0, 150) 
-        });
-    }
-    
-    // ESTRATEGIA 1: Buscar JSON entre llaves (buscar el primer { hasta el último })
-    const match = rawLimpio.match(/\{[\s\S]*\}/);
-    if (match) {
-        try {
-            const resultado = JSON.parse(match[0]);
-            logQuinti('DEBUG', 'parsearJSON: extracción exitosa del JSON del texto');
-            // Adjuntar el texto original completo al resultado para no perder contexto
-            resultado.texto_original = textoOriginalCompleto;
-            return resultado;
-        } catch (error) {
-            logQuinti('DEBUG', `parsearJSON: segundo intento falló - ${error.message}`, {
-                jsonExtraido: match[0].substring(0, 150)
-            });
-        }
-    }
-    
-    // ESTRATEGIA 2: Buscar desde el primer { hasta encontrar un } válido
-    const primerLLave = rawLimpio.indexOf('{');
-    if (primerLLave !== -1) {
-        const desdeLLave = rawLimpio.substring(primerLLave);
-        const ultimaLLaveCierre = desdeLLave.lastIndexOf('}');
-        if (ultimaLLaveCierre !== -1) {
-            const posibleJSON = desdeLLave.substring(0, ultimaLLaveCierre + 1);
-            try {
-                const resultado = JSON.parse(posibleJSON);
-                logQuinti('DEBUG', 'parsearJSON: extracción exitosa tras limpiar texto inicial');
-                // Adjuntar el texto original completo al resultado para no perder contexto
-                resultado.texto_original = textoOriginalCompleto;
-                return resultado;
-            } catch (error) {
-                logQuinti('DEBUG', `parsearJSON: tercer intento falló - ${error.message}`, {
-                    posibleJSON: posibleJSON.substring(0, 150)
-                });
-            }
-        }
-    }
-    
-    // ESTRATEGIA 3: Eliminar texto narrativo (acciones entre asteriscos) antes del JSON
-    const textoSinAcciones = rawLimpio.replace(/^\s*(\*[^*]*\*\s*)+/gi, '').trim();
-    if (textoSinAcciones !== rawLimpio) {
-        logQuinti('DEBUG', 'parsearJSON: detectado texto narrativo antes del JSON, intentando con texto limpio');
-        try {
-            const resultado = JSON.parse(textoSinAcciones);
-            logQuinti('DEBUG', 'parsearJSON: extracción exitosa tras eliminar acciones narrativas');
-            // Adjuntar el texto original completo al resultado para no perder contexto
-            resultado.texto_original = textoOriginalCompleto;
-            return resultado;
-        } catch (error) {
-            logQuinti('DEBUG', `parsearJSON: intento con texto sin acciones falló - ${error.message}`);
-        }
+        const parsed = JSON.parse(texto);
+        parsed.texto_original = textoOriginalCompleto;
+        return parsed;
+    } catch (e) {}
+
+    // ==========================================
+    // ESTRATEGIA 4: Intentar extraer JSON aunque tenga texto narrativo antes/después
+    // Busca patrones como {"respuesta": "..."} incluso con ruido alrededor
+    // ==========================================
+    const jsonConRuido = texto.match(/\{\s*["']\w+["']\s*:[\s\S]*?\}/);
+    if (jsonConRuido) {
+        // Intentar limpiar el contenido interno
+        let candidato = jsonConRuido[0];
         
-        // Si aún falla, intentar extraer JSON del texto ya limpio de acciones
-        const matchLimpio = textoSinAcciones.match(/\{[\s\S]*\}/);
-        if (matchLimpio) {
-            try {
-                const resultado = JSON.parse(matchLimpio[0]);
-                logQuinti('DEBUG', 'parsearJSON: extracción exitosa de JSON tras limpiar acciones narrativas');
-                // Adjuntar el texto original completo al resultado para no perder contexto
-                resultado.texto_original = textoOriginalCompleto;
-                return resultado;
-            } catch (error) {
-                logQuinti('DEBUG', `parsearJSON: extracción de JSON limpia falló - ${error.message}`);
-            }
-        }
-    }
-    
-    // ESTRATEGIA 4: NUEVA - Eliminar cualquier texto antes del primer { incluyendo frases completas
-    // Maneja casos como "Mi expresión... {\"respuesta\": ...}" o "¡No te equivoques! {...}"
-    const indicePrimerLLave = rawLimpio.indexOf('{');
-    if (indicePrimerLLave > 0) {
-        const textoDesdeLLave = rawLimpio.substring(indicePrimerLLave);
-        logQuinti('DEBUG', `parsearJSON: detectado texto antes de JSON (${indicePrimerLLave} chars), intentando desde la primera llave`);
+        // Reparar comillas curvas y caracteres problemáticos
+        candidato = candidato
+            .replace(/"|"/g, '"')      // Comillas curvas dobles
+            .replace(/'|'/g, "'")      // Comillas curvas simples
+            .replace(/—|–/g, '-')      // Guiones largos
+            .replace(/\n/g, '\\n');    // Saltos de línea reales a escapados
+        
         try {
-            const resultado = JSON.parse(textoDesdeLLave);
-            logQuinti('DEBUG', 'parsearJSON: extracción exitosa desde primera llave');
-            // Adjuntar el texto original completo al resultado para no perder contexto
-            resultado.texto_original = textoOriginalCompleto;
-            return resultado;
-        } catch (error) {
-            logQuinti('DEBUG', `parsearJSON: intento desde primera llave falló - ${error.message}`);
+            const parsed = JSON.parse(candidato);
+            parsed.texto_original = textoOriginalCompleto;
+            logQuinti('INFO', 'parsearJSON: Estrategia 4 exitosa (JSON con ruido)');
+            return parsed;
+        } catch (e) {
+            logQuinti('DEBUG', `parsearJSON: Estrategia 4 falló - ${e.message}`);
         }
     }
-    
-    // ESTRATEGIA 5: NUEVA - Intentar reparar JSON comúnmente roto (comillas simples, comas faltantes, etc.)
-    let jsonReparado = rawLimpio;
-    // Reemplazar comillas simples por dobles (solo si parece JSON)
-    if (rawLimpio.includes("'") && rawLimpio.includes('{')) {
-        jsonReparado = jsonReparado.replace(/'/g, '"');
-        try {
-            const resultado = JSON.parse(jsonReparado);
-            logQuinti('DEBUG', 'parsearJSON: extracción exitosa tras reparar comillas');
-            // Adjuntar el texto original completo al resultado para no perder contexto
-            resultado.texto_original = textoOriginalCompleto;
-            return resultado;
-        } catch (error) {
-            logQuinti('DEBUG', `parsearJSON: reparación de comillas falló - ${error.message}`);
-        }
+
+    // ==========================================
+    // ESTRATEGIA 5: Último intento - reparación agresiva
+    // Limpia comillas, escapa caracteres y repara JSON malformed
+    // ==========================================
+    let reparado = texto
+        .replace(/"|"/g, '"')           // Comillas curvas dobles → rectas
+        .replace(/'|'/g, "'")           // Comillas curvas simples → rectas
+        .replace(/\\n/g, '\\\\n')       // Escapar saltos de línea
+        .replace(/\t/g, '\\\\t')        // Escapar tabs
+        .replace(/,\s*}/g, '}')         // Eliminar comas finales antes de }
+        .replace(/,\s*]/g, ']')         // Eliminar comas finales antes de ]
+        .replace(/([{,]\s*)(\w+)\s*:/g, '$1"$2":'); // Asegurar comillas en keys
+
+    try {
+        const parsed = JSON.parse(reparado);
+        parsed.texto_original = textoOriginalCompleto;
+        logQuinti('INFO', 'parsearJSON: Estrategia 5 exitosa (reparación agresiva)');
+        return parsed;
+    } catch (e) {
+        // ==========================================
+        // FALLBACK FINAL: Si TODO falla, devolver null
+        // El sistema usará fallbacks.js para generar respuesta alternativa
+        // ==========================================
+        logQuinti('ERROR', 'parsearJSON: TODOS LOS INTENTOS FALLARON', {
+            contenidoInicio: texto.substring(0, 300),
+            longitudTotal: texto.length,
+            errorUltimoIntento: e.message
+        });
+        return null;
     }
-    
-    // ESTRATEGIA 6: NUEVA - Buscar patrón de JSON aunque esté incompleto
-    // Intentar encontrar un objeto JSON mínimo válido
-    const patronJSONMinimo = /\{\s*"respuesta"\s*:\s*"[^"]*"\s*(,\s*"imagen_tag"\s*:\s*"[^"]*")?\s*\}/i;
-    const matchMinimo = rawLimpio.match(patronJSONMinimo);
-    if (matchMinimo) {
-        try {
-            const resultado = JSON.parse(matchMinimo[0]);
-            logQuinti('DEBUG', 'parsearJSON: extracción exitosa de JSON mínimo');
-            // Adjuntar el texto original completo al resultado para no perder contexto
-            resultado.texto_original = textoOriginalCompleto;
-            return resultado;
-        } catch (error) {
-            logQuinti('DEBUG', `parsearJSON: JSON mínimo falló - ${error.message}`);
-        }
-    }
-    
-    logQuinti('ERROR', 'parsearJSON: no se pudo extraer JSON válido', {
-        contenidoCompleto: raw.substring(0, 300)
-    });
-    return null;
 }
 
 /**
@@ -1962,7 +1935,12 @@ async function intentarLlamadaAPI(mensajes, modelo) {
                     model: modelo,
                     messages: mensajes,
                     temperature: 0.7,
-                    max_tokens: 1024
+                    max_tokens: 1024,
+                    
+                    // ← ESTO ES CLAVE: Forzar respuesta JSON
+                    response_format: { 
+                        type: "json_object" 
+                    }
                 })
             });
             
@@ -2438,7 +2416,12 @@ async function describirRopaConVision(imageUrl, contextoRespuesta) {
                         }
                     ],
                     temperature: 0.3,
-                    max_tokens: 500
+                    max_tokens: 500,
+                    
+                    // ← ESTO ES CLAVE: Forzar respuesta JSON
+                    response_format: { 
+                        type: "json_object" 
+                    }
                 })
             });
             
