@@ -37,8 +37,11 @@ reverse_cowgirl: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDD
     follando_anal_rapido: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773757229891.jpg", audio: "https://files.catbox.moe/hhewjq.mp3" },  
     anal_cumming: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD21/main/imagenes/img_1773757227550.jpg", audio: "" },
     ichika_licking_anus: { url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1774103171064.png", audio: "" },
-    follando_en_el_aire: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD23/main/imagenes/img_1774198366172.jpg", audio: "" }, 
-    me_corro_en_su_boca_de_ichika: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854981094.jpg", audio: "" },  
+  
+            follando_en_el_aire: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD23/main/imagenes/img_1774198366172.jpg", audio: "" }, 
+                   follando_en_el_aire_anal: { url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD59/main/imagenes/img_1780230421362.jpg", audio: "" }, 
+   
+            me_corro_en_su_boca_de_ichika: { url: "https://raw.githubusercontent.com/SORFAR123123/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD22/main/imagenes/img_1773854981094.jpg", audio: "" },  
  ropa_idol: { url: "https://pbs.twimg.com/media/HFoblZNWIAA9Pgy?format=jpg&name=small", audio: "" },        
              ropa_vestido: { url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD66/main/imagenes/img_1781640176371.webp", audio: "" },    
        mostrando_culo_tanga_negra: { url: "https://pbs.twimg.com/media/HGJ4KmyW8AAZfgm?format=jpg&name=small", audio: "" },     
