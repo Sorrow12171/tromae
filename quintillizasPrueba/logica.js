@@ -820,7 +820,94 @@ function encontrarTagMasPertinente(tagSolicitado, tagsDisponibles, dialogoContex
     }
     
     // ============================================
-    // CRITERIO 4: Similitud de palabras clave principales
+    // CRITERIO 4: PRIORIZAR ACCIÓN PRINCIPAL (VERBO) - MEJORA CRÍTICA
+    // Extraer el verbo/acción principal y buscar coincidencia exacta de acción
+    // Esto evita que "chupando_tetas" matchee con "agarra_tetas"
+    // ============================================
+    // Mapeo de variaciones verbales (gerundio, infinitivo, presente, etc.)
+    const variacionesAcciones = {
+        'chupando': ['chupando', 'chupa', 'chupar', 'chupé', 'chupaba'],
+        'mamando': ['mamando', 'mama', 'mamar', 'mamé', 'mamaba'],
+        'besando': ['besando', 'besa', 'besar', 'besé', 'besaba'],
+        'follando': ['follando', 'folla', 'follar', 'follé', 'follaba'],
+        'tocando': ['tocando', 'toca', 'tocar', 'toqué', 'tocaba'],
+        'agarrando': ['agarrando', 'agarra', 'agarrar', 'agarré', 'agarraba'],
+        'lamiendo': ['lamiendo', 'lame', 'lamer', 'lamí', 'lamía'],
+        'penetrando': ['penetrando', 'penetra', 'penetrar', 'penetré', 'penetraba'],
+        'corriendo': ['corriendo', 'corre', 'correr', 'corrí', 'corría'],
+        'eyaculando': ['eyaculando', 'eyacula', 'eyacular', 'eyaculé', 'eyaculaba'],
+        'mostrando': ['mostrando', 'muestra', 'mostrar', 'mostré', 'mostraba'],
+        'enseñando': ['enseñando', 'enseña', 'enseñar', 'enseñé', 'enseñaba'],
+        'quitando': ['quitando', 'quita', 'quitar', 'quité', 'quitaba'],
+        'desvistiendo': ['desvistiendo', 'desviste', 'desvestir', 'desvestí', 'desvestía'],
+        'moviendo': ['moviendo', 'mueve', 'mover', 'moví', 'movía'],
+        'sujetando': ['sujetando', 'sujeta', 'sujetar', 'sujeté', 'sujetaba'],
+        'empujando': ['empujando', 'empuja', 'empujar', 'empujé', 'empujaba']
+    };
+    
+    // Detectar acción principal en el tag solicitado
+    let accionPrincipalSolicitada = null;
+    let formaVerbalDetectada = null;
+    for (const [accionBase, variaciones] of Object.entries(variacionesAcciones)) {
+        for (const variacion of variaciones) {
+            if (tagNormalizado.includes(variacion)) {
+                accionPrincipalSolicitada = accionBase;
+                formaVerbalDetectada = variacion;
+                break;
+            }
+        }
+        if (accionPrincipalSolicitada) break;
+    }
+    
+    // Si hay una acción principal, buscar tags que tengan ESA acción específica (en cualquier variación)
+    if (accionPrincipalSolicitada) {
+        logQuinti('DEBUG', `Acción principal detectada: "${formaVerbalDetectada}" (base: ${accionPrincipalSolicitada}) en "${tagSolicitado}"`);
+        
+        // Obtener todas las variaciones de esta acción para buscar en los tags disponibles
+        const variacionesDeAccion = variacionesAcciones[accionPrincipalSolicitada];
+        
+        // Primero buscar coincidencia exacta de acción + objeto similar
+        for (const tag of tagsDisponibles) {
+            const tagNorm = tag.toLowerCase().replace(/_/g, ' ');
+            
+            // Verificar si el tag disponible tiene ALGUNA variación de la acción principal
+            let variacionEncontrada = null;
+            for (const variacion of variacionesDeAccion) {
+                if (tagNorm.includes(variacion)) {
+                    variacionEncontrada = variacion;
+                    break;
+                }
+            }
+            
+            if (variacionEncontrada) {
+                logQuinti('DEBUG', `  Tag "${tag}" tiene variación "${variacionEncontrada}" de la acción "${accionPrincipalSolicitada}"`);
+                
+                // Ahora verificar si también coincide el objeto/contexto
+                // Remover la variación encontrada del tag para comparar el resto
+                const palabrasRestantesSolicitado = tagNormalizado.replace(formaVerbalDetectada, '').split(' ').filter(p => p.length > 2);
+                const palabrasRestantesTag = tagNorm.replace(variacionEncontrada, '').split(' ').filter(p => p.length > 2);
+                
+                let coincidenciasObjeto = 0;
+                for (const palabraS of palabrasRestantesSolicitado) {
+                    for (const palabraT of palabrasRestantesTag) {
+                        if (palabraS.includes(palabraT) || palabraT.includes(palabraS) || palabraS === palabraT) {
+                            coincidenciasObjeto++;
+                            break;
+                        }
+                    }
+                }
+                
+                // Si coincide al menos un objeto o no hay objetos específicos
+                if (coincidenciasObjeto > 0 || palabrasRestantesSolicitado.length === 0) {
+                    logQuinti('DEBUG', `Coincidencia por ACCIÓN PRINCIPAL (${formaVerbalDetectada}->${variacionEncontrada}): "${tagSolicitado}" -> "${tag}"`);
+                    return tag;
+                }
+            }
+        }
+    }
+    
+    // ============================================
+    // CRITERIO 5: Similitud de palabras clave principales (sin priorizar acción)
     // Extraer sustantivos/verbos clave del tag solicitado
     // ============================================
     const palabrasClave = tagNormalizado.split(' ').filter(p => p.length > 3);
@@ -887,7 +974,7 @@ function encontrarTagMasPertinente(tagSolicitado, tagsDisponibles, dialogoContex
     
     // ============================================
     // CRITERIO 6: Búsqueda por categoría semántica
-    // Mapeo de conceptos relacionados
+    // Mapeo de conceptos relacionados - AHORA CON ACCIONES ESPECÍFICAS
     // ============================================
     const mapeoSemanitico = {
         'desvestir': ['quitandose_la_ropa', 'desnuda', 'mostrando_bra'],
@@ -898,7 +985,13 @@ function encontrarTagMasPertinente(tagSolicitado, tagsDisponibles, dialogoContex
         'ano': ['anal', 'enseñando_ano', 'rozo_mi_verga_en_su_ano'],
         'culo': ['moviendo_el_culo', 'mostrando_culo_tanga_negra', 'le_agarro_el_culo'],
         'pecho': ['mostrando_tetas', 'mostrando_bra'],
-        'mano': ['handjob_paja', 'manos_alrededor_del_cuello']
+        'mano': ['handjob_paja', 'manos_alrededor_del_cuello'],
+        // Acciones específicas con tetas/pechos - PRIORIZAR LA ACCIÓN CORRECTA
+        // Solo Ichika tiene estas tags por ahora
+        'chupando_tetas': ['usuario_chupa_tetas_de_ichika'],
+        'chupa_tetas': ['usuario_chupa_tetas_de_ichika'],
+        'agarra_tetas': ['usuario_agarra_tetas_de_ichika'],
+        'toca_tetas': ['usuario_toca_tetas_de_ichika']
     };
     
     for (const [concepto, tagsRelacionados] of Object.entries(mapeoSemanitico)) {
