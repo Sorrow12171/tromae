@@ -1444,10 +1444,11 @@ function detectarAccionEnMensaje(mensajeUsuario, chicaNombre = 'Ichika') {
                                 audioURL = resultadoFallback.urlAudio;
                             }
                             if (!imagenURL) {
-                            const resultadoImagen = obtenerURLImagen(chicaNombre, tagImagen);
-                            imagenURL = resultadoImagen.urlImagen;
-                            audioURL = resultadoImagen.urlAudio;
-                            logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, audio: audioURL, mensajeUsuario: message.substring(0, 50) });
+                                const resultadoImagen = obtenerURLImagen(chicaNombre, tagImagen);
+                                imagenURL = resultadoImagen.urlImagen;
+                                audioURL = resultadoImagen.urlAudio;
+                                logQuinti('DEBUG', `Imagen para ${chicaNombre}`, { tag: tagImagen, url: imagenURL, audio: audioURL, mensajeUsuario: message.substring(0, 50) });
+                            }
                         }
 
                         // Construir contenido: PRIMERO TEXTO con nombre, luego imagen y audio al final
