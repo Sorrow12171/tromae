@@ -688,6 +688,9 @@ function encontrarTagMasPertinente(tagSolicitado, tagsDisponibles, dialogoContex
     const palabrasClave = tagNormalizado.split(' ').filter(p => p.length > 3);
     
     if (palabrasClave.length > 0) {
+        let mejorCoincidencia = null;
+        let mejorCount = 0;
+        
         for (const tag of tagsDisponibles) {
             const tagNorm = tag.toLowerCase().replace(/_/g, ' ');
             let coincidenciasCount = 0;
@@ -698,11 +701,17 @@ function encontrarTagMasPertinente(tagSolicitado, tagsDisponibles, dialogoContex
                 }
             }
             
-            // Si coincide más del 50% de las palabras clave
-            if (coincidenciasCount >= Math.ceil(palabrasClave.length * 0.5)) {
-                logQuinti('DEBUG', `Coincidencia por PALABRAS CLAVE (${coincidenciasCount}/${palabrasClave.length}): "${tagSolicitado}" -> "${tag}"`);
-                return tag;
+            // Guardar la mejor coincidencia encontrada
+            if (coincidenciasCount > mejorCount) {
+                mejorCount = coincidenciasCount;
+                mejorCoincidencia = tag;
             }
+        }
+        
+        // Solo retornar si coincide más del 50% de las palabras clave
+        if (mejorCount >= Math.ceil(palabrasClave.length * 0.5) && mejorCoincidencia) {
+            logQuinti('DEBUG', `Coincidencia por PALABRAS CLAVE (${mejorCount}/${palabrasClave.length}): "${tagSolicitado}" -> "${mejorCoincidencia}"`);
+            return mejorCoincidencia;
         }
     }
     
