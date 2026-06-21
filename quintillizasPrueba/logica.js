@@ -1504,7 +1504,7 @@ DEBES HACER TRES COSAS OBLIGATORIAMENTE:
             }
             
             // SOLUCIÓN PROBLEMA #2: Incluir contexto unificado en el system prompt
-            const systemPromptIndividual = `${personalidadChica}${instruccionesImagen}${instruccionAntiRepeticion}${instruccionAccionUsuario}${instruccionContextoOtrasChicas}\n\n${contextoUnificado ? contextoUnificado + '\n\n' : ''}FORMATO JSON OBLIGATORIO - RESPONDE SOLO CON JSON, SIN TEXTO ANTES NI DESPUES:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"una_imagen_disponible"}`;
+            const systemPromptIndividual = `${personalidadChica}${instruccionesImagen}${instruccionAntiRepeticion}${instruccionAccionUsuario}${instruccionContextoOtrasChicas}\n\n${contextoUnificado ? contextoUnificado + '\n\n' : ''}FORMATO JSON OBLIGATORIO - Respondé únicamente en formato JSON válido. RESPONDE SOLO CON JSON, SIN TEXTO ANTES NI DESPUES:\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"una_imagen_disponible"}`;
             
             // Preparar mensajes para esta chica (SOLO el mensaje actual del usuario)
             const mensajesPayload = [
@@ -1765,7 +1765,7 @@ DEBES HACER TRES COSAS OBLIGATORIAMENTE:
         contextoEstadoActual += `⚠️ CRÍTICO: DEBES MANTENER ESTA POSICIÓN/ACCIÓN A MENOS QUE EL USUARIO INDIQUE EXPLÍCITAMENTE CAMBIARLA. NO LA OLVIDES.`;
     }
     
-    const systemPrompt = `${personalidadPrincipal}${instruccionesImagenes}${instruccionAntiRepeticion}${instruccionMemoria}${instruccionAccionUsuario}${contextoEstadoActual}\n\nFORMATO DE RESPUESTA OBLIGATORIO - JSON (SOLO JSON, SIN TEXTO ANTES NI DESPUES):\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
+    const systemPrompt = `${personalidadPrincipal}${instruccionesImagenes}${instruccionAntiRepeticion}${instruccionMemoria}${instruccionAccionUsuario}${contextoEstadoActual}\n\nFORMATO DE RESPUESTA OBLIGATORIO - Respondé únicamente en formato JSON válido. JSON (SOLO JSON, SIN TEXTO ANTES NI DESPUES):\n{"respuesta":"tu diálogo con *acciones entre asteriscos*","imagen_tag":"nombre_de_una_imagen_disponible"}`;
     
     // Preparar mensajes
     const mensajesPayload = [

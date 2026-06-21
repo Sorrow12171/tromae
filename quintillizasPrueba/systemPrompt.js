@@ -65,8 +65,9 @@ Responde **solo** el JSON. Nada más. Ni una sola palabra antes o después.
 
 /**
  * System prompt mínimo usado en fases avanzadas de reintento (FASE 3 y 4)
+ * NOTA: Debe incluir explícitamente "JSON" para que Groq acepte response_format: json_object
  */
-export const QUINT_PRUEBA_SYSTEM_MINIMO = `Eres una chica de roleplay interactivo. Responde SOLO con JSON válido.
+export const QUINT_PRUEBA_SYSTEM_MINIMO = `Eres una chica de roleplay interactivo. Respondé únicamente en formato JSON válido.
 FORMATO - SOLO JSON, SIN TEXTO ANTES NI DESPUES: {"respuesta":"tu respuesta con *acciones*","imagen_tag":"nombre_imagen"}`;
 
 /**
@@ -74,20 +75,20 @@ FORMATO - SOLO JSON, SIN TEXTO ANTES NI DESPUES: {"respuesta":"tu respuesta con 
  * Estos prompts fuerzan a la IA a responder SOLO con JSON, sin texto narrativo antes
  */
 export const QUINT_PRUEBA_FASE1 = [
-    "Responde SOLO con JSON valido. Sin texto fuera del JSON. Sin formato [Nombre]:. Empieza directamente con { y termina con }",
-    'SOLO JSON. Formato: {"respuesta":"tu respuesta aqui con *acciones entre asteriscos*","imagen_tag":"nombre_de_imagen"}. NO escribas [Nombre]: antes del JSON.',
-    "Tu respuesta anterior no fue JSON valido. Intenta de nuevo. SOLO el JSON, nada mas. No uses formato [Nombre]: respuesta.",
-    "JSON VALIDO UNICAMENTE. Empieza con { — no con texto, no con explicaciones, no con [Nombre]:.",
+    "Respondé únicamente en formato JSON válido. Responde SOLO con JSON valido. Sin texto fuera del JSON. Sin formato [Nombre]:. Empieza directamente con { y termina con }",
+    'Respondé únicamente en formato JSON válido. SOLO JSON. Formato: {"respuesta":"tu respuesta aqui con *acciones entre asteriscos*","imagen_tag":"nombre_de_imagen"}. NO escribas [Nombre]: antes del JSON.',
+    "Tu respuesta anterior no fue JSON valido. Intenta de nuevo. Respondé únicamente en formato JSON válido. SOLO el JSON, nada mas. No uses formato [Nombre]: respuesta.",
+    "Respondé únicamente en formato JSON válido. JSON VALIDO UNICAMENTE. Empieza con { — no con texto, no con explicaciones, no con [Nombre]:.",
 ];
 
 /**
  * FASE 2: Prompts con historial reducido
  */
 export const QUINT_PRUEBA_FASE2 = [
-    'Responde en JSON. {"respuesta":"respuesta aqui con *acciones*","imagen_tag":"nombre_imagen"}',
-    "SOLO JSON valido. Sin markdown. Sin texto extra. Empieza con {",
-    "Por favor responde unicamente con el JSON solicitado. Nada de texto adicional.",
-    "JSON. Solo JSON. Empieza con { termina con }",
+    'Respondé únicamente en formato JSON válido. Responde en JSON. {"respuesta":"respuesta aqui con *acciones*","imagen_tag":"nombre_imagen"}',
+    "Respondé únicamente en formato JSON válido. SOLO JSON valido. Sin markdown. Sin texto extra. Empieza con {",
+    "Por favor Respondé únicamente en formato JSON válido. responde unicamente con el JSON solicitado. Nada de texto adicional.",
+    "Respondé únicamente en formato JSON válido. JSON. Solo JSON. Empieza con { termina con }",
 ];
 
 /**
@@ -99,7 +100,7 @@ export const QUINT_PRUEBA_FASE3 = ["responde", "continua", "ok"];
  * FASE 4: Prompts agresivos directos
  */
 export const QUINT_PRUEBA_FASE4 = [
-    'JSON solo: {"respuesta":"tu respuesta","imagen_tag":"normal"}',
+    'Respondé únicamente en formato JSON válido. JSON solo: {"respuesta":"tu respuesta","imagen_tag":"normal"}',
     '{"respuesta":"Hola, ¿cómo estás? *sonríe amablemente*","imagen_tag":"hablando"}',
 ];
 
