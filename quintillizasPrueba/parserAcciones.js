@@ -3,6 +3,8 @@
 //  Archivo: parserAcciones.js
 //  Descripción: Detecta acciones en el texto de la IA y divide
 //               el mensaje para insertar imágenes en el lugar correcto
+//               INCLUYE: análisis de contexto, verbos + sustantivos,
+//               validación por puntuación y múltiples capas de detección
 // ============================================================
 
 /**
@@ -42,83 +44,301 @@ const TAGS_ACCIONES_EXPLICITAS = [
 ];
 
 /**
- * Patrones para detectar acciones en el texto
- * Cada patrón tiene asociado un tag de imagen
- * @type {Array<{patron: RegExp, tag: string}>}
+ * Configuración de pesos para el sistema de puntuación
+ * VERBOS tienen mayor peso (son la acción principal)
+ * SUSTANTIVOS tienen peso medio (contexto de la acción)
+ * ADVERBIOS/MODIFICADORES tienen peso menor (refuerzan la acción)
+ */
+const PESOS_DETECCION = {
+    VERBO_PRINCIPAL: 10,      // Acción principal (ej: "besando", "chupando")
+    SUSTANTIVO_OBJETO: 6,     // Objeto de la acción (ej: "pene", "culo", "bolas")
+    SUSTANTIVO_POSICION: 5,   // Posición (ej: "doggystyle", "misionero")
+    ADVERBIO_MODIFICADOR: 3,  // Modificadores (ej: "profundo", "fuerte")
+    CONTEXTO_FRASE: 4,        // Frases contextuales completas
+    ASTERISCO_ACCION: 8       // Acciones entre asteriscos *acción*
+};
+
+/**
+ * Patrones para detectar acciones en el texto (entre asteriscos)
+ * Cada patrón incluye verbos Y sustantivos relacionados
+ * @type {Array<{patron: RegExp, tag: string, peso: number, tipo: string}>}
  */
 const PATRONES_ACCIONES = [
-    { patron: /\*[^*]*(?:bes[ao]|kiss)[^*]*\*/gi, tag: 'besando' },
-    { patron: /\*[^*]*(?:chup[ao]|mam[ao]|oral|felaci)[^*]*\*/gi, tag: 'chupando_todo_el_pene' },
-    { patron: /\*[^*]*(?:punta|cabeza del pene)[^*]*\*/gi, tag: 'chupando_solo_la_punta_del_pene' },
-    { patron: /\*[^*]*(?:mitad|medio pene)[^*]*\*/gi, tag: 'chupando_solo_la_mitad_del_pene' },
-    { patron: /\*[^*]*(?:bola[s]?|testículo[s]?|escroto)[^*]*\*/gi, tag: 'chupando_bolas' },
-    { patron: /\*[^*]*(?:doggy|cuatro patas|por detrás)[^*]*\*/gi, tag: 'doggystyle' },
-    { patron: /\*[^*]*(?:misioner[o]?|encima|cara a cara)[^*]*\*/gi, tag: 'misionero' },
-    { patron: /\*[^*]*(?:desnud[ao]|sin ropa|quit[ao] la ropa|desvistiendo)[^*]*\*/gi, tag: 'desnuda' },
-    { patron: /\*[^*]*(?:anal|culo|ano|trasero)[^*]*\*/gi, tag: 'anal' },
-    { patron: /\*[^*]*(?:paja|handjob|masturb[ao])[^*]*\*/gi, tag: 'handjob_paja' },
-    { patron: /\*[^*]*(?:cowgirl|a caballo|encima suya)[^*]*\*/gi, tag: 'reverse_cowgirl' },
-    { patron: /\*[^*]*(?:sidefuck|de lado)[^*]*\*/gi, tag: 'sidefuck' },
-    { patron: /\*[^*]*(?:de pie|parad[ao]|stand)[^*]*\*/gi, tag: 'standfuck_follando_de_pie' },
-    { patron: /\*[^*]*(?:ventana|cristal|vidrio)[^*]*\*/gi, tag: 'follando_en_la_ventana' },
-    { patron: /\*[^*]*(?:en el aire|levantad[ao]|suspendid[ao])[^*]*\*/gi, tag: 'follando_en_el_aire' },
-    { patron: /\*[^*]*(?:lam[ei]ndo|lame|anilingus|culo|ano)[^*]*\*/gi, tag: 'ichika_licking_anus' },
-    { patron: /\*[^*]*(?:cuello|garganta)[^*]*\*/gi, tag: 'manos_alrededor_del_cuello' },
-    { patron: /\*[^*]*(?:corrida|eyacul[ao]|se viene|orgasmo)[^*]*\*/gi, tag: 'me_corro_en_su_boca_de_ichika' }
+    // BESANDO - verbo + sustantivos relacionados
+    { patron: /\*[^*]*(?:bes[ao]|besando|besar|beso|kiss|labios|boca)[^*]*\*/gi, tag: 'besando', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'verbo' },
+    
+    // CHUPANDO PENE - verbo principal + sustantivos de objeto
+    { patron: /\*[^*]*(?:chup[ao]|mam[ao]|oral|felaci|pene|miembro|verga|polla)[^*]*\*/gi, tag: 'chupando_todo_el_pene', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'verbo' },
+    
+    // PUNTA DEL PENE - sustantivos específicos + verbos
+    { patron: /\*[^*]*(?:punta|cabeza del pene|glans|corona|punta del miembro)[^*]*\*/gi, tag: 'chupando_solo_la_punta_del_pene', peso: PESOS_DETECCION.SUSTANTIVO_OBJETO, tipo: 'sustantivo' },
+    
+    // MITAD DEL PENE - sustantivos específicos
+    { patron: /\*[^*]*(?:mitad|medio pene|centro del pene)[^*]*\*/gi, tag: 'chupando_solo_la_mitad_del_pene', peso: PESOS_DETECCION.SUSTANTIVO_OBJETO, tipo: 'sustantivo' },
+    
+    // BOLAS/TESTÍCULOS - sustantivos + verbos relacionados
+    { patron: /\*[^*]*(?:bola[s]?|testículo[s]?|escroto|huevos|saco)[^*]*\*/gi, tag: 'chupando_bolas', peso: PESOS_DETECCION.SUSTANTIVO_OBJETO, tipo: 'sustantivo' },
+    
+    // DOGGYSTYLE - posición (sustantivo) + verbos relacionados
+    { patron: /\*[^*]*(?:doggy|cuatro patas|por detrás|culo hacia arriba|posición del perrito)[^*]*\*/gi, tag: 'doggystyle', peso: PESOS_DETECCION.SUSTANTIVO_POSICION, tipo: 'posicion' },
+    
+    // MISIONERO - posición + verbos
+    { patron: /\*[^*]*(?:misioner[o]?|encima|cara a cara|tumbada debajo)[^*]*\*/gi, tag: 'misionero', peso: PESOS_DETECCION.SUSTANTIVO_POSICION, tipo: 'posicion' },
+    
+    // DESNUDA - verbo + estado
+    { patron: /\*[^*]*(?:desnud[ao]|sin ropa|quit[ao] la ropa|desvistiendo|desnudez|cuerpo desnudo)[^*]*\*/gi, tag: 'desnuda', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'verbo' },
+    
+    // ANAL - sustantivo + verbos relacionados
+    { patron: /\*[^*]*(?:anal|culo|ano|trasero|nalga[s]?|hoyo)[^*]*\*/gi, tag: 'anal', peso: PESOS_DETECCION.SUSTANTIVO_OBJETO, tipo: 'sustantivo' },
+    
+    // PAJA/HANDJOB - verbo + sustantivo
+    { patron: /\*[^*]*(?:paja|handjob|masturb[ao]|mano[s]? en el pene|moviendo la mano)[^*]*\*/gi, tag: 'handjob_paja', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'verbo' },
+    
+    // COWGIRL - posición + verbos
+    { patron: /\*[^*]*(?:cowgirl|a caballo|encima suya|montand[o]?|subida encima)[^*]*\*/gi, tag: 'reverse_cowgirl', peso: PESOS_DETECCION.SUSTANTIVO_POSICION, tipo: 'posicion' },
+    
+    // SIDEFUCK - posición
+    { patron: /\*[^*]*(?:sidefuck|de lado|posición lateral)[^*]*\*/gi, tag: 'sidefuck', peso: PESOS_DETECCION.SUSTANTIVO_POSICION, tipo: 'posicion' },
+    
+    // DE PIE - posición + verbo
+    { patron: /\*[^*]*(?:de pie|parad[ao]|stand|follando de pie|penetración de pie)[^*]*\*/gi, tag: 'standfuck_follando_de_pie', peso: PESOS_DETECCION.SUSTANTIVO_POSICION, tipo: 'posicion' },
+    
+    // VENTANA - contexto de lugar + acción
+    { patron: /\*[^*]*(?:ventana|cristal|vidrio|pared|contra la ventana)[^*]*\*/gi, tag: 'follando_en_la_ventana', peso: PESOS_DETECCION.CONTEXTO_FRASE, tipo: 'contexto' },
+    
+    // EN EL AIRE - posición específica
+    { patron: /\*[^*]*(?:en el aire|levantad[ao]|suspendid[ao]|piernas al aire)[^*]*\*/gi, tag: 'follando_en_el_aire', peso: PESOS_DETECCION.CONTEXTO_FRASE, tipo: 'contexto' },
+    
+    // LAMIENDO ANO/CULO - verbo + sustantivo
+    { patron: /\*[^*]*(?:lam[ei]ndo|lame|anilingus|culo|ano|limpiando con la lengua)[^*]*\*/gi, tag: 'ichika_licking_anus', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'verbo' },
+    
+    // CUELLO/GARGANTA - sustantivo + verbos
+    { patron: /\*[^*]*(?:cuello|garganta|ahorcando|manos en el cuello)[^*]*\*/gi, tag: 'manos_alrededor_del_cuello', peso: PESOS_DETECCION.SUSTANTIVO_OBJETO, tipo: 'sustantivo' },
+    
+    // CORRIDAS/EYACULACIÓN - verbo + sustantivo
+    { patron: /\*[^*]*(?:corrida|eyacul[ao]|se viene|orgasmo|leche|esperma|terminando dentro)[^*]*\*/gi, tag: 'me_corro_en_su_boca_de_ichika', peso: PESOS_DETECCION.VERBO_PRINCIPAL, tipo: 'verbo' }
 ];
 
 /**
  * Palabras clave para detectar acciones en texto narrativo (no entre asteriscos)
- * @type {Array<{palabras: string[], tag: string}>}
+ * ORGANIZADO POR CATEGORÍAS: verbos, sustantivos, posiciones, contextos
+ * @type {Array<{palabras: string[], tag: string, categoria: string, peso: number}>}
  */
 const PALABRAS_CLAVE_ACCIONES = [
-    { palabras: ['beso', 'besa', 'besando', 'besar', 'besé'], tag: 'besando' },
-    { palabras: ['chupa', 'chupando', 'mama', 'mamando', 'felación', 'oral'], tag: 'chupando_todo_el_pene' },
-    { palabras: ['punta', 'cabeza del pene', 'glans'], tag: 'chupando_solo_la_punta_del_pene' },
-    { palabras: ['mitad', 'medio pene'], tag: 'chupando_solo_la_mitad_del_pene' },
-    { palabras: ['bola', 'bolas', 'testículos', 'escroto'], tag: 'chupando_bolas' },
-    { palabras: ['doggy', 'cuatro patas', 'por detrás'], tag: 'doggystyle' },
-    { palabras: ['misionero', 'encima', 'cara a cara'], tag: 'misionero' },
-    { palabras: ['desnuda', 'sin ropa', 'desviste'], tag: 'desnuda' },
-    { palabras: ['anal', 'culo', 'ano'], tag: 'anal' },
-    { palabras: ['paja', 'handjob', 'masturba'], tag: 'handjob_paja' },
-    { palabras: ['cowgirl', 'a caballo'], tag: 'reverse_cowgirl' },
-    { palabras: ['de lado', 'sidefuck'], tag: 'sidefuck' },
-    { palabras: ['de pie', 'parada', 'stand'], tag: 'standfuck_follando_de_pie' },
-    { palabras: ['ventana', 'cristal'], tag: 'follando_en_la_ventana' },
-    { palabras: ['en el aire', 'levantada'], tag: 'follando_en_el_aire' },
-    { palabras: ['lamiendo', 'lame', 'anilingus'], tag: 'ichika_licking_anus' },
-    { palabras: ['cuello', 'garganta'], tag: 'manos_alrededor_del_cuello' }
+    // === BESANDO ===
+    { palabras: ['beso', 'besa', 'besando', 'besar', 'besé', 'besos'], tag: 'besando', categoria: 'verbo', peso: PESOS_DETECCION.VERBO_PRINCIPAL },
+    { palabras: ['labios', 'boca', 'lengua'], tag: 'besando', categoria: 'sustantivo', peso: PESOS_DETECCION.SUSTANTIVO_OBJETO },
+    
+    // === CHUPANDO PENE ===
+    { palabras: ['chupa', 'chupando', 'mama', 'mamando', 'felación', 'oral', 'succiona'], tag: 'chupando_todo_el_pene', categoria: 'verbo', peso: PESOS_DETECCION.VERBO_PRINCIPAL },
+    { palabras: ['pene', 'miembro', 'verga', 'polla', 'pirula'], tag: 'chupando_todo_el_pene', categoria: 'sustantivo', peso: PESOS_DETECCION.SUSTANTIVO_OBJETO },
+    
+    // === PUNTA DEL PENE ===
+    { palabras: ['punta', 'cabeza del pene', 'glans', 'corona'], tag: 'chupando_solo_la_punta_del_pene', categoria: 'sustantivo', peso: PESOS_DETECCION.SUSTANTIVO_OBJETO },
+    
+    // === MITAD DEL PENE ===
+    { palabras: ['mitad', 'medio pene', 'centro'], tag: 'chupando_solo_la_mitad_del_pene', categoria: 'sustantivo', peso: PESOS_DETECCION.SUSTANTIVO_OBJETO },
+    
+    // === BOLAS ===
+    { palabras: ['bola', 'bolas', 'testículos', 'escroto', 'huevos'], tag: 'chupando_bolas', categoria: 'sustantivo', peso: PESOS_DETECCION.SUSTANTIVO_OBJETO },
+    
+    // === DOGGYSTYLE ===
+    { palabras: ['doggy', 'cuatro patas', 'por detrás'], tag: 'doggystyle', categoria: 'posicion', peso: PESOS_DETECCION.SUSTANTIVO_POSICION },
+    { palabras: ['culo hacia arriba', 'arqueada'], tag: 'doggystyle', categoria: 'contexto', peso: PESOS_DETECCION.CONTEXTO_FRASE },
+    
+    // === MISIONERO ===
+    { palabras: ['misionero', 'encima', 'cara a cara'], tag: 'misionero', categoria: 'posicion', peso: PESOS_DETECCION.SUSTANTIVO_POSICION },
+    { palabras: ['tumbada', 'debajo', 'acostada'], tag: 'misionero', categoria: 'contexto', peso: PESOS_DETECCION.CONTEXTO_FRASE },
+    
+    // === DESNUDA ===
+    { palabras: ['desnuda', 'sin ropa', 'desviste', 'desnudando'], tag: 'desnuda', categoria: 'verbo', peso: PESOS_DETECCION.VERBO_PRINCIPAL },
+    { palabras: ['ropa interior', 'sujetador', 'bragas', 'tanga'], tag: 'desnuda', categoria: 'sustantivo', peso: PESOS_DETECCION.SUSTANTIVO_OBJETO },
+    
+    // === ANAL ===
+    { palabras: ['anal', 'culo', 'ano', 'trasero'], tag: 'anal', categoria: 'sustantivo', peso: PESOS_DETECCION.SUSTANTIVO_OBJETO },
+    { palabras: ['penetración anal', 'metiendo en el culo'], tag: 'anal', categoria: 'contexto', peso: PESOS_DETECCION.CONTEXTO_FRASE },
+    
+    // === PAJA/HANDJOB ===
+    { palabras: ['paja', 'handjob', 'masturba'], tag: 'handjob_paja', categoria: 'verbo', peso: PESOS_DETECCION.VERBO_PRINCIPAL },
+    { palabras: ['mano', 'manos', 'moviendo'], tag: 'handjob_paja', categoria: 'sustantivo', peso: PESOS_DETECCION.SUSTANTIVO_OBJETO },
+    
+    // === COWGIRL ===
+    { palabras: ['cowgirl', 'a caballo'], tag: 'reverse_cowgirl', categoria: 'posicion', peso: PESOS_DETECCION.SUSTANTIVO_POSICION },
+    { palabras: ['montando', 'arriba', 'encima'], tag: 'reverse_cowgirl', categoria: 'contexto', peso: PESOS_DETECCION.CONTEXTO_FRASE },
+    
+    // === SIDEFUCK ===
+    { palabras: ['de lado', 'sidefuck', 'lado a lado'], tag: 'sidefuck', categoria: 'posicion', peso: PESOS_DETECCION.SUSTANTIVO_POSICION },
+    
+    // === DE PIE ===
+    { palabras: ['de pie', 'parada', 'stand'], tag: 'standfuck_follando_de_pie', categoria: 'posicion', peso: PESOS_DETECCION.SUSTANTIVO_POSICION },
+    
+    // === VENTANA ===
+    { palabras: ['ventana', 'cristal', 'pared'], tag: 'follando_en_la_ventana', categoria: 'contexto', peso: PESOS_DETECCION.CONTEXTO_FRASE },
+    { palabras: ['empujada contra', 'pegada a'], tag: 'follando_en_la_ventana', categoria: 'contexto', peso: PESOS_DETECCION.CONTEXTO_FRASE },
+    
+    // === EN EL AIRE ===
+    { palabras: ['en el aire', 'levantada'], tag: 'follando_en_el_aire', categoria: 'contexto', peso: PESOS_DETECCION.CONTEXTO_FRASE },
+    { palabras: ['piernas levantadas', 'sostenida en el aire'], tag: 'follando_en_el_aire', categoria: 'contexto', peso: PESOS_DETECCION.CONTEXTO_FRASE },
+    
+    // === LAMIENDO ANO ===
+    { palabras: ['lamiendo', 'lame', 'anilingus'], tag: 'ichika_licking_anus', categoria: 'verbo', peso: PESOS_DETECCION.VERBO_PRINCIPAL },
+    { palabras: ['culo', 'ano', 'hoyo'], tag: 'ichika_licking_anus', categoria: 'sustantivo', peso: PESOS_DETECCION.SUSTANTIVO_OBJETO },
+    
+    // === CUELLO ===
+    { palabras: ['cuello', 'garganta'], tag: 'manos_alrededor_del_cuello', categoria: 'sustantivo', peso: PESOS_DETECCION.SUSTANTIVO_OBJETO },
+    { palabras: ['ahorcando', 'apretando el cuello', 'manos alrededor'], tag: 'manos_alrededor_del_cuello', categoria: 'contexto', peso: PESOS_DETECCION.CONTEXTO_FRASE }
 ];
 
 /**
  * Detecta si un fragmento de texto contiene una acción específica
+ * USA SISTEMA DE PUNTUACIÓN: verbos (mayor peso) + sustantivos (peso medio) + contexto
  * @param {string} texto - Fragmento de texto a analizar
- * @returns {string|null} - Tag de la acción detectada o null si no hay acción
+ * @param {Object} opciones - Opciones adicionales
+ * @param {boolean} opciones.usarContexto - Si debe analizar el contexto completo (default: true)
+ * @param {number} opciones.umbralPuntuacion - Puntuación mínima para considerar acción detectada (default: 8)
+ * @returns {{tag: string|null, puntuacion: number, coincidencias: Array}} - Resultado detallado
  */
-export function detectarAccionEnTexto(texto) {
-    if (!texto) return null;
+export function detectarAccionEnTexto(texto, opciones = {}) {
+    if (!texto) return { tag: null, puntuacion: 0, coincidencias: [] };
     
+    const opcionesDefault = {
+        usarContexto: true,
+        umbralPuntuacion: 8
+    };
+    
+    const config = { ...opcionesDefault, ...opciones };
     const textoLower = texto.toLowerCase();
     
-    // Primero buscar patrones entre asteriscos (acciones narrativas)
-    for (const { patron, tag } of PATRONES_ACCIONES) {
-        patron.lastIndex = 0; // Resetear lastIndex para regex global
-        if (patron.test(texto)) {
-            return tag;
-        }
-    }
+    // Objeto para acumular puntuaciones por tag
+    const puntuacionesPorTag = {};
+    const coincidencias = [];
     
-    // Luego buscar palabras clave en texto normal
-    for (const { palabras, tag } of PALABRAS_CLAVE_ACCIONES) {
-        for (const palabra of palabras) {
-            if (textoLower.includes(palabra.toLowerCase())) {
-                return tag;
+    // ==========================================
+    // CAPA 1: Patrones entre asteriscos (máxima prioridad)
+    // ==========================================
+    const tieneAsteriscos = texto.includes('*');
+    if (tieneAsteriscos) {
+        for (const { patron, tag, peso, tipo } of PATRONES_ACCIONES) {
+            patron.lastIndex = 0;
+            const match = patron.exec(texto);
+            if (match) {
+                if (!puntuacionesPorTag[tag]) {
+                    puntuacionesPorTag[tag] = 0;
+                }
+                // Bonus por estar entre asteriscos (acción narrativa explícita)
+                const puntuacionTotal = peso + PESOS_DETECCION.ASTERISCO_ACCION;
+                puntuacionesPorTag[tag] += puntuacionTotal;
+                
+                coincidencias.push({
+                    tipo: 'asterisco',
+                    tag: tag,
+                    texto: match[0],
+                    peso: puntuacionTotal,
+                    categoria: tipo
+                });
             }
         }
     }
     
-    return null;
+    // ==========================================
+    // CAPA 2: Palabras clave en texto narrativo
+    // ==========================================
+    for (const { palabras, tag, categoria, peso } of PALABRAS_CLAVE_ACCIONES) {
+        let coincidenciasEnCategoria = 0;
+        
+        for (const palabra of palabras) {
+            if (textoLower.includes(palabra.toLowerCase())) {
+                coincidenciasEnCategoria++;
+                
+                if (!puntuacionesPorTag[tag]) {
+                    puntuacionesPorTag[tag] = 0;
+                }
+                puntuacionesPorTag[tag] += peso;
+                
+                coincidencias.push({
+                    tipo: 'palabra_clave',
+                    tag: tag,
+                    texto: palabra,
+                    peso: peso,
+                    categoria: categoria
+                });
+            }
+        }
+    }
+    
+    // ==========================================
+    // CAPA 3: Análisis de contexto (validación adicional)
+    // ==========================================
+    if (config.usarContexto) {
+        // Buscar combinaciones verbo + sustantivo que refuercen la detección
+        const combinacionesContexto = [
+            { verbos: ['bes', 'chup', 'mam', 'lam'], sustantivos: ['pene', 'boca', 'culo', 'ano'], bonus: 5 },
+            { verbos: ['foll', 'penetr', 'met'], sustantivos: ['culo', 'vagina', 'coño'], bonus: 5 },
+            { verbos: ['toc', 'acarici', 'sujeta'], sustantivos: ['pecho', 'teta', 'culo', 'pene'], bonus: 3 }
+        ];
+        
+        for (const combo of combinacionesContexto) {
+            const tieneVerbo = combo.verbos.some(v => textoLower.includes(v));
+            const tieneSustantivo = combo.sustantivos.some(s => textoLower.includes(s));
+            
+            if (tieneVerbo && tieneSustantivo) {
+                // Bonus por tener verbo Y sustantivo juntos (contexto reforzado)
+                Object.keys(puntuacionesPorTag).forEach(tag => {
+                    puntuacionesPorTag[tag] += combo.bonus;
+                    coincidencias.push({
+                        tipo: 'contexto_reforzado',
+                        tag: tag,
+                        texto: `verbo+${combo.sustantivos.join('|')}`,
+                        peso: combo.bonus,
+                        categoria: 'contexto'
+                    });
+                });
+            }
+        }
+    }
+    
+    // ==========================================
+    // CAPA 4: Seleccionar el tag con mayor puntuación
+    // ==========================================
+    let tagGanador = null;
+    let puntuacionMaxima = 0;
+    
+    for (const [tag, puntuacion] of Object.entries(puntuacionesPorTag)) {
+        if (puntuacion > puntuacionMaxima && puntuacion >= config.umbralPuntuacion) {
+            puntuacionMaxima = puntuacion;
+            tagGanador = tag;
+        }
+    }
+    
+    // Si hay múltiples tags con puntuación similar, priorizar verbos sobre sustantivos
+    if (tagGanador) {
+        const coincidenciasGanadoras = coincidencias.filter(c => c.tag === tagGanador);
+        const tieneVerboPrincipal = coincidenciasGanadoras.some(c => 
+            c.categoria === 'verbo' || c.tipo === 'asterisco'
+        );
+        
+        // Bonus final si hay verbo principal confirmado
+        if (tieneVerboPrincipal) {
+            puntuacionMaxima += 3;
+        }
+    }
+    
+    return {
+        tag: tagGanador,
+        puntuacion: puntuacionMaxima,
+        coincidencias: coincidencias,
+        detectado: tagGanador !== null
+    };
+}
+
+/**
+ * Versión simplificada para compatibilidad (retorna solo el tag)
+ * @param {string} texto - Fragmento de texto a analizar
+ * @returns {string|null} - Tag de la acción detectada o null
+ */
+export function detectarAccionEnTextoSimple(texto) {
+    const resultado = detectarAccionEnTexto(texto);
+    return resultado.tag;
 }
 
 /**
@@ -155,8 +375,8 @@ export function dividirMensajeConAcciones(mensaje, chicaNombre, imagenesChica) {
                 bufferTexto = '';
             }
             
-            // Detectar qué acción se describe
-            const accionDetectada = detectarAccionEnTexto(parte);
+            // Detectar qué acción se describe (usando versión simplificada para compatibilidad)
+            const accionDetectada = detectarAccionEnTextoSimple(parte);
             
             // Verificar si la chica tiene imagen para esta acción
             if (accionDetectada && tagsDisponibles.includes(accionDetectada)) {
@@ -264,13 +484,248 @@ export function tieneMultiplesAcciones(mensaje) {
     // Verificar si al menos 2 de esas acciones son acciones explícitas diferentes
     const accionesDetectadas = new Set();
     for (const accion of accionesEntreAsteriscos) {
-        const tag = detectarAccionEnTexto(accion);
+        const tag = detectarAccionEnTextoSimple(accion);
         if (tag) {
             accionesDetectadas.add(tag);
         }
     }
     
     return accionesDetectadas.size >= 2;
+}
+
+/**
+ * Analiza el contexto completo de la respuesta para validar/reforzar la detección de acciones
+ * Esta función actúa como SEGUNDA VALIDACIÓN después del análisis inicial
+ * Considera:
+ * 1. Co-ocurrencia de verbos + sustantivos en la misma frase
+ * 2. Patrones contextuales específicos (ej: "se arrodilla y toma su pene")
+ * 3. Modificadores que intensifican la acción (ej: "profundamente", "con fuerza")
+ * @param {string} texto - Texto completo de la respuesta
+ * @param {string|null} tagDetectado - Tag detectado en el análisis primario
+ * @returns {{tagValidado: string|null, confianza: number, razones: Array}} - Resultado de validación
+ */
+export function validarAccionConContexto(texto, tagDetectado = null) {
+    if (!texto) return { tagValidado: null, confianza: 0, razones: [] };
+    
+    const textoLower = texto.toLowerCase();
+    const razones = [];
+    let confianza = 0;
+    let tagValidado = tagDetectado;
+    
+    // ==========================================
+    // VALIDACIÓN 1: Co-ocurrencia verbo + sustantivo
+    // ==========================================
+    const combinacionesVerbosSustantivos = [
+        {
+            tag: 'chupando_todo_el_pene',
+            verbos: ['chupa', 'chupando', 'mama', 'mamando', 'succiona', 'lame'],
+            sustantivos: ['pene', 'miembro', 'verga', 'polla', 'pirula'],
+            frases: ['toma en su boca', 'lo introduce en su boca', 'rodea con sus labios']
+        },
+        {
+            tag: 'chupando_solo_la_punta_del_pene',
+            verbos: ['chupa', 'lame', 'succiona'],
+            sustantivos: ['punta', 'cabeza', 'glans', 'corona'],
+            frases: ['solo la punta', 'únicamente la cabeza', 'la parte superior']
+        },
+        {
+            tag: 'chupando_bolas',
+            verbos: ['chupa', 'lame', 'succiona', 'toca con la lengua'],
+            sustantivos: ['bolas', 'testículos', 'escroto', 'huevos'],
+            frases: ['toma las bolas', 'las chupa suavemente']
+        },
+        {
+            tag: 'besando',
+            verbos: ['besa', 'besando', 'da besos', 'une sus labios'],
+            sustantivos: ['labios', 'boca', 'lengua', 'beso'],
+            frases: ['se besan apasionadamente', 'sus bocas se encuentran']
+        },
+        {
+            tag: 'doggystyle',
+            verbos: ['penetra', 'folla', 'entra por detrás', 'se coloca detrás'],
+            sustantivos: ['culo', 'ano', 'trasero', 'nalga'],
+            frases: ['por detrás', 'cuatro patas', 'culo hacia arriba', 'posición del perrito']
+        },
+        {
+            tag: 'misionero',
+            verbos: ['penetra', 'folla', 'está encima', 'se monta'],
+            sustantivos: ['encima', 'cara a cara', 'tumbada'],
+            frases: ['posición del misionero', 'uno encima del otro', 'cara a cara']
+        },
+        {
+            tag: 'anal',
+            verbos: ['penetra', 'mete', 'introduce', 'empuja en'],
+            sustantivos: ['culo', 'ano', 'trasero', 'hoyo'],
+            frases: ['penetración anal', 'dentro del culo', 'en el ano']
+        },
+        {
+            tag: 'handjob_paja',
+            verbos: ['masturba', 'hace una paja', 'mueve la mano', 'acaricia con la mano'],
+            sustantivos: ['pene', 'miembro', 'mano', 'manos'],
+            frases: ['moviendo la mano arriba y abajo', 'le hace una paja']
+        },
+        {
+            tag: 'reverse_cowgirl',
+            verbos: ['monta', 'se sienta', 'cabalga', 'se sube'],
+            sustantivos: ['encima', 'a caballo', 'culo hacia él'],
+            frases: ['de espaldas', 'dándole la espalda', 'posición cowgirl inversa']
+        },
+        {
+            tag: 'standfuck_follando_de_pie',
+            verbos: ['folla', 'penetra', 'levanta'],
+            sustantivos: ['de pie', 'parada', 'pared'],
+            frases: ['follando de pie', 'contra la pared', 'ambos parados']
+        },
+        {
+            tag: 'ichika_licking_anus',
+            verbos: ['lame', 'limpia con la lengua', 'hace anilingus'],
+            sustantivos: ['culo', 'ano', 'trasero', 'hoyo'],
+            frases: ['lame el ano', 'limpia su culo con la lengua']
+        },
+        {
+            tag: 'manos_alrededor_del_cuello',
+            verbos: ['sujeta', 'agarra', 'aprieta', 'rodea'],
+            sustantivos: ['cuello', 'garganta'],
+            frases: ['manos en el cuello', 'lo ahorca suavemente', 'aprieta su garganta']
+        }
+    ];
+    
+    // Buscar la combinación más fuerte
+    for (const combo of combinacionesVerbosSustantivos) {
+        let tieneVerbo = false;
+        let tieneSustantivo = false;
+        let tieneFrase = false;
+        
+        // Verificar verbos
+        for (const verbo of combo.verbos) {
+            if (textoLower.includes(verbo)) {
+                tieneVerbo = true;
+                razones.push(`Verbo detectado: "${verbo}"`);
+                break;
+            }
+        }
+        
+        // Verificar sustantivos
+        for (const sustantivo of combo.sustantivos) {
+            if (textoLower.includes(sustantivo)) {
+                tieneSustantivo = true;
+                razones.push(`Sustantivo detectado: "${sustantivo}"`);
+                break;
+            }
+        }
+        
+        // Verificar frases completas
+        for (const frase of combo.frases) {
+            if (textoLower.includes(frase)) {
+                tieneFrase = true;
+                razones.push(`Frase contextual: "${frase}"`);
+                break;
+            }
+        }
+        
+        // Calcular puntuación de confianza
+        let puntuacionCombo = 0;
+        if (tieneVerbo) puntuacionCombo += 5;  // Verbo es lo más importante
+        if (tieneSustantivo) puntuacionCombo += 4;  // Sustantivo da contexto
+        if (tieneFrase) puntuacionCombo += 6;  // Frase completa es muy específica
+        
+        // Si hay verbo Y sustantivo, bonus adicional
+        if (tieneVerbo && tieneSustantivo) {
+            puntuacionCombo += 5;
+            razones.push(`✓ Combinación reforzada: verbo + sustantivo para ${combo.tag}`);
+        }
+        
+        // Si esta combinación supera la confianza actual, actualizar
+        if (puntuacionCombo > confianza) {
+            confianza = puntuacionCombo;
+            tagValidado = combo.tag;
+        }
+    }
+    
+    // ==========================================
+    // VALIDACIÓN 2: Si ya había un tag detectado, verificar consistencia
+    // ==========================================
+    if (tagDetectado) {
+        const comboExistente = combinacionesVerbosSustantivos.find(c => c.tag === tagDetectado);
+        if (comboExistente) {
+            let coincideVerbo = comboExistente.verbos.some(v => textoLower.includes(v));
+            let coincideSustantivo = comboExistente.sustantivos.some(s => textoLower.includes(s));
+            
+            if (coincideVerbo || coincideSustantivo) {
+                confianza += 10;  // Bonus por consistencia con detección previa
+                razones.push(`✓ Tag previamente detectado (${tagDetectado}) confirmado por contexto`);
+            }
+        }
+    }
+    
+    // ==========================================
+    // VALIDACIÓN 3: Detectar modificadores que intensifican
+    // ==========================================
+    const modificadoresIntensidad = [
+        'profundamente', 'con fuerza', 'suavemente', 'lentamente',
+        'rápidamente', 'apasionadamente', 'intensamente', 'con ganas'
+    ];
+    
+    for (const modificador of modificadoresIntensidad) {
+        if (textoLower.includes(modificador)) {
+            confianza += 2;
+            razones.push(`Modificador de intensidad: "${modificador}"`);
+        }
+    }
+    
+    // Umbral mínimo de confianza para validar
+    const UMBRAL_CONFIANZA_MINIMA = 8;
+    if (confianza < UMBRAL_CONFIANZA_MINIMA) {
+        return {
+            tagValidado: null,
+            confianza: confianza,
+            razones: [`Confianza insuficiente (${confianza}/${UMBRAL_CONFIANZA_MINIMA})`]
+        };
+    }
+    
+    return {
+        tagValidado: tagValidado,
+        confianza: confianza,
+        razones: razones
+    };
+}
+
+/**
+ * Función principal mejorada que combina detección primaria + validación de contexto
+ * @param {string} texto - Texto completo a analizar
+ * @param {Object} opciones - Opciones de configuración
+ * @returns {{tag: string|null, puntuacion: number, validacionContexto: Object, coincidencias: Array}}
+ */
+export function detectarAccionMejorada(texto, opciones = {}) {
+    // Paso 1: Detección primaria
+    const deteccionPrimaria = detectarAccionEnTexto(texto, opciones);
+    
+    // Paso 2: Validación con contexto (segunda validación)
+    const validacionContexto = validarAccionConContexto(texto, deteccionPrimaria.tag);
+    
+    // Paso 3: Decisión final basada en ambas validaciones
+    let tagFinal = deteccionPrimaria.tag;
+    let puntuacionFinal = deteccionPrimaria.puntuacion;
+    
+    // Si la validación de contexto tiene más confianza, usar esa
+    if (validacionContexto.tagValidado && validacionContexto.confianza > deteccionPrimaria.puntuacion) {
+        tagFinal = validacionContexto.tagValidado;
+        puntuacionFinal = validacionContexto.confianza;
+    }
+    
+    // Bonus si ambas detecciones coinciden
+    if (deteccionPrimaria.tag && validacionContexto.tagValidado && 
+        deteccionPrimaria.tag === validacionContexto.tagValidado) {
+        puntuacionFinal += 5;
+    }
+    
+    return {
+        tag: tagFinal,
+        puntuacion: puntuacionFinal,
+        validacionContexto: validacionContexto,
+        coincidencias: deteccionPrimaria.coincidencias,
+        detectado: tagFinal !== null
+    };
 }
 
 /**
@@ -353,11 +808,16 @@ export function interpretarRespuestaCorta(respuestaUsuario, ultimoMensajeChica) 
 // Exportaciones para compatibilidad
 export default {
     detectarAccionEnTexto,
+    detectarAccionEnTextoSimple,
+    detectarAccionMejorada,
+    validarAccionConContexto,
     dividirMensajeConAcciones,
     procesarMensajeParaUI,
     tieneMultiplesAcciones,
     extraerUltimaPregunta,
     interpretarRespuestaCorta,
     TAGS_ACCIONES_EXPLICITAS,
-    PATRONES_ACCIONES
+    PATRONES_ACCIONES,
+    PALABRAS_CLAVE_ACCIONES,
+    PESOS_DETECCION
 };

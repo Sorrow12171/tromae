@@ -30,7 +30,7 @@ import { obtenerMensajeError, generarPayloadFase, getOrdenFases, getInfoFase, ob
 import { QuintiImagenesPrueba } from './imagenes.js';
 import { getImagenTagsMapping as getImagenTagsMappingHistoria } from './historiasParalelas.js';
 import { detectarRepeticion, detectarRepeticionEntreChicas, agregarDialogoAlHistorial, generarPromptAntiRepeticion, getEstadisticasRepeticion, calcularSimilitud } from './antiRepeticion.js';
-import { detectarAccionEnTexto } from './parserAcciones.js';
+import { detectarAccionEnTexto, detectarAccionEnTextoSimple } from './parserAcciones.js';
 
 // ============================================================
 //  CONFIGURACIÓN DE API KEYS
@@ -560,22 +560,28 @@ async function verificarAccionEnCurso(mensajeUsuario, respuestaIA, chicaNombre, 
     // Esto es más rápido y evita llamadas innecesarias
     
     // 1. Detectar acción en el mensaje del usuario (prioridad máxima)
-    const accionEnMensaje = detectarAccionEnTexto(mensajeUsuario);
+    const resultadoMensaje = detectarAccionEnTexto(mensajeUsuario);
+    const accionEnMensaje = resultadoMensaje.tag;
+    
     if (accionEnMensaje && tagsDisponibles.includes(accionEnMensaje)) {
-        logQuinti('INFO', `[VERIFICACIÓN] Acción detectada en mensaje del usuario: ${accionEnMensaje}`);
+        logQuinti('INFO', `[VERIFICACIÓN] Acción detectada en mensaje del usuario: ${accionEnMensaje} (puntuación: ${resultadoMensaje.puntuacion})`);
         return { 
             accion: accionEnMensaje, 
-            cambioDetectado: accionAnterior !== accionEnMensaje 
+            cambioDetectado: accionAnterior !== accionEnMensaje,
+            detalle: resultadoMensaje
         };
     }
     
     // 2. Detectar acción en la respuesta de la IA (asteriscos)
-    const accionEnRespuesta = detectarAccionEnTexto(respuestaIA);
+    const resultadoRespuesta = detectarAccionEnTexto(respuestaIA);
+    const accionEnRespuesta = resultadoRespuesta.tag;
+    
     if (accionEnRespuesta && tagsDisponibles.includes(accionEnRespuesta)) {
-        logQuinti('INFO', `[VERIFICACIÓN] Acción detectada en respuesta IA: ${accionEnRespuesta}`);
+        logQuinti('INFO', `[VERIFICACIÓN] Acción detectada en respuesta IA: ${accionEnRespuesta} (puntuación: ${resultadoRespuesta.puntuacion})`);
         return { 
             accion: accionEnRespuesta, 
-            cambioDetectado: accionAnterior !== accionEnRespuesta 
+            cambioDetectado: accionAnterior !== accionEnRespuesta,
+            detalle: resultadoRespuesta
         };
     }
     
