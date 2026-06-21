@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Las Quintillizas Nakano</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .chat-container {
+            width: 400px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+        }
+        .header {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .selector {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .selector option {
+            color: black;
+        }
+        .chat-box {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            word-wrap: break-word;
+        }
+        .user-msg {
+            background: #f0f0f0;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+        .bot-msg {
+            background: #ffe0e0;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .bot-img {
+            width: 100%;
+            max-width: 200px;
+            border-radius: 10px;
+            align-self: center;
+            margin-top: 5px;
+        }
+        .input-area {
+            padding: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+        }
+        input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+        }
+        button {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #ff5252;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .loading {
+            font-size: 12px;
+            color: #888;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="header">
+            <span>💬 Chat Nakano</span>
+            <select id="chicaSelector" class="selector">
+                <option value="ichika">Ichika</option>
+                <option value="nino">Nino</option>
+                <option value="miku">Miku</option>
+                <option value="yotsuba">Yotsuba</option>
+                <option value="itsuki">Itsuki</option>
+            </select>
+        </div>
+        <div class="chat-box" id="chatBox"></div>
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Escribe un mensaje..." />
+            <button id="sendBtn" onclick="enviarMensaje()">Enviar</button>
+        </div>
+    </div>
+
+    <script type="module">
+        // Importamos solo lo esencial
+        import { seleccionarChica, conversar } from './logica.js';
+
+        const chatBox = document.getElementById('chatBox');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const chicaSelector = document.getElementById('chicaSelector');
+
+        // Cambiar de chica
+        chicaSelector.addEventListener('change', (e) => {
+            seleccionarChica(e.target.value);
+            agregarMensaje('bot', `¡Ahora soy ${e.target.value.toUpperCase()}! 🌸`, null);
+        });
+
+        // Enviar mensaje con Enter
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') enviarMensaje();
+        });
+
+        window.enviarMensaje = async () => {
+            const texto = userInput.value.trim();
+            if (!texto) return;
+
+            // Mostrar mensaje usuario
+            agregarMensaje('user', texto, null);
+            userInput.value = '';
+            userInput.disabled = true;
+            sendBtn.disabled = true;
+
+            // Mostrar loading
+            const loadingId = agregarMensaje('bot', '<span class="loading">Escribiendo...</span>', null);
+
+            try {
+                const respuesta = await conversar(texto);
+                
+                // Remover loading
+                const loadingEl = document.getElementById(loadingId);
+                if (loadingEl) loadingEl.remove();
+
+                // Mostrar respuesta con imagen
+                agregarMensaje('bot', respuesta.texto, respuesta.imagen);
+            } catch (error) {
+                const loadingEl = document.getElementById(loadingId);
+                if (loadingEl) loadingEl.remove();
+                agregarMensaje('bot', '⚠️ Error al conectar. Intenta de nuevo.', null);
+                console.error(error);
+            }
+
+            userInput.disabled = false;
+            sendBtn.disabled = false;
+            userInput.focus();
+        };
+
+        function agregarMensaje(tipo, texto, imagenUrl) {
+            const id = 'msg-' + Date.now();
+            const div = document.createElement('div');
+            div.className = `message ${tipo}-msg`;
+            div.id = id;
+            
+            let contenido = `<span>${texto}</span>`;
+            if (imagenUrl) {
+                contenido += `<img src="${imagenUrl}" class="bot-img" alt="Imagen">`;
+            }
+            
+            div.innerHTML = contenido;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return id;
+        }
+    </script>
+</body>
+</html>
