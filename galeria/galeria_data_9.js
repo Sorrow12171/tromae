@@ -1149,6 +1149,15 @@ const galeriaData_9 = {
     { id: 21, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD59/main/imagenes/img_1780232917140.png" }
 ]
     },
+
+    '9_Perraasputas': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
 };
 
 if (typeof galeriaDatabase !== 'undefined') {
