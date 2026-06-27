@@ -9,7 +9,9 @@ const galeriaData_14 = {
         categoria: "Mi zorra",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772929248085.jpg",
         imagenes_rotacion: [],
-        imagenes: []
+        imagenes: [
+    { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1782520751258.png" }
+]
     },
     '14_2': {
         titulo: "Chinarda",
