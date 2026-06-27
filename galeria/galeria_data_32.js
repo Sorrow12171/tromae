@@ -9,7 +9,9 @@ const galeriaData_32 = {
         imagenes_rotacion: [],
         imagenes: [
             { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1777847613292_1.png" }
-        ]
+        
+            { id: 2, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1782521003316.png" }
+]
     },
 
     '32_2': {
