@@ -9,7 +9,9 @@ const galeriaData_18 = {
         categoria: "Putonas",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772992063587.jpg",
         imagenes_rotacion: [],
-        imagenes: []
+        imagenes: [
+    { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1782520796342.png" }
+]
     },
     '18_2': {
         titulo: "OshinoPutardas",
