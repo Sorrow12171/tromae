@@ -7,7 +7,9 @@ const galeriaData_30 = {
         categoria: "",
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD32/main/imagenes/img_1777210528600.webp",
         imagenes_rotacion: [],
-        imagenes: []
+        imagenes: [
+    { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1782520995009.png" }
+]
     },
 
     '30_2': {
