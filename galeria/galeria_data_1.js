@@ -370,7 +370,18 @@ const galeriaData_1 = {
             { id: 257, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1782520837209.png" },
             { id: 258, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1782520839365.png" },
             { id: 259, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1782520841501.png" },
-            { id: 260, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1782520843833.png" }
+            { id: 260, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1782520843833.png" },
+            { id: 261, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1783208404760.png" },
+            { id: 262, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1783208408347.png" },
+            { id: 263, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1783208410619.png" },
+            { id: 264, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1783208413839.png" },
+            { id: 265, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1783208416996.png" },
+            { id: 266, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1783208419761.png" },
+            { id: 267, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1783208422270.png" },
+            { id: 268, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1783208426350.png" },
+            { id: 269, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1783208428928.png" },
+            { id: 270, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1783208431240.png" },
+            { id: 271, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1783208433623.png" }
 ]
     },
     '1_2': {
