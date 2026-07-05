@@ -270,6 +270,12 @@ const contenedoresGaleria = {
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD69/main/imagenes/img_1783220485958.png",
         descripcion: "asd",
         categoria: "asd"
+    },
+    45: {
+        nombre: "poketrolasas",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD69/main/imagenes/img_1783264321119.png",
+        descripcion: "trolas",
+        categoria: "trolitas"
     }
 };
 
