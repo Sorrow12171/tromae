@@ -54,7 +54,8 @@ const galeriaData_34 = {
     { id: 45, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1782521024870.png" },
     { id: 46, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1782521027093.png" },
     { id: 47, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1783208452560.png" },
-    { id: 48, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1783208454562.png" }
+    { id: 48, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1783208454562.png" },
+    { id: 49, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1783222770928.png" }
 ]
     },
 
