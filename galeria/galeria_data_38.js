@@ -26,7 +26,15 @@ const galeriaData_38 = {
     { id: 17, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1783174831808.png" },
     { id: 18, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1783174835620.png" },
     { id: 19, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1783174838099.png" },
-    { id: 20, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1783174840553.png" }
+    { id: 20, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1783174840553.png" },
+    { id: 21, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1784504474994.png" },
+    { id: 22, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1784504478336.png" },
+    { id: 23, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1784504481544.png" },
+    { id: 24, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1784504484713.png" },
+    { id: 25, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1784504487427.png" },
+    { id: 26, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1784504490580.png" },
+    { id: 27, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1784504493722.png" },
+    { id: 28, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1784504497673.png" }
 ]
     },
 
