@@ -122,7 +122,21 @@ function cargarPaginaGaleria() {
 // 2. Crear UI de contenedores de galería
 function crearContenedoresGaleria() {
     let html = '<h2 style="text-align: center; margin-bottom: 30px; color: #FFD166;">📦 CONTENEDORES DE GALERÍA</h2>';
-    html += '<div class="manga-contenedores">';
+    
+    // AÑADIR BUSCADOR FIJO EN LA PARTE SUPERIOR
+    html += `
+        <div style="max-width: 600px; margin: 0 auto 30px auto; padding: 0 20px;">
+            <input type="text" 
+                   id="buscador-galerias" 
+                   placeholder="🔍 Buscar galería por nombre..." 
+                   style="width: 100%; padding: 15px 20px; font-size: 1rem; border: 2px solid rgba(255, 20, 147, 0.5); border-radius: 25px; background: rgba(255, 255, 255, 0.95); color: #333; outline: none; transition: all 0.3s ease;"
+                   oninput="filtrarGalerias(this.value)"
+                   onfocus="this.style.borderColor='rgba(255, 20, 147, 1)'; this.style.boxShadow='0 0 15px rgba(255, 20, 147, 0.5)'"
+                   onblur="this.style.borderColor='rgba(255, 20, 147, 0.5)'; this.style.boxShadow='none'">
+        </div>
+    `;
+    
+    html += '<div class="manga-contenedores" id="contenedores-galerias-grid">';
     
     const totalContenedores = Object.keys(contenedoresGaleria).length;
     
@@ -132,7 +146,7 @@ function crearContenedoresGaleria() {
         const desc = contenedorData.descripcion || 'Sub-contenedores con imágenes';
         
         html += `
-            <div class="contenedor-item" onclick="cargarSubcontenedoresGaleria(${i})">
+            <div class="contenedor-item galeria-item" data-nombre="${nombre.toLowerCase()}" onclick="cargarSubcontenedoresGaleria(${i})">
                 <div class="contenedor-img" style="background-image: url('${contenedorData.imagen}')"></div>
                 <div class="contenedor-numero">${nombre}</div>
                 <p>${desc}</p>
@@ -145,6 +159,27 @@ function crearContenedoresGaleria() {
     
     html += '</div>';
     return html;
+}
+
+// FUNCIÓN PARA FILTRAR GALERÍAS POR NOMBRE
+function filtrarGalerias(termino) {
+    const terminoNormalizado = termino.toLowerCase().trim();
+    const contenedores = document.querySelectorAll('.galeria-item');
+    
+    contenedores.forEach(contenedor => {
+        const nombreGaleria = contenedor.getAttribute('data-nombre') || '';
+        
+        if (terminoNormalizado === '') {
+            // Si no hay término de búsqueda, mostrar todos
+            contenedor.style.display = 'block';
+        } else if (nombreGaleria.includes(terminoNormalizado)) {
+            // Si coincide, mostrar
+            contenedor.style.display = 'block';
+        } else {
+            // Si no coincide, ocultar
+            contenedor.style.display = 'none';
+        }
+    });
 }
 
 function cargarSubcontenedoresGaleria(contenedor) {
