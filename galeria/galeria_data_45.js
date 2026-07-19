@@ -1,7 +1,7 @@
 // GALERÍA - DATOS CHICA 45
 const galeriaData_45 = {
     '45_1': {
-        titulo: "poketrolasas",
+        titulo: "Yor Forger",
         descripcion: "",
         categoria: "",
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD69/main/imagenes/img_1783264321119.png",
