@@ -23,7 +23,9 @@ const galeriaData_2 = {
             { id: 11, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773004667454.jpg" },
             { id: 12, url: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1773004674330.jpg" },
             { id: 13, url: "https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/img_1773174086149.jpg" }
-        ]
+        
+            { id: 14, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1784504450477.png" }
+]
     },
     '2_2': {
         titulo: "petera",
