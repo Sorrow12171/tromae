@@ -272,8 +272,8 @@ const contenedoresGaleria = {
         categoria: "asd"
     },
     45: {
-        nombre: "poketrolasas",
-        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD69/main/imagenes/img_1783264321119.png",
+        nombre: "YorForger",
+        imagen: "https://pbs.twimg.com/media/HNYcM9LXQAA-ilJ?format=jpg&name=medium",
         descripcion: "trolas",
         categoria: "trolitas"
     }
