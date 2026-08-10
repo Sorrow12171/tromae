@@ -9,12 +9,14 @@ const galeriaData_46 = {
     },
 
     '46_2': {
-        titulo: "",
+        titulo: "se corrompio",
         descripcion: "",
         categoria: "",
         imagen: "",
         imagenes_rotacion: [],
-        imagenes: []
+        imagenes: [
+    { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD70/main/imagenes/img_1786391650983.webp" }
+]
     },
 };
 if (typeof galeriaDatabase !== 'undefined') {
