@@ -8,18 +8,8 @@ const galeriaData_46 = {
         imagenes: []
     },
 
-    '46_2': {
-        titulo: "se corrompio",
-        descripcion: "",
-        categoria: "",
-        imagen: "",
-        imagenes_rotacion: [],
-        imagenes: [
-    { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD70/main/imagenes/img_1786391650983.webp" }
-]
-    },
 
-    '46_3': {
+    '46_2': {
         titulo: "Tetardas",
         descripcion: "",
         categoria: "",
