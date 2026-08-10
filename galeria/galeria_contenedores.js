@@ -276,6 +276,12 @@ const contenedoresGaleria = {
         imagen: "https://pbs.twimg.com/media/HNYcM9LXQAA-ilJ?format=jpg&name=medium",
         descripcion: "trolas",
         categoria: "trolitas"
+    },
+    46: {
+        nombre: "Mushoku trolas",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD70/main/imagenes/img_1786390917747.jpg",
+        descripcion: "",
+        categoria: "General"
     }
 };
 
