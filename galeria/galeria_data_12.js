@@ -3344,6 +3344,15 @@ const galeriaData_12 = {
 ]
     },
 
+    '12_Nino_y_amigas_trolas': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
+
     
 };
 
