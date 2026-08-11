@@ -2707,6 +2707,15 @@ const galeriaData_13 = {
 ]
     },
 
+    '13_46': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
+
     
 
 
