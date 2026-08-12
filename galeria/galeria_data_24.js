@@ -392,12 +392,47 @@ const galeriaData_24 = {
     },
 
     '24_13': {
-        titulo: "",
+        titulo: "Kachando a la putita",
         descripcion: "",
         categoria: "",
-        imagen: "",
-        imagenes_rotacion: [],
-        imagenes: []
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502176545.webp",
+        imagenes_rotacion: [
+                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502178959.webp",
+                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502180585.webp",
+                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502182418.webp"
+                           ],
+        imagenes: [
+    { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502119059.webp" },
+    { id: 2, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502120733.webp" },
+    { id: 3, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502122478.webp" },
+    { id: 4, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502124276.webp" },
+    { id: 5, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502126293.webp" },
+    { id: 6, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502128091.webp" },
+    { id: 7, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502130023.webp" },
+    { id: 8, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502131895.webp" },
+    { id: 9, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502133713.webp" },
+    { id: 10, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502135624.webp" },
+    { id: 11, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502137405.webp" },
+    { id: 12, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502139140.webp" },
+    { id: 13, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502141304.webp" },
+    { id: 14, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502143210.webp" },
+    { id: 15, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502145108.webp" },
+    { id: 16, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502147031.webp" },
+    { id: 17, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502148898.webp" },
+    { id: 18, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502150962.webp" },
+    { id: 19, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502152845.webp" },
+    { id: 20, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502154479.webp" },
+    { id: 21, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502156432.webp" },
+    { id: 22, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502158551.webp" },
+    { id: 23, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502160666.webp" },
+    { id: 24, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502162535.webp" },
+    { id: 25, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502164305.webp" },
+    { id: 26, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502166234.webp" },
+    { id: 27, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502168111.webp" },
+    { id: 28, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502170225.webp" },
+    { id: 29, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502172010.webp" },
+    { id: 30, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD71/main/imagenes/img_1786502173942.webp" }
+]
     },
 };
 
