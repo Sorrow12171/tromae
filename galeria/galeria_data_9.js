@@ -1215,6 +1215,15 @@ const galeriaData_9 = {
     { id: 54, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD67/main/imagenes/img_1782248839473.webp" }
 ]
     },
+
+    '9_nino_ichika_terribles_trolas': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
 };
 
 if (typeof galeriaDatabase !== 'undefined') {
