@@ -282,6 +282,12 @@ const contenedoresGaleria = {
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD70/main/imagenes/img_1786390917747.jpg",
         descripcion: "",
         categoria: "General"
+    },
+    47: {
+        nombre: "Noelle putasilva",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD72/main/imagenes/img_1786909291728.png",
+        descripcion: "",
+        categoria: "General"
     }
 };
 
