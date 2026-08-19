@@ -1902,7 +1902,14 @@ const sistemaDescriptivo = {
                 duracion: '' 
             },
             
-                        '5_1': { 
+            '4_21': { 
+                nombre: 'MeguPuta',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_119250_1787177037732.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
+            
+                                    '5_1': { 
                 nombre: 'Colombianas putardas',
                 imagen: 'https://pbs.twimg.com/media/G_Hrih3WkAYINc8?format=jpg&name=small', 
                 descripcion: '', 
