@@ -3513,6 +3513,15 @@ const galeriaData_1 = {
         imagenes_rotacion: [],
         imagenes: []
     },
+
+    '1_55': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
    
     
     // CONTENEDOR 2
