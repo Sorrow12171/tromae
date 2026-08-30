@@ -1246,6 +1246,15 @@ const galeriaData_9 = {
     { id: 14, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD72/main/imagenes/img_1786733737420.webp" }
 ]
     },
+
+    '9_Nino_miku_putarads': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
 };
 
 if (typeof galeriaDatabase !== 'undefined') {
