@@ -2136,6 +2136,15 @@ const galeriaData_7 = {
         imagenes_rotacion: [],
         imagenes: []
     },
+
+    '7_29': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
     
     // CONTENEDOR 8 - Trolas Random
 };
