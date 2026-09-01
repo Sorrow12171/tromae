@@ -3061,6 +3061,15 @@ const galeriaData_13 = {
 ]
     },
 
+    '13_49': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
+
     
 
 
