@@ -2741,14 +2741,10 @@ const sistemaDescriptivo = {
                 imagen: 'https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/frame_0_1775000839651.webp', 
                 descripcion: '', 
                 duracion: '' 
-            },
-            
-                                                                                                                                                                                                                                                                         '14_1': { 
-                nombre: 'Doggystyle',
-                imagen: '', 
-                descripcion: '', 
-                duracion: '' 
             }
+            
+                                                                                                                                                                                                                                                                        
+             
             // ... puedes agregar más si necesitas
         }
     }
