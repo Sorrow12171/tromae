@@ -2748,7 +2748,13 @@ const sistemaDescriptivo = {
                 imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_1320_1788637169731.webp', 
                 descripcion: '', 
                 duracion: '' 
-            }
+            },
+                    '14_2': { 
+                nombre: 'exitoso 2',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_550_1788637749870.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
         }
     }
 };
