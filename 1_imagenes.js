@@ -2756,6 +2756,13 @@ const sistemaDescriptivo = {
                 imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_550_1788637749870.webp', 
                 descripcion: '', 
                 duracion: '' 
+            },
+        
+            '15_1': { 
+                nombre: 'putona',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_640_1788638732464.webp', 
+                descripcion: '', 
+                duracion: '' 
             }
         }
     }
