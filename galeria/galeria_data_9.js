@@ -1355,6 +1355,15 @@ const galeriaData_9 = {
     { id: 87, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD75/main/imagenes/img_1788113572049.webp" }
 ]
     },
+
+    '9_PORRISTAS_PUTARDAS': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
 };
 
 if (typeof galeriaDatabase !== 'undefined') {
