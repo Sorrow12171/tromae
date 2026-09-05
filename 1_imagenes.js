@@ -1494,7 +1494,6 @@ const sistemaDescriptivo = {
     videos: {
         // CONTENEDORES PRINCIPALES (1-10)
         contenedores: {
-           
             1: { 
                 nombre: 'Quinti zorras',
                 imagen: 'https://pbs.twimg.com/media/GztU8Y3XsAA5Yzm?format=png&name=small', 
@@ -1573,8 +1572,12 @@ const sistemaDescriptivo = {
                 descripcion: 'culonas',
                 tematica: 'misceláneo'
             },
-             14: { nombre: 'Exitosos animados', imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/contenedor_Exitosos_animados_1788635605.jpg' }
-             
+             14: { 
+                nombre: 'PRUEBA',
+                imagen: '', 
+                descripcion: 'culonas',
+                tematica: 'misceláneo'
+            }
         },
         
         // SUB-CONTENEDORES (5 por cada contenedor)
@@ -2740,7 +2743,7 @@ const sistemaDescriptivo = {
                 duracion: '' 
             },
             
-              '14_1': { 
+                                                                                                                                                                                                                                                                         '14_1': { 
                 nombre: 'Doggystyle',
                 imagen: '', 
                 descripcion: '', 
@@ -3109,12 +3112,6 @@ console.log('🔄 Funciones disponibles:');
 console.log('   - obtenerNombreContenedor(modo, numero)');
 console.log('   - obtenerNombreSubcontenedor(modo, contenedor, subcontenedor)');
 console.log('   - editarContenedor(modo, numero, {nombre, imagen, descripcion, ...})');
-console.log('   - editarSubcontenedor(modo, contenedor, subcontenedor, {nombre, imagen, descripcion, ...            '14_2': { 
-                nombre: 'Exitoso',
-                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_1250_1788636489978.webp', 
-                descripcion: '', 
-                duracion: '' 
-            },
-        })');
+console.log('   - editarSubcontenedor(modo, contenedor, subcontenedor, {nombre, imagen, descripcion, ...})');
 console.log('   - mostrarInfoContenedor(modo, numero)');
 console.log('   - mostrarInfoSubcontenedor(modo, contenedor, subcontenedor)');
