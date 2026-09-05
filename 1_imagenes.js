@@ -2778,6 +2778,13 @@ const sistemaDescriptivo = {
                 imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_580_1788646606609.webp', 
                 descripcion: '', 
                 duracion: '' 
+            },
+        
+            '16_2': { 
+                nombre: 'Culona',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_919_1788647226233.webp', 
+                descripcion: '', 
+                duracion: '' 
             }
         }
     }
