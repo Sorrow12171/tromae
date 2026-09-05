@@ -2785,6 +2785,13 @@ const sistemaDescriptivo = {
                 imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_919_1788647226233.webp', 
                 descripcion: '', 
                 duracion: '' 
+            },
+        
+            '16_3': { 
+                nombre: 'Zahiry y belinda mis trolas',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_229_1788647786412.webp', 
+                descripcion: '', 
+                duracion: '' 
             }
         }
     }
