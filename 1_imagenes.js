@@ -1494,6 +1494,7 @@ const sistemaDescriptivo = {
     videos: {
         // CONTENEDORES PRINCIPALES (1-10)
         contenedores: {
+            15: { nombre: 'Exitosos animados', imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/contenedor_Exitosos_animados_1788635605.jpg' },
             1: { 
                 nombre: 'Quinti zorras',
                 imagen: 'https://pbs.twimg.com/media/GztU8Y3XsAA5Yzm?format=png&name=small', 
