@@ -1571,10 +1571,10 @@ const sistemaDescriptivo = {
                 imagen: 'https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/frame_360_1774914878235.webp', 
                 descripcion: 'culonas',
                 tematica: 'misceláneo'
-            }
+            },
            
         
-            14: { nombre: 'Exitosos', imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/contenedor_Exitosos_1788636981.jpg' },
+            14: { nombre: 'Exitosos', imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/contenedor_Exitosos_1788636981.jpg' }
         },
         
         // SUB-CONTENEDORES (5 por cada contenedor)
