@@ -2757,6 +2757,12 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 duracion: '' 
             },
+            '14_3': { 
+                nombre: 'Exitoso ganador',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_1630_1788646314406.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
         
             '15_1': { 
                 nombre: 'putona',
