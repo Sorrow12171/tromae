@@ -1573,13 +1573,8 @@ const sistemaDescriptivo = {
                 descripcion: 'culonas',
                 tematica: 'misceláneo'
             },
-             14: { nombre: 'Exitosos animados', imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/contenedor_Exitosos_animados_1788635605.jpg' },
-             15: { 
-                nombre: 'PRUEBA',
-                imagen: '', 
-                descripcion: 'culonas',
-                tematica: 'misceláneo'
-            }
+             14: { nombre: 'Exitosos animados', imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/contenedor_Exitosos_animados_1788635605.jpg' }
+             
         },
         
         // SUB-CONTENEDORES (5 por cada contenedor)
@@ -2745,7 +2740,7 @@ const sistemaDescriptivo = {
                 duracion: '' 
             },
             
-                                                                                                                                                                                                                                                                         '14_1': { 
+              '14_1': { 
                 nombre: 'Doggystyle',
                 imagen: '', 
                 descripcion: '', 
