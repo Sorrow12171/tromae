@@ -2738,7 +2738,7 @@ const sistemaDescriptivo = {
                 imagen: 'https://raw.githubusercontent.com/SORFAR123123/WAIFUAJUssola/main/imagenes/frame_0_1775000839651.webp', 
                 descripcion: '', 
                 duracion: '' 
-            }
+            },
             
                                                                                                                                                                                                                                                                         
              
@@ -2748,7 +2748,7 @@ const sistemaDescriptivo = {
                 imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_1320_1788637169731.webp', 
                 descripcion: '', 
                 duracion: '' 
-            },
+            }
         }
     }
 };
