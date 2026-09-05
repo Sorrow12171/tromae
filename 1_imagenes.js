@@ -1573,6 +1573,8 @@ const sistemaDescriptivo = {
                 tematica: 'misceláneo'
             }
            
+        
+            14: { nombre: 'Exitosos', imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/contenedor_Exitosos_1788636981.jpg' },
         },
         
         // SUB-CONTENEDORES (5 por cada contenedor)
