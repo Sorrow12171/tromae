@@ -2743,6 +2743,12 @@ const sistemaDescriptivo = {
                                                                                                                                                                                                                                                                         
              
             // ... puedes agregar más si necesitas
+                    '14_1': { 
+                nombre: 'exitoso',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_1320_1788637169731.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
         }
     }
 };
