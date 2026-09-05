@@ -2792,6 +2792,13 @@ const sistemaDescriptivo = {
                 imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_229_1788647786412.webp', 
                 descripcion: '', 
                 duracion: '' 
+            },
+        
+            '16_4': { 
+                nombre: 'Zahiry y belinda mis laycas',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_620_1788648606205.webp', 
+                descripcion: '', 
+                duracion: '' 
             }
         }
     }
