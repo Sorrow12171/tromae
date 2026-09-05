@@ -3109,6 +3109,12 @@ console.log('🔄 Funciones disponibles:');
 console.log('   - obtenerNombreContenedor(modo, numero)');
 console.log('   - obtenerNombreSubcontenedor(modo, contenedor, subcontenedor)');
 console.log('   - editarContenedor(modo, numero, {nombre, imagen, descripcion, ...})');
-console.log('   - editarSubcontenedor(modo, contenedor, subcontenedor, {nombre, imagen, descripcion, ...})');
+console.log('   - editarSubcontenedor(modo, contenedor, subcontenedor, {nombre, imagen, descripcion, ...            '14_2': { 
+                nombre: 'Exitoso',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_1250_1788636489978.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
+        })');
 console.log('   - mostrarInfoContenedor(modo, numero)');
 console.log('   - mostrarInfoSubcontenedor(modo, contenedor, subcontenedor)');
