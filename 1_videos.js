@@ -1723,7 +1723,7 @@ const videosDatabase = {
         timestamps: [],
         duracion: "0:00",
         categoria: "Basico"
-    },
+    }
 
        
     
