@@ -2771,6 +2771,13 @@ const sistemaDescriptivo = {
                 imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_640_1788638732464.webp', 
                 descripcion: '', 
                 duracion: '' 
+            },
+        
+            '16_1': { 
+                nombre: 'Belinda y zahiry borrachas',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_580_1788646606609.webp', 
+                descripcion: '', 
+                duracion: '' 
             }
         }
     }
