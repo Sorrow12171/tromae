@@ -1574,7 +1574,9 @@ const sistemaDescriptivo = {
             },
            
         
-            14: { nombre: 'Exitosos', imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/contenedor_Exitosos_1788636981.jpg' }
+            14: { nombre: 'Exitosos', imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/contenedor_Exitosos_1788636981.jpg' },
+        
+            15: { nombre: 'Riding', imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/contenedor_Riding_1788638119.png' },
         },
         
         // SUB-CONTENEDORES (5 por cada contenedor)
