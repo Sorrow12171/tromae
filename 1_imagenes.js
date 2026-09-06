@@ -2681,6 +2681,12 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 duracion: '' 
             },
+            '11_2': { 
+                nombre: 'zahiry uf',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_4210_1788737875961.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
              '12_1': { 
                 nombre: 'Corrida en el orto',
                 imagen: 'https://pbs.twimg.com/media/HBSejioaUAE8Tpb?format=png&name=small', 
