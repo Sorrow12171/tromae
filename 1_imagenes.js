@@ -2674,6 +2674,12 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 duracion: '' 
             },
+            '10_4': { 
+                nombre: 'zahiry}',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_8920_1788738017607.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
             
                          '11_1': { 
                 nombre: 'estudiaNTE PUTA ',
