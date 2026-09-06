@@ -824,7 +824,14 @@ const sistemaDescriptivo = {
             },
             
             // Contenedor 8
-            '8_1': { 
+'7_6': { 
+                nombre: 'Belinda zahiry putonas',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_79840_1788717695628.webp', 
+                descripcion: '', 
+                episodios: '' 
+            },
+            
+                        '8_1': { 
                 nombre: 'Anime 1',
                 imagen: '', 
                 descripcion: '', 
