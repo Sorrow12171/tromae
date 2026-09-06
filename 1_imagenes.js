@@ -2833,6 +2833,12 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 duracion: '' 
             },
+            '16_6': { 
+                nombre: 'putona',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_409_1788723472792.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
         
             '17_1': { 
                 nombre: 'belinda  y zahiry peteras',
