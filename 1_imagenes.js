@@ -2807,7 +2807,14 @@ const sistemaDescriptivo = {
                 duracion: '' 
             },
         
-            '18_1': { 
+            '17_1': { 
+                nombre: 'belinda  y zahiry peteras',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_7509_1788716336186.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
+            
+                        '18_1': { 
                 nombre: 'belinda chupadora',
                 imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_3000_1788701701061.webp', 
                 descripcion: '', 
