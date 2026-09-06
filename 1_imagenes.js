@@ -2605,6 +2605,12 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 duracion: '' 
             },
+            '7_41': { 
+                nombre: 'Emilia mi zorra',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_3500_1788722857682.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
             
                                                                                                                                                                                                                                                                                                                                                   '8_1': { 
                 nombre: 'fabri putardo',
