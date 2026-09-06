@@ -1980,6 +1980,12 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 duracion: '' 
             },
+            '5_6': { 
+                nombre: 'belinda y zahiry trolas',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_1810_1788725671201.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
             
                           '6_1': { 
                 nombre: 'Quintiputarda nino chupa bolas',
