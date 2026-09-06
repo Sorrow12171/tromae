@@ -2686,6 +2686,12 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 duracion: '' 
             },
+            '10_6': { 
+                nombre: 'Zahiry en el carro',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_330_1788738147632.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
             
                          '11_1': { 
                 nombre: 'estudiaNTE PUTA ',
