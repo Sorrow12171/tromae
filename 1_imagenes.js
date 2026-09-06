@@ -509,8 +509,8 @@ const sistemaDescriptivo = {
                 categoria: 'fantasía'
             },
             7: { 
-                nombre: 'ANIME CONTAINER 7',
-                imagen: '', 
+                nombre: 'Trios',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/contenedor_anime_Trios_1788714993.png', 
                 descripcion: 'Animes de drama',
                 categoria: 'drama'
             },
