@@ -2944,6 +2944,13 @@ const sistemaDescriptivo = {
                 imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_3000_1788701701061.webp', 
                 descripcion: '', 
                 duracion: '' 
+            },
+        
+            '19_1': { 
+                nombre: 'Culona en el aire won',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_3750_1788733560800.webp', 
+                descripcion: '', 
+                duracion: '' 
             }
         }
     }
