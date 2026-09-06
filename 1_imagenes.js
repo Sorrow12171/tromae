@@ -2834,6 +2834,12 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 duracion: '' 
             },
+            '15_3': { 
+                nombre: 'negra potona',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_1220_1788727510293.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
         
             '16_1': { 
                 nombre: 'Belinda y zahiry borrachas',
