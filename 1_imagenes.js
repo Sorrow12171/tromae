@@ -2799,6 +2799,12 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 duracion: '' 
             },
+            '13_19': { 
+                nombre: 'completo',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_2730_1788727797709.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
             
                                                                                                                                                                                                                                                                         
              
