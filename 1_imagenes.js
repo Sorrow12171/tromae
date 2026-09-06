@@ -751,12 +751,7 @@ const sistemaDescriptivo = {
                 episodios: '' 
             },
             
-'5_11': { 
-                nombre: 'Alumnas putardas',
-                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_30970_1787181447654.webp', 
-                descripcion: '', 
-                episodios: '' 
-            },
+
             
                                                             '6_1': { 
                 nombre: 'okaasan chupadora ',
@@ -791,8 +786,8 @@ const sistemaDescriptivo = {
             
             // Contenedor 7
             '7_1': { 
-                nombre: 'Anime 1',
-                imagen: '', 
+                nombre: 'Alumnas putardas',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_30970_1787181447654.webp', 
                 descripcion: '', 
                 episodios: '' 
             },
