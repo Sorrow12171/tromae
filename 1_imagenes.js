@@ -1814,6 +1814,12 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 duracion: '' 
             },
+            '3_20': { 
+                nombre: 'Buen ortovich',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_23800_1788725101877.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
             
                         '4_1': { 
                 nombre: 'Zerotwo quiere pene',
