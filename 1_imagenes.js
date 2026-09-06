@@ -2810,6 +2810,13 @@ const sistemaDescriptivo = {
                 imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_390_1788699177385.webp', 
                 descripcion: '', 
                 duracion: '' 
+            },
+        
+            '18_1': { 
+                nombre: 'belinda chupadora',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_3000_1788701701061.webp', 
+                descripcion: '', 
+                duracion: '' 
             }
         }
     }
