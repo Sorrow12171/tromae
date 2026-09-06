@@ -671,18 +671,7 @@ const animesDatabase = {
         año: 2025
     },
 
-// Sub-contenedor 5_11
-    '5_11': {
-        titulo: "Alumnas putardas",
-        driveIdEsp: "1zItVLATVJitWNZb9lTVUGcFa3kqdxcOR",
-        driveIdJap: "",
-        descripcion: "",
-        timestampsEsp: [],
-        timestampsJap: [],
-        duracion: "0:00",
-        categoria: "",
-        año: 2025
-    },
+
 
                         '6_1': {
         titulo: "Okaasan mamadora ",
@@ -771,29 +760,7 @@ const animesDatabase = {
     },
 
     
-    '7_1': {
-        titulo: "Profesora putona",
-        driveIdEsp: "1Z3dh2BFP1HXi8xX6jVG-dGEusis52fSi",
-        driveIdJap: "1X6qhQxLNemXus_5WjLlMIWOAsHsJSsRS",
-        descripcion: "Light Yagami encuentra el Death Note y conoce a Ryuk.",
-        timestampsEsp: [
-            { tiempo: 0, titulo: "📔 Encuentro con el cuaderno", imagen: "" },
-            { tiempo: 180, titulo: "👻 Ryuk aparece", imagen: "" },
-            { tiempo: 360, titulo: "⚖️ Primera prueba", imagen: "" },
-            { tiempo: 540, titulo: "🎯 Decisión de usarlo", imagen: "" },
-            { tiempo: 720, titulo: "🕵️ Primer crimen", imagen: "" }
-        ],
-        timestampsJap: [
-            { tiempo: 0, titulo: "📔 ノートとの出会い", imagen: "" },
-            { tiempo: 180, titulo: "👻 リューク登場", imagen: "" },
-            { tiempo: 360, titulo: "⚖️ 最初のテスト", imagen: "" },
-            { tiempo: 540, titulo: "🎯 使用の決意", imagen: "" },
-            { tiempo: 720, titulo: "🕵️ 最初の犯罪", imagen: "" }
-        ],
-        duracion: "23:20",
-        categoria: "Misterio",
-        año: 2006
-    },
+
       
     // Sub-contenedor 7.2 (vacío)
     '7_2': {
@@ -847,7 +814,20 @@ const animesDatabase = {
         año: 0
     },
     
-    '8_1': {
+// Sub-contenedor 7_1
+    '7_1': {
+        titulo: "Alumnas putardas",
+        driveIdEsp: "1zItVLATVJitWNZb9lTVUGcFa3kqdxcOR",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 2025
+    },
+
+        '8_1': {
         titulo: "Profesora putona",
         driveIdEsp: "1Z3dh2BFP1HXi8xX6jVG-dGEusis52fSi",
         driveIdJap: "1X6qhQxLNemXus_5WjLlMIWOAsHsJSsRS",
