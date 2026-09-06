@@ -647,7 +647,14 @@ const sistemaDescriptivo = {
                 episodios: '' 
             },
             
-                        '4_1': { 
+'3_7': { 
+                nombre: 'Gyarus trolardas',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_45710_1788716871702.webp', 
+                descripcion: '', 
+                episodios: '' 
+            },
+            
+                                    '4_1': { 
                 nombre: 'nose el name xd 1',
                 imagen: 'https://pbs.twimg.com/media/G_DlLNbWoAA7ANu?format=png&name=small', 
                 descripcion: '', 
