@@ -831,7 +831,14 @@ const sistemaDescriptivo = {
                 episodios: '' 
             },
             
-                        '8_1': { 
+'7_7': { 
+                nombre: 'Zahiry belinda trolas 2',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_12470_1788721729849.webp', 
+                descripcion: '', 
+                episodios: '' 
+            },
+            
+                                    '8_1': { 
                 nombre: 'Anime 1',
                 imagen: '', 
                 descripcion: '', 
