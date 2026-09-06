@@ -1580,7 +1580,9 @@ const sistemaDescriptivo = {
         
             16: { nombre: 'Twerking', imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/contenedor_Twerking_1788646539.png' },
         
-            17: { nombre: 'Peteras', imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/contenedor_Peteras_1788699515.png' }
+            17: { nombre: 'Peteras', imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/contenedor_Peteras_1788699515.png' },
+        
+            18: { nombre: 'Chupada de orto', imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/contenedor_Chupada_de_orto_1788701560.png' }
         },
         
         // SUB-CONTENEDORES (5 por cada contenedor)
