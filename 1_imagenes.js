@@ -2968,6 +2968,12 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 duracion: '' 
             },
+            '15_10': { 
+                nombre: 'Zahiry',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_1320_1788737487067.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
         
             '16_1': { 
                 nombre: 'Belinda y zahiry borrachas',
