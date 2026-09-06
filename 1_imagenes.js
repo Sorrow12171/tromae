@@ -2920,6 +2920,12 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 duracion: '' 
             },
+            '15_6': { 
+                nombre: 'Buena tanga',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_950_1788735857304.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
         
             '16_1': { 
                 nombre: 'Belinda y zahiry borrachas',
