@@ -2642,6 +2642,12 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 duracion: '' 
             },
+            '9_3': { 
+                nombre: 'potona',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_4990_1788729406347.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
               '10_1': { 
                 nombre: 'mating',
                 imagen: 'https://pbs.twimg.com/media/HA9mn12bAAAk9FZ?format=png&name=small', 
