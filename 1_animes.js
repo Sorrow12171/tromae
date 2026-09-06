@@ -840,7 +840,20 @@ const animesDatabase = {
         año: 2025
     },
 
-        '8_1': {
+// Sub-contenedor 7_6
+    '7_6': {
+        titulo: "Belinda zahiry putonas",
+        driveIdEsp: "1bn3ybTUx5z_e5refuWJkiwefPmOu3o5D",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 2025
+    },
+
+            '8_1': {
         titulo: "Profesora putona",
         driveIdEsp: "1Z3dh2BFP1HXi8xX6jVG-dGEusis52fSi",
         driveIdJap: "1X6qhQxLNemXus_5WjLlMIWOAsHsJSsRS",
