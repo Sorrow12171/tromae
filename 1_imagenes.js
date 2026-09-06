@@ -2799,6 +2799,13 @@ const sistemaDescriptivo = {
                 imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_620_1788648606205.webp', 
                 descripcion: '', 
                 duracion: '' 
+            },
+        
+            '16_5': { 
+                nombre: 'zahiry trolita',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_390_1788699177385.webp', 
+                descripcion: '', 
+                duracion: '' 
             }
         }
     }
