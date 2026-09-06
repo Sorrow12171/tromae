@@ -2867,6 +2867,12 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 duracion: '' 
             },
+            '13_27': { 
+                nombre: 'en la fiesta',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_840_1788735946430.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
             
                                                                                                                                                                                                                                                                         
              
