@@ -331,7 +331,20 @@ const animesDatabase = {
         año: 2025
     },
 
-        '4_1': {
+// Sub-contenedor 3_7
+    '3_7': {
+        titulo: "Gyarus trolardas",
+        driveIdEsp: "1PVWEqjPldoPMAEihNfejVuh02WlociRS",
+        driveIdJap: "",
+        descripcion: "",
+        timestampsEsp: [],
+        timestampsJap: [],
+        duracion: "0:00",
+        categoria: "",
+        año: 2025
+    },
+
+            '4_1': {
         titulo: "Me kacho a mi hermana pelirroja",
         driveIdEsp: "1p4_xYNgyjjktmDPLfO9aauKkWvSSEB2C",
         driveIdJap: "1X6qhQxLNemXus_5WjLlMIWOAsHsJSsRS",
