@@ -3022,6 +3022,12 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 duracion: '' 
             },
+            '17_2': { 
+                nombre: 'Belinda no puede tragar',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_6870_1788737750087.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
             
                         '18_1': { 
                 nombre: 'belinda chupadora',
