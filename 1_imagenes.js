@@ -1951,6 +1951,12 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 duracion: '' 
             },
+            '4_22': { 
+                nombre: 'bulma culona',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_5060_1788734698150.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
             
                                     '5_1': { 
                 nombre: 'Colombianas putardas',
