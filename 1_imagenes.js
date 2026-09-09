@@ -2357,6 +2357,12 @@ const sistemaDescriptivo = {
                 descripcion: 'puta rica', 
                 duracion: '' 
             },
+            '6_60': { 
+                nombre: 'Terrible pete de yotsuba mi novia putita',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_1620_1788992627175.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
            
              '7_1': { 
                 nombre: 'Alya de la u',
