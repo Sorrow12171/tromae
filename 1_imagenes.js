@@ -2375,6 +2375,12 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 duracion: '' 
             },
+            '6_63': { 
+                nombre: 'Traga entera',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_40870_1788998098709.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
            
              '7_1': { 
                 nombre: 'Alya de la u',
