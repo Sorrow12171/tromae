@@ -2399,6 +2399,12 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 duracion: '' 
             },
+            '6_67': { 
+                nombre: 'mamada',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_29280_1789072175695.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
            
              '7_1': { 
                 nombre: 'Alya de la u',
