@@ -2417,6 +2417,12 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 duracion: '' 
             },
+            '6_70': { 
+                nombre: 'Atraganto a nino',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_31030_1789074112612.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
            
              '7_1': { 
                 nombre: 'Alya de la u',
