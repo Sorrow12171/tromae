@@ -2393,6 +2393,12 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 duracion: '' 
             },
+            '6_66': { 
+                nombre: 'Sentones',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_37350_1789071797241.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
            
              '7_1': { 
                 nombre: 'Alya de la u',
