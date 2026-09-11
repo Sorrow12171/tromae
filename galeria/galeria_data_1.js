@@ -4729,6 +4729,15 @@ const galeriaData_1 = {
     { id: 131, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD77/main/imagenes/img_1789073891774.webp" }
 ]
     },
+
+    '1_63': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
    
     
     // CONTENEDOR 2
