@@ -1439,7 +1439,14 @@ const sistemaDescriptivo = {
                 tipoVoz: '' 
             },
             
-                                                                        '2_1': { 
+            '1_10': { 
+                nombre: 'Dedos en el coño de la jefa',
+                imagen: '', 
+                descripcion: '', 
+                tipoVoz: '' 
+            },
+            
+                                                                                    '2_1': { 
                 nombre: 'ASMR 1',
                 imagen: '', 
                 descripcion: '', 
