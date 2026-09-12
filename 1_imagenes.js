@@ -1411,7 +1411,14 @@ const sistemaDescriptivo = {
                 tipoVoz: '' 
             },
             
-                        '2_1': { 
+            '1_6': { 
+                nombre: 'Alumna pajeadora',
+                imagen: '', 
+                descripcion: '', 
+                tipoVoz: '' 
+            },
+            
+                                    '2_1': { 
                 nombre: 'ASMR 1',
                 imagen: '', 
                 descripcion: '', 
