@@ -548,9 +548,9 @@ class SistemaReproductorDrive {
         this.timestampsActuales = timestamps;
 
         return `
-            <div class="reproductor-container">
-                <h2 style="text-align: center; margin-bottom: 15px; color: #FFD166;">🎬 REPRODUCTOR DE VIDEO</h2>
-                <p style="text-align: center; margin-bottom: 25px; opacity: 0.8;">
+            <div class="reproductor-container" style="padding: 20px;">
+                <h2 style="text-align: center; margin-bottom: 15px; color: #FFD166; font-size: clamp(1.2rem, 4vw, 2rem);">🎬 REPRODUCTOR DE VIDEO</h2>
+                <p style="text-align: center; margin-bottom: 25px; opacity: 0.8; font-size: clamp(0.9rem, 3vw, 1rem);">
                     Haz clic en cualquier timestamp para saltar a esa parte del video
                 </p>
                 ${this.crearListaTimestamps(timestamps)}
@@ -566,8 +566,8 @@ class SistemaReproductorDrive {
                 </div>
                 ${this.crearControlesEmergencia()}
                 <div style="background: rgba(255, 209, 102, 0.1); border-radius: 15px; padding: 20px; margin: 25px 0; border-left: 5px solid #FFD166;">
-                    <h4 style="color: #FFD166; margin-bottom: 10px;">💡 ¿Cómo usar los timestamps?</h4>
-                    <p style="margin: 5px 0; font-size: 0.95rem;">
+                    <h4 style="color: #FFD166; margin-bottom: 10px; font-size: clamp(1rem, 3vw, 1.2rem);">💡 ¿Cómo usar los timestamps?</h4>
+                    <p style="margin: 5px 0; font-size: clamp(0.85rem, 3vw, 0.95rem);">
                         1. Haz clic en cualquier timestamp de arriba<br>
                         2. El video se RECARGARÁ en ese tiempo exacto<br>
                         3. Dale PLAY manualmente cuando se cargue<br>
@@ -575,7 +575,7 @@ class SistemaReproductorDrive {
                     </p>
                 </div>
                 <div class="video-controls">
-                    <button class="video-btn btn-volver" onclick="cargarSubcontenedoresVideos(contenedorActual)">
+                    <button class="video-btn btn-volver" onclick="cargarSubcontenedoresVideos(contenedorActual)" style="width: 100%; max-width: 300px;">
                         ↩️ Volver a Videos
                     </button>
                 </div>
@@ -814,6 +814,87 @@ document.addEventListener('DOMContentLoaded', function() {
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); background: #000;
         }
         .drive-iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; border-radius: 15px; }
+        
+        /* ================================================
+           ESTILOS RESPONSIVE PARA CELULAR
+           ================================================ */
+        @media (max-width: 768px) {
+            .reproductor-container {
+                padding: 15px !important;
+            }
+            
+            .video-wrapper {
+                margin: 20px 0 !important;
+                border-radius: 10px !important;
+            }
+            
+            .timestamps-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)) !important;
+                gap: 15px !important;
+            }
+            
+            .timestamp-item {
+                padding: 12px !important;
+            }
+            
+            .timestamp-tiempo {
+                font-size: 1.3rem !important;
+            }
+            
+            .timestamp-titulo {
+                font-size: 1rem !important;
+            }
+            
+            .timestamps-container {
+                padding: 15px !important;
+            }
+            
+            h2 {
+                font-size: 1.3rem !important;
+            }
+            
+            .video-controls {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .video-btn {
+                width: 100% !important;
+                max-width: none !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .reproductor-container {
+                padding: 10px !important;
+            }
+            
+            .video-wrapper {
+                margin: 15px 0 !important;
+                border-radius: 8px !important;
+            }
+            
+            .timestamp-item {
+                padding: 10px !important;
+            }
+            
+            .timestamp-tiempo {
+                font-size: 1.2rem !important;
+            }
+            
+            .timestamp-titulo {
+                font-size: 0.9rem !important;
+            }
+            
+            h2 {
+                font-size: 1.2rem !important;
+            }
+            
+            p {
+                font-size: 0.9rem !important;
+            }
+        }
     `;
     document.head.appendChild(estiloTimestamps);
 });

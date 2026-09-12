@@ -2409,13 +2409,13 @@ function crearReproductorAudioUI(audioInfo) {
             
             <div style="background: rgba(0, 0, 0, 0.3); border-radius: 15px; padding: 25px; margin: 30px 0; text-align: center;">
                 <h3 style="color: #FFD166; margin-bottom: 20px;">🎵 Reproductor</h3>
-                <div style="margin: 20px 0;">
+                <div style="margin: 20px 0; max-width: 600px; margin-left: auto; margin-right: auto;">
                     <iframe 
                         src="https://drive.google.com/file/d/${audioInfo.driveId}/preview"
                         width="100%"
                         height="100"
                         frameborder="0"
-                        style="border-radius: 10px;"
+                        style="border-radius: 10px; width: 100%; max-width: 100%;"
                         allow="autoplay"
                     ></iframe>
                 </div>
@@ -2423,6 +2423,21 @@ function crearReproductorAudioUI(audioInfo) {
                     Si no se reproduce automáticamente, haz clic en el botón de play
                 </p>
             </div>
+            
+            <style>
+                @media (max-width: 768px) {
+                    .reproductor-audio-container {
+                        padding: 20px !important;
+                        margin: 20px auto !important;
+                    }
+                }
+                @media (max-width: 480px) {
+                    .reproductor-audio-container {
+                        padding: 15px !important;
+                        margin: 15px auto !important;
+                    }
+                }
+            </style>
             
             <div style="background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 20px; margin: 20px 0;">
                 <h4 style="color: #8A5AF7; margin-bottom: 15px;">📊 Información del Opening</h4>
@@ -2698,13 +2713,13 @@ function crearReproductorASMRUI(asmrInfo) {
             
             <div style="background: rgba(156, 39, 176, 0.1); border-radius: 15px; padding: 25px; margin: 30px 0; text-align: center; border: 2px solid rgba(156, 39, 176, 0.3);">
                 <h3 style="color: #FFD166; margin-bottom: 20px;">🎧 Reproductor ASMR</h3>
-                <div style="margin: 20px 0;">
+                <div style="margin: 20px 0; max-width: 600px; margin-left: auto; margin-right: auto;">
                     <iframe 
                         src="https://drive.google.com/file/d/${asmrInfo.driveId}/preview"
                         width="100%"
                         height="500"
                         frameborder="0"
-                        style="border-radius: 10px; background: rgba(0, 0, 0, 0.5);"
+                        style="border-radius: 10px; background: rgba(0, 0, 0, 0.5); width: 100%; max-width: 100%;"
                         allow="autoplay"
                     ></iframe>
                 </div>
@@ -2712,6 +2727,21 @@ function crearReproductorASMRUI(asmrInfo) {
                     🎯 Recomendación: Usa auriculares para mejor experiencia ASMR
                 </p>
             </div>
+            
+            <style>
+                @media (max-width: 768px) {
+                    .reproductor-audio-container[style*="#9C27B0"] {
+                        padding: 20px !important;
+                        margin: 20px auto !important;
+                    }
+                }
+                @media (max-width: 480px) {
+                    .reproductor-audio-container[style*="#9C27B0"] {
+                        padding: 15px !important;
+                        margin: 15px auto !important;
+                    }
+                }
+            </style>
             
             ${asmrInfo.timestamps && asmrInfo.timestamps.length > 0 ? `
                 <div style="background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 25px; margin: 30px 0; border-left: 5px solid #FFD166;">
