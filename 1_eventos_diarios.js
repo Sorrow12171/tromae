@@ -1223,6 +1223,21 @@ const EventosDiarios = {
                     </div>
                 ` : ''}
 
+                <style>
+                    @media (max-width: 768px) {
+                        [style*="max-width: 560px"] {
+                            max-width: 100% !important;
+                            margin: 15px auto !important;
+                        }
+                    }
+                    @media (max-width: 480px) {
+                        [style*="max-width: 560px"] {
+                            margin: 10px auto !important;
+                            border-width: 2px !important;
+                        }
+                    }
+                </style>
+
                 ${evento.personajes ? `
                     <div style="
                         background: rgba(255, 20, 147, 0.2);
@@ -1441,6 +1456,9 @@ const EventosDiarios = {
                         border-radius: 15px;
                         overflow: hidden;
                         background: black;
+                        max-width: 560px;
+                        margin-left: auto;
+                        margin-right: auto;
                     ">
                         <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
                             <iframe
@@ -1452,6 +1470,21 @@ const EventosDiarios = {
                             ></iframe>
                         </div>
                     </div>
+                    
+                    <style>
+                        @media (max-width: 768px) {
+                            [style*="max-width: 560px"] {
+                                max-width: 100% !important;
+                                margin: 15px auto !important;
+                            }
+                        }
+                        @media (max-width: 480px) {
+                            [style*="max-width: 560px"] {
+                                margin: 10px auto !important;
+                                border-width: 2px !important;
+                            }
+                        }
+                    </style>
                 ` : ''}
 
                 <div style="
@@ -1625,6 +1658,9 @@ const EventosDiarios = {
                     border-radius: 15px;
                     overflow: hidden;
                     background: black;
+                    max-width: 560px;
+                    margin-left: auto;
+                    margin-right: auto;
                 ">
                     <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
                         <iframe
@@ -1636,6 +1672,21 @@ const EventosDiarios = {
                         ></iframe>
                     </div>
                 </div>
+                
+                <style>
+                    @media (max-width: 768px) {
+                        [style*="max-width: 560px"] {
+                            max-width: 100% !important;
+                            margin: 15px auto !important;
+                        }
+                    }
+                    @media (max-width: 480px) {
+                        [style*="max-width: 560px"] {
+                            margin: 10px auto !important;
+                            border-width: 2px !important;
+                        }
+                    }
+                </style>
 
                 <div style="
                     background: rgba(0,0,0,0.5);
