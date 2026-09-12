@@ -814,6 +814,54 @@ document.addEventListener('DOMContentLoaded', function() {
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); background: #000;
         }
         .drive-iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; border-radius: 15px; }
+        
+        /* 📱 RESPONSIVE PARA CELULARES */
+        @media (max-width: 768px) {
+            .timestamps-grid { 
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+                gap: 15px; 
+            }
+            .timestamp-item { padding: 12px; }
+            .timestamp-tiempo { font-size: 1.2rem !important; }
+            .timestamp-titulo { font-size: 0.95rem !important; }
+            .timestamps-container { padding: 20px; margin: 15px 0; }
+            .video-wrapper { margin: 20px 0; }
+            .reproductor-container { padding: 20px !important; }
+        }
+        
+        @media (max-width: 480px) {
+            .timestamps-grid { 
+                grid-template-columns: 1fr !important; 
+                gap: 12px; 
+            }
+            .timestamp-item { 
+                padding: 15px; 
+                flex-direction: row; 
+                align-items: center; 
+                justify-content: space-between;
+            }
+            .timestamp-tiempo { font-size: 1.1rem !important; margin-bottom: 0; margin-right: 15px; }
+            .timestamp-titulo { font-size: 0.9rem !important; margin-top: 0; flex: 1; }
+            .timestamps-container { padding: 15px; margin: 10px 0; border-radius: 12px; }
+            .video-wrapper { 
+                margin: 15px 0; 
+                border-radius: 10px;
+            }
+            .reproductor-container { 
+                padding: 15px !important; 
+                margin: 10px !important;
+            }
+            .controles-idioma {
+                flex-direction: column !important;
+                gap: 10px !important;
+            }
+            .boton-idioma {
+                width: 100% !important;
+                max-width: none !important;
+                padding: 12px !important;
+                font-size: 0.95rem !important;
+            }
+        }
     `;
     document.head.appendChild(estiloTimestamps);
 });
