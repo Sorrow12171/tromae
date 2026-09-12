@@ -168,7 +168,21 @@ const asmrDatabase = {
         tags: []
     },
 
-                            '2_1': {
+
+    // Sub-contenedor 1_11
+    '1_11': {
+        titulo: "Compañera petera",
+        driveId: "1yX19FHuWBDhP4nQyPuwSoe5W1Avkry2k",
+        descripcion: "",
+        timestamps: [],
+        duracion: "0:00",
+        categoria: "",
+        tipoVoz: "",
+        tipo: "audio",
+        tags: []
+    },
+
+                                '2_1': {
         titulo: "🎌 Repetición de Vocabulario N5 (ASMR)",
         driveId: "1tS-gKr6bf4MY5Yrw7zRvP2uP_zq9rsLl",
         descripcion: "Repetición suave de palabras esenciales del nivel N5 con pausas para practicar.",
