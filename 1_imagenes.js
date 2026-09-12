@@ -1404,7 +1404,14 @@ const sistemaDescriptivo = {
             },
             
             // Contenedor 2
-            '2_1': { 
+            '1_5': { 
+                nombre: 'Porrista Putona traga leche',
+                imagen: '', 
+                descripcion: '', 
+                tipoVoz: '' 
+            },
+            
+                        '2_1': { 
                 nombre: 'ASMR 1',
                 imagen: '', 
                 descripcion: '', 
