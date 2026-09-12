@@ -3461,6 +3461,15 @@ const galeriaData_12 = {
 ]
     },
 
+    '12_ricos_culos': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
+
     
 };
 
