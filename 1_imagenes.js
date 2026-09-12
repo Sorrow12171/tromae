@@ -1553,7 +1553,14 @@ const sistemaDescriptivo = {
                 tipoVoz: '' 
             },
             
-                                                            '4_1': { 
+            '3_11': { 
+                nombre: 'Peteada epica',
+                imagen: '', 
+                descripcion: '', 
+                tipoVoz: '' 
+            },
+            
+                                                                        '4_1': { 
                 nombre: 'Maylily ASMR',
                 imagen: 'https://pbs.twimg.com/media/HCa56QhWEAANR17?format=png&name=small', 
                 descripcion: '', 
