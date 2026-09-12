@@ -1460,7 +1460,14 @@ const sistemaDescriptivo = {
                 tipoVoz: '' 
             },
             
-                                                                                                            '2_1': { 
+            '1_13': { 
+                nombre: 'Compañera me hace assjob',
+                imagen: '', 
+                descripcion: '', 
+                tipoVoz: '' 
+            },
+            
+                                                                                                                        '2_1': { 
                 nombre: 'ASMR 1',
                 imagen: '', 
                 descripcion: '', 
