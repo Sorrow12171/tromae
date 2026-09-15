@@ -1501,6 +1501,15 @@ const galeriaData_9 = {
     { id: 130, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD76/main/imagenes/img_1788630283972.webp" }
 ]
     },
+
+    '9_terribles_putas_nino_y_miku': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
 };
 
 if (typeof galeriaDatabase !== 'undefined') {
