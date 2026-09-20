@@ -3525,6 +3525,15 @@ const galeriaData_12 = {
 ]
     },
 
+    '12_gyarus': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
+
     
 };
 
