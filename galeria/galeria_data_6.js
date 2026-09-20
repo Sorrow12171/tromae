@@ -3303,6 +3303,15 @@ const galeriaData_6 = {
 ]
     },
 
+    '6_42': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
+
    
 
   
