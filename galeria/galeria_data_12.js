@@ -3545,6 +3545,15 @@ const galeriaData_12 = {
 ]
     },
 
+    '12_5_culonas': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
+
     
 };
 
