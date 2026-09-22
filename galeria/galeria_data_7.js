@@ -2841,6 +2841,15 @@ const galeriaData_7 = {
     { id: 83, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD81/main/imagenes/img_1789929826587.png" }
 ]
     },
+
+    '7_34': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
     
     // CONTENEDOR 8 - Trolas Random
 };
