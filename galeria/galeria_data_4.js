@@ -3997,6 +3997,15 @@ const galeriaData_4 = {
     { id: 80, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD81/main/imagenes/img_1789930061151.png" }
 ]
     },
+
+    '4_43': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
     
     // CONTENEDOR 5 - Ichika
 };
