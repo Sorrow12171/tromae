@@ -1488,7 +1488,14 @@ const sistemaDescriptivo = {
                 tipoVoz: '' 
             },
             
-                                                                                                                                                            '2_1': { 
+            '1_17': { 
+                nombre: 'popular trola',
+                imagen: '', 
+                descripcion: '', 
+                tipoVoz: '' 
+            },
+            
+                                                                                                                                                                        '2_1': { 
                 nombre: 'ASMR 1',
                 imagen: '', 
                 descripcion: '', 
