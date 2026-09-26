@@ -98,7 +98,7 @@ const contenedoresGaleria = {
         nombre: "Uzaki",
         imagen: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772986105360.jpg",
         descripcion: "3 putardas albinas",
-        categoria: "Uzaki"
+        categoria: "Uzaki | https://www.pixiv.net/en/artworks/136315351"
     },
     17: {
         nombre: "Rias",
@@ -173,7 +173,7 @@ const contenedoresGaleria = {
         nombre: "PutasDelZZZ",
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD31/main/imagenes/img_1777153715050.webp",
         descripcion: "zhu yuan que rico culo",
-        categoria: "evelyyn culaso | https://www.pixiv.net/en/artworks/149581625"
+        categoria: "evelyyn culaso"
     },
     29: {
         nombre: "Galería 29",
