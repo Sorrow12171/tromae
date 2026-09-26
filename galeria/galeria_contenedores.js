@@ -173,7 +173,7 @@ const contenedoresGaleria = {
         nombre: "PutasDelZZZ",
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD31/main/imagenes/img_1777153715050.webp",
         descripcion: "zhu yuan que rico culo",
-        categoria: "evelyyn culaso"
+        categoria: "evelyyn culaso | https://www.pixiv.net/en/artworks/149581625"
     },
     29: {
         nombre: "Galería 29",
