@@ -7,7 +7,7 @@ const contenedoresGaleria = {
     1: {
         nombre: "Nino mi novia putona",
         imagen: "https://pbs.twimg.com/media/G7qfpGZXAAAib4A?format=png&name=small",
-        descripcion: "Rico orto rosado rica conch rosada tetas ricas",
+        descripcion: "Rico orto rosado rica conch rosada tetas ricas | https://www.pixiv.net/en/artworks/150125500",
         categoria: "La puta de fabrizio"
     },
     2: {
