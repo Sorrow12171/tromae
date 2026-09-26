@@ -1037,12 +1037,41 @@ const galeriaData_16 = {
     },
 
     '16_18': {
-        titulo: "",
+        titulo: "potona 3",
         descripcion: "",
-        categoria: "",
-        imagen: "",
-        imagenes_rotacion: [],
-        imagenes: []
+        categoria: "https://www.pixiv.net/en/artworks/137238859",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450534547.jpg",
+        imagenes_rotacion: [
+                            "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450536513.jpg"
+                           ],
+        imagenes: [
+    { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450480745.jpg" },
+    { id: 2, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450482732.jpg" },
+    { id: 3, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450484597.jpg" },
+    { id: 4, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450486551.jpg" },
+    { id: 5, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450488577.jpg" },
+    { id: 6, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450490613.jpg" },
+    { id: 7, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450492744.jpg" },
+    { id: 8, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450495280.jpg" },
+    { id: 9, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450497423.jpg" },
+    { id: 10, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450499387.jpg" },
+    { id: 11, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450501387.jpg" },
+    { id: 12, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450503413.jpg" },
+    { id: 13, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450505453.jpg" },
+    { id: 14, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450507345.jpg" },
+    { id: 15, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450509326.jpg" },
+    { id: 16, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450511314.jpg" },
+    { id: 17, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450513234.jpg" },
+    { id: 18, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450515201.jpg" },
+    { id: 19, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450517153.jpg" },
+    { id: 20, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450519144.jpg" },
+    { id: 21, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450521026.jpg" },
+    { id: 22, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450522961.jpg" },
+    { id: 23, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450525042.jpg" },
+    { id: 24, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450527219.jpg" },
+    { id: 25, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450529158.jpg" },
+    { id: 26, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD84/main/imagenes/img_1790450531208.jpg" }
+]
     },
 };
 
