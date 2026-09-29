@@ -10,7 +10,10 @@ const galeriaData_14 = {
         imagen: "https://raw.githubusercontent.com/SORFAR123123/Putas-de-fabri/main/imagenes/img_1772929248085.jpg",
         imagenes_rotacion: [],
         imagenes: [
-    { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1782520751258.png" }
+    { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1782520751258.png" },
+    { id: 2, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1790685857042.png" },
+    { id: 3, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1790685859216.png" },
+    { id: 4, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1790685861752.png" }
 ]
     },
     '14_2': {
