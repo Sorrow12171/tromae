@@ -4175,6 +4175,15 @@ const galeriaData_6 = {
 ]
     },
 
+    '6_47': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
+
    
 
   
