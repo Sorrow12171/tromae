@@ -294,6 +294,12 @@ const contenedoresGaleria = {
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD85/main/imagenes/img_1791060268466.jpg",
         descripcion: "putarda kaoruko xd",
         categoria: "General"
+    },
+    49: {
+        nombre: "AzurTrolas",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD85/main/imagenes/img_1791062571230.png",
+        descripcion: "trtr",
+        categoria: "General"
     }
 };
 
