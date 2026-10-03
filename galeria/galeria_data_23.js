@@ -526,6 +526,15 @@ const galeriaData_23 = {
     { id: 185, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD77/main/imagenes/img_1789157428990.webp" }
 ]
     },
+
+    '23_8': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
 };
 
 if (typeof galeriaDatabase !== 'undefined') {
