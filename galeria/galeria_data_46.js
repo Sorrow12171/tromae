@@ -1304,6 +1304,15 @@ const galeriaData_46 = {
     { id: 103, url: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD85/main/imagenes/img_1791060229895.webp" }
 ]
     },
+
+    '46_11': {
+        titulo: "",
+        descripcion: "",
+        categoria: "",
+        imagen: "",
+        imagenes_rotacion: [],
+        imagenes: []
+    },
 };
 if (typeof galeriaDatabase !== 'undefined') {
     Object.assign(galeriaDatabase, galeriaData_46);
