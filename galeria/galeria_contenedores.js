@@ -288,6 +288,12 @@ const contenedoresGaleria = {
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD72/main/imagenes/img_1786909291728.png",
         descripcion: "",
         categoria: "General"
+    },
+    48: {
+        nombre: "Kaoruputona",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD85/main/imagenes/img_1791060268466.jpg",
+        descripcion: "putarda kaoruko xd",
+        categoria: "General"
     }
 };
 
