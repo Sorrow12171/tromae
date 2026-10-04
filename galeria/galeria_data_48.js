@@ -5,7 +5,12 @@ const galeriaData_48 = {
         descripcion: "",
         categoria: "",
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD85/main/imagenes/img_1791060268466.jpg",
-        imagenes: []
+        imagenes: [
+    { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1791139983354.png" },
+    { id: 2, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1791139985575.png" },
+    { id: 3, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1791139988092.png" },
+    { id: 4, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1791139990361.png" }
+]
     },
 
     '48_2': {
