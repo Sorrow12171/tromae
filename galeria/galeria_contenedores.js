@@ -300,6 +300,12 @@ const contenedoresGaleria = {
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD85/main/imagenes/img_1791062571230.png",
         descripcion: "trtr",
         categoria: "General"
+    },
+    50: {
+        nombre: "Fateputas",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD86/main/imagenes/img_1791117131847.jpg",
+        descripcion: "fate",
+        categoria: "General"
     }
 };
 
