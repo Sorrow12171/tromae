@@ -5,7 +5,10 @@ const galeriaData_50 = {
         descripcion: "",
         categoria: "",
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD86/main/imagenes/img_1791117131847.jpg",
-        imagenes: []
+        imagenes: [
+    { id: 1, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1791120955131.png" },
+    { id: 2, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1791120957616.png" }
+]
     }
 };
 if (typeof galeriaDatabase !== 'undefined') {
