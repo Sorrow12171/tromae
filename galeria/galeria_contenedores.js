@@ -306,6 +306,12 @@ const contenedoresGaleria = {
         imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD86/main/imagenes/img_1791117131847.jpg",
         descripcion: "fate",
         categoria: "General"
+    },
+    51: {
+        nombre: "NikkePutonas",
+        imagen: "https://raw.githubusercontent.com/Sorrow12171/XDDDDDDDDDDDDDDDDDDDDXDXDXDXDXDXD87/main/imagenes/img_1791487308621.png",
+        descripcion: "nikearads",
+        categoria: "General"
     }
 };
 
