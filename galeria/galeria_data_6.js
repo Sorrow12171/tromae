@@ -165,7 +165,8 @@ const galeriaData_6 = {
             { id: 133, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1791070619853.png" },
             { id: 134, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1791070621701.png" },
             { id: 135, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1791070623604.png" },
-            { id: 136, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1791070625371.png" }
+            { id: 136, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1791070625371.png" },
+            { id: 137, url: "https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/img_1791647288401.png" }
 ]
     },
     '6_2': {
