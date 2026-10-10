@@ -1769,6 +1769,12 @@ const sistemaDescriptivo = {
                 descripcion: '', 
                 duracion: '' 
             },
+            '1_6': { 
+                nombre: 'putona rica',
+                imagen: 'https://raw.githubusercontent.com/Sorrow12171/imaginardas/main/imagenes/frame_520660_1791648113265.webp', 
+                descripcion: '', 
+                duracion: '' 
+            },
             
             // Contenedor 2
             '2_1': { 
